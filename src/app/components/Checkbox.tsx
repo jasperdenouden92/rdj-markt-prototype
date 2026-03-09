@@ -102,7 +102,7 @@ export default function Checkbox({
       }}
     >
       {checkboxBox}
-      <p className="font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[20px] text-rdj-text-primary text-[14px]">
+      <p className="font-sans font-normal leading-[20px] text-rdj-text-primary text-[14px]">
         {label}
       </p>
     </label>

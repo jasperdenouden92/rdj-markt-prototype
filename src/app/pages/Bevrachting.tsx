@@ -37,8 +37,8 @@ export default function Bevrachting() {
   const location = useLocation();
   const activeTab = location.pathname.includes('/vaartuigen') ? 'vaartuigen' : 'ladingen';
   const { cargos: apiCargos, vessels: apiVessels, loading: apiLoading } = useBevrachtingData();
-  const [cargos, setCargos] = useState<Cargo[]>(mockCargos);
-  const [vessels, setVessels] = useState<Vessel[]>(mockVessels);
+  const [cargos, setCargos] = useState<Cargo[]>([]);
+  const [vessels, setVessels] = useState<Vessel[]>([]);
   const [apiLoaded, setApiLoaded] = useState(false);
   const [modalCargo, setModalCargo] = useState<Cargo | null>(null);
   const [showEmailModal, setShowEmailModal] = useState(false);
@@ -227,15 +227,12 @@ export default function Bevrachting() {
     };
   });
 
-  // Load from API when data arrives
+  // Load from API when data arrives, fallback to mock data if API returns empty
   useEffect(() => {
-    if (!apiLoading && !apiLoaded && apiCargos.length > 0) {
-      setCargos(apiCargos as unknown as Cargo[]);
-      setApiLoaded(true);
-    }
-    if (!apiLoading && apiVessels.length > 0) {
-      setVessels(apiVessels as unknown as Vessel[]);
-    }
+    if (apiLoading || apiLoaded) return;
+    setApiLoaded(true);
+    setCargos(apiCargos.length > 0 ? apiCargos as unknown as Cargo[] : mockCargos);
+    setVessels(apiVessels.length > 0 ? apiVessels as unknown as Vessel[] : mockVessels);
   }, [apiCargos, apiVessels, apiLoading, apiLoaded]);
 
   return (
@@ -249,11 +246,11 @@ export default function Bevrachting() {
           <PageHeader
             title="Bevrachting"
             titleMeta={
-              <p className="font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[0] overflow-hidden relative shrink-0 text-[#344054] text-[12px] text-ellipsis whitespace-nowrap">
+              <p className="font-sans font-normal leading-[0] overflow-hidden relative shrink-0 text-[#344054] text-[12px] text-ellipsis whitespace-nowrap">
                 <span className="leading-[18px]">{`Laatste werklijst gemaild `}</span>
-                <span className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[18px]">vandaag om 9:00</span>
+                <span className="font-sans font-bold leading-[18px]">vandaag om 9:00</span>
                 <span className="leading-[18px]">{` door `}</span>
-                <span className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[18px]">Khoa Nguyen</span>
+                <span className="font-sans font-bold leading-[18px]">Khoa Nguyen</span>
               </p>
             }
             actions={
@@ -261,14 +258,14 @@ export default function Bevrachting() {
                 <button onClick={() => setShowEmailModal(true)} className="bg-rdj-bg-primary relative rounded-[6px] shrink-0">
                   <div className="content-stretch flex gap-[4px] items-center justify-center overflow-clip px-[14px] py-[10px] relative rounded-[inherit]">
                     <div className="overflow-clip relative shrink-0 size-[20px]"><div className="absolute inset-[9.96%_9.96%_9.91%_9.9%]"><div className="absolute inset-[-5.2%]"><svg className="block size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 17.6933 17.6933"><path d={svgPaths.p31aa2800} stroke="var(--stroke-0, #344054)" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.66667" /></svg></div></div></div>
-                    <div className="content-stretch flex items-center justify-center px-[2px] relative shrink-0"><p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[20px] relative shrink-0 text-[#344054] text-[14px] whitespace-nowrap">Werklijst e-mailen</p></div>
+                    <div className="content-stretch flex items-center justify-center px-[2px] relative shrink-0"><p className="font-sans font-bold leading-[20px] relative shrink-0 text-[#344054] text-[14px] whitespace-nowrap">Werklijst e-mailen</p></div>
                   </div>
                   <div aria-hidden="true" className="absolute border border-rdj-border-primary border-solid inset-0 pointer-events-none rounded-[6px] shadow-[0px_1px_2px_0px_rgba(16,24,40,0.05)]" />
                 </button>
                 <button className="bg-[#1567a4] relative rounded-[6px] shrink-0">
                   <div className="content-stretch flex gap-[4px] items-center justify-center overflow-clip px-[14px] py-[10px] relative rounded-[inherit]">
                     <div className="overflow-clip relative shrink-0 size-[20px]"><div className="absolute inset-[20.83%]"><div className="absolute inset-[-7.14%]"><svg className="block size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 13.3333 13.3333"><path d={svgPaths.p1b67fa00} stroke="var(--stroke-0, white)" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.66667" /></svg></div></div></div>
-                    <div className="content-stretch flex items-center justify-center px-[2px] relative shrink-0"><p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[20px] relative shrink-0 text-[14px] text-white whitespace-nowrap">Toevoegen</p></div>
+                    <div className="content-stretch flex items-center justify-center px-[2px] relative shrink-0"><p className="font-sans font-bold leading-[20px] relative shrink-0 text-[14px] text-white whitespace-nowrap">Toevoegen</p></div>
                   </div>
                   <div aria-hidden="true" className="absolute border border-[#1567a4] border-solid inset-0 pointer-events-none rounded-[6px] shadow-[0px_1px_2px_0px_rgba(16,24,40,0.05)]" />
                 </button>
@@ -300,7 +297,7 @@ export default function Bevrachting() {
                   <FilterDropdown label="Laadregio" />
                   <FilterDropdown label="Losregio" />
                 </div>
-                <button className="content-stretch flex gap-[4px] items-center relative shrink-0"><div className="overflow-clip relative shrink-0 size-[20px]"><div className="absolute inset-[12.5%]"><div className="absolute inset-[-5.56%]"><svg className="block size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 16.6667 16.6667"><path d={svgPaths.p3190da80} stroke="var(--stroke-0, #1567A4)" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.66667" /></svg></div></div></div><div className="content-stretch flex items-center justify-center px-[2px] relative shrink-0"><p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[20px] relative shrink-0 text-[#145990] text-[14px] whitespace-nowrap">Filter</p></div></button>
+                <button className="content-stretch flex gap-[4px] items-center relative shrink-0"><div className="overflow-clip relative shrink-0 size-[20px]"><div className="absolute inset-[12.5%]"><div className="absolute inset-[-5.56%]"><svg className="block size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 16.6667 16.6667"><path d={svgPaths.p3190da80} stroke="var(--stroke-0, #1567A4)" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.66667" /></svg></div></div></div><div className="content-stretch flex items-center justify-center px-[2px] relative shrink-0"><p className="font-sans font-bold leading-[20px] relative shrink-0 text-[#145990] text-[14px] whitespace-nowrap">Filter</p></div></button>
                 <div className="content-stretch flex flex-[1_0_0] gap-[12px] items-center justify-end min-h-px min-w-px relative">
                   <SegmentedButtonGroup
                     items={[
@@ -310,7 +307,7 @@ export default function Bevrachting() {
                     value={viewMode}
                     onChange={(val) => setViewMode(val as 'kanban' | 'table')}
                   />
-                  <div className="bg-white h-[40px] relative rounded-[6px] shrink-0 max-w-[320px] w-full"><div className="flex flex-row items-center overflow-clip rounded-[inherit] size-full"><div className="content-stretch flex items-center px-[14px] py-[8px] relative size-full"><div className="content-stretch flex flex-[1_0_0] gap-[8px] items-center min-h-px min-w-px relative"><div className="overflow-clip relative shrink-0 size-[20px]"><div className="absolute inset-[12.5%]"><div className="absolute inset-[-5.56%]"><svg className="block size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 16.6667 16.6667"><path d={svgPaths.p3190da80} stroke="var(--stroke-0, #667085)" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.66667" /></svg></div></div></div><p className="flex-[1_0_0] font-['Hanken_Grotesk:Regular',sans-serif] font-normal h-[18px] leading-[20px] min-h-px min-w-px overflow-hidden relative text-[#667085] text-[14px] text-ellipsis text-left whitespace-nowrap">Zoeken</p></div></div></div><div aria-hidden="true" className="absolute border border-[#d0d5dd] border-solid inset-0 pointer-events-none rounded-[6px] shadow-[0px_1px_2px_0px_rgba(16,24,40,0.05)]" /></div>
+                  <div className="bg-white h-[40px] relative rounded-[6px] shrink-0 max-w-[320px] w-full"><div className="flex flex-row items-center overflow-clip rounded-[inherit] size-full"><div className="content-stretch flex items-center px-[14px] py-[8px] relative size-full"><div className="content-stretch flex flex-[1_0_0] gap-[8px] items-center min-h-px min-w-px relative"><div className="overflow-clip relative shrink-0 size-[20px]"><div className="absolute inset-[12.5%]"><div className="absolute inset-[-5.56%]"><svg className="block size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 16.6667 16.6667"><path d={svgPaths.p3190da80} stroke="var(--stroke-0, #667085)" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.66667" /></svg></div></div></div><p className="flex-[1_0_0] font-sans font-normal h-[18px] leading-[20px] min-h-px min-w-px overflow-hidden relative text-[#667085] text-[14px] text-ellipsis text-left whitespace-nowrap">Zoeken</p></div></div></div><div aria-hidden="true" className="absolute border border-[#d0d5dd] border-solid inset-0 pointer-events-none rounded-[6px] shadow-[0px_1px_2px_0px_rgba(16,24,40,0.05)]" /></div>
                 </div>
               </div>
             </div>

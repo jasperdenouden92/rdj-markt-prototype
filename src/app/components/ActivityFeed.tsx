@@ -62,7 +62,7 @@ export default function ActivityFeed({ compact }: ActivityFeedProps) {
       <div className="bg-white border border-rdj-border-secondary rounded-[12px] p-[16px] w-full">
         <div className="flex gap-[8px] items-start">
           <div className="relative rounded-full shrink-0 size-[32px] bg-rdj-bg-secondary flex items-center justify-center">
-            <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold text-rdj-text-primary text-[12px]">
+            <p className="font-sans font-bold text-rdj-text-primary text-[12px]">
               KN
             </p>
           </div>
@@ -72,7 +72,7 @@ export default function ActivityFeed({ compact }: ActivityFeedProps) {
               value={comment}
               onChange={(e) => setComment(e.target.value)}
               placeholder="Plaats een opmerking..."
-              className="w-full font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[20px] text-rdj-text-primary text-[14px] border-0 outline-none bg-transparent placeholder:text-rdj-text-tertiary"
+              className="w-full font-sans font-normal leading-[20px] text-rdj-text-primary text-[14px] border-0 outline-none bg-transparent placeholder:text-rdj-text-tertiary"
             />
           </div>
         </div>
@@ -89,25 +89,25 @@ export default function ActivityFeed({ compact }: ActivityFeedProps) {
 
             {/* Avatar */}
             <div className="relative rounded-full shrink-0 size-[32px] bg-rdj-bg-secondary flex items-center justify-center z-[1]">
-              <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold text-rdj-text-primary text-[12px]">
+              <p className="font-sans font-bold text-rdj-text-primary text-[12px]">
                 {event.initials}
               </p>
             </div>
 
             {/* Content */}
             <div className="flex-1 pb-[20px]">
-              <p className="font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[20px] text-rdj-text-secondary text-[14px]">
-                <span className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold text-rdj-text-primary">
+              <p className="font-sans font-normal leading-[20px] text-rdj-text-secondary text-[14px]">
+                <span className="font-sans font-bold text-rdj-text-primary">
                   {event.user}
                 </span>{" "}
                 {event.action}
               </p>
-              <p className="font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[20px] text-rdj-text-tertiary text-[12px] mt-[2px]">
+              <p className="font-sans font-normal leading-[20px] text-rdj-text-tertiary text-[12px] mt-[2px]">
                 {event.timestamp}
               </p>
               {event.detail && (
                 <div className="mt-[8px] bg-rdj-bg-secondary rounded-[8px] px-[12px] py-[8px]">
-                  <p className="font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[20px] text-rdj-text-secondary text-[14px]">
+                  <p className="font-sans font-normal leading-[20px] text-rdj-text-secondary text-[14px]">
                     {event.detail}
                   </p>
                 </div>

@@ -104,7 +104,7 @@ export default function CargoDetailSidebar({
 
       {activeTab === "condities" && (
         <DetailsSidebarSection>
-          <p className="font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[20px] text-rdj-text-secondary text-[14px] text-center w-full">
+          <p className="font-sans font-normal leading-[20px] text-rdj-text-secondary text-[14px] text-center w-full">
             Condities worden hier getoond
           </p>
         </DetailsSidebarSection>

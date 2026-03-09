@@ -65,7 +65,7 @@ export default function InboxVesselDetail() {
         return (
           <div className="flex items-center justify-end gap-[6px]">
             <MatchDonut percentage={pct} color={color} />
-            <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[20px] text-rdj-text-primary text-[14px]">{pct}%</p>
+            <p className="font-sans font-bold leading-[20px] text-rdj-text-primary text-[14px]">{pct}%</p>
           </div>
         );
       },
@@ -91,15 +91,15 @@ export default function InboxVesselDetail() {
             {/* Breadcrumbs */}
             <div className="flex items-center gap-[8px] px-[24px] pt-[24px] pb-[20px] border-b border-rdj-border-secondary">
               <button onClick={() => navigate("/markt/inbox/vaartuigen")} className="flex items-center justify-center p-[4px] rounded-[6px] shrink-0 hover:bg-rdj-bg-primary-hover">
-                <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[20px] text-rdj-text-secondary text-[14px] whitespace-nowrap">Markt</p>
+                <p className="font-sans font-bold leading-[20px] text-rdj-text-secondary text-[14px] whitespace-nowrap">Markt</p>
               </button>
               <BreadcrumbChevron />
               <button onClick={() => navigate("/markt/inbox/vaartuigen")} className="flex items-center justify-center px-[8px] py-[4px] rounded-[6px] shrink-0 hover:bg-rdj-bg-primary-hover">
-                <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[20px] text-rdj-text-secondary text-[14px] whitespace-nowrap">Inbox</p>
+                <p className="font-sans font-bold leading-[20px] text-rdj-text-secondary text-[14px] whitespace-nowrap">Inbox</p>
               </button>
               <BreadcrumbChevron />
               <div className="bg-rdj-bg-secondary flex items-center justify-center px-[8px] py-[4px] rounded-[6px] shrink-0">
-                <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[20px] text-rdj-text-primary text-[14px] whitespace-nowrap">
+                <p className="font-sans font-bold leading-[20px] text-rdj-text-primary text-[14px] whitespace-nowrap">
                   {summaryLoading ? "..." : (summary?.breadcrumbLabel || id)}
                 </p>
               </div>
@@ -113,7 +113,7 @@ export default function InboxVesselDetail() {
                   title={summaryLoading ? "Laden..." : (summary?.title || "—")}
                   subtitle={
                     summaryLoading ? undefined : (
-                      <p className="font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[24px] text-rdj-text-secondary text-[16px]">
+                      <p className="font-sans font-normal leading-[24px] text-rdj-text-secondary text-[16px]">
                         {summary?.subtitle || ""}
                       </p>
                     )

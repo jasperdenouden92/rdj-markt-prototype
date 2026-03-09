@@ -45,10 +45,10 @@ export default function DroppableColumn({ title, status, items, onDrop, type }: 
           className="shrink-0 size-[8px] rounded-full"
           style={{ backgroundColor: dotColor }}
         />
-        <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[20px] text-rdj-text-primary text-[14px]">
+        <p className="font-sans font-bold leading-[20px] text-rdj-text-primary text-[14px]">
           {title}
         </p>
-        <span className="font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[20px] text-rdj-text-secondary text-[14px]">
+        <span className="font-sans font-normal leading-[20px] text-rdj-text-secondary text-[14px]">
           {items.length}
         </span>
       </div>

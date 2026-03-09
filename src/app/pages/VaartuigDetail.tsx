@@ -11,19 +11,15 @@ import Pagination from "../components/Pagination";
 import Button from "../components/Button";
 import ActivityFeed from "../components/ActivityFeed";
 import VaartuigEigenSidebar from "../components/VaartuigEigenSidebar";
+import VaartuigMarktSidebar from "../components/VaartuigMarktSidebar";
 import NegotiationDialog from "../components/NegotiationDialog";
 import { useBevrachtingVaartuigSummary } from "../data/useDetailData";
 import svgPaths from "../../imports/svg-62fj7rjvas";
-// import imgAvatar from "figma:asset/a2737d3b5b234fc04041650cb9f114889c6859da.png";
-const imgAvatar = "";
-// import imgAvatar1 from "figma:asset/3627de284acb374a4d9313b3c2dbaeeb87a48224.png";
-const imgAvatar1 = "";
-// import imgAvatar2 from "figma:asset/e7809035038b3816de2a1d67c5de86ebeed325d0.png";
-const imgAvatar2 = "";
-// import imgAvatar3 from "figma:asset/bf485cb6f98c12534c69bc81459ce34f2e24e4a8.png";
-const imgAvatar3 = "";
-// import imgAvatar4 from "figma:asset/9e45f45f537bea4bf653bc0307471e5ff5545f63.png";
-const imgAvatar4 = "";
+import imgAvatar from "../../assets/a2737d3b5b234fc04041650cb9f114889c6859da.png";
+import imgAvatar1 from "../../assets/3627de284acb374a4d9313b3c2dbaeeb87a48224.png";
+import imgAvatar2 from "../../assets/e7809035038b3816de2a1d67c5de86ebeed325d0.png";
+import imgAvatar3 from "../../assets/bf485cb6f98c12534c69bc81459ce34f2e24e4a8.png";
+import imgAvatar4 from "../../assets/9e45f45f537bea4bf653bc0307471e5ff5545f63.png";
 
 /* ── Mock vessel matches (ladingen die passen bij dit vaartuig) ── */
 const vesselMatches = [
@@ -80,7 +76,7 @@ export default function VaartuigDetail() {
   const [negPage, setNegPage] = useState(1);
   const [negRowsPerPage, setNegRowsPerPage] = useState(50);
 
-  const { data: summary, loading: summaryLoading } = useBevrachtingVaartuigSummary(id);
+  const { data: summary, detectedType, loading: summaryLoading } = useBevrachtingVaartuigSummary(id);
   const avatars = [imgAvatar, imgAvatar1, imgAvatar2, imgAvatar3, imgAvatar4];
 
   /* ── Breadcrumb ── */
@@ -90,7 +86,7 @@ export default function VaartuigDetail() {
         <div className="content-stretch flex items-center pl-[24px] relative shrink-0">
           <div className="content-stretch flex gap-[8px] items-center relative shrink-0">
             <Link to="/markt/bevrachting" className="content-stretch flex items-center justify-center p-[4px] relative rounded-[6px] shrink-0 hover:bg-rdj-bg-primary-hover">
-              <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[20px] relative shrink-0 text-[#475467] text-[14px] whitespace-nowrap">Markt</p>
+              <p className="font-sans font-bold leading-[20px] relative shrink-0 text-[#475467] text-[14px] whitespace-nowrap">Markt</p>
             </Link>
             <div className="overflow-clip relative shrink-0 size-[16px]">
               <div className="absolute bottom-1/4 left-[37.5%] right-[37.5%] top-1/4">
@@ -102,7 +98,7 @@ export default function VaartuigDetail() {
               </div>
             </div>
             <Link to="/markt/bevrachting/vaartuigen" className="content-stretch flex items-center justify-center px-[8px] py-[4px] relative rounded-[6px] shrink-0 hover:bg-rdj-bg-primary-hover">
-              <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[20px] relative shrink-0 text-[#475467] text-[14px] whitespace-nowrap">Bevrachting</p>
+              <p className="font-sans font-bold leading-[20px] relative shrink-0 text-[#475467] text-[14px] whitespace-nowrap">Bevrachting</p>
             </Link>
             <div className="overflow-clip relative shrink-0 size-[16px]">
               <div className="absolute bottom-1/4 left-[37.5%] right-[37.5%] top-1/4">
@@ -114,7 +110,7 @@ export default function VaartuigDetail() {
               </div>
             </div>
             <div className="bg-[#f9fafb] content-stretch flex items-center justify-center px-[8px] py-[4px] relative rounded-[6px] shrink-0">
-              <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[20px] relative shrink-0 text-[#344054] text-[14px] whitespace-nowrap">
+              <p className="font-sans font-bold leading-[20px] relative shrink-0 text-[#344054] text-[14px] whitespace-nowrap">
                 {summaryLoading ? "..." : (summary?.breadcrumbLabel || id)}
               </p>
             </div>
@@ -127,7 +123,7 @@ export default function VaartuigDetail() {
 
   /* ── Subtitle ── */
   const subtitle = summaryLoading ? undefined : (
-    <p className="font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[24px] text-rdj-text-secondary text-[16px]">
+    <p className="font-sans font-normal leading-[24px] text-rdj-text-secondary text-[16px]">
       {summary?.subtitle || ""}
     </p>
   );
@@ -212,7 +208,16 @@ export default function VaartuigDetail() {
   /* ── Actions ── */
   const actions = (
     <>
-      <Button variant="secondary" label="Uit markt halen" className="[&_p]:!text-[#b42318]" />
+      <Button
+        variant="secondary"
+        label="Uit markt halen"
+        leadingIcon={
+          <svg fill="none" viewBox="-0.5 -0.5 12.5 12.5">
+            <path d={svgPaths.p3f40eb80} stroke="#B42318" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.66667" />
+          </svg>
+        }
+        className="[&_p]:!text-[#b42318] [&_svg_path]:!stroke-[#b42318] [&_div>div]:!size-[12px] [&_div]:!gap-[2px]"
+      />
       <Button variant="primary" label="Bewerken" />
     </>
   );
@@ -224,7 +229,7 @@ export default function VaartuigDetail() {
       <div className="flex-1 overflow-auto">
         {breadcrumb}
 
-        <div className="content-stretch flex items-start justify-center relative shrink-0 w-full">
+        <div className="content-stretch flex items-stretch justify-center relative shrink-0 w-full min-h-[calc(100vh-65px)]">
           <div className="flex-[1_0_0] min-h-px min-w-px relative">
             <div className="flex flex-col items-center size-full">
               <div className="content-stretch flex flex-col items-center py-[24px] relative w-full">
@@ -293,7 +298,10 @@ export default function VaartuigDetail() {
           </div>
 
           {/* Right Sidebar */}
-          <VaartuigEigenSidebar id={id!} />
+          {detectedType === 'markt'
+            ? <VaartuigMarktSidebar id={id!} />
+            : <VaartuigEigenSidebar id={id!} />
+          }
         </div>
       </div>
 

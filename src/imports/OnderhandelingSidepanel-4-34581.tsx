@@ -1,11 +1,10 @@
 import svgPaths from "./svg-kcwma38iau";
-// import imgAvatar from "figma:asset/a2737d3b5b234fc04041650cb9f114889c6859da.png";
-const imgAvatar = "";
+import imgAvatar from "../assets/a2737d3b5b234fc04041650cb9f114889c6859da.png";
 
 function TextAndSupportingText() {
   return (
     <div className="content-stretch flex flex-[1_0_0] flex-col gap-[4px] items-start min-h-px min-w-px relative" data-name="Text and supporting text">
-      <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[26px] relative shrink-0 text-[#101828] text-[18px] w-full">Onderhandeling met Rederij Alfa</p>
+      <p className="font-sans font-bold leading-[26px] relative shrink-0 text-[#101828] text-[18px] w-full">Onderhandeling met Rederij Alfa</p>
     </div>
   );
 }
@@ -50,8 +49,8 @@ function AvatarWrap() {
 function TextAndSubtext() {
   return (
     <div className="content-stretch flex flex-[1_0_0] gap-[8px] items-center min-h-px min-w-px relative whitespace-nowrap" data-name="Text and subtext">
-      <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[20px] relative shrink-0 text-[#344054] text-[14px]">Bod goedgekeurd</p>
-      <p className="font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[18px] relative shrink-0 text-[#475467] text-[12px]">6 uur geleden</p>
+      <p className="font-sans font-bold leading-[20px] relative shrink-0 text-[#344054] text-[14px]">Bod goedgekeurd</p>
+      <p className="font-sans font-normal leading-[18px] relative shrink-0 text-[#475467] text-[12px]">6 uur geleden</p>
     </div>
   );
 }
@@ -90,8 +89,8 @@ function TextAndSupportingText1() {
 function TitleAndSubtitle() {
   return (
     <div className="content-stretch flex flex-col items-start justify-center relative shrink-0 w-full whitespace-nowrap" data-name="Title and subtitle">
-      <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[20px] relative shrink-0 text-[14px] text-black">3.000 ton Houtpellets</p>
-      <p className="font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[0] overflow-hidden relative shrink-0 text-[#475467] text-[12px] text-ellipsis">
+      <p className="font-sans font-bold leading-[20px] relative shrink-0 text-[14px] text-black">3.000 ton Houtpellets</p>
+      <p className="font-sans font-normal leading-[0] overflow-hidden relative shrink-0 text-[#475467] text-[12px] text-ellipsis">
         <span className="leading-[18px]">{`€3,50 per ton `}</span>
         <span className="leading-[18px] text-[#079455]">(-20%)</span>
       </p>
@@ -101,7 +100,7 @@ function TitleAndSubtitle() {
 
 function Text() {
   return (
-    <div className="content-stretch flex flex-[1_0_0] font-['Hanken_Grotesk:Regular',sans-serif] font-normal gap-[4px] items-center min-h-px min-w-px relative text-[12px] whitespace-nowrap" data-name="Text">
+    <div className="content-stretch flex flex-[1_0_0] font-sans font-normal gap-[4px] items-center min-h-px min-w-px relative text-[12px] whitespace-nowrap" data-name="Text">
       <p className="flex-[1_0_0] leading-[18px] min-h-px min-w-px overflow-hidden relative text-[#101828] text-ellipsis">Salzgitter Stichkanal</p>
       <div className="flex flex-col justify-center leading-[0] relative shrink-0 text-[#667085]">
         <p className="leading-[18px]">Ma 12 Jan 10:00</p>
@@ -129,7 +128,7 @@ function Row() {
 
 function Text1() {
   return (
-    <div className="content-stretch flex flex-[1_0_0] font-['Hanken_Grotesk:Regular',sans-serif] font-normal gap-[4px] items-center min-h-px min-w-px relative text-[12px] whitespace-nowrap" data-name="Text">
+    <div className="content-stretch flex flex-[1_0_0] font-sans font-normal gap-[4px] items-center min-h-px min-w-px relative text-[12px] whitespace-nowrap" data-name="Text">
       <p className="flex-[1_0_0] leading-[18px] min-h-px min-w-px overflow-hidden relative text-[#101828] text-ellipsis">Hamburg Veddelkanal</p>
       <div className="flex flex-col justify-center leading-[0] relative shrink-0 text-[#667085]">
         <p className="leading-[18px]">Vr 20 Jan</p>
@@ -177,7 +176,7 @@ function Card() {
 function Cell() {
   return (
     <div className="content-stretch flex flex-[1_0_0] h-[18px] items-center min-h-px min-w-px relative" data-name="cell">
-      <p className="flex-[1_0_0] font-['Hanken_Grotesk:Bold',sans-serif] font-bold h-full leading-[18px] min-h-px min-w-px relative text-[#344054] text-[12px]">Wo 4 Feb, 2026</p>
+      <p className="flex-[1_0_0] font-sans font-bold h-full leading-[18px] min-h-px min-w-px relative text-[#344054] text-[12px]">Wo 4 Feb, 2026</p>
     </div>
   );
 }
@@ -185,7 +184,7 @@ function Cell() {
 function Row2() {
   return (
     <div className="content-stretch flex gap-[8px] items-start relative shrink-0 w-full" data-name="row">
-      <p className="font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[18px] relative self-stretch shrink-0 text-[#475467] text-[12px] w-[200px]">Deadline</p>
+      <p className="font-sans font-normal leading-[18px] relative self-stretch shrink-0 text-[#475467] text-[12px] w-[200px]">Deadline</p>
       <Cell />
     </div>
   );
@@ -194,8 +193,8 @@ function Row2() {
 function Cell1() {
   return (
     <div className="content-stretch flex flex-[1_0_0] flex-col items-start justify-center min-h-px min-w-px relative" data-name="cell">
-      <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold relative shrink-0 text-[#344054] w-full">Conform Nederlands Wettelijk</p>
-      <p className="font-['Hanken_Grotesk:Regular',sans-serif] font-normal relative shrink-0 text-[#475467] w-full">Duwbak gelijk aan motorschepen</p>
+      <p className="font-sans font-bold relative shrink-0 text-[#344054] w-full">Conform Nederlands Wettelijk</p>
+      <p className="font-sans font-normal relative shrink-0 text-[#475467] w-full">Duwbak gelijk aan motorschepen</p>
     </div>
   );
 }
@@ -203,7 +202,7 @@ function Cell1() {
 function Row3() {
   return (
     <div className="content-stretch flex gap-[8px] items-start leading-[18px] relative shrink-0 text-[12px] w-full" data-name="row">
-      <p className="font-['Hanken_Grotesk:Regular',sans-serif] font-normal relative self-stretch shrink-0 text-[#475467] w-[200px]">Liggeld laden</p>
+      <p className="font-sans font-normal relative self-stretch shrink-0 text-[#475467] w-[200px]">Liggeld laden</p>
       <Cell1 />
     </div>
   );
@@ -212,7 +211,7 @@ function Row3() {
 function Cell2() {
   return (
     <div className="content-stretch flex flex-[1_0_0] flex-col items-start justify-center min-h-px min-w-px relative" data-name="cell">
-      <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[18px] relative shrink-0 text-[#344054] text-[12px] w-full">Conform Nederlands Wettelijk</p>
+      <p className="font-sans font-bold leading-[18px] relative shrink-0 text-[#344054] text-[12px] w-full">Conform Nederlands Wettelijk</p>
     </div>
   );
 }
@@ -220,7 +219,7 @@ function Cell2() {
 function Row4() {
   return (
     <div className="content-stretch flex gap-[8px] items-start relative shrink-0 w-full" data-name="row">
-      <p className="font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[18px] relative self-stretch shrink-0 text-[#475467] text-[12px] w-[200px]">Lostijd</p>
+      <p className="font-sans font-normal leading-[18px] relative self-stretch shrink-0 text-[#475467] text-[12px] w-[200px]">Lostijd</p>
       <Cell2 />
     </div>
   );
@@ -229,8 +228,8 @@ function Row4() {
 function Cell3() {
   return (
     <div className="content-stretch flex flex-[1_0_0] flex-col items-start justify-center min-h-px min-w-px relative" data-name="cell">
-      <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold relative shrink-0 text-[#344054] w-full">Conform Nederlands Wettelijk</p>
-      <p className="font-['Hanken_Grotesk:Regular',sans-serif] font-normal relative shrink-0 text-[#475467] w-full">Duwbak gelijk aan motorschepen</p>
+      <p className="font-sans font-bold relative shrink-0 text-[#344054] w-full">Conform Nederlands Wettelijk</p>
+      <p className="font-sans font-normal relative shrink-0 text-[#475467] w-full">Duwbak gelijk aan motorschepen</p>
     </div>
   );
 }
@@ -238,7 +237,7 @@ function Cell3() {
 function Row5() {
   return (
     <div className="content-stretch flex gap-[8px] items-start leading-[18px] relative shrink-0 text-[12px] w-full" data-name="row">
-      <p className="font-['Hanken_Grotesk:Regular',sans-serif] font-normal relative self-stretch shrink-0 text-[#475467] w-[200px]">Liggeld lossen</p>
+      <p className="font-sans font-normal relative self-stretch shrink-0 text-[#475467] w-[200px]">Liggeld lossen</p>
       <Cell3 />
     </div>
   );
@@ -247,8 +246,8 @@ function Row5() {
 function Cell4() {
   return (
     <div className="content-stretch flex flex-[1_0_0] flex-col items-start justify-center min-h-px min-w-px relative" data-name="cell">
-      <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold h-[18px] relative shrink-0 text-[#344054] w-full">Basis IJsselkop - m Twentenkanaal</p>
-      <p className="font-['Hanken_Grotesk:Regular',sans-serif] font-normal relative shrink-0 text-[#475467] w-full">2,50m / 10% per dm</p>
+      <p className="font-sans font-bold h-[18px] relative shrink-0 text-[#344054] w-full">Basis IJsselkop - m Twentenkanaal</p>
+      <p className="font-sans font-normal relative shrink-0 text-[#475467] w-full">2,50m / 10% per dm</p>
     </div>
   );
 }
@@ -256,7 +255,7 @@ function Cell4() {
 function Row6() {
   return (
     <div className="content-stretch flex gap-[8px] items-start leading-[18px] relative shrink-0 text-[12px] w-full" data-name="row">
-      <p className="font-['Hanken_Grotesk:Regular',sans-serif] font-normal relative self-stretch shrink-0 text-[#475467] w-[200px]">Laagwater toeslag</p>
+      <p className="font-sans font-normal relative self-stretch shrink-0 text-[#475467] w-[200px]">Laagwater toeslag</p>
       <Cell4 />
     </div>
   );
@@ -265,7 +264,7 @@ function Row6() {
 function TextPadding() {
   return (
     <div className="content-stretch flex items-center justify-center px-[2px] relative shrink-0" data-name="Text padding">
-      <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[20px] relative shrink-0 text-[14px] text-white whitespace-nowrap">Doorsturen naar laadplanning</p>
+      <p className="font-sans font-bold leading-[20px] relative shrink-0 text-[14px] text-white whitespace-nowrap">Doorsturen naar laadplanning</p>
     </div>
   );
 }
@@ -273,7 +272,7 @@ function TextPadding() {
 function TextPadding1() {
   return (
     <div className="content-stretch flex items-center justify-center px-[2px] relative shrink-0" data-name="Text padding">
-      <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[20px] relative shrink-0 text-[#98a2b3] text-[14px] whitespace-nowrap">Doorgestuurd naar laadplanning</p>
+      <p className="font-sans font-bold leading-[20px] relative shrink-0 text-[#98a2b3] text-[14px] whitespace-nowrap">Doorgestuurd naar laadplanning</p>
     </div>
   );
 }
@@ -366,8 +365,8 @@ function AvatarWrap1() {
 function TextAndSubtext1() {
   return (
     <div className="content-stretch flex flex-[1_0_0] gap-[8px] items-center min-h-px min-w-px relative whitespace-nowrap" data-name="Text and subtext">
-      <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[20px] relative shrink-0 text-[#344054] text-[14px]">Bod verstuurd</p>
-      <p className="font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[18px] relative shrink-0 text-[#475467] text-[12px]">6 uur geleden</p>
+      <p className="font-sans font-bold leading-[20px] relative shrink-0 text-[#344054] text-[14px]">Bod verstuurd</p>
+      <p className="font-sans font-normal leading-[18px] relative shrink-0 text-[#475467] text-[12px]">6 uur geleden</p>
     </div>
   );
 }
@@ -408,7 +407,7 @@ function MessageBubble() {
     <div className="relative shrink-0 w-full" data-name="Message bubble">
       <div aria-hidden="true" className="absolute border-[#f2f4f7] border-b border-solid inset-[0_0_-1px_0] pointer-events-none" />
       <div className="content-stretch flex items-start px-[12px] py-[10px] relative w-full">
-        <p className="flex-[1_0_0] font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[20px] min-h-px min-w-px relative text-[#344054] text-[14px]">“Vrachtprijs nog even goed doorgenomen.”</p>
+        <p className="flex-[1_0_0] font-sans font-normal leading-[20px] min-h-px min-w-px relative text-[#344054] text-[14px]">“Vrachtprijs nog even goed doorgenomen.”</p>
       </div>
     </div>
   );
@@ -417,8 +416,8 @@ function MessageBubble() {
 function Cell5() {
   return (
     <div className="content-stretch flex flex-[1_0_0] h-[18px] items-center min-h-px min-w-px relative" data-name="cell">
-      <p className="flex-[1_0_0] font-['Hanken_Grotesk:Bold',sans-serif] font-bold h-full leading-[0] min-h-px min-w-px relative text-[#dc6803] text-[0px] text-[12px]">
-        <span className="[text-decoration-skip-ink:none] decoration-solid font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[18px] line-through text-[#667085]">€3,75 per ton</span>
+      <p className="flex-[1_0_0] font-sans font-bold h-full leading-[0] min-h-px min-w-px relative text-[#dc6803] text-[0px] text-[12px]">
+        <span className="[text-decoration-skip-ink:none] decoration-solid font-sans font-normal leading-[18px] line-through text-[#667085]">€3,75 per ton</span>
         <span className="leading-[18px] text-[#344054]">{` €3,50 per ton`}</span>
       </p>
     </div>
@@ -428,7 +427,7 @@ function Cell5() {
 function Row7() {
   return (
     <div className="content-stretch flex gap-[8px] items-start relative shrink-0 w-full" data-name="row">
-      <p className="font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[18px] relative self-stretch shrink-0 text-[#475467] text-[12px] w-[160px]">Vrachtprijs</p>
+      <p className="font-sans font-normal leading-[18px] relative self-stretch shrink-0 text-[#475467] text-[12px] w-[160px]">Vrachtprijs</p>
       <Cell5 />
     </div>
   );
@@ -501,8 +500,8 @@ function AvatarWrap2() {
 function TextAndSubtext2() {
   return (
     <div className="content-stretch flex flex-[1_0_0] gap-[8px] items-center min-h-px min-w-px relative whitespace-nowrap" data-name="Text and subtext">
-      <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[20px] relative shrink-0 text-[#344054] text-[14px]">Bod bijgewerkt</p>
-      <p className="font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[18px] relative shrink-0 text-[#475467] text-[12px]">6 uur geleden</p>
+      <p className="font-sans font-bold leading-[20px] relative shrink-0 text-[#344054] text-[14px]">Bod bijgewerkt</p>
+      <p className="font-sans font-normal leading-[18px] relative shrink-0 text-[#475467] text-[12px]">6 uur geleden</p>
     </div>
   );
 }
@@ -543,7 +542,7 @@ function MessageBubble1() {
     <div className="relative shrink-0 w-full" data-name="Message bubble">
       <div aria-hidden="true" className="absolute border-[#f2f4f7] border-b border-solid inset-[0_0_-1px_0] pointer-events-none" />
       <div className="content-stretch flex items-start px-[12px] py-[10px] relative w-full">
-        <p className="flex-[1_0_0] font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[20px] min-h-px min-w-px relative text-[#344054] text-[14px]">“Lading aangepast.”</p>
+        <p className="flex-[1_0_0] font-sans font-normal leading-[20px] min-h-px min-w-px relative text-[#344054] text-[14px]">“Lading aangepast.”</p>
       </div>
     </div>
   );
@@ -552,8 +551,8 @@ function MessageBubble1() {
 function Cell6() {
   return (
     <div className="content-stretch flex flex-[1_0_0] h-[18px] items-center min-h-px min-w-px relative" data-name="cell">
-      <p className="flex-[1_0_0] font-['Hanken_Grotesk:Bold',sans-serif] font-bold h-full leading-[0] min-h-px min-w-px relative text-[#dc6803] text-[0px] text-[12px]">
-        <span className="[text-decoration-skip-ink:none] decoration-solid font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[18px] line-through text-[#667085]">2.000 ton Houtpellets</span>
+      <p className="flex-[1_0_0] font-sans font-bold h-full leading-[0] min-h-px min-w-px relative text-[#dc6803] text-[0px] text-[12px]">
+        <span className="[text-decoration-skip-ink:none] decoration-solid font-sans font-normal leading-[18px] line-through text-[#667085]">2.000 ton Houtpellets</span>
         <span className="leading-[18px] text-[#344054]">{` 3.000 ton Houtpellets`}</span>
       </p>
     </div>
@@ -563,7 +562,7 @@ function Cell6() {
 function Row8() {
   return (
     <div className="content-stretch flex gap-[8px] items-start relative shrink-0 w-full" data-name="row">
-      <p className="font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[18px] relative self-stretch shrink-0 text-[#475467] text-[12px] w-[160px]">Lading</p>
+      <p className="font-sans font-normal leading-[18px] relative self-stretch shrink-0 text-[#475467] text-[12px] w-[160px]">Lading</p>
       <Cell6 />
     </div>
   );
@@ -664,8 +663,8 @@ function AvatarWrap3() {
 function TextAndSubtext3() {
   return (
     <div className="content-stretch flex flex-[1_0_0] gap-[8px] items-center min-h-px min-w-px relative whitespace-nowrap" data-name="Text and subtext">
-      <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[20px] relative shrink-0 text-[#344054] text-[14px]">Bod ontvangen</p>
-      <p className="font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[18px] relative shrink-0 text-[#475467] text-[12px]">6 uur geleden</p>
+      <p className="font-sans font-bold leading-[20px] relative shrink-0 text-[#344054] text-[14px]">Bod ontvangen</p>
+      <p className="font-sans font-normal leading-[18px] relative shrink-0 text-[#475467] text-[12px]">6 uur geleden</p>
     </div>
   );
 }
@@ -706,7 +705,7 @@ function MessageBubble2() {
     <div className="relative shrink-0 w-full" data-name="Message bubble">
       <div aria-hidden="true" className="absolute border-[#f2f4f7] border-b border-solid inset-[0_0_-1px_0] pointer-events-none" />
       <div className="content-stretch flex items-start px-[12px] py-[10px] relative w-full">
-        <p className="flex-[1_0_0] font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[20px] min-h-px min-w-px relative text-[#344054] text-[14px]">“Lading toegevoegd.”</p>
+        <p className="flex-[1_0_0] font-sans font-normal leading-[20px] min-h-px min-w-px relative text-[#344054] text-[14px]">“Lading toegevoegd.”</p>
       </div>
     </div>
   );
@@ -715,7 +714,7 @@ function MessageBubble2() {
 function Cell7() {
   return (
     <div className="content-stretch flex flex-[1_0_0] h-[18px] items-center min-h-px min-w-px relative" data-name="cell">
-      <p className="flex-[1_0_0] font-['Hanken_Grotesk:Bold',sans-serif] font-bold h-full leading-[18px] min-h-px min-w-px relative text-[#344054] text-[12px]">2.000 ton Houtpellets</p>
+      <p className="flex-[1_0_0] font-sans font-bold h-full leading-[18px] min-h-px min-w-px relative text-[#344054] text-[12px]">2.000 ton Houtpellets</p>
     </div>
   );
 }
@@ -723,7 +722,7 @@ function Cell7() {
 function Row9() {
   return (
     <div className="content-stretch flex gap-[8px] items-start relative shrink-0 w-full" data-name="row">
-      <p className="font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[18px] relative self-stretch shrink-0 text-[#475467] text-[12px] w-[160px]">Lading</p>
+      <p className="font-sans font-normal leading-[18px] relative self-stretch shrink-0 text-[#475467] text-[12px] w-[160px]">Lading</p>
       <Cell7 />
     </div>
   );
@@ -796,8 +795,8 @@ function AvatarWrap4() {
 function TextAndSubtext4() {
   return (
     <div className="content-stretch flex flex-[1_0_0] gap-[8px] items-center min-h-px min-w-px relative whitespace-nowrap" data-name="Text and subtext">
-      <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[20px] relative shrink-0 text-[#344054] text-[14px]">Bod verstuurd</p>
-      <p className="font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[18px] relative shrink-0 text-[#475467] text-[12px]">6 uur geleden</p>
+      <p className="font-sans font-bold leading-[20px] relative shrink-0 text-[#344054] text-[14px]">Bod verstuurd</p>
+      <p className="font-sans font-normal leading-[18px] relative shrink-0 text-[#475467] text-[12px]">6 uur geleden</p>
     </div>
   );
 }
@@ -838,7 +837,7 @@ function MessageBubble3() {
     <div className="relative shrink-0 w-full" data-name="Message bubble">
       <div aria-hidden="true" className="absolute border-[#f2f4f7] border-b border-solid inset-[0_0_-1px_0] pointer-events-none" />
       <div className="content-stretch flex items-start px-[12px] py-[10px] relative w-full">
-        <p className="flex-[1_0_0] font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[20px] min-h-px min-w-px relative text-[#344054] text-[14px]">“Voor het eerst gesproken.”</p>
+        <p className="flex-[1_0_0] font-sans font-normal leading-[20px] min-h-px min-w-px relative text-[#344054] text-[14px]">“Voor het eerst gesproken.”</p>
       </div>
     </div>
   );
@@ -847,7 +846,7 @@ function MessageBubble3() {
 function Cell8() {
   return (
     <div className="content-stretch flex flex-[1_0_0] flex-col items-start justify-center min-h-px min-w-px relative" data-name="cell">
-      <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold h-[18px] leading-[18px] relative shrink-0 text-[#344054] text-[12px] w-full">€3,50 per ton</p>
+      <p className="font-sans font-bold h-[18px] leading-[18px] relative shrink-0 text-[#344054] text-[12px] w-full">€3,50 per ton</p>
     </div>
   );
 }
@@ -855,7 +854,7 @@ function Cell8() {
 function Row10() {
   return (
     <div className="content-stretch flex gap-[8px] items-start relative shrink-0 w-full" data-name="row">
-      <p className="font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[18px] relative self-stretch shrink-0 text-[#475467] text-[12px] w-[160px]">Vrachtprijs</p>
+      <p className="font-sans font-normal leading-[18px] relative self-stretch shrink-0 text-[#475467] text-[12px] w-[160px]">Vrachtprijs</p>
       <Cell8 />
     </div>
   );
@@ -864,8 +863,8 @@ function Row10() {
 function Cell9() {
   return (
     <div className="content-stretch flex flex-[1_0_0] flex-col items-start justify-center min-h-px min-w-px relative" data-name="cell">
-      <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold h-[18px] relative shrink-0 text-[#344054] w-full">Basis IJsselkop - m Twentenkanaal</p>
-      <p className="font-['Hanken_Grotesk:Regular',sans-serif] font-normal relative shrink-0 text-[#475467] w-full">2,50m / 10% per dm</p>
+      <p className="font-sans font-bold h-[18px] relative shrink-0 text-[#344054] w-full">Basis IJsselkop - m Twentenkanaal</p>
+      <p className="font-sans font-normal relative shrink-0 text-[#475467] w-full">2,50m / 10% per dm</p>
     </div>
   );
 }
@@ -873,7 +872,7 @@ function Cell9() {
 function Row11() {
   return (
     <div className="content-stretch flex gap-[8px] items-start leading-[18px] relative shrink-0 text-[12px] w-full" data-name="row">
-      <p className="font-['Hanken_Grotesk:Regular',sans-serif] font-normal relative self-stretch shrink-0 text-[#475467] w-[160px]">Laagwater toeslag</p>
+      <p className="font-sans font-normal relative self-stretch shrink-0 text-[#475467] w-[160px]">Laagwater toeslag</p>
       <Cell9 />
     </div>
   );
@@ -882,8 +881,8 @@ function Row11() {
 function Cell10() {
   return (
     <div className="content-stretch flex flex-[1_0_0] flex-col items-start justify-center min-h-px min-w-px relative" data-name="cell">
-      <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold relative shrink-0 text-[#344054] w-full">Salzgitter</p>
-      <p className="font-['Hanken_Grotesk:Regular',sans-serif] font-normal relative shrink-0 text-[#475467] w-full">Jan 4, 2025 10:00</p>
+      <p className="font-sans font-bold relative shrink-0 text-[#344054] w-full">Salzgitter</p>
+      <p className="font-sans font-normal relative shrink-0 text-[#475467] w-full">Jan 4, 2025 10:00</p>
     </div>
   );
 }
@@ -891,7 +890,7 @@ function Cell10() {
 function Row12() {
   return (
     <div className="content-stretch flex gap-[8px] items-start leading-[18px] relative shrink-0 text-[12px] w-full" data-name="row">
-      <p className="font-['Hanken_Grotesk:Regular',sans-serif] font-normal relative self-stretch shrink-0 text-[#475467] w-[160px]">Laden</p>
+      <p className="font-sans font-normal relative self-stretch shrink-0 text-[#475467] w-[160px]">Laden</p>
       <Cell10 />
     </div>
   );
@@ -900,8 +899,8 @@ function Row12() {
 function Cell11() {
   return (
     <div className="content-stretch flex flex-[1_0_0] flex-col items-start justify-center min-h-px min-w-px relative" data-name="cell">
-      <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold relative shrink-0 text-[#344054] w-full">IJmuiden</p>
-      <p className="font-['Hanken_Grotesk:Regular',sans-serif] font-normal relative shrink-0 text-[#475467] w-full">Melden bij aankomst</p>
+      <p className="font-sans font-bold relative shrink-0 text-[#344054] w-full">IJmuiden</p>
+      <p className="font-sans font-normal relative shrink-0 text-[#475467] w-full">Melden bij aankomst</p>
     </div>
   );
 }
@@ -909,7 +908,7 @@ function Cell11() {
 function Row13() {
   return (
     <div className="content-stretch flex gap-[8px] items-start leading-[18px] relative shrink-0 text-[12px] w-full" data-name="row">
-      <p className="font-['Hanken_Grotesk:Regular',sans-serif] font-normal relative self-stretch shrink-0 text-[#475467] w-[160px]">Lossen</p>
+      <p className="font-sans font-normal relative self-stretch shrink-0 text-[#475467] w-[160px]">Lossen</p>
       <Cell11 />
     </div>
   );
@@ -984,8 +983,8 @@ function AvatarWrap5() {
 function TextAndSubtext5() {
   return (
     <div className="content-stretch flex flex-[1_0_0] gap-[8px] items-center min-h-px min-w-px relative whitespace-nowrap" data-name="Text and subtext">
-      <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[20px] relative shrink-0 text-[#344054] text-[14px]">Via werklijst</p>
-      <p className="font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[18px] relative shrink-0 text-[#475467] text-[12px]">6 uur geleden</p>
+      <p className="font-sans font-bold leading-[20px] relative shrink-0 text-[#344054] text-[14px]">Via werklijst</p>
+      <p className="font-sans font-normal leading-[18px] relative shrink-0 text-[#475467] text-[12px]">6 uur geleden</p>
     </div>
   );
 }
@@ -1026,7 +1025,7 @@ function MessageBubble4() {
     <div className="relative shrink-0 w-full" data-name="Message bubble">
       <div aria-hidden="true" className="absolute border-[#f2f4f7] border-b border-solid inset-[0_0_-1px_0] pointer-events-none" />
       <div className="content-stretch flex items-start px-[12px] py-[10px] relative w-full">
-        <p className="flex-[1_0_0] font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[20px] min-h-px min-w-px relative text-[#344054] text-[14px] whitespace-pre-wrap">
+        <p className="flex-[1_0_0] font-sans font-normal leading-[20px] min-h-px min-w-px relative text-[#344054] text-[14px] whitespace-pre-wrap">
           “Goedendag,
           <br aria-hidden="true" />
           <br aria-hidden="true" />

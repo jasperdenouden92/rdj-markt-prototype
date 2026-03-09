@@ -11,8 +11,7 @@ import type { Column } from "../components/Table";
 import Button from "../components/Button";
 import NegotiationDialog from "../components/NegotiationDialog";
 import svgPaths from "../../imports/svg-q07ncv0e2v";
-// import imgAvatar from "figma:asset/a2737d3b5b234fc04041650cb9f114889c6859da.png";
-const imgAvatar = "";
+import imgAvatar from "../../assets/a2737d3b5b234fc04041650cb9f114889c6859da.png";
 
 /* ── Status badge mapping ── */
 const statusVariantMap: Record<string, string> = {
@@ -373,7 +372,7 @@ function StatusFilterDropdown({
       >
         <div className="content-stretch flex gap-[4px] items-center justify-center overflow-clip px-[14px] py-[10px] relative rounded-[inherit]">
           <div className="content-stretch flex items-center justify-center px-[2px] relative shrink-0">
-            <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[20px] relative shrink-0 text-[#344054] text-[14px] whitespace-nowrap">
+            <p className="font-sans font-bold leading-[20px] relative shrink-0 text-[#344054] text-[14px] whitespace-nowrap">
               {displayLabel}
             </p>
           </div>
@@ -425,7 +424,7 @@ function StatusFilterDropdown({
                     onSelect(option.value);
                     setIsOpen(false);
                   }}
-                  className={`w-full text-left px-[14px] py-[10px] font-['Hanken_Grotesk:Regular',sans-serif] font-normal text-[14px] leading-[20px] hover:bg-rdj-bg-secondary transition-colors cursor-pointer whitespace-nowrap ${
+                  className={`w-full text-left px-[14px] py-[10px] font-sans font-normal text-[14px] leading-[20px] hover:bg-rdj-bg-secondary transition-colors cursor-pointer whitespace-nowrap ${
                     option.value === value
                       ? "text-[#1567a4] bg-[#f0f7fc]"
                       : "text-[#344054]"
@@ -812,7 +811,7 @@ export default function Onderhandelingen() {
                     </div>
                   </div>
                 </div>
-                <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[20px] relative shrink-0 text-[#145990] text-[14px] whitespace-nowrap">
+                <p className="font-sans font-bold leading-[20px] relative shrink-0 text-[#145990] text-[14px] whitespace-nowrap">
                   Filter
                 </p>
               </button>
@@ -820,7 +819,7 @@ export default function Onderhandelingen() {
           }
           filtersRight={
             <>
-              <p className="font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[20px] text-[#344054] text-[14px]">
+              <p className="font-sans font-normal leading-[20px] text-[#344054] text-[14px]">
                 Groeperen op regio
               </p>
               <div className="bg-white h-[40px] relative rounded-[6px] shrink-0 max-w-[320px] w-full">
@@ -855,7 +854,7 @@ export default function Onderhandelingen() {
                           setSearchQuery(e.target.value);
                           setCurrentPage(1);
                         }}
-                        className="flex-[1_0_0] font-['Hanken_Grotesk:Regular',sans-serif] font-normal h-[18px] leading-[20px] min-h-px min-w-px overflow-hidden text-[#667085] text-[14px] text-ellipsis text-left whitespace-nowrap outline-none border-0 bg-transparent"
+                        className="flex-[1_0_0] font-sans font-normal h-[18px] leading-[20px] min-h-px min-w-px overflow-hidden text-[#667085] text-[14px] text-ellipsis text-left whitespace-nowrap outline-none border-0 bg-transparent"
                       />
                     </div>
                   </div>

@@ -1,14 +1,9 @@
 import svgPaths from "./svg-3yp6dq55tt";
-// import imgMarktBevrachtingLadingDetailOnderhandelingenDesktop from "figma:asset/a2737d3b5b234fc04041650cb9f114889c6859da.png";
-const imgMarktBevrachtingLadingDetailOnderhandelingenDesktop = "";
-// import imgMarktBevrachtingLadingDetailOnderhandelingenDesktop1 from "figma:asset/3627de284acb374a4d9313b3c2dbaeeb87a48224.png";
-const imgMarktBevrachtingLadingDetailOnderhandelingenDesktop1 = "";
-// import imgMarktBevrachtingLadingDetailOnderhandelingenDesktop2 from "figma:asset/e7809035038b3816de2a1d67c5de86ebeed325d0.png";
-const imgMarktBevrachtingLadingDetailOnderhandelingenDesktop2 = "";
-// import imgMarktBevrachtingLadingDetailOnderhandelingenDesktop3 from "figma:asset/bf485cb6f98c12534c69bc81459ce34f2e24e4a8.png";
-const imgMarktBevrachtingLadingDetailOnderhandelingenDesktop3 = "";
-// import imgMarktBevrachtingLadingDetailOnderhandelingenDesktop4 from "figma:asset/9e45f45f537bea4bf653bc0307471e5ff5545f63.png";
-const imgMarktBevrachtingLadingDetailOnderhandelingenDesktop4 = "";
+import imgMarktBevrachtingLadingDetailOnderhandelingenDesktop from "../assets/a2737d3b5b234fc04041650cb9f114889c6859da.png";
+import imgMarktBevrachtingLadingDetailOnderhandelingenDesktop1 from "../assets/3627de284acb374a4d9313b3c2dbaeeb87a48224.png";
+import imgMarktBevrachtingLadingDetailOnderhandelingenDesktop2 from "../assets/e7809035038b3816de2a1d67c5de86ebeed325d0.png";
+import imgMarktBevrachtingLadingDetailOnderhandelingenDesktop3 from "../assets/bf485cb6f98c12534c69bc81459ce34f2e24e4a8.png";
+import imgMarktBevrachtingLadingDetailOnderhandelingenDesktop4 from "../assets/9e45f45f537bea4bf653bc0307471e5ff5545f63.png";
 
 export default function MarktBevrachtingLadingDetailOnderhandelingenDesktop() {
   return (
@@ -51,7 +46,7 @@ export default function MarktBevrachtingLadingDetailOnderhandelingenDesktop() {
                             </div>
                           </div>
                         </div>
-                        <p className="font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[18px] relative shrink-0 text-[#344054] text-[12px] whitespace-nowrap">Lading</p>
+                        <p className="font-sans font-normal leading-[18px] relative shrink-0 text-[#344054] text-[12px] whitespace-nowrap">Lading</p>
                       </div>
                       <div className="content-stretch flex flex-col gap-[4px] items-center relative shrink-0" data-name="Item">
                         <div className="content-stretch flex items-center justify-center overflow-clip p-[8px] relative rounded-[4px] shrink-0 size-[40px]" data-name="_Nav item button">
@@ -65,7 +60,7 @@ export default function MarktBevrachtingLadingDetailOnderhandelingenDesktop() {
                             </div>
                           </div>
                         </div>
-                        <p className="font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[18px] relative shrink-0 text-[#344054] text-[12px] whitespace-nowrap">Vloot</p>
+                        <p className="font-sans font-normal leading-[18px] relative shrink-0 text-[#344054] text-[12px] whitespace-nowrap">Vloot</p>
                       </div>
                       <div className="content-stretch flex flex-col gap-[4px] items-center relative shrink-0 w-full" data-name="Item">
                         <div className="content-stretch flex items-center justify-center overflow-clip p-[8px] relative rounded-[4px] shrink-0" data-name="_Nav item button">
@@ -79,7 +74,7 @@ export default function MarktBevrachtingLadingDetailOnderhandelingenDesktop() {
                             </div>
                           </div>
                         </div>
-                        <p className="font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[18px] relative shrink-0 text-[#344054] text-[12px] whitespace-nowrap">Planning</p>
+                        <p className="font-sans font-normal leading-[18px] relative shrink-0 text-[#344054] text-[12px] whitespace-nowrap">Planning</p>
                       </div>
                       <div className="content-stretch flex flex-col gap-[4px] items-center relative shrink-0" data-name="Item">
                         <div className="bg-[#e3effb] content-stretch flex items-center justify-center overflow-clip p-[8px] relative rounded-[4px] shrink-0 size-[40px]" data-name="_Nav item button">
@@ -93,7 +88,7 @@ export default function MarktBevrachtingLadingDetailOnderhandelingenDesktop() {
                             </div>
                           </div>
                         </div>
-                        <p className="font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[18px] relative shrink-0 text-[#344054] text-[12px] whitespace-nowrap">Markt</p>
+                        <p className="font-sans font-normal leading-[18px] relative shrink-0 text-[#344054] text-[12px] whitespace-nowrap">Markt</p>
                       </div>
                       <div className="content-stretch flex flex-col gap-[4px] items-center relative shrink-0" data-name="Item">
                         <div className="content-stretch flex items-center justify-center overflow-clip p-[8px] relative rounded-[4px] shrink-0 size-[40px]" data-name="_Nav item button">
@@ -107,7 +102,7 @@ export default function MarktBevrachtingLadingDetailOnderhandelingenDesktop() {
                             </div>
                           </div>
                         </div>
-                        <p className="font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[18px] relative shrink-0 text-[#344054] text-[12px] whitespace-nowrap">Backoffice</p>
+                        <p className="font-sans font-normal leading-[18px] relative shrink-0 text-[#344054] text-[12px] whitespace-nowrap">Backoffice</p>
                       </div>
                       <div className="content-stretch flex flex-col gap-[4px] items-center relative shrink-0" data-name="Item">
                         <div className="content-stretch flex items-center justify-center overflow-clip p-[8px] relative rounded-[4px] shrink-0 size-[40px]" data-name="_Nav item button">
@@ -121,7 +116,7 @@ export default function MarktBevrachtingLadingDetailOnderhandelingenDesktop() {
                             </div>
                           </div>
                         </div>
-                        <p className="font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[18px] relative shrink-0 text-[#344054] text-[12px] whitespace-nowrap">Relaties</p>
+                        <p className="font-sans font-normal leading-[18px] relative shrink-0 text-[#344054] text-[12px] whitespace-nowrap">Relaties</p>
                       </div>
                     </div>
                   </div>
@@ -166,7 +161,7 @@ export default function MarktBevrachtingLadingDetailOnderhandelingenDesktop() {
                       <div className="flex-[1_0_0] min-h-px min-w-px relative rounded-[4px]" data-name="Content">
                         <div className="flex flex-row items-center size-full">
                           <div className="content-stretch flex items-center px-[8px] py-[9px] relative w-full">
-                            <p className="flex-[1_0_0] font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[20px] min-h-px min-w-px relative text-[#344054] text-[14px]">Alle statussen</p>
+                            <p className="flex-[1_0_0] font-sans font-bold leading-[20px] min-h-px min-w-px relative text-[#344054] text-[14px]">Alle statussen</p>
                           </div>
                         </div>
                       </div>
@@ -179,7 +174,7 @@ export default function MarktBevrachtingLadingDetailOnderhandelingenDesktop() {
                       <div className="flex-[1_0_0] min-h-px min-w-px relative rounded-[4px]" data-name="Content">
                         <div className="flex flex-row items-center size-full">
                           <div className="content-stretch flex items-center px-[8px] py-[9px] relative w-full">
-                            <p className="flex-[1_0_0] font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[20px] min-h-px min-w-px relative text-[#344054] text-[14px]">Te verdelen</p>
+                            <p className="flex-[1_0_0] font-sans font-bold leading-[20px] min-h-px min-w-px relative text-[#344054] text-[14px]">Te verdelen</p>
                           </div>
                         </div>
                       </div>
@@ -192,7 +187,7 @@ export default function MarktBevrachtingLadingDetailOnderhandelingenDesktop() {
                       <div className="flex-[1_0_0] min-h-px min-w-px relative rounded-[4px]" data-name="Content">
                         <div className="flex flex-row items-center size-full">
                           <div className="content-stretch flex items-center px-[8px] py-[9px] relative w-full">
-                            <p className="flex-[1_0_0] font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[20px] min-h-px min-w-px relative text-[#344054] text-[14px]">Afgerond</p>
+                            <p className="flex-[1_0_0] font-sans font-bold leading-[20px] min-h-px min-w-px relative text-[#344054] text-[14px]">Afgerond</p>
                           </div>
                         </div>
                       </div>
@@ -209,7 +204,7 @@ export default function MarktBevrachtingLadingDetailOnderhandelingenDesktop() {
                 <div className="content-stretch flex items-center pl-[24px] relative shrink-0" data-name="Breadcrumbs">
                   <div className="content-stretch flex gap-[8px] items-center relative shrink-0" data-name="Tabs">
                     <div className="content-stretch flex items-center justify-center p-[4px] relative rounded-[6px] shrink-0" data-name="_Breadcrumb button base">
-                      <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[20px] relative shrink-0 text-[#475467] text-[14px] whitespace-nowrap">Markt</p>
+                      <p className="font-sans font-bold leading-[20px] relative shrink-0 text-[#475467] text-[14px] whitespace-nowrap">Markt</p>
                     </div>
                     <div className="overflow-clip relative shrink-0 size-[16px]" data-name="chevron-right">
                       <div className="absolute bottom-1/4 left-[37.5%] right-[37.5%] top-1/4" data-name="Icon">
@@ -221,7 +216,7 @@ export default function MarktBevrachtingLadingDetailOnderhandelingenDesktop() {
                       </div>
                     </div>
                     <div className="content-stretch flex items-center justify-center px-[8px] py-[4px] relative rounded-[6px] shrink-0" data-name="_Breadcrumb button base">
-                      <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[20px] relative shrink-0 text-[#475467] text-[14px] whitespace-nowrap">Bevrachting</p>
+                      <p className="font-sans font-bold leading-[20px] relative shrink-0 text-[#475467] text-[14px] whitespace-nowrap">Bevrachting</p>
                     </div>
                     <div className="overflow-clip relative shrink-0 size-[16px]" data-name="chevron-right">
                       <div className="absolute bottom-1/4 left-[37.5%] right-[37.5%] top-1/4" data-name="Icon">
@@ -233,7 +228,7 @@ export default function MarktBevrachtingLadingDetailOnderhandelingenDesktop() {
                       </div>
                     </div>
                     <div className="bg-[#f9fafb] content-stretch flex items-center justify-center px-[8px] py-[4px] relative rounded-[6px] shrink-0" data-name="_Breadcrumb button base">
-                      <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[20px] relative shrink-0 text-[#344054] text-[14px] whitespace-nowrap">CRG164-01</p>
+                      <p className="font-sans font-bold leading-[20px] relative shrink-0 text-[#344054] text-[14px] whitespace-nowrap">CRG164-01</p>
                     </div>
                   </div>
                 </div>
@@ -283,7 +278,7 @@ export default function MarktBevrachtingLadingDetailOnderhandelingenDesktop() {
                         <div className="content-start flex flex-wrap gap-[20px_16px] items-start relative shrink-0 w-full" data-name="Content">
                           <div className="content-stretch flex flex-[1_0_0] flex-col gap-[4px] items-start min-h-px min-w-[320px] relative" data-name="Text and supporting text">
                             <div className="content-stretch flex gap-[12px] items-center relative shrink-0 w-full">
-                              <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[38px] relative shrink-0 text-[#101828] text-[30px] whitespace-nowrap">Cargill N.V. - Theadora Oldendorff</p>
+                              <p className="font-sans font-bold leading-[38px] relative shrink-0 text-[#101828] text-[30px] whitespace-nowrap">Cargill N.V. - Theadora Oldendorff</p>
                               <div className="bg-white content-stretch flex gap-[6px] items-center px-[8px] py-[2px] relative rounded-[4px] shrink-0" data-name="Badge">
                                 <div aria-hidden="true" className="absolute border border-[#d0d5dd] border-solid inset-0 pointer-events-none rounded-[4px]" />
                                 <div className="relative shrink-0 size-[8px]" data-name="_Dot">
@@ -293,15 +288,15 @@ export default function MarktBevrachtingLadingDetailOnderhandelingenDesktop() {
                                     </svg>
                                   </div>
                                 </div>
-                                <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[20px] relative shrink-0 text-[#344054] text-[14px] text-center whitespace-nowrap">In de markt</p>
+                                <p className="font-sans font-bold leading-[20px] relative shrink-0 text-[#344054] text-[14px] text-center whitespace-nowrap">In de markt</p>
                               </div>
                             </div>
-                            <p className="font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[0] relative shrink-0 text-[#475467] text-[0px] text-[16px] w-full">
-                              <span className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[24px]">2.000 ton Houtpellets</span>
+                            <p className="font-sans font-normal leading-[0] relative shrink-0 text-[#475467] text-[0px] text-[16px] w-full">
+                              <span className="font-sans font-bold leading-[24px]">2.000 ton Houtpellets</span>
                               <span className="leading-[24px]">{` vanuit `}</span>
-                              <span className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[24px]">Rotterdam (Do 15 Jan)</span>
+                              <span className="font-sans font-bold leading-[24px]">Rotterdam (Do 15 Jan)</span>
                               <span className="leading-[24px]">{` naar `}</span>
-                              <span className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[24px]">Mannheim (Af te stemmen)</span>
+                              <span className="font-sans font-bold leading-[24px]">Mannheim (Af te stemmen)</span>
                             </p>
                           </div>
                           <div className="content-stretch flex gap-[12px] items-center relative shrink-0" data-name="Actions">
@@ -317,7 +312,7 @@ export default function MarktBevrachtingLadingDetailOnderhandelingenDesktop() {
                                   </div>
                                 </div>
                                 <div className="content-stretch flex items-center justify-center px-[2px] relative shrink-0" data-name="Text padding">
-                                  <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[20px] relative shrink-0 text-[#b42318] text-[14px] whitespace-nowrap">Uit markt halen</p>
+                                  <p className="font-sans font-bold leading-[20px] relative shrink-0 text-[#b42318] text-[14px] whitespace-nowrap">Uit markt halen</p>
                                 </div>
                               </div>
                               <div aria-hidden="true" className="absolute border border-[#d0d5dd] border-solid inset-0 pointer-events-none rounded-[6px] shadow-[0px_1px_2px_0px_rgba(16,24,40,0.05)]" />
@@ -325,7 +320,7 @@ export default function MarktBevrachtingLadingDetailOnderhandelingenDesktop() {
                             <div className="bg-[#1567a4] relative rounded-[6px] shrink-0" data-name="Button">
                               <div className="content-stretch flex gap-[4px] items-center justify-center overflow-clip px-[14px] py-[10px] relative rounded-[inherit]">
                                 <div className="content-stretch flex items-center justify-center px-[2px] relative shrink-0" data-name="Text padding">
-                                  <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[20px] relative shrink-0 text-[14px] text-white whitespace-nowrap">Bewerken</p>
+                                  <p className="font-sans font-bold leading-[20px] relative shrink-0 text-[14px] text-white whitespace-nowrap">Bewerken</p>
                                 </div>
                               </div>
                               <div aria-hidden="true" className="absolute border border-[#1567a4] border-solid inset-0 pointer-events-none rounded-[6px] shadow-[0px_1px_2px_0px_rgba(16,24,40,0.05)]" />
@@ -335,22 +330,22 @@ export default function MarktBevrachtingLadingDetailOnderhandelingenDesktop() {
                             <div aria-hidden="true" className="absolute border-[#eaecf0] border-b border-solid inset-0 pointer-events-none" />
                             <div className="content-stretch flex gap-[12px] items-center relative shrink-0 w-full" data-name="Tabs">
                               <div className="content-stretch flex gap-[8px] h-[32px] items-center justify-center pb-[12px] px-[4px] relative shrink-0" data-name="Tab button base">
-                                <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[20px] relative shrink-0 text-[#667085] text-[14px] whitespace-nowrap">Matches</p>
+                                <p className="font-sans font-bold leading-[20px] relative shrink-0 text-[#667085] text-[14px] whitespace-nowrap">Matches</p>
                                 <div className="bg-[#f9fafb] content-stretch flex items-center px-[8px] py-[2px] relative rounded-[9999px] shrink-0" data-name="Badge">
                                   <div aria-hidden="true" className="absolute border border-[#eaecf0] border-solid inset-0 pointer-events-none rounded-[9999px]" />
-                                  <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[18px] relative shrink-0 text-[#344054] text-[12px] text-center whitespace-nowrap">5</p>
+                                  <p className="font-sans font-bold leading-[18px] relative shrink-0 text-[#344054] text-[12px] text-center whitespace-nowrap">5</p>
                                 </div>
                               </div>
                               <div className="content-stretch flex gap-[8px] h-[32px] items-center justify-center pb-[12px] px-[4px] relative shrink-0" data-name="Tab button base">
                                 <div aria-hidden="true" className="absolute border-[#1567a4] border-b-2 border-solid inset-0 pointer-events-none" />
-                                <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[20px] relative shrink-0 text-[#145990] text-[14px] whitespace-nowrap">Onderhandelingen</p>
+                                <p className="font-sans font-bold leading-[20px] relative shrink-0 text-[#145990] text-[14px] whitespace-nowrap">Onderhandelingen</p>
                                 <div className="bg-[#f2f8fd] content-stretch flex items-center px-[8px] py-[2px] relative rounded-[9999px] shrink-0" data-name="Badge">
                                   <div aria-hidden="true" className="absolute border border-[#c1dff6] border-solid inset-0 pointer-events-none rounded-[9999px]" />
-                                  <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[18px] relative shrink-0 text-[#145990] text-[12px] text-center whitespace-nowrap">1</p>
+                                  <p className="font-sans font-bold leading-[18px] relative shrink-0 text-[#145990] text-[12px] text-center whitespace-nowrap">1</p>
                                 </div>
                               </div>
                               <div className="content-stretch flex h-[32px] items-center justify-center pb-[12px] px-[4px] relative shrink-0" data-name="Tab button base">
-                                <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[20px] relative shrink-0 text-[#667085] text-[14px] whitespace-nowrap">Activiteit</p>
+                                <p className="font-sans font-bold leading-[20px] relative shrink-0 text-[#667085] text-[14px] whitespace-nowrap">Activiteit</p>
                               </div>
                             </div>
                           </div>
@@ -361,11 +356,11 @@ export default function MarktBevrachtingLadingDetailOnderhandelingenDesktop() {
                       <div className="content-stretch flex gap-[16px] items-center relative shrink-0 w-full z-[2]" data-name="Content">
                         <div className="flex flex-[1_0_0] flex-row items-center self-stretch">
                           <div className="content-stretch flex flex-[1_0_0] flex-col gap-[4px] h-full items-start justify-center min-h-px min-w-px relative" data-name="Text and supporting text">
-                            <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[26px] relative shrink-0 text-[#101828] text-[18px] w-full">Onderhandelingen</p>
+                            <p className="font-sans font-bold leading-[26px] relative shrink-0 text-[#101828] text-[18px] w-full">Onderhandelingen</p>
                           </div>
                         </div>
                         <div className="content-stretch flex gap-[6px] items-center justify-center overflow-clip relative shrink-0" data-name="Buttons/Button">
-                          <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[20px] relative shrink-0 text-[#145990] text-[14px] whitespace-nowrap">Actieve onderhandelingen</p>
+                          <p className="font-sans font-bold leading-[20px] relative shrink-0 text-[#145990] text-[14px] whitespace-nowrap">Actieve onderhandelingen</p>
                           <div className="overflow-clip relative shrink-0 size-[20px]" data-name="chevron-down">
                             <div className="absolute bottom-[37.5%] left-1/4 right-1/4 top-[37.5%]" data-name="Icon">
                               <div className="absolute inset-[-16.67%_-8.33%]">
@@ -394,14 +389,14 @@ export default function MarktBevrachtingLadingDetailOnderhandelingenDesktop() {
                     </div>
                     <div className="content-stretch flex items-center justify-between max-w-[1116px] py-[20px] relative shrink-0 w-full" data-name="Pagination">
                       <div className="content-stretch flex gap-[8px] items-center relative shrink-0" data-name="Amount">
-                        <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[20px] relative shrink-0 text-[#344054] text-[14px] whitespace-nowrap">Regels per pagina</p>
+                        <p className="font-sans font-bold leading-[20px] relative shrink-0 text-[#344054] text-[14px] whitespace-nowrap">Regels per pagina</p>
                         <button className="content-stretch cursor-pointer flex flex-col gap-[8px] items-start relative shrink-0 w-[80px]" data-name="Input dropdown">
                           <div className="content-stretch flex flex-col gap-[6px] items-start relative shrink-0 w-full" data-name="Input with label">
                             <div className="bg-white relative rounded-[6px] shrink-0 w-full" data-name="Input">
                               <div className="flex flex-row items-center overflow-clip rounded-[inherit] size-full">
                                 <div className="content-stretch flex gap-[8px] items-center px-[12px] py-[8px] relative w-full">
                                   <div className="content-stretch flex flex-[1_0_0] gap-[8px] items-center min-h-px min-w-px relative" data-name="Content">
-                                    <p className="font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[20px] relative shrink-0 text-[#101828] text-[14px] text-left whitespace-nowrap">50</p>
+                                    <p className="font-sans font-normal leading-[20px] relative shrink-0 text-[#101828] text-[14px] text-left whitespace-nowrap">50</p>
                                   </div>
                                   <div className="overflow-clip relative shrink-0 size-[20px]" data-name="chevron-down">
                                     <div className="absolute bottom-[37.5%] left-1/4 right-1/4 top-[37.5%]" data-name="Icon">
@@ -420,7 +415,7 @@ export default function MarktBevrachtingLadingDetailOnderhandelingenDesktop() {
                         </button>
                       </div>
                       <div className="content-stretch flex gap-[12px] items-center relative shrink-0" data-name="Navigation">
-                        <p className="font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[0] relative shrink-0 text-[#344054] text-[0px] text-[14px] whitespace-nowrap">
+                        <p className="font-sans font-normal leading-[0] relative shrink-0 text-[#344054] text-[0px] text-[14px] whitespace-nowrap">
                           <span className="leading-[20px]">1</span>
                           <span className="leading-[20px]">{` tot 5`}</span>
                           <span className="leading-[20px]">0</span>
@@ -441,14 +436,14 @@ export default function MarktBevrachtingLadingDetailOnderhandelingenDesktop() {
                           </div>
                         </div>
                         <div className="content-stretch flex gap-[8px] items-center relative shrink-0" data-name="Page dropdown">
-                          <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[20px] relative shrink-0 text-[#344054] text-[14px] whitespace-nowrap">Pagina</p>
+                          <p className="font-sans font-bold leading-[20px] relative shrink-0 text-[#344054] text-[14px] whitespace-nowrap">Pagina</p>
                           <button className="content-stretch cursor-pointer flex flex-col gap-[8px] items-start relative shrink-0 w-[64px]" data-name="Input dropdown">
                             <div className="content-stretch flex flex-col gap-[6px] items-start relative shrink-0 w-full" data-name="Input with label">
                               <div className="bg-white relative rounded-[6px] shrink-0 w-full" data-name="Input">
                                 <div className="flex flex-row items-center overflow-clip rounded-[inherit] size-full">
                                   <div className="content-stretch flex gap-[8px] items-center px-[12px] py-[8px] relative w-full">
                                     <div className="content-stretch flex flex-[1_0_0] gap-[8px] items-center min-h-px min-w-px relative" data-name="Content">
-                                      <p className="font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[20px] relative shrink-0 text-[#101828] text-[14px] text-left whitespace-nowrap">1</p>
+                                      <p className="font-sans font-normal leading-[20px] relative shrink-0 text-[#101828] text-[14px] text-left whitespace-nowrap">1</p>
                                     </div>
                                     <div className="overflow-clip relative shrink-0 size-[20px]" data-name="chevron-down">
                                       <div className="absolute bottom-[37.5%] left-1/4 right-1/4 top-[37.5%]" data-name="Icon">
@@ -465,7 +460,7 @@ export default function MarktBevrachtingLadingDetailOnderhandelingenDesktop() {
                               </div>
                             </div>
                           </button>
-                          <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[20px] relative shrink-0 text-[#344054] text-[14px] whitespace-nowrap">van 10</p>
+                          <p className="font-sans font-bold leading-[20px] relative shrink-0 text-[#344054] text-[14px] whitespace-nowrap">van 10</p>
                         </div>
                         <div className="content-stretch flex h-[20px] items-center justify-end relative shrink-0" data-name="Button wrap">
                           <div className="content-stretch flex items-center justify-center overflow-clip p-[8px] relative rounded-[6px] shrink-0" data-name="Buttons/Button">
@@ -489,7 +484,7 @@ export default function MarktBevrachtingLadingDetailOnderhandelingenDesktop() {
                           <div className="flex flex-row items-center size-full">
                             <div className="content-stretch flex items-center px-[16px] py-[12px] relative size-full">
                               <div className="content-stretch flex items-center relative shrink-0" data-name="Table header">
-                                <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[18px] relative shrink-0 text-[#475467] text-[12px] whitespace-nowrap">Relatie</p>
+                                <p className="font-sans font-bold leading-[18px] relative shrink-0 text-[#475467] text-[12px] whitespace-nowrap">Relatie</p>
                               </div>
                             </div>
                           </div>
@@ -498,7 +493,7 @@ export default function MarktBevrachtingLadingDetailOnderhandelingenDesktop() {
                           <div aria-hidden="true" className="absolute border-[#eaecf0] border-b border-solid inset-0 pointer-events-none" />
                           <div className="flex flex-row items-center size-full">
                             <div className="content-stretch flex gap-[8px] items-center p-[16px] relative size-full">
-                              <p className="flex-[1_0_0] font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[20px] min-h-px min-w-px relative text-[#101828] text-[14px]">{`Janson & Janson B.V.`}</p>
+                              <p className="flex-[1_0_0] font-sans font-bold leading-[20px] min-h-px min-w-px relative text-[#101828] text-[14px]">{`Janson & Janson B.V.`}</p>
                             </div>
                           </div>
                         </div>
@@ -506,7 +501,7 @@ export default function MarktBevrachtingLadingDetailOnderhandelingenDesktop() {
                           <div aria-hidden="true" className="absolute border-[#eaecf0] border-b border-solid inset-0 pointer-events-none" />
                           <div className="flex flex-row items-center size-full">
                             <div className="content-stretch flex gap-[8px] items-center p-[16px] relative size-full">
-                              <p className="flex-[1_0_0] font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[20px] min-h-px min-w-px relative text-[#101828] text-[14px]">De Volharding C.V.</p>
+                              <p className="flex-[1_0_0] font-sans font-bold leading-[20px] min-h-px min-w-px relative text-[#101828] text-[14px]">De Volharding C.V.</p>
                             </div>
                           </div>
                         </div>
@@ -514,7 +509,7 @@ export default function MarktBevrachtingLadingDetailOnderhandelingenDesktop() {
                           <div aria-hidden="true" className="absolute border-[#eaecf0] border-b border-solid inset-0 pointer-events-none" />
                           <div className="flex flex-row items-center size-full">
                             <div className="content-stretch flex gap-[8px] items-center p-[16px] relative size-full">
-                              <p className="flex-[1_0_0] font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[20px] min-h-px min-w-px relative text-[#101828] text-[14px]">Rederij Alfa</p>
+                              <p className="flex-[1_0_0] font-sans font-bold leading-[20px] min-h-px min-w-px relative text-[#101828] text-[14px]">Rederij Alfa</p>
                             </div>
                           </div>
                         </div>
@@ -523,12 +518,12 @@ export default function MarktBevrachtingLadingDetailOnderhandelingenDesktop() {
                           <div className="flex flex-row items-center size-full">
                             <div className="content-stretch flex gap-[8px] items-center p-[16px] relative size-full">
                               <div className="content-stretch flex flex-col items-start relative shrink-0" data-name="Text and supporting text">
-                                <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[20px] relative shrink-0 text-[#101828] text-[14px] whitespace-nowrap">Rederij Abel</p>
+                                <p className="font-sans font-bold leading-[20px] relative shrink-0 text-[#101828] text-[14px] whitespace-nowrap">Rederij Abel</p>
                               </div>
                               <div className="-translate-y-1/2 absolute bg-white right-[16px] rounded-[6px] top-1/2" data-name="Buttons/Button">
                                 <div className="content-stretch flex gap-[4px] items-center justify-center overflow-clip px-[12px] py-[8px] relative rounded-[inherit]">
                                   <div className="content-stretch flex items-center justify-center px-[2px] relative shrink-0" data-name="Text padding">
-                                    <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[20px] relative shrink-0 text-[#145990] text-[14px] whitespace-nowrap">Openen</p>
+                                    <p className="font-sans font-bold leading-[20px] relative shrink-0 text-[#145990] text-[14px] whitespace-nowrap">Openen</p>
                                   </div>
                                 </div>
                                 <div aria-hidden="true" className="absolute border border-[#d0d5dd] border-solid inset-0 pointer-events-none rounded-[6px] shadow-[0px_1px_2px_0px_rgba(16,24,40,0.05)]" />
@@ -540,7 +535,7 @@ export default function MarktBevrachtingLadingDetailOnderhandelingenDesktop() {
                           <div aria-hidden="true" className="absolute border-[#eaecf0] border-b border-solid inset-0 pointer-events-none" />
                           <div className="flex flex-row items-center size-full">
                             <div className="content-stretch flex gap-[8px] items-center p-[16px] relative size-full">
-                              <p className="flex-[1_0_0] font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[20px] min-h-px min-w-px relative text-[#101828] text-[14px]">Vaart Wel B.V.</p>
+                              <p className="flex-[1_0_0] font-sans font-bold leading-[20px] min-h-px min-w-px relative text-[#101828] text-[14px]">Vaart Wel B.V.</p>
                             </div>
                           </div>
                         </div>
@@ -548,7 +543,7 @@ export default function MarktBevrachtingLadingDetailOnderhandelingenDesktop() {
                           <div aria-hidden="true" className="absolute border-[#eaecf0] border-b border-solid inset-0 pointer-events-none" />
                           <div className="flex flex-row items-center size-full">
                             <div className="content-stretch flex gap-[8px] items-center p-[16px] relative size-full">
-                              <p className="flex-[1_0_0] font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[20px] min-h-px min-w-px relative text-[#101828] text-[14px]">Flevo Shipping</p>
+                              <p className="flex-[1_0_0] font-sans font-bold leading-[20px] min-h-px min-w-px relative text-[#101828] text-[14px]">Flevo Shipping</p>
                             </div>
                           </div>
                         </div>
@@ -556,7 +551,7 @@ export default function MarktBevrachtingLadingDetailOnderhandelingenDesktop() {
                           <div aria-hidden="true" className="absolute border-[#eaecf0] border-b border-solid inset-0 pointer-events-none" />
                           <div className="flex flex-row items-center size-full">
                             <div className="content-stretch flex gap-[8px] items-center p-[16px] relative size-full">
-                              <p className="flex-[1_0_0] font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[20px] min-h-px min-w-px relative text-[#101828] text-[14px]">De Blauwe Golf B.V.</p>
+                              <p className="flex-[1_0_0] font-sans font-bold leading-[20px] min-h-px min-w-px relative text-[#101828] text-[14px]">De Blauwe Golf B.V.</p>
                             </div>
                           </div>
                         </div>
@@ -564,7 +559,7 @@ export default function MarktBevrachtingLadingDetailOnderhandelingenDesktop() {
                           <div aria-hidden="true" className="absolute border-[#eaecf0] border-b border-solid inset-0 pointer-events-none" />
                           <div className="flex flex-row items-center size-full">
                             <div className="content-stretch flex gap-[8px] items-center p-[16px] relative size-full">
-                              <p className="flex-[1_0_0] font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[20px] min-h-px min-w-px relative text-[#101828] text-[14px]">IJsseldelta Transport</p>
+                              <p className="flex-[1_0_0] font-sans font-bold leading-[20px] min-h-px min-w-px relative text-[#101828] text-[14px]">IJsseldelta Transport</p>
                             </div>
                           </div>
                         </div>
@@ -572,7 +567,7 @@ export default function MarktBevrachtingLadingDetailOnderhandelingenDesktop() {
                           <div aria-hidden="true" className="absolute border-[#eaecf0] border-b border-solid inset-0 pointer-events-none" />
                           <div className="flex flex-row items-center size-full">
                             <div className="content-stretch flex gap-[8px] items-center p-[16px] relative size-full">
-                              <p className="flex-[1_0_0] font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[20px] min-h-px min-w-px relative text-[#101828] text-[14px]">De Nieuwe Hanze N.V.</p>
+                              <p className="flex-[1_0_0] font-sans font-bold leading-[20px] min-h-px min-w-px relative text-[#101828] text-[14px]">De Nieuwe Hanze N.V.</p>
                             </div>
                           </div>
                         </div>
@@ -583,7 +578,7 @@ export default function MarktBevrachtingLadingDetailOnderhandelingenDesktop() {
                           <div className="flex flex-row items-center justify-end size-full">
                             <div className="content-stretch flex items-center justify-end px-[16px] py-[12px] relative size-full">
                               <div className="content-stretch flex items-center relative shrink-0" data-name="Table header">
-                                <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[18px] relative shrink-0 text-[#475467] text-[12px] whitespace-nowrap">Vrachtprijs</p>
+                                <p className="font-sans font-bold leading-[18px] relative shrink-0 text-[#475467] text-[12px] whitespace-nowrap">Vrachtprijs</p>
                               </div>
                             </div>
                           </div>
@@ -592,7 +587,7 @@ export default function MarktBevrachtingLadingDetailOnderhandelingenDesktop() {
                           <div aria-hidden="true" className="absolute border-[#eaecf0] border-b border-solid inset-0 pointer-events-none" />
                           <div className="flex flex-row items-center justify-end size-full">
                             <div className="content-stretch flex gap-[8px] items-center justify-end p-[16px] relative size-full">
-                              <p className="font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[20px] relative shrink-0 text-[#475467] text-[14px] whitespace-nowrap">-</p>
+                              <p className="font-sans font-normal leading-[20px] relative shrink-0 text-[#475467] text-[14px] whitespace-nowrap">-</p>
                             </div>
                           </div>
                         </div>
@@ -600,7 +595,7 @@ export default function MarktBevrachtingLadingDetailOnderhandelingenDesktop() {
                           <div aria-hidden="true" className="absolute border-[#eaecf0] border-b border-solid inset-0 pointer-events-none" />
                           <div className="flex flex-row items-center justify-end size-full">
                             <div className="content-stretch flex gap-[8px] items-center justify-end p-[16px] relative size-full">
-                              <p className="font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[20px] relative shrink-0 text-[#475467] text-[14px] whitespace-nowrap">-</p>
+                              <p className="font-sans font-normal leading-[20px] relative shrink-0 text-[#475467] text-[14px] whitespace-nowrap">-</p>
                             </div>
                           </div>
                         </div>
@@ -608,7 +603,7 @@ export default function MarktBevrachtingLadingDetailOnderhandelingenDesktop() {
                           <div aria-hidden="true" className="absolute border-[#eaecf0] border-b border-solid inset-0 pointer-events-none" />
                           <div className="flex flex-row items-center justify-end size-full">
                             <div className="content-stretch flex gap-[8px] items-center justify-end p-[16px] relative size-full">
-                              <p className="font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[20px] relative shrink-0 text-[#475467] text-[14px] whitespace-nowrap">-</p>
+                              <p className="font-sans font-normal leading-[20px] relative shrink-0 text-[#475467] text-[14px] whitespace-nowrap">-</p>
                             </div>
                           </div>
                         </div>
@@ -616,7 +611,7 @@ export default function MarktBevrachtingLadingDetailOnderhandelingenDesktop() {
                           <div aria-hidden="true" className="absolute border-[#eaecf0] border-b border-solid inset-0 pointer-events-none" />
                           <div className="flex flex-row items-center justify-end size-full">
                             <div className="content-stretch flex gap-[8px] items-center justify-end px-[16px] py-[12px] relative size-full">
-                              <p className="font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[20px] relative shrink-0 text-[#475467] text-[14px] whitespace-nowrap">€3,80 per ton</p>
+                              <p className="font-sans font-normal leading-[20px] relative shrink-0 text-[#475467] text-[14px] whitespace-nowrap">€3,80 per ton</p>
                             </div>
                           </div>
                         </div>
@@ -624,7 +619,7 @@ export default function MarktBevrachtingLadingDetailOnderhandelingenDesktop() {
                           <div aria-hidden="true" className="absolute border-[#eaecf0] border-b border-solid inset-0 pointer-events-none" />
                           <div className="flex flex-row items-center justify-end size-full">
                             <div className="content-stretch flex gap-[8px] items-center justify-end p-[16px] relative size-full">
-                              <p className="font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[20px] relative shrink-0 text-[#475467] text-[14px] whitespace-nowrap">-</p>
+                              <p className="font-sans font-normal leading-[20px] relative shrink-0 text-[#475467] text-[14px] whitespace-nowrap">-</p>
                             </div>
                           </div>
                         </div>
@@ -632,7 +627,7 @@ export default function MarktBevrachtingLadingDetailOnderhandelingenDesktop() {
                           <div aria-hidden="true" className="absolute border-[#eaecf0] border-b border-solid inset-0 pointer-events-none" />
                           <div className="flex flex-row items-center justify-end size-full">
                             <div className="content-stretch flex gap-[8px] items-center justify-end p-[16px] relative size-full">
-                              <p className="font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[20px] relative shrink-0 text-[#475467] text-[14px] whitespace-nowrap">-</p>
+                              <p className="font-sans font-normal leading-[20px] relative shrink-0 text-[#475467] text-[14px] whitespace-nowrap">-</p>
                             </div>
                           </div>
                         </div>
@@ -640,7 +635,7 @@ export default function MarktBevrachtingLadingDetailOnderhandelingenDesktop() {
                           <div aria-hidden="true" className="absolute border-[#eaecf0] border-b border-solid inset-0 pointer-events-none" />
                           <div className="flex flex-row items-center justify-end size-full">
                             <div className="content-stretch flex gap-[8px] items-center justify-end p-[16px] relative size-full">
-                              <p className="font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[20px] relative shrink-0 text-[#475467] text-[14px] whitespace-nowrap">-</p>
+                              <p className="font-sans font-normal leading-[20px] relative shrink-0 text-[#475467] text-[14px] whitespace-nowrap">-</p>
                             </div>
                           </div>
                         </div>
@@ -648,7 +643,7 @@ export default function MarktBevrachtingLadingDetailOnderhandelingenDesktop() {
                           <div aria-hidden="true" className="absolute border-[#eaecf0] border-b border-solid inset-0 pointer-events-none" />
                           <div className="flex flex-row items-center justify-end size-full">
                             <div className="content-stretch flex gap-[8px] items-center justify-end p-[16px] relative size-full">
-                              <p className="font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[20px] relative shrink-0 text-[#475467] text-[14px] whitespace-nowrap">-</p>
+                              <p className="font-sans font-normal leading-[20px] relative shrink-0 text-[#475467] text-[14px] whitespace-nowrap">-</p>
                             </div>
                           </div>
                         </div>
@@ -656,7 +651,7 @@ export default function MarktBevrachtingLadingDetailOnderhandelingenDesktop() {
                           <div aria-hidden="true" className="absolute border-[#eaecf0] border-b border-solid inset-0 pointer-events-none" />
                           <div className="flex flex-row items-center justify-end size-full">
                             <div className="content-stretch flex gap-[8px] items-center justify-end p-[16px] relative size-full">
-                              <p className="font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[20px] relative shrink-0 text-[#475467] text-[14px] whitespace-nowrap">-</p>
+                              <p className="font-sans font-normal leading-[20px] relative shrink-0 text-[#475467] text-[14px] whitespace-nowrap">-</p>
                             </div>
                           </div>
                         </div>
@@ -667,7 +662,7 @@ export default function MarktBevrachtingLadingDetailOnderhandelingenDesktop() {
                           <div className="flex flex-row items-center justify-end size-full">
                             <div className="content-stretch flex items-center justify-end px-[16px] py-[12px] relative size-full">
                               <div className="content-stretch flex items-center relative shrink-0" data-name="Table header">
-                                <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[18px] relative shrink-0 text-[#475467] text-[12px] whitespace-nowrap">Tonnage</p>
+                                <p className="font-sans font-bold leading-[18px] relative shrink-0 text-[#475467] text-[12px] whitespace-nowrap">Tonnage</p>
                               </div>
                             </div>
                           </div>
@@ -676,7 +671,7 @@ export default function MarktBevrachtingLadingDetailOnderhandelingenDesktop() {
                           <div aria-hidden="true" className="absolute border-[#eaecf0] border-b border-solid inset-0 pointer-events-none" />
                           <div className="flex flex-row items-center justify-end size-full">
                             <div className="content-stretch flex gap-[8px] items-center justify-end p-[16px] relative size-full">
-                              <p className="font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[20px] relative shrink-0 text-[#475467] text-[14px] whitespace-nowrap">2.000 ton</p>
+                              <p className="font-sans font-normal leading-[20px] relative shrink-0 text-[#475467] text-[14px] whitespace-nowrap">2.000 ton</p>
                             </div>
                           </div>
                         </div>
@@ -684,7 +679,7 @@ export default function MarktBevrachtingLadingDetailOnderhandelingenDesktop() {
                           <div aria-hidden="true" className="absolute border-[#eaecf0] border-b border-solid inset-0 pointer-events-none" />
                           <div className="flex flex-row items-center justify-end size-full">
                             <div className="content-stretch flex gap-[8px] items-center justify-end p-[16px] relative size-full">
-                              <p className="font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[20px] relative shrink-0 text-[#475467] text-[14px] whitespace-nowrap">2.000 ton</p>
+                              <p className="font-sans font-normal leading-[20px] relative shrink-0 text-[#475467] text-[14px] whitespace-nowrap">2.000 ton</p>
                             </div>
                           </div>
                         </div>
@@ -692,7 +687,7 @@ export default function MarktBevrachtingLadingDetailOnderhandelingenDesktop() {
                           <div aria-hidden="true" className="absolute border-[#eaecf0] border-b border-solid inset-0 pointer-events-none" />
                           <div className="flex flex-row items-center justify-end size-full">
                             <div className="content-stretch flex gap-[8px] items-center justify-end p-[16px] relative size-full">
-                              <p className="font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[20px] relative shrink-0 text-[#475467] text-[14px] whitespace-nowrap">2.000 ton</p>
+                              <p className="font-sans font-normal leading-[20px] relative shrink-0 text-[#475467] text-[14px] whitespace-nowrap">2.000 ton</p>
                             </div>
                           </div>
                         </div>
@@ -700,7 +695,7 @@ export default function MarktBevrachtingLadingDetailOnderhandelingenDesktop() {
                           <div aria-hidden="true" className="absolute border-[#eaecf0] border-b border-solid inset-0 pointer-events-none" />
                           <div className="flex flex-row items-center justify-end size-full">
                             <div className="content-stretch flex gap-[8px] items-center justify-end px-[16px] py-[12px] relative size-full">
-                              <p className="font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[20px] relative shrink-0 text-[#475467] text-[14px] whitespace-nowrap">2.000 ton</p>
+                              <p className="font-sans font-normal leading-[20px] relative shrink-0 text-[#475467] text-[14px] whitespace-nowrap">2.000 ton</p>
                             </div>
                           </div>
                         </div>
@@ -708,7 +703,7 @@ export default function MarktBevrachtingLadingDetailOnderhandelingenDesktop() {
                           <div aria-hidden="true" className="absolute border-[#eaecf0] border-b border-solid inset-0 pointer-events-none" />
                           <div className="flex flex-row items-center justify-end size-full">
                             <div className="content-stretch flex gap-[8px] items-center justify-end p-[16px] relative size-full">
-                              <p className="font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[20px] relative shrink-0 text-[#475467] text-[14px] whitespace-nowrap">2.000 ton</p>
+                              <p className="font-sans font-normal leading-[20px] relative shrink-0 text-[#475467] text-[14px] whitespace-nowrap">2.000 ton</p>
                             </div>
                           </div>
                         </div>
@@ -716,7 +711,7 @@ export default function MarktBevrachtingLadingDetailOnderhandelingenDesktop() {
                           <div aria-hidden="true" className="absolute border-[#eaecf0] border-b border-solid inset-0 pointer-events-none" />
                           <div className="flex flex-row items-center justify-end size-full">
                             <div className="content-stretch flex gap-[8px] items-center justify-end p-[16px] relative size-full">
-                              <p className="font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[20px] relative shrink-0 text-[#475467] text-[14px] whitespace-nowrap">2.000 ton</p>
+                              <p className="font-sans font-normal leading-[20px] relative shrink-0 text-[#475467] text-[14px] whitespace-nowrap">2.000 ton</p>
                             </div>
                           </div>
                         </div>
@@ -724,7 +719,7 @@ export default function MarktBevrachtingLadingDetailOnderhandelingenDesktop() {
                           <div aria-hidden="true" className="absolute border-[#eaecf0] border-b border-solid inset-0 pointer-events-none" />
                           <div className="flex flex-row items-center justify-end size-full">
                             <div className="content-stretch flex gap-[8px] items-center justify-end p-[16px] relative size-full">
-                              <p className="font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[20px] relative shrink-0 text-[#475467] text-[14px] whitespace-nowrap">2.000 ton</p>
+                              <p className="font-sans font-normal leading-[20px] relative shrink-0 text-[#475467] text-[14px] whitespace-nowrap">2.000 ton</p>
                             </div>
                           </div>
                         </div>
@@ -732,7 +727,7 @@ export default function MarktBevrachtingLadingDetailOnderhandelingenDesktop() {
                           <div aria-hidden="true" className="absolute border-[#eaecf0] border-b border-solid inset-0 pointer-events-none" />
                           <div className="flex flex-row items-center justify-end size-full">
                             <div className="content-stretch flex gap-[8px] items-center justify-end p-[16px] relative size-full">
-                              <p className="font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[20px] relative shrink-0 text-[#475467] text-[14px] whitespace-nowrap">2.000 ton</p>
+                              <p className="font-sans font-normal leading-[20px] relative shrink-0 text-[#475467] text-[14px] whitespace-nowrap">2.000 ton</p>
                             </div>
                           </div>
                         </div>
@@ -740,7 +735,7 @@ export default function MarktBevrachtingLadingDetailOnderhandelingenDesktop() {
                           <div aria-hidden="true" className="absolute border-[#eaecf0] border-b border-solid inset-0 pointer-events-none" />
                           <div className="flex flex-row items-center justify-end size-full">
                             <div className="content-stretch flex gap-[8px] items-center justify-end p-[16px] relative size-full">
-                              <p className="font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[20px] relative shrink-0 text-[#475467] text-[14px] whitespace-nowrap">2.000 ton</p>
+                              <p className="font-sans font-normal leading-[20px] relative shrink-0 text-[#475467] text-[14px] whitespace-nowrap">2.000 ton</p>
                             </div>
                           </div>
                         </div>
@@ -751,7 +746,7 @@ export default function MarktBevrachtingLadingDetailOnderhandelingenDesktop() {
                           <div className="flex flex-row items-center size-full">
                             <div className="content-stretch flex items-center px-[16px] py-[12px] relative size-full">
                               <div className="content-stretch flex gap-[4px] items-center relative shrink-0" data-name="Table header">
-                                <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[18px] relative shrink-0 text-[#475467] text-[12px] whitespace-nowrap">Deadline</p>
+                                <p className="font-sans font-bold leading-[18px] relative shrink-0 text-[#475467] text-[12px] whitespace-nowrap">Deadline</p>
                                 <div className="overflow-clip relative shrink-0 size-[16px]" data-name="arrow-down">
                                   <div className="absolute inset-[20.83%]" data-name="Icon">
                                     <div className="absolute inset-[-7.14%]">
@@ -769,7 +764,7 @@ export default function MarktBevrachtingLadingDetailOnderhandelingenDesktop() {
                           <div aria-hidden="true" className="absolute border-[#eaecf0] border-b border-solid inset-0 pointer-events-none" />
                           <div className="flex flex-row items-center size-full">
                             <div className="content-stretch flex gap-[8px] items-center p-[16px] relative size-full">
-                              <div className="flex flex-col font-['Hanken_Grotesk:Bold',sans-serif] font-bold justify-center leading-[0] relative shrink-0 text-[#dc6803] text-[14px] whitespace-nowrap">
+                              <div className="flex flex-col font-sans font-bold justify-center leading-[0] relative shrink-0 text-[#dc6803] text-[14px] whitespace-nowrap">
                                 <p className="leading-[20px]">Za 14 Feb, 16:00</p>
                               </div>
                             </div>
@@ -779,7 +774,7 @@ export default function MarktBevrachtingLadingDetailOnderhandelingenDesktop() {
                           <div aria-hidden="true" className="absolute border-[#eaecf0] border-b border-solid inset-0 pointer-events-none" />
                           <div className="flex flex-row items-center size-full">
                             <div className="content-stretch flex gap-[8px] items-center p-[16px] relative size-full">
-                              <div className="flex flex-col font-['Hanken_Grotesk:Bold',sans-serif] font-bold justify-center leading-[0] relative shrink-0 text-[#dc6803] text-[14px] whitespace-nowrap">
+                              <div className="flex flex-col font-sans font-bold justify-center leading-[0] relative shrink-0 text-[#dc6803] text-[14px] whitespace-nowrap">
                                 <p className="leading-[20px]">Eergisteren, 9:00</p>
                               </div>
                             </div>
@@ -789,7 +784,7 @@ export default function MarktBevrachtingLadingDetailOnderhandelingenDesktop() {
                           <div aria-hidden="true" className="absolute border-[#eaecf0] border-b border-solid inset-0 pointer-events-none" />
                           <div className="flex flex-row items-center size-full">
                             <div className="content-stretch flex gap-[8px] items-center p-[16px] relative size-full">
-                              <p className="font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[20px] relative shrink-0 text-[#475467] text-[14px] whitespace-nowrap">Morgen, 10:00</p>
+                              <p className="font-sans font-normal leading-[20px] relative shrink-0 text-[#475467] text-[14px] whitespace-nowrap">Morgen, 10:00</p>
                             </div>
                           </div>
                         </div>
@@ -797,7 +792,7 @@ export default function MarktBevrachtingLadingDetailOnderhandelingenDesktop() {
                           <div aria-hidden="true" className="absolute border-[#eaecf0] border-b border-solid inset-0 pointer-events-none" />
                           <div className="flex flex-row items-center size-full">
                             <div className="content-stretch flex gap-[8px] items-center px-[16px] py-[12px] relative size-full">
-                              <p className="font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[20px] relative shrink-0 text-[#475467] text-[14px] whitespace-nowrap">Morgen, 11:00</p>
+                              <p className="font-sans font-normal leading-[20px] relative shrink-0 text-[#475467] text-[14px] whitespace-nowrap">Morgen, 11:00</p>
                             </div>
                           </div>
                         </div>
@@ -805,7 +800,7 @@ export default function MarktBevrachtingLadingDetailOnderhandelingenDesktop() {
                           <div aria-hidden="true" className="absolute border-[#eaecf0] border-b border-solid inset-0 pointer-events-none" />
                           <div className="flex flex-row items-center size-full">
                             <div className="content-stretch flex gap-[8px] items-center p-[16px] relative size-full">
-                              <p className="font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[20px] relative shrink-0 text-[#475467] text-[14px] whitespace-nowrap">Do 19 Feb, 11:15</p>
+                              <p className="font-sans font-normal leading-[20px] relative shrink-0 text-[#475467] text-[14px] whitespace-nowrap">Do 19 Feb, 11:15</p>
                             </div>
                           </div>
                         </div>
@@ -813,7 +808,7 @@ export default function MarktBevrachtingLadingDetailOnderhandelingenDesktop() {
                           <div aria-hidden="true" className="absolute border-[#eaecf0] border-b border-solid inset-0 pointer-events-none" />
                           <div className="flex flex-row items-center size-full">
                             <div className="content-stretch flex gap-[8px] items-center p-[16px] relative size-full">
-                              <p className="font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[20px] relative shrink-0 text-[#475467] text-[14px] whitespace-nowrap">Vr 20 Feb</p>
+                              <p className="font-sans font-normal leading-[20px] relative shrink-0 text-[#475467] text-[14px] whitespace-nowrap">Vr 20 Feb</p>
                             </div>
                           </div>
                         </div>
@@ -821,7 +816,7 @@ export default function MarktBevrachtingLadingDetailOnderhandelingenDesktop() {
                           <div aria-hidden="true" className="absolute border-[#eaecf0] border-b border-solid inset-0 pointer-events-none" />
                           <div className="flex flex-row items-center size-full">
                             <div className="content-stretch flex gap-[8px] items-center p-[16px] relative size-full">
-                              <p className="font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[20px] relative shrink-0 text-[#475467] text-[14px] whitespace-nowrap">Vr 20 Feb</p>
+                              <p className="font-sans font-normal leading-[20px] relative shrink-0 text-[#475467] text-[14px] whitespace-nowrap">Vr 20 Feb</p>
                             </div>
                           </div>
                         </div>
@@ -829,7 +824,7 @@ export default function MarktBevrachtingLadingDetailOnderhandelingenDesktop() {
                           <div aria-hidden="true" className="absolute border-[#eaecf0] border-b border-solid inset-0 pointer-events-none" />
                           <div className="flex flex-row items-center size-full">
                             <div className="content-stretch flex gap-[8px] items-center p-[16px] relative size-full">
-                              <p className="font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[20px] relative shrink-0 text-[#475467] text-[14px] whitespace-nowrap">Za 21 Feb</p>
+                              <p className="font-sans font-normal leading-[20px] relative shrink-0 text-[#475467] text-[14px] whitespace-nowrap">Za 21 Feb</p>
                             </div>
                           </div>
                         </div>
@@ -837,7 +832,7 @@ export default function MarktBevrachtingLadingDetailOnderhandelingenDesktop() {
                           <div aria-hidden="true" className="absolute border-[#eaecf0] border-b border-solid inset-0 pointer-events-none" />
                           <div className="flex flex-row items-center size-full">
                             <div className="content-stretch flex gap-[8px] items-center p-[16px] relative size-full">
-                              <p className="font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[20px] relative shrink-0 text-[#475467] text-[14px] whitespace-nowrap">-</p>
+                              <p className="font-sans font-normal leading-[20px] relative shrink-0 text-[#475467] text-[14px] whitespace-nowrap">-</p>
                             </div>
                           </div>
                         </div>
@@ -848,7 +843,7 @@ export default function MarktBevrachtingLadingDetailOnderhandelingenDesktop() {
                           <div className="flex flex-row items-center size-full">
                             <div className="content-stretch flex items-center px-[16px] py-[12px] relative size-full">
                               <div className="content-stretch flex items-center relative shrink-0" data-name="Table header">
-                                <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[18px] relative shrink-0 text-[#475467] text-[12px] whitespace-nowrap">Status</p>
+                                <p className="font-sans font-bold leading-[18px] relative shrink-0 text-[#475467] text-[12px] whitespace-nowrap">Status</p>
                               </div>
                             </div>
                           </div>
@@ -866,7 +861,7 @@ export default function MarktBevrachtingLadingDetailOnderhandelingenDesktop() {
                                     </svg>
                                   </div>
                                 </div>
-                                <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[18px] relative shrink-0 text-[#344054] text-[12px] text-center whitespace-nowrap">Via werklijst</p>
+                                <p className="font-sans font-bold leading-[18px] relative shrink-0 text-[#344054] text-[12px] text-center whitespace-nowrap">Via werklijst</p>
                               </div>
                             </div>
                           </div>
@@ -884,7 +879,7 @@ export default function MarktBevrachtingLadingDetailOnderhandelingenDesktop() {
                                     </svg>
                                   </div>
                                 </div>
-                                <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[18px] relative shrink-0 text-[#344054] text-[12px] text-center whitespace-nowrap">Via werklijst</p>
+                                <p className="font-sans font-bold leading-[18px] relative shrink-0 text-[#344054] text-[12px] text-center whitespace-nowrap">Via werklijst</p>
                               </div>
                             </div>
                           </div>
@@ -902,7 +897,7 @@ export default function MarktBevrachtingLadingDetailOnderhandelingenDesktop() {
                                     </svg>
                                   </div>
                                 </div>
-                                <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[18px] relative shrink-0 text-[#344054] text-[12px] text-center whitespace-nowrap">Via werklijst</p>
+                                <p className="font-sans font-bold leading-[18px] relative shrink-0 text-[#344054] text-[12px] text-center whitespace-nowrap">Via werklijst</p>
                               </div>
                             </div>
                           </div>
@@ -922,7 +917,7 @@ export default function MarktBevrachtingLadingDetailOnderhandelingenDesktop() {
                                     </div>
                                   </div>
                                 </div>
-                                <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[18px] relative shrink-0 text-[#175cd3] text-[12px] text-center whitespace-nowrap">Bod ontvangen</p>
+                                <p className="font-sans font-bold leading-[18px] relative shrink-0 text-[#175cd3] text-[12px] text-center whitespace-nowrap">Bod ontvangen</p>
                               </div>
                             </div>
                           </div>
@@ -940,7 +935,7 @@ export default function MarktBevrachtingLadingDetailOnderhandelingenDesktop() {
                                     </svg>
                                   </div>
                                 </div>
-                                <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[18px] relative shrink-0 text-[#344054] text-[12px] text-center whitespace-nowrap">Via werklijst</p>
+                                <p className="font-sans font-bold leading-[18px] relative shrink-0 text-[#344054] text-[12px] text-center whitespace-nowrap">Via werklijst</p>
                               </div>
                             </div>
                           </div>
@@ -958,7 +953,7 @@ export default function MarktBevrachtingLadingDetailOnderhandelingenDesktop() {
                                     </svg>
                                   </div>
                                 </div>
-                                <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[18px] relative shrink-0 text-[#344054] text-[12px] text-center whitespace-nowrap">Via werklijst</p>
+                                <p className="font-sans font-bold leading-[18px] relative shrink-0 text-[#344054] text-[12px] text-center whitespace-nowrap">Via werklijst</p>
                               </div>
                             </div>
                           </div>
@@ -976,7 +971,7 @@ export default function MarktBevrachtingLadingDetailOnderhandelingenDesktop() {
                                     </svg>
                                   </div>
                                 </div>
-                                <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[18px] relative shrink-0 text-[#344054] text-[12px] text-center whitespace-nowrap">Via werklijst</p>
+                                <p className="font-sans font-bold leading-[18px] relative shrink-0 text-[#344054] text-[12px] text-center whitespace-nowrap">Via werklijst</p>
                               </div>
                             </div>
                           </div>
@@ -994,7 +989,7 @@ export default function MarktBevrachtingLadingDetailOnderhandelingenDesktop() {
                                     </svg>
                                   </div>
                                 </div>
-                                <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[18px] relative shrink-0 text-[#344054] text-[12px] text-center whitespace-nowrap">Via werklijst</p>
+                                <p className="font-sans font-bold leading-[18px] relative shrink-0 text-[#344054] text-[12px] text-center whitespace-nowrap">Via werklijst</p>
                               </div>
                             </div>
                           </div>
@@ -1014,7 +1009,7 @@ export default function MarktBevrachtingLadingDetailOnderhandelingenDesktop() {
                                     </div>
                                   </div>
                                 </div>
-                                <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[18px] relative shrink-0 text-[#b42318] text-[12px] text-center whitespace-nowrap">Geen interesse</p>
+                                <p className="font-sans font-bold leading-[18px] relative shrink-0 text-[#b42318] text-[12px] text-center whitespace-nowrap">Geen interesse</p>
                               </div>
                             </div>
                           </div>
@@ -1026,7 +1021,7 @@ export default function MarktBevrachtingLadingDetailOnderhandelingenDesktop() {
                           <div className="flex flex-row items-center size-full">
                             <div className="content-stretch flex items-center px-[16px] py-[12px] relative size-full">
                               <div className="content-stretch flex items-center relative shrink-0" data-name="Table header">
-                                <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[18px] relative shrink-0 text-[#475467] text-[12px] whitespace-nowrap">Laatste update</p>
+                                <p className="font-sans font-bold leading-[18px] relative shrink-0 text-[#475467] text-[12px] whitespace-nowrap">Laatste update</p>
                               </div>
                             </div>
                           </div>
@@ -1039,7 +1034,7 @@ export default function MarktBevrachtingLadingDetailOnderhandelingenDesktop() {
                                 <img alt="" className="absolute inset-0 max-w-none object-cover pointer-events-none rounded-[9999px] size-full" src={imgMarktBevrachtingLadingDetailOnderhandelingenDesktop1} />
                                 <div className="absolute border-[0.5px] border-[rgba(0,0,0,0.08)] border-solid inset-0 rounded-[9999px]" data-name="Contrast border" />
                               </div>
-                              <div className="content-stretch flex flex-col font-['Hanken_Grotesk:Regular',sans-serif] font-normal items-start leading-[20px] relative shrink-0 text-[14px] whitespace-nowrap" data-name="Text and supporting text">
+                              <div className="content-stretch flex flex-col font-sans font-normal items-start leading-[20px] relative shrink-0 text-[14px] whitespace-nowrap" data-name="Text and supporting text">
                                 <p className="relative shrink-0 text-[#101828]">Erick Nieuwkoop</p>
                                 <p className="relative shrink-0 text-[#475467]">Ma 9 Feb 07:28</p>
                               </div>
@@ -1054,7 +1049,7 @@ export default function MarktBevrachtingLadingDetailOnderhandelingenDesktop() {
                                 <img alt="" className="absolute inset-0 max-w-none object-cover pointer-events-none rounded-[9999px] size-full" src={imgMarktBevrachtingLadingDetailOnderhandelingenDesktop2} />
                                 <div className="absolute border-[0.5px] border-[rgba(0,0,0,0.08)] border-solid inset-0 rounded-[9999px]" data-name="Contrast border" />
                               </div>
-                              <div className="content-stretch flex flex-col font-['Hanken_Grotesk:Regular',sans-serif] font-normal items-start leading-[20px] relative shrink-0 text-[14px] whitespace-nowrap" data-name="Text and supporting text">
+                              <div className="content-stretch flex flex-col font-sans font-normal items-start leading-[20px] relative shrink-0 text-[14px] whitespace-nowrap" data-name="Text and supporting text">
                                 <p className="relative shrink-0 text-[#101828]">Mitchell den Hoed</p>
                                 <p className="relative shrink-0 text-[#475467]">Di 10 Feb 19:53</p>
                               </div>
@@ -1069,7 +1064,7 @@ export default function MarktBevrachtingLadingDetailOnderhandelingenDesktop() {
                                 <img alt="" className="absolute inset-0 max-w-none object-cover pointer-events-none rounded-[9999px] size-full" src={imgMarktBevrachtingLadingDetailOnderhandelingenDesktop3} />
                                 <div className="absolute border-[0.5px] border-[rgba(0,0,0,0.08)] border-solid inset-0 rounded-[9999px]" data-name="Contrast border" />
                               </div>
-                              <div className="content-stretch flex flex-col font-['Hanken_Grotesk:Regular',sans-serif] font-normal items-start leading-[20px] relative shrink-0 text-[14px] whitespace-nowrap" data-name="Text and supporting text">
+                              <div className="content-stretch flex flex-col font-sans font-normal items-start leading-[20px] relative shrink-0 text-[14px] whitespace-nowrap" data-name="Text and supporting text">
                                 <p className="relative shrink-0 text-[#101828]">Khoa Nguyen</p>
                                 <p className="relative shrink-0 text-[#475467]">Zo 8 Feb 21:12</p>
                               </div>
@@ -1087,7 +1082,7 @@ export default function MarktBevrachtingLadingDetailOnderhandelingenDesktop() {
                                 </div>
                                 <div className="absolute border-[0.5px] border-[rgba(0,0,0,0.08)] border-solid inset-0 rounded-[9999px]" data-name="Contrast border" />
                               </div>
-                              <div className="content-stretch flex flex-col font-['Hanken_Grotesk:Regular',sans-serif] font-normal items-start leading-[20px] relative shrink-0 text-[14px] whitespace-nowrap" data-name="Text and supporting text">
+                              <div className="content-stretch flex flex-col font-sans font-normal items-start leading-[20px] relative shrink-0 text-[14px] whitespace-nowrap" data-name="Text and supporting text">
                                 <p className="relative shrink-0 text-[#101828]">Pelger de Jong</p>
                                 <p className="relative shrink-0 text-[#475467]">Za 7 Feb 18:39</p>
                               </div>
@@ -1102,7 +1097,7 @@ export default function MarktBevrachtingLadingDetailOnderhandelingenDesktop() {
                                 <img alt="" className="absolute inset-0 max-w-none object-cover pointer-events-none rounded-[9999px] size-full" src={imgMarktBevrachtingLadingDetailOnderhandelingenDesktop2} />
                                 <div className="absolute border-[0.5px] border-[rgba(0,0,0,0.08)] border-solid inset-0 rounded-[9999px]" data-name="Contrast border" />
                               </div>
-                              <div className="content-stretch flex flex-col font-['Hanken_Grotesk:Regular',sans-serif] font-normal items-start leading-[20px] relative shrink-0 text-[14px] whitespace-nowrap" data-name="Text and supporting text">
+                              <div className="content-stretch flex flex-col font-sans font-normal items-start leading-[20px] relative shrink-0 text-[14px] whitespace-nowrap" data-name="Text and supporting text">
                                 <p className="relative shrink-0 text-[#101828]">Mitchell den Hoed</p>
                                 <p className="relative shrink-0 text-[#475467]">Vr 6 Feb 11:47</p>
                               </div>
@@ -1117,7 +1112,7 @@ export default function MarktBevrachtingLadingDetailOnderhandelingenDesktop() {
                                 <img alt="" className="absolute inset-0 max-w-none object-cover pointer-events-none rounded-[9999px] size-full" src={imgMarktBevrachtingLadingDetailOnderhandelingenDesktop3} />
                                 <div className="absolute border-[0.5px] border-[rgba(0,0,0,0.08)] border-solid inset-0 rounded-[9999px]" data-name="Contrast border" />
                               </div>
-                              <div className="content-stretch flex flex-col font-['Hanken_Grotesk:Regular',sans-serif] font-normal items-start leading-[20px] relative shrink-0 text-[14px] whitespace-nowrap" data-name="Text and supporting text">
+                              <div className="content-stretch flex flex-col font-sans font-normal items-start leading-[20px] relative shrink-0 text-[14px] whitespace-nowrap" data-name="Text and supporting text">
                                 <p className="relative shrink-0 text-[#101828]">Khoa Nguyen</p>
                                 <p className="relative shrink-0 text-[#475467]">Vr 6 Feb 09:01</p>
                               </div>
@@ -1132,7 +1127,7 @@ export default function MarktBevrachtingLadingDetailOnderhandelingenDesktop() {
                                 <img alt="" className="absolute inset-0 max-w-none object-cover pointer-events-none rounded-[9999px] size-full" src={imgMarktBevrachtingLadingDetailOnderhandelingenDesktop3} />
                                 <div className="absolute border-[0.5px] border-[rgba(0,0,0,0.08)] border-solid inset-0 rounded-[9999px]" data-name="Contrast border" />
                               </div>
-                              <div className="content-stretch flex flex-col font-['Hanken_Grotesk:Regular',sans-serif] font-normal items-start leading-[20px] relative shrink-0 text-[14px] whitespace-nowrap" data-name="Text and supporting text">
+                              <div className="content-stretch flex flex-col font-sans font-normal items-start leading-[20px] relative shrink-0 text-[14px] whitespace-nowrap" data-name="Text and supporting text">
                                 <p className="relative shrink-0 text-[#101828]">Khoa Nguyen</p>
                                 <p className="relative shrink-0 text-[#475467]">Do 5 Feb 16:22</p>
                               </div>
@@ -1147,7 +1142,7 @@ export default function MarktBevrachtingLadingDetailOnderhandelingenDesktop() {
                                 <img alt="" className="absolute inset-0 max-w-none object-cover pointer-events-none rounded-[9999px] size-full" src={imgMarktBevrachtingLadingDetailOnderhandelingenDesktop4} />
                                 <div className="absolute border-[0.5px] border-[rgba(0,0,0,0.08)] border-solid inset-0 rounded-[9999px]" data-name="Contrast border" />
                               </div>
-                              <div className="content-stretch flex flex-col font-['Hanken_Grotesk:Regular',sans-serif] font-normal items-start leading-[20px] relative shrink-0 text-[14px] whitespace-nowrap" data-name="Text and supporting text">
+                              <div className="content-stretch flex flex-col font-sans font-normal items-start leading-[20px] relative shrink-0 text-[14px] whitespace-nowrap" data-name="Text and supporting text">
                                 <p className="relative shrink-0 text-[#101828]">Jan-Willem van der Kraan</p>
                                 <p className="relative shrink-0 text-[#475467]">Do 5 Feb 14:55</p>
                               </div>
@@ -1162,7 +1157,7 @@ export default function MarktBevrachtingLadingDetailOnderhandelingenDesktop() {
                                 <img alt="" className="absolute inset-0 max-w-none object-cover pointer-events-none rounded-[9999px] size-full" src={imgMarktBevrachtingLadingDetailOnderhandelingenDesktop1} />
                                 <div className="absolute border-[0.5px] border-[rgba(0,0,0,0.08)] border-solid inset-0 rounded-[9999px]" data-name="Contrast border" />
                               </div>
-                              <div className="content-stretch flex flex-col font-['Hanken_Grotesk:Regular',sans-serif] font-normal items-start leading-[20px] relative shrink-0 text-[14px] whitespace-nowrap" data-name="Text and supporting text">
+                              <div className="content-stretch flex flex-col font-sans font-normal items-start leading-[20px] relative shrink-0 text-[14px] whitespace-nowrap" data-name="Text and supporting text">
                                 <p className="relative shrink-0 text-[#101828]">Erick Nieuwkoop</p>
                                 <p className="relative shrink-0 text-[#475467]">Wo 11 Feb 12:06</p>
                               </div>
@@ -1184,14 +1179,14 @@ export default function MarktBevrachtingLadingDetailOnderhandelingenDesktop() {
                         <div className="h-full relative rounded-[4px] shrink-0" data-name="Tab button base">
                           <div className="flex flex-row items-center justify-center overflow-clip rounded-[inherit] size-full">
                             <div className="content-stretch flex h-full items-center justify-center px-[12px] py-[8px] relative">
-                              <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[20px] relative shrink-0 text-[#667085] text-[14px] whitespace-nowrap">Details</p>
+                              <p className="font-sans font-bold leading-[20px] relative shrink-0 text-[#667085] text-[14px] whitespace-nowrap">Details</p>
                             </div>
                           </div>
                         </div>
                         <div className="bg-[#f2f8fd] h-full relative rounded-[4px] shrink-0" data-name="Tab button base">
                           <div className="flex flex-row items-center justify-center overflow-clip rounded-[inherit] size-full">
                             <div className="content-stretch flex h-full items-center justify-center px-[12px] py-[8px] relative">
-                              <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[20px] relative shrink-0 text-[#344054] text-[14px] whitespace-nowrap">Condities</p>
+                              <p className="font-sans font-bold leading-[20px] relative shrink-0 text-[#344054] text-[14px] whitespace-nowrap">Condities</p>
                             </div>
                           </div>
                         </div>
@@ -1201,33 +1196,33 @@ export default function MarktBevrachtingLadingDetailOnderhandelingenDesktop() {
                       <div aria-hidden="true" className="absolute border-[#eaecf0] border-l border-solid inset-0 pointer-events-none" />
                       <div className="content-stretch flex flex-col items-start pb-[24px] relative shrink-0 w-full" data-name="Subsection">
                         <div aria-hidden="true" className="absolute border-[#eaecf0] border-b border-solid inset-[0_0_-1px_0] pointer-events-none" />
-                        <p className="font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[20px] relative shrink-0 text-[#667085] text-[14px] w-[352px]">Voeg opmerkingen en notities toe rondom de condities van deze lading</p>
+                        <p className="font-sans font-normal leading-[20px] relative shrink-0 text-[#667085] text-[14px] w-[352px]">Voeg opmerkingen en notities toe rondom de condities van deze lading</p>
                       </div>
                       <div className="content-stretch flex flex-col gap-[16px] items-start relative shrink-0 w-full" data-name="Subsection">
                         <div className="content-stretch flex flex-col gap-[2px] items-start pb-[12px] relative shrink-0 w-full" data-name="Subsection">
                           <div aria-hidden="true" className="absolute border-[#eaecf0] border-b border-solid inset-[0_0_-1px_0] pointer-events-none" />
-                          <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold h-[28px] leading-[20px] relative shrink-0 text-[#101828] text-[14px] w-full">Prijs</p>
+                          <p className="font-sans font-bold h-[28px] leading-[20px] relative shrink-0 text-[#101828] text-[14px] w-full">Prijs</p>
                           <div className="content-stretch flex gap-[16px] items-start relative shrink-0 w-full" data-name="Row">
                             <div className="bg-white content-stretch flex items-center py-[8px] relative rounded-[6px] shrink-0 w-[144px]" data-name="Label">
-                              <p className="flex-[1_0_0] font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[20px] min-h-px min-w-px relative text-[#475467] text-[14px]">Eigen</p>
+                              <p className="flex-[1_0_0] font-sans font-normal leading-[20px] min-h-px min-w-px relative text-[#475467] text-[14px]">Eigen</p>
                             </div>
                             <div className="content-stretch flex flex-[1_0_0] flex-col items-start min-h-px min-w-px relative" data-name="Data">
                               <div className="content-stretch flex flex-col items-start relative shrink-0 w-[298px]" data-name="Data">
                                 <div className="bg-white content-stretch flex items-center pl-[12px] pr-[6px] py-[8px] relative rounded-[6px] shrink-0" data-name="Label">
-                                  <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[20px] relative shrink-0 text-[#101828] text-[14px] w-[163.333px]">€4,00 per ton</p>
+                                  <p className="font-sans font-bold leading-[20px] relative shrink-0 text-[#101828] text-[14px] w-[163.333px]">€4,00 per ton</p>
                                 </div>
                               </div>
                             </div>
                           </div>
                           <div className="content-stretch flex gap-[16px] items-start relative shrink-0 w-full" data-name="Row">
                             <div className="bg-white content-stretch flex items-center py-[8px] relative rounded-[6px] shrink-0 w-[144px]" data-name="Label">
-                              <p className="flex-[1_0_0] font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[20px] min-h-px min-w-px relative text-[#475467] text-[14px]">Markt</p>
+                              <p className="flex-[1_0_0] font-sans font-normal leading-[20px] min-h-px min-w-px relative text-[#475467] text-[14px]">Markt</p>
                             </div>
                             <div className="content-stretch flex flex-[1_0_0] flex-col items-start min-h-px min-w-px relative" data-name="Data">
                               <div className="content-stretch flex flex-col items-start relative shrink-0 w-full" data-name="Data">
                                 <div className="bg-white relative rounded-[6px] shrink-0 w-full" data-name="Label">
                                   <div className="flex flex-row items-end size-full">
-                                    <div className="content-stretch flex font-['Hanken_Grotesk:Bold',sans-serif] font-bold gap-[8px] items-end pl-[12px] pr-[6px] py-[8px] relative w-full">
+                                    <div className="content-stretch flex font-sans font-bold gap-[8px] items-end pl-[12px] pr-[6px] py-[8px] relative w-full">
                                       <p className="flex-[1_0_0] leading-[20px] min-h-px min-w-px relative text-[#101828] text-[14px]">€3,50 per ton</p>
                                       <p className="leading-[18px] relative shrink-0 text-[#079455] text-[12px] whitespace-nowrap">- €0,50</p>
                                     </div>
@@ -1239,29 +1234,29 @@ export default function MarktBevrachtingLadingDetailOnderhandelingenDesktop() {
                         </div>
                         <div className="content-stretch flex flex-col gap-[2px] items-start pb-[12px] relative shrink-0 w-full" data-name="Subsection">
                           <div aria-hidden="true" className="absolute border-[#eaecf0] border-b border-solid inset-[0_0_-1px_0] pointer-events-none" />
-                          <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold h-[28px] leading-[20px] relative shrink-0 text-[#101828] text-[14px] w-full">Laadtijd</p>
+                          <p className="font-sans font-bold h-[28px] leading-[20px] relative shrink-0 text-[#101828] text-[14px] w-full">Laadtijd</p>
                           <div className="content-stretch flex gap-[16px] items-start relative shrink-0 w-full" data-name="Row">
                             <div className="bg-white content-stretch flex items-center py-[8px] relative rounded-[6px] shrink-0 w-[144px]" data-name="Label">
-                              <p className="flex-[1_0_0] font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[20px] min-h-px min-w-px relative text-[#475467] text-[14px]">Eigen</p>
+                              <p className="flex-[1_0_0] font-sans font-normal leading-[20px] min-h-px min-w-px relative text-[#475467] text-[14px]">Eigen</p>
                             </div>
                             <div className="content-stretch flex flex-[1_0_0] flex-col items-start min-h-px min-w-px relative" data-name="Data">
                               <div className="content-stretch flex flex-col items-start relative shrink-0 w-[298px]" data-name="Data">
                                 <div className="bg-white content-stretch flex items-center pl-[12px] pr-[6px] py-[8px] relative rounded-[6px] shrink-0" data-name="Label">
-                                  <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[20px] relative shrink-0 text-[#101828] text-[14px] w-[163.333px]">12 uur</p>
+                                  <p className="font-sans font-bold leading-[20px] relative shrink-0 text-[#101828] text-[14px] w-[163.333px]">12 uur</p>
                                 </div>
                               </div>
                             </div>
                           </div>
                           <div className="content-stretch flex gap-[16px] items-start relative shrink-0 w-full" data-name="Row">
                             <div className="bg-white content-stretch flex items-center py-[8px] relative rounded-[6px] shrink-0 w-[144px]" data-name="Label">
-                              <p className="flex-[1_0_0] font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[20px] min-h-px min-w-px relative text-[#475467] text-[14px]">Markt</p>
+                              <p className="flex-[1_0_0] font-sans font-normal leading-[20px] min-h-px min-w-px relative text-[#475467] text-[14px]">Markt</p>
                             </div>
                             <div className="content-stretch flex flex-[1_0_0] flex-col items-start min-h-px min-w-px relative" data-name="Data">
                               <div className="content-stretch flex flex-col items-start relative shrink-0 w-full" data-name="Data">
                                 <div className="bg-white relative rounded-[6px] shrink-0 w-full" data-name="Label">
                                   <div className="flex flex-row items-end size-full">
                                     <div className="content-stretch flex items-end pl-[12px] pr-[6px] py-[8px] relative w-full">
-                                      <p className="flex-[1_0_0] font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[20px] min-h-px min-w-px relative text-[#101828] text-[14px]">12 uur</p>
+                                      <p className="flex-[1_0_0] font-sans font-bold leading-[20px] min-h-px min-w-px relative text-[#101828] text-[14px]">12 uur</p>
                                     </div>
                                   </div>
                                 </div>
@@ -1271,17 +1266,17 @@ export default function MarktBevrachtingLadingDetailOnderhandelingenDesktop() {
                         </div>
                         <div className="content-stretch flex flex-col gap-[2px] items-start pb-[12px] relative shrink-0 w-full" data-name="Subsection">
                           <div aria-hidden="true" className="absolute border-[#eaecf0] border-b border-solid inset-[0_0_-1px_0] pointer-events-none" />
-                          <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold h-[28px] leading-[20px] relative shrink-0 text-[#101828] text-[14px] w-full">Liggeld laden</p>
+                          <p className="font-sans font-bold h-[28px] leading-[20px] relative shrink-0 text-[#101828] text-[14px] w-full">Liggeld laden</p>
                           <div className="content-stretch flex gap-[16px] items-start relative shrink-0 w-full" data-name="Row">
                             <div className="bg-white content-stretch flex items-center py-[8px] relative rounded-[6px] shrink-0 w-[144px]" data-name="Label">
-                              <p className="flex-[1_0_0] font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[20px] min-h-px min-w-px relative text-[#475467] text-[14px]">Eigen</p>
+                              <p className="flex-[1_0_0] font-sans font-normal leading-[20px] min-h-px min-w-px relative text-[#475467] text-[14px]">Eigen</p>
                             </div>
                             <div className="content-stretch flex flex-[1_0_0] flex-col items-start min-h-px min-w-px relative" data-name="Data">
                               <div className="content-stretch flex flex-col items-start relative shrink-0 w-full" data-name="Data">
                                 <div className="bg-white relative rounded-[6px] shrink-0 w-full" data-name="Label">
                                   <div className="flex flex-row items-center size-full">
                                     <div className="content-stretch flex items-center pl-[12px] pr-[6px] py-[8px] relative w-full">
-                                      <p className="flex-[1_0_0] font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[20px] min-h-px min-w-px relative text-[#101828] text-[14px]">150% Nederlands Wettelijk</p>
+                                      <p className="flex-[1_0_0] font-sans font-bold leading-[20px] min-h-px min-w-px relative text-[#101828] text-[14px]">150% Nederlands Wettelijk</p>
                                     </div>
                                   </div>
                                 </div>
@@ -1290,14 +1285,14 @@ export default function MarktBevrachtingLadingDetailOnderhandelingenDesktop() {
                           </div>
                           <div className="content-stretch flex gap-[16px] items-start relative shrink-0 w-full" data-name="Row">
                             <div className="bg-white content-stretch flex items-center py-[8px] relative rounded-[6px] shrink-0 w-[144px]" data-name="Label">
-                              <p className="flex-[1_0_0] font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[20px] min-h-px min-w-px relative text-[#475467] text-[14px]">Markt</p>
+                              <p className="flex-[1_0_0] font-sans font-normal leading-[20px] min-h-px min-w-px relative text-[#475467] text-[14px]">Markt</p>
                             </div>
                             <div className="content-stretch flex flex-[1_0_0] flex-col items-start min-h-px min-w-px relative" data-name="Data">
                               <div className="content-stretch flex flex-col items-start relative shrink-0 w-full" data-name="Data">
                                 <div className="bg-white relative rounded-[6px] shrink-0 w-full" data-name="Label">
                                   <div className="flex flex-row items-end size-full">
                                     <div className="content-stretch flex items-end pl-[12px] pr-[6px] py-[8px] relative w-full">
-                                      <p className="flex-[1_0_0] font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[20px] min-h-px min-w-px relative text-[#101828] text-[14px]">12 uur</p>
+                                      <p className="flex-[1_0_0] font-sans font-bold leading-[20px] min-h-px min-w-px relative text-[#101828] text-[14px]">12 uur</p>
                                     </div>
                                   </div>
                                 </div>
@@ -1307,17 +1302,17 @@ export default function MarktBevrachtingLadingDetailOnderhandelingenDesktop() {
                         </div>
                         <div className="content-stretch flex flex-col gap-[2px] items-start pb-[12px] relative shrink-0 w-full" data-name="Subsection">
                           <div aria-hidden="true" className="absolute border-[#eaecf0] border-b border-solid inset-[0_0_-1px_0] pointer-events-none" />
-                          <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold h-[28px] leading-[20px] relative shrink-0 text-[#101828] text-[14px] w-full">Lostijd</p>
+                          <p className="font-sans font-bold h-[28px] leading-[20px] relative shrink-0 text-[#101828] text-[14px] w-full">Lostijd</p>
                           <div className="content-stretch flex gap-[16px] items-start relative shrink-0 w-full" data-name="Row">
                             <div className="bg-white content-stretch flex items-center py-[8px] relative rounded-[6px] shrink-0 w-[144px]" data-name="Label">
-                              <p className="flex-[1_0_0] font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[20px] min-h-px min-w-px relative text-[#475467] text-[14px]">Eigen</p>
+                              <p className="flex-[1_0_0] font-sans font-normal leading-[20px] min-h-px min-w-px relative text-[#475467] text-[14px]">Eigen</p>
                             </div>
                             <div className="content-stretch flex flex-[1_0_0] flex-col items-start min-h-px min-w-px relative" data-name="Data">
                               <div className="content-stretch flex flex-col items-start relative shrink-0 w-full" data-name="Data">
                                 <div className="bg-white relative rounded-[6px] shrink-0 w-full" data-name="Label">
                                   <div className="flex flex-row items-center size-full">
                                     <div className="content-stretch flex items-center pl-[12px] pr-[6px] py-[8px] relative w-full">
-                                      <p className="flex-[1_0_0] font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[20px] min-h-px min-w-px relative text-[#101828] text-[14px]">Nederlands Wettelijk</p>
+                                      <p className="flex-[1_0_0] font-sans font-bold leading-[20px] min-h-px min-w-px relative text-[#101828] text-[14px]">Nederlands Wettelijk</p>
                                     </div>
                                   </div>
                                 </div>
@@ -1326,14 +1321,14 @@ export default function MarktBevrachtingLadingDetailOnderhandelingenDesktop() {
                           </div>
                           <div className="content-stretch flex gap-[16px] items-start relative shrink-0 w-full" data-name="Row">
                             <div className="bg-white content-stretch flex items-center py-[8px] relative rounded-[6px] shrink-0 w-[144px]" data-name="Label">
-                              <p className="flex-[1_0_0] font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[20px] min-h-px min-w-px relative text-[#475467] text-[14px]">Markt</p>
+                              <p className="flex-[1_0_0] font-sans font-normal leading-[20px] min-h-px min-w-px relative text-[#475467] text-[14px]">Markt</p>
                             </div>
                             <div className="content-stretch flex flex-[1_0_0] flex-col items-start min-h-px min-w-px relative" data-name="Data">
                               <div className="content-stretch flex flex-col items-start relative shrink-0 w-full" data-name="Data">
                                 <div className="bg-white relative rounded-[6px] shrink-0 w-full" data-name="Label">
                                   <div className="flex flex-row items-end size-full">
                                     <div className="content-stretch flex items-end pl-[12px] pr-[6px] py-[8px] relative w-full">
-                                      <p className="flex-[1_0_0] font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[20px] min-h-px min-w-px relative text-[#101828] text-[14px]">Nederlands Wettelijk</p>
+                                      <p className="flex-[1_0_0] font-sans font-bold leading-[20px] min-h-px min-w-px relative text-[#101828] text-[14px]">Nederlands Wettelijk</p>
                                     </div>
                                   </div>
                                 </div>
@@ -1342,17 +1337,17 @@ export default function MarktBevrachtingLadingDetailOnderhandelingenDesktop() {
                           </div>
                         </div>
                         <div className="content-stretch flex flex-col gap-[2px] items-start pb-[12px] relative shrink-0 w-full" data-name="Subsection">
-                          <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold h-[28px] leading-[20px] relative shrink-0 text-[#101828] text-[14px] w-full">Liggeld lossen</p>
+                          <p className="font-sans font-bold h-[28px] leading-[20px] relative shrink-0 text-[#101828] text-[14px] w-full">Liggeld lossen</p>
                           <div className="content-stretch flex gap-[16px] items-start relative shrink-0 w-full" data-name="Row">
                             <div className="bg-white content-stretch flex items-center py-[8px] relative rounded-[6px] shrink-0 w-[144px]" data-name="Label">
-                              <p className="flex-[1_0_0] font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[20px] min-h-px min-w-px relative text-[#475467] text-[14px]">Eigen</p>
+                              <p className="flex-[1_0_0] font-sans font-normal leading-[20px] min-h-px min-w-px relative text-[#475467] text-[14px]">Eigen</p>
                             </div>
                             <div className="content-stretch flex flex-[1_0_0] flex-col items-start min-h-px min-w-px relative" data-name="Data">
                               <div className="content-stretch flex flex-col items-start relative shrink-0 w-full" data-name="Data">
                                 <div className="bg-white relative rounded-[6px] shrink-0 w-full" data-name="Label">
                                   <div className="flex flex-row items-center size-full">
                                     <div className="content-stretch flex items-center pl-[12px] pr-[6px] py-[8px] relative w-full">
-                                      <p className="flex-[1_0_0] font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[20px] min-h-px min-w-px relative text-[#101828] text-[14px]">Nederlands Wettelijk</p>
+                                      <p className="flex-[1_0_0] font-sans font-bold leading-[20px] min-h-px min-w-px relative text-[#101828] text-[14px]">Nederlands Wettelijk</p>
                                     </div>
                                   </div>
                                 </div>
@@ -1361,14 +1356,14 @@ export default function MarktBevrachtingLadingDetailOnderhandelingenDesktop() {
                           </div>
                           <div className="content-stretch flex gap-[16px] items-start relative shrink-0 w-full" data-name="Row">
                             <div className="bg-white content-stretch flex items-center py-[8px] relative rounded-[6px] shrink-0 w-[144px]" data-name="Label">
-                              <p className="flex-[1_0_0] font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[20px] min-h-px min-w-px relative text-[#475467] text-[14px]">Markt</p>
+                              <p className="flex-[1_0_0] font-sans font-normal leading-[20px] min-h-px min-w-px relative text-[#475467] text-[14px]">Markt</p>
                             </div>
                             <div className="content-stretch flex flex-[1_0_0] flex-col items-start min-h-px min-w-px relative" data-name="Data">
                               <div className="content-stretch flex flex-col items-start relative shrink-0 w-full" data-name="Data">
                                 <div className="bg-white relative rounded-[6px] shrink-0 w-full" data-name="Label">
                                   <div className="flex flex-row items-end size-full">
                                     <div className="content-stretch flex items-end pl-[12px] pr-[6px] py-[8px] relative w-full">
-                                      <p className="flex-[1_0_0] font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[20px] min-h-px min-w-px relative text-[#101828] text-[14px]">Nederlands Wettelijk</p>
+                                      <p className="flex-[1_0_0] font-sans font-bold leading-[20px] min-h-px min-w-px relative text-[#101828] text-[14px]">Nederlands Wettelijk</p>
                                     </div>
                                   </div>
                                 </div>

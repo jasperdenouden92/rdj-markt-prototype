@@ -893,6 +893,7 @@ export interface BevrachtingVaartuigSummary {
 
 export function useBevrachtingVaartuigSummary(id: string | undefined) {
   const [data, setData] = useState<BevrachtingVaartuigSummary | null>(null);
+  const [detectedType, setDetectedType] = useState<"eigen" | "markt">("eigen");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const mountedRef = useRef(true);
@@ -905,10 +906,18 @@ export function useBevrachtingVaartuigSummary(id: string | undefined) {
       setLoading(true);
       setError(null);
       try {
-        const [item, maps] = await Promise.all([
-          api.get<VaartuigEigen & { status?: string }>("vaartuig_eigen", id),
-          getLookups(),
-        ]);
+        const maps = await getLookups();
+        let item: (VaartuigEigen | VaartuigMarkt) & { status?: string };
+        let type: "eigen" | "markt" = "eigen";
+
+        // Try eigen first, then markt
+        try {
+          item = await api.get<VaartuigEigen & { status?: string }>("vaartuig_eigen", id);
+          type = "eigen";
+        } catch {
+          item = await api.get<VaartuigMarkt & { status?: string }>("vaartuig_markt", id);
+          type = "markt";
+        }
 
         const locatie = maps.havens.get(item.huidigeLocatieId);
         const status = (item as any).status || "intake";
@@ -921,7 +930,10 @@ export function useBevrachtingVaartuigSummary(id: string | undefined) {
           breadcrumbLabel: item.naam,
         };
 
-        if (mountedRef.current) setData(resolved);
+        if (mountedRef.current) {
+          setDetectedType(type);
+          setData(resolved);
+        }
       } catch (err: any) {
         console.error("useBevrachtingVaartuigSummary error:", err);
         if (mountedRef.current) setError(err.message);
@@ -933,7 +945,7 @@ export function useBevrachtingVaartuigSummary(id: string | undefined) {
     return () => { mountedRef.current = false; };
   }, [id]);
 
-  return { data, loading, error };
+  return { data, detectedType, loading, error };
 }
 
 function formatTonnage(t: number): string {

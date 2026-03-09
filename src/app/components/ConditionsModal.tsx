@@ -68,10 +68,10 @@ export default function ConditionsModal({ cargo, onClose, onSave }: ConditionsMo
           <div className="relative shrink-0 w-full">
             <div className="content-stretch flex gap-[16px] items-start pt-[24px] px-[24px] relative w-full">
               <div className="content-stretch flex flex-[1_0_0] flex-col gap-[4px] items-start min-h-px min-w-px relative">
-                <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[26px] relative shrink-0 text-[#101828] text-[18px] w-full">
+                <p className="font-sans font-bold leading-[26px] relative shrink-0 text-[#101828] text-[18px] w-full">
                   Bepaal de condities voor {cargo.id}
                 </p>
-                <p className="font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[20px] relative shrink-0 text-[#475467] text-[14px] w-full">
+                <p className="font-sans font-normal leading-[20px] relative shrink-0 text-[#475467] text-[14px] w-full">
                   {cargo.weight} van {cargo.from} naar {cargo.to}
                 </p>
               </div>
@@ -92,23 +92,23 @@ export default function ConditionsModal({ cargo, onClose, onSave }: ConditionsMo
             {/* Tonnage */}
             <div className="content-stretch flex gap-[16px] items-end relative shrink-0 w-full">
               <div className="content-stretch flex flex-col gap-[6px] items-start relative shrink-0 w-[160px]">
-                <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[20px] relative shrink-0 text-[#344054] text-[14px] text-left whitespace-nowrap">Tonnage</p>
+                <p className="font-sans font-bold leading-[20px] relative shrink-0 text-[#344054] text-[14px] text-left whitespace-nowrap">Tonnage</p>
                 <div className="bg-white content-stretch flex items-start relative rounded-[6px] shrink-0 w-full">
                   <div aria-hidden="true" className="absolute border border-[#d0d5dd] border-solid inset-0 pointer-events-none rounded-[6px] shadow-[0px_1px_2px_0px_rgba(16,24,40,0.05)]" />
                   <input
                     type="text"
                     value={tonnage}
                     onChange={(e) => setTonnage(e.target.value)}
-                    className="flex-1 px-[12px] py-[8px] font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[20px] text-[#101828] text-[14px] bg-transparent outline-none rounded-l-[6px]"
+                    className="flex-1 px-[12px] py-[8px] font-sans font-normal leading-[20px] text-[#101828] text-[14px] bg-transparent outline-none rounded-l-[6px]"
                   />
                   <div className="content-stretch flex items-center px-[12px] py-[8px] relative rounded-br-[8px] rounded-tr-[8px] shrink-0">
-                    <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[20px] relative shrink-0 text-[#475467] text-[14px] text-left whitespace-nowrap">t</p>
+                    <p className="font-sans font-bold leading-[20px] relative shrink-0 text-[#475467] text-[14px] text-left whitespace-nowrap">t</p>
                   </div>
                 </div>
               </div>
-              <div className="flex flex-col font-['Hanken_Grotesk:Regular',sans-serif] font-normal h-[36px] justify-center leading-[18px] relative shrink-0 text-[#475467] text-[12px]">
+              <div className="flex flex-col font-sans font-normal h-[36px] justify-center leading-[18px] relative shrink-0 text-[#475467] text-[12px]">
                 <p>
-                  <span className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold">50%</span>
+                  <span className="font-sans font-bold">50%</span>
                   {` van deze lading wordt naar de werklijst gezet`}
                 </p>
               </div>
@@ -117,17 +117,17 @@ export default function ConditionsModal({ cargo, onClose, onSave }: ConditionsMo
             {/* Vrachtprijs */}
             <div className="content-stretch flex gap-[16px] items-start relative shrink-0 w-full">
               <div className="content-stretch flex flex-col gap-[6px] items-start relative shrink-0 w-[160px]">
-                <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[20px] relative shrink-0 text-[#344054] text-[14px] text-left whitespace-nowrap">Vrachtprijs</p>
+                <p className="font-sans font-bold leading-[20px] relative shrink-0 text-[#344054] text-[14px] text-left whitespace-nowrap">Vrachtprijs</p>
                 <div className="bg-white content-stretch flex items-start relative rounded-[6px] shrink-0 w-full">
                   <div aria-hidden="true" className="absolute border border-[#d0d5dd] border-solid inset-0 pointer-events-none rounded-[6px] shadow-[0px_1px_2px_0px_rgba(16,24,40,0.05)]" />
                   <div className="content-stretch flex items-center pl-[14px] pr-[12px] py-[10px] relative rounded-bl-[8px] rounded-tl-[8px] shrink-0">
-                    <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[20px] relative shrink-0 text-[#475467] text-[14px] text-left whitespace-nowrap">€</p>
+                    <p className="font-sans font-bold leading-[20px] relative shrink-0 text-[#475467] text-[14px] text-left whitespace-nowrap">€</p>
                   </div>
                   <input
                     type="text"
                     value={price}
                     onChange={(e) => setPrice(e.target.value)}
-                    className="flex-1 px-[14px] py-[10px] font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[20px] text-[#101828] text-[14px] bg-transparent outline-none rounded-r-[6px]"
+                    className="flex-1 px-[14px] py-[10px] font-sans font-normal leading-[20px] text-[#101828] text-[14px] bg-transparent outline-none rounded-r-[6px]"
                   />
                 </div>
               </div>
@@ -158,7 +158,7 @@ export default function ConditionsModal({ cargo, onClose, onSave }: ConditionsMo
             {/* Laadtijd & Lostijd */}
             <div className="grid grid-cols-2 gap-[16px]">
               <div className="content-stretch flex flex-col gap-[6px] items-start relative shrink-0">
-                <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[20px] relative shrink-0 text-[#344054] text-[14px] whitespace-nowrap">Laadtijd</p>
+                <p className="font-sans font-bold leading-[20px] relative shrink-0 text-[#344054] text-[14px] whitespace-nowrap">Laadtijd</p>
                 <div className="flex gap-[8px] w-full">
                   <Checkbox
                     checked={loadingCondition === "conform-nederlands-werklijst"}
@@ -172,12 +172,12 @@ export default function ConditionsModal({ cargo, onClose, onSave }: ConditionsMo
                     value={loadingTime}
                     onChange={(e) => setLoadingTime(e.target.value)}
                     placeholder="0"
-                    className="flex-1 px-[12px] py-[8px] font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[20px] text-[#101828] text-[14px] bg-white border border-[#d0d5dd] rounded-[6px] outline-none"
+                    className="flex-1 px-[12px] py-[8px] font-sans font-normal leading-[20px] text-[#101828] text-[14px] bg-white border border-[#d0d5dd] rounded-[6px] outline-none"
                   />
                   <select
                     value={loadingTimeUnit}
                     onChange={(e) => setLoadingTimeUnit(e.target.value)}
-                    className="px-[12px] py-[8px] font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[20px] text-[#101828] text-[14px] bg-white border border-[#d0d5dd] rounded-[6px] outline-none"
+                    className="px-[12px] py-[8px] font-sans font-normal leading-[20px] text-[#101828] text-[14px] bg-white border border-[#d0d5dd] rounded-[6px] outline-none"
                   >
                     <option value="uur">uur</option>
                     <option value="dag">dag</option>
@@ -186,7 +186,7 @@ export default function ConditionsModal({ cargo, onClose, onSave }: ConditionsMo
               </div>
 
               <div className="content-stretch flex flex-col gap-[6px] items-start relative shrink-0">
-                <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[20px] relative shrink-0 text-[#344054] text-[14px] whitespace-nowrap">Lostijd</p>
+                <p className="font-sans font-bold leading-[20px] relative shrink-0 text-[#344054] text-[14px] whitespace-nowrap">Lostijd</p>
                 <div className="flex items-center gap-[8px]">
                   <Checkbox
                     checked={unloadingCondition === "conform-nederlands-werklijst"}
@@ -200,12 +200,12 @@ export default function ConditionsModal({ cargo, onClose, onSave }: ConditionsMo
                     value={unloadingTime}
                     onChange={(e) => setUnloadingTime(e.target.value)}
                     placeholder="0"
-                    className="flex-1 px-[12px] py-[8px] font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[20px] text-[#101828] text-[14px] bg-white border border-[#d0d5dd] rounded-[6px] outline-none"
+                    className="flex-1 px-[12px] py-[8px] font-sans font-normal leading-[20px] text-[#101828] text-[14px] bg-white border border-[#d0d5dd] rounded-[6px] outline-none"
                   />
                   <select
                     value={unloadingTimeUnit}
                     onChange={(e) => setUnloadingTimeUnit(e.target.value)}
-                    className="px-[12px] py-[8px] font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[20px] text-[#101828] text-[14px] bg-white border border-[#d0d5dd] rounded-[6px] outline-none"
+                    className="px-[12px] py-[8px] font-sans font-normal leading-[20px] text-[#101828] text-[14px] bg-white border border-[#d0d5dd] rounded-[6px] outline-none"
                   >
                     <option value="uur">uur</option>
                     <option value="dag">dag</option>
@@ -217,15 +217,15 @@ export default function ConditionsModal({ cargo, onClose, onSave }: ConditionsMo
             {/* Liggeld laden & lossen */}
             <div className="grid grid-cols-2 gap-[16px]">
               <div className="content-stretch flex flex-col gap-[6px] items-start relative shrink-0">
-                <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[20px] relative shrink-0 text-[#344054] text-[14px] whitespace-nowrap">Liggeld laden</p>
-                <select className="w-full px-[12px] py-[8px] font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[20px] text-[#101828] text-[14px] bg-white border border-[#d0d5dd] rounded-[6px] outline-none">
+                <p className="font-sans font-bold leading-[20px] relative shrink-0 text-[#344054] text-[14px] whitespace-nowrap">Liggeld laden</p>
+                <select className="w-full px-[12px] py-[8px] font-sans font-normal leading-[20px] text-[#101828] text-[14px] bg-white border border-[#d0d5dd] rounded-[6px] outline-none">
                   <option>Niet van toepassing</option>
                 </select>
               </div>
 
               <div className="content-stretch flex flex-col gap-[6px] items-start relative shrink-0">
-                <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[20px] relative shrink-0 text-[#344054] text-[14px] whitespace-nowrap">Liggeld lossen</p>
-                <select className="w-full px-[12px] py-[8px] font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[20px] text-[#101828] text-[14px] bg-white border border-[#d0d5dd] rounded-[6px] outline-none">
+                <p className="font-sans font-bold leading-[20px] relative shrink-0 text-[#344054] text-[14px] whitespace-nowrap">Liggeld lossen</p>
+                <select className="w-full px-[12px] py-[8px] font-sans font-normal leading-[20px] text-[#101828] text-[14px] bg-white border border-[#d0d5dd] rounded-[6px] outline-none">
                   <option>Niet van toepassing</option>
                 </select>
               </div>
@@ -233,13 +233,13 @@ export default function ConditionsModal({ cargo, onClose, onSave }: ConditionsMo
 
             {/* Opmerkingen */}
             <div className="content-stretch flex flex-col gap-[6px] items-start relative shrink-0 w-full">
-              <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[20px] relative shrink-0 text-[#344054] text-[14px] whitespace-nowrap">Opmerkingen</p>
+              <p className="font-sans font-bold leading-[20px] relative shrink-0 text-[#344054] text-[14px] whitespace-nowrap">Opmerkingen</p>
               <textarea
                 value={remarks}
                 onChange={(e) => setRemarks(e.target.value)}
                 placeholder="Extra informatie en bijzonderheden..."
                 rows={3}
-                className="w-full px-[14px] py-[12px] font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[20px] text-[#101828] text-[14px] bg-white border border-[#d0d5dd] rounded-[6px] outline-none resize-none"
+                className="w-full px-[14px] py-[12px] font-sans font-normal leading-[20px] text-[#101828] text-[14px] bg-white border border-[#d0d5dd] rounded-[6px] outline-none resize-none"
               />
             </div>
           </div>
@@ -253,7 +253,7 @@ export default function ConditionsModal({ cargo, onClose, onSave }: ConditionsMo
                 className="bg-white relative rounded-[6px] shrink-0"
               >
                 <div className="content-stretch flex gap-[4px] items-center justify-center overflow-clip px-[16px] py-[10px] relative rounded-[inherit]">
-                  <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[20px] relative shrink-0 text-[#344054] text-[14px] whitespace-nowrap">Annuleren</p>
+                  <p className="font-sans font-bold leading-[20px] relative shrink-0 text-[#344054] text-[14px] whitespace-nowrap">Annuleren</p>
                 </div>
                 <div aria-hidden="true" className="absolute border border-[#d0d5dd] border-solid inset-0 pointer-events-none rounded-[6px] shadow-[0px_1px_2px_0px_rgba(16,24,40,0.05)]" />
               </button>
@@ -262,7 +262,7 @@ export default function ConditionsModal({ cargo, onClose, onSave }: ConditionsMo
                 className="bg-[#1567a4] relative rounded-[6px] shrink-0"
               >
                 <div className="content-stretch flex gap-[4px] items-center justify-center overflow-clip px-[16px] py-[10px] relative rounded-[inherit]">
-                  <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[20px] relative shrink-0 text-[14px] text-white whitespace-nowrap">Toepassen</p>
+                  <p className="font-sans font-bold leading-[20px] relative shrink-0 text-[14px] text-white whitespace-nowrap">Toepassen</p>
                 </div>
                 <div aria-hidden="true" className="absolute border border-[#1567a4] border-solid inset-0 pointer-events-none rounded-[6px] shadow-[0px_1px_2px_0px_rgba(16,24,40,0.05)]" />
               </button>

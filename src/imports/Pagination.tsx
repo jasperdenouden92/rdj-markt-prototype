@@ -4,14 +4,14 @@ export default function Pagination() {
   return (
     <div className="content-stretch flex items-center justify-between px-[24px] py-[20px] relative size-full" data-name="Pagination">
       <div className="content-stretch flex gap-[8px] items-center relative shrink-0" data-name="Amount">
-        <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[20px] relative shrink-0 text-[#344054] text-[14px] whitespace-nowrap">Regels per pagina</p>
+        <p className="font-sans font-bold leading-[20px] relative shrink-0 text-[#344054] text-[14px] whitespace-nowrap">Regels per pagina</p>
         <button className="content-stretch cursor-pointer flex flex-col gap-[8px] items-start relative shrink-0 w-[80px]" data-name="Input dropdown">
           <div className="content-stretch flex flex-col gap-[6px] items-start relative shrink-0 w-full" data-name="Input with label">
             <div className="bg-white relative rounded-[6px] shrink-0 w-full" data-name="Input">
               <div className="flex flex-row items-center overflow-clip rounded-[inherit] size-full">
                 <div className="content-stretch flex gap-[8px] items-center px-[12px] py-[8px] relative w-full">
                   <div className="content-stretch flex flex-[1_0_0] gap-[8px] items-center min-h-px min-w-px relative" data-name="Content">
-                    <p className="font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[20px] relative shrink-0 text-[#101828] text-[14px] text-left whitespace-nowrap">50</p>
+                    <p className="font-sans font-normal leading-[20px] relative shrink-0 text-[#101828] text-[14px] text-left whitespace-nowrap">50</p>
                   </div>
                   <div className="overflow-clip relative shrink-0 size-[20px]" data-name="chevron-down">
                     <div className="absolute bottom-[37.5%] left-1/4 right-1/4 top-[37.5%]" data-name="Icon">
@@ -30,7 +30,7 @@ export default function Pagination() {
         </button>
       </div>
       <div className="content-stretch flex gap-[12px] items-center relative shrink-0" data-name="Navigation">
-        <p className="font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[0] relative shrink-0 text-[#344054] text-[0px] text-[14px] whitespace-nowrap">
+        <p className="font-sans font-normal leading-[0] relative shrink-0 text-[#344054] text-[0px] text-[14px] whitespace-nowrap">
           <span className="leading-[20px]">1</span>
           <span className="leading-[20px]">{` tot 5`}</span>
           <span className="leading-[20px]">0</span>
@@ -51,14 +51,14 @@ export default function Pagination() {
           </div>
         </div>
         <div className="content-stretch flex gap-[8px] items-center relative shrink-0" data-name="Page dropdown">
-          <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[20px] relative shrink-0 text-[#344054] text-[14px] whitespace-nowrap">Pagina</p>
+          <p className="font-sans font-bold leading-[20px] relative shrink-0 text-[#344054] text-[14px] whitespace-nowrap">Pagina</p>
           <button className="content-stretch cursor-pointer flex flex-col gap-[8px] items-start relative shrink-0 w-[64px]" data-name="Input dropdown">
             <div className="content-stretch flex flex-col gap-[6px] items-start relative shrink-0 w-full" data-name="Input with label">
               <div className="bg-white relative rounded-[6px] shrink-0 w-full" data-name="Input">
                 <div className="flex flex-row items-center overflow-clip rounded-[inherit] size-full">
                   <div className="content-stretch flex gap-[8px] items-center px-[12px] py-[8px] relative w-full">
                     <div className="content-stretch flex flex-[1_0_0] gap-[8px] items-center min-h-px min-w-px relative" data-name="Content">
-                      <p className="font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[20px] relative shrink-0 text-[#101828] text-[14px] text-left whitespace-nowrap">1</p>
+                      <p className="font-sans font-normal leading-[20px] relative shrink-0 text-[#101828] text-[14px] text-left whitespace-nowrap">1</p>
                     </div>
                     <div className="overflow-clip relative shrink-0 size-[20px]" data-name="chevron-down">
                       <div className="absolute bottom-[37.5%] left-1/4 right-1/4 top-[37.5%]" data-name="Icon">
@@ -75,7 +75,7 @@ export default function Pagination() {
               </div>
             </div>
           </button>
-          <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[20px] relative shrink-0 text-[#344054] text-[14px] whitespace-nowrap">van 10</p>
+          <p className="font-sans font-bold leading-[20px] relative shrink-0 text-[#344054] text-[14px] whitespace-nowrap">van 10</p>
         </div>
         <div className="content-stretch flex h-[20px] items-center justify-end relative shrink-0" data-name="Button wrap">
           <div className="content-stretch flex items-center justify-center overflow-clip p-[8px] relative rounded-[6px] shrink-0" data-name="Buttons/Button">

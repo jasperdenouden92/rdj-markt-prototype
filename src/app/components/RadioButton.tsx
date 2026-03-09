@@ -71,7 +71,7 @@ export default function RadioButton({
       {radioCircle}
       {icon && <div className="shrink-0">{icon}</div>}
       {label && (
-        <p className="font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[20px] text-rdj-text-primary text-[14px]">
+        <p className="font-sans font-normal leading-[20px] text-rdj-text-primary text-[14px]">
           {label}
         </p>
       )}

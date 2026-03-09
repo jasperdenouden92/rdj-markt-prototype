@@ -544,7 +544,7 @@ export default function VesselMapView({ onArchive, onMoveToPipeline }: VesselMap
         <div className="absolute right-0 top-0 bottom-0 w-[380px] bg-white border-l border-[#eaecf0] overflow-y-auto z-[1000]">
           {/* Panel Header */}
           <div className="flex items-center justify-between px-[20px] py-[16px] border-b border-[#eaecf0]">
-            <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[24px] text-[#101828] text-[16px]">
+            <p className="font-sans font-bold leading-[24px] text-[#101828] text-[16px]">
               {selectedCluster.items.length} {selectedCluster.items.length === 1 ? 'vaartuig' : 'vaartuigen'} op deze locatie
             </p>
             <button
@@ -567,10 +567,10 @@ export default function VesselMapView({ onArchive, onMoveToPipeline }: VesselMap
               >
                 {/* Name + avatar */}
                 <div className="flex items-start justify-between mb-[4px]">
-                  <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[20px] text-[#101828] text-[14px] flex-1">{item.name}</p>
+                  <p className="font-sans font-bold leading-[20px] text-[#101828] text-[14px] flex-1">{item.name}</p>
                   <div className="ml-[8px] overflow-clip relative shrink-0 size-[28px] rounded-full bg-[#f2f4f7] flex items-center justify-center">
                     {item.owner ? (
-                      <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold text-[#344054] text-[11px]">
+                      <p className="font-sans font-bold text-[#344054] text-[11px]">
                         {item.owner === 'avatar1' ? 'PJ' : 'LV'}
                       </p>
                     ) : (
@@ -582,7 +582,7 @@ export default function VesselMapView({ onArchive, onMoveToPipeline }: VesselMap
                 </div>
 
                 {/* Tonnage / capacity / type */}
-                <p className="font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[18px] text-[#475467] text-[13px] mb-[10px]">
+                <p className="font-sans font-normal leading-[18px] text-[#475467] text-[13px] mb-[10px]">
                   {item.tonnage} / {item.capacity} ({item.type})
                 </p>
 
@@ -591,8 +591,8 @@ export default function VesselMapView({ onArchive, onMoveToPipeline }: VesselMap
                   <svg width="14" height="14" viewBox="0 0 14 14" fill="none" className="shrink-0">
                     <circle cx="7" cy="7" r="3" fill="#1567a4"/>
                   </svg>
-                  <p className="font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[18px] text-[#344054] text-[13px] flex-1">{item.location}</p>
-                  <p className="font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[18px] text-[#667085] text-[13px] shrink-0">{item.availableFrom}</p>
+                  <p className="font-sans font-normal leading-[18px] text-[#344054] text-[13px] flex-1">{item.location}</p>
+                  <p className="font-sans font-normal leading-[18px] text-[#667085] text-[13px] shrink-0">{item.availableFrom}</p>
                 </div>
 
                 {/* Relation */}
@@ -600,16 +600,16 @@ export default function VesselMapView({ onArchive, onMoveToPipeline }: VesselMap
                   <svg width="14" height="14" viewBox="0 0 14 14" fill="none" className="shrink-0">
                     <path d="M2 12V4H5V2H9V6H12V12H8V9H6V12H2Z" stroke="#667085" strokeWidth="1.1" fill="none" strokeLinecap="round" strokeLinejoin="round"/>
                   </svg>
-                  <p className="font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[18px] text-[#344054] text-[13px] flex-1">{item.relation}</p>
+                  <p className="font-sans font-normal leading-[18px] text-[#344054] text-[13px] flex-1">{item.relation}</p>
                   {item.relationContact && (
-                    <p className="font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[18px] text-[#667085] text-[13px] shrink-0">{item.relationContact}</p>
+                    <p className="font-sans font-normal leading-[18px] text-[#667085] text-[13px] shrink-0">{item.relationContact}</p>
                   )}
                 </div>
 
                 {/* Bottom row: matches, stars, actions */}
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-[8px]">
-                    <span className="font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[18px] text-[#667085] text-[13px]">{item.matches} matches</span>
+                    <span className="font-sans font-normal leading-[18px] text-[#667085] text-[13px]">{item.matches} matches</span>
                     <div className="flex items-center gap-[2px]">
                       {[1, 2, 3, 4, 5].map(star => (
                         <button

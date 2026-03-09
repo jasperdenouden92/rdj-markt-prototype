@@ -85,7 +85,7 @@ export default function FilterDropdown({
                 {leadingIcon}
               </div>
               <div className="content-stretch flex items-center justify-center px-[2px] relative shrink-0">
-                <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[20px] relative shrink-0 text-[#344054] text-[14px] text-left whitespace-nowrap">
+                <p className="font-sans font-bold leading-[20px] relative shrink-0 text-[#344054] text-[14px] text-left whitespace-nowrap">
                   {displayLabel}
                 </p>
               </div>
@@ -93,7 +93,7 @@ export default function FilterDropdown({
           ) : (
             <>
               <div className="content-stretch flex items-center justify-center px-[2px] relative shrink-0">
-                <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[20px] relative shrink-0 text-[#344054] text-[14px] whitespace-nowrap">
+                <p className="font-sans font-bold leading-[20px] relative shrink-0 text-[#344054] text-[14px] whitespace-nowrap">
                   {displayLabel}
                 </p>
               </div>
@@ -117,7 +117,7 @@ export default function FilterDropdown({
                 onSelect?.(option);
                 setIsOpen(false);
               }}
-              className={`w-full text-left px-[14px] py-[10px] font-['Hanken_Grotesk:Regular',sans-serif] font-normal text-[14px] leading-[20px] hover:bg-rdj-bg-secondary transition-colors cursor-pointer whitespace-nowrap ${
+              className={`w-full text-left px-[14px] py-[10px] font-sans font-normal text-[14px] leading-[20px] hover:bg-rdj-bg-secondary transition-colors cursor-pointer whitespace-nowrap ${
                 option === value
                   ? "text-[#1567a4] bg-[#f0f7fc]"
                   : "text-[#344054]"

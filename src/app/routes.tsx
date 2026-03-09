@@ -21,8 +21,8 @@ function NotFound() {
   return (
     <div className="flex items-center justify-center min-h-screen">
       <div className="text-center">
-        <h1 className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold text-[30px] text-[#101828]">404</h1>
-        <p className="font-['Hanken_Grotesk:Regular',sans-serif] text-[#667085] text-[16px] mt-2">Pagina niet gevonden</p>
+        <h1 className="font-sans font-bold text-[30px] text-[#101828]">404</h1>
+        <p className="font-sans text-[#667085] text-[16px] mt-2">Pagina niet gevonden</p>
       </div>
     </div>
   );

@@ -5,7 +5,7 @@ function Content() {
     <div className="flex-[1_0_0] min-h-px min-w-px relative rounded-[4px]" data-name="Content">
       <div className="flex flex-row items-center size-full">
         <div className="content-stretch flex items-center px-[8px] py-[9px] relative w-full">
-          <p className="flex-[1_0_0] font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[20px] min-h-px min-w-px relative text-[#344054] text-[14px]">Inbox</p>
+          <p className="flex-[1_0_0] font-sans font-bold leading-[20px] min-h-px min-w-px relative text-[#344054] text-[14px]">Inbox</p>
         </div>
       </div>
     </div>
@@ -17,7 +17,7 @@ function Content1() {
     <div className="bg-[#f9fafb] flex-[1_0_0] min-h-px min-w-px relative rounded-[4px]" data-name="Content">
       <div className="flex flex-row items-center size-full">
         <div className="content-stretch flex items-center px-[8px] py-[9px] relative w-full">
-          <p className="flex-[1_0_0] font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[20px] min-h-px min-w-px relative text-[#182230] text-[14px]">Bevrachting</p>
+          <p className="flex-[1_0_0] font-sans font-bold leading-[20px] min-h-px min-w-px relative text-[#182230] text-[14px]">Bevrachting</p>
         </div>
       </div>
     </div>
@@ -29,7 +29,7 @@ function Content2() {
     <div className="flex-[1_0_0] min-h-px min-w-px relative rounded-[4px]" data-name="Content">
       <div className="flex flex-row items-center size-full">
         <div className="content-stretch flex items-center px-[8px] py-[9px] relative w-full">
-          <p className="flex-[1_0_0] font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[20px] min-h-px min-w-px relative text-[#344054] text-[14px]">Pijplijn</p>
+          <p className="flex-[1_0_0] font-sans font-bold leading-[20px] min-h-px min-w-px relative text-[#344054] text-[14px]">Pijplijn</p>
         </div>
       </div>
     </div>
@@ -41,7 +41,7 @@ function Content3() {
     <div className="flex-[1_0_0] min-h-px min-w-px relative rounded-[4px]" data-name="Content">
       <div className="flex flex-row items-center size-full">
         <div className="content-stretch flex items-center px-[8px] py-[9px] relative w-full">
-          <p className="flex-[1_0_0] font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[20px] min-h-px min-w-px relative text-[#344054] text-[14px]">Deals</p>
+          <p className="flex-[1_0_0] font-sans font-bold leading-[20px] min-h-px min-w-px relative text-[#344054] text-[14px]">Deals</p>
         </div>
       </div>
     </div>

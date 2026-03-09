@@ -34,7 +34,7 @@ export default function LadingMarktSidebar({ id, onEdit }: LadingMarktSidebarPro
         onTabChange={setActiveTab}
       >
         <div className="flex items-center justify-center py-[40px] w-full">
-          <p className="font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[20px] text-rdj-text-tertiary text-[14px]">
+          <p className="font-sans font-normal leading-[20px] text-rdj-text-tertiary text-[14px]">
             Laden...
           </p>
         </div>
@@ -53,7 +53,7 @@ export default function LadingMarktSidebar({ id, onEdit }: LadingMarktSidebarPro
         onTabChange={setActiveTab}
       >
         <div className="flex items-center justify-center py-[40px] w-full">
-          <p className="font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[20px] text-rdj-text-tertiary text-[14px]">
+          <p className="font-sans font-normal leading-[20px] text-rdj-text-tertiary text-[14px]">
             {error || "Geen data gevonden"}
           </p>
         </div>

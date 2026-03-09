@@ -53,7 +53,7 @@ export default function PageHeader({
             <div className="content-center flex flex-wrap gap-[20px_16px] items-center relative shrink-0 w-full">
               <div className="content-stretch flex flex-[1_0_0] flex-col gap-[4px] items-start min-h-px min-w-[320px] relative">
                 <div className="flex items-center gap-[12px] w-full">
-                  <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[38px] shrink-0 text-rdj-text-primary text-[30px]">
+                  <p className="font-sans font-bold leading-[38px] shrink-0 text-rdj-text-primary text-[30px]">
                     {title}
                   </p>
                   {titleBadge}
@@ -61,7 +61,7 @@ export default function PageHeader({
                 {subtitle && (
                   <div className="w-full">
                     {typeof subtitle === "string" ? (
-                      <p className="font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[24px] text-rdj-text-secondary text-[16px]">
+                      <p className="font-sans font-normal leading-[24px] text-rdj-text-secondary text-[16px]">
                         {subtitle}
                       </p>
                     ) : (
@@ -100,7 +100,7 @@ export default function PageHeader({
                     }`}
                   >
                     <p
-                      className={`font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[20px] relative shrink-0 text-[14px] whitespace-nowrap ${
+                      className={`font-sans font-bold leading-[20px] relative shrink-0 text-[14px] whitespace-nowrap ${
                         tab.isActive ? "text-rdj-text-brand" : "text-rdj-text-tertiary"
                       }`}
                     >

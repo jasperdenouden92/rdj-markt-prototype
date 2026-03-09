@@ -130,7 +130,7 @@ export default function Button({
         {/* Label */}
         {label && (
           <p
-            className={`font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[20px] relative shrink-0 text-[14px] whitespace-nowrap ${v.text}`}
+            className={`font-sans font-bold leading-[20px] relative shrink-0 text-[14px] whitespace-nowrap ${v.text}`}
           >
             {label}
           </p>

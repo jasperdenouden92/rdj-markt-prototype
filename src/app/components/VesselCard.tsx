@@ -1,7 +1,6 @@
 import { Link } from "react-router";
 import { useDrag } from "react-dnd";
-// import imgAvatar from "figma:asset/a2737d3b5b234fc04041650cb9f114889c6859da.png";
-const imgAvatar = "";
+import imgAvatar from "../../assets/a2737d3b5b234fc04041650cb9f114889c6859da.png";
 import { Vessel } from "../data/mock-data";
 
 interface VesselCardProps {
@@ -26,10 +25,10 @@ export default function VesselCard({ vessel }: VesselCardProps) {
         {/* Top Row */}
         <div className="flex items-start gap-[10px] mb-[12px] w-full">
           <div className="flex-1 min-w-0">
-            <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[20px] text-[14px] text-black mb-[2px]">
+            <p className="font-sans font-bold leading-[20px] text-[14px] text-black mb-[2px]">
               {vessel.title}
             </p>
-            <p className="font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[18px] text-rdj-text-secondary text-[12px]">
+            <p className="font-sans font-normal leading-[18px] text-rdj-text-secondary text-[12px]">
               {vessel.weight} · {vessel.vesselType}
             </p>
           </div>
@@ -56,12 +55,12 @@ export default function VesselCard({ vessel }: VesselCardProps) {
                   </defs>
                 </svg>
               </div>
-              <p className="font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[18px] text-rdj-text-primary text-[12px] overflow-hidden text-ellipsis whitespace-nowrap">
+              <p className="font-sans font-normal leading-[18px] text-rdj-text-primary text-[12px] overflow-hidden text-ellipsis whitespace-nowrap">
                 {vessel.location}
               </p>
             </div>
             {vessel.locationDate && (
-              <p className="font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[18px] text-rdj-text-tertiary text-[12px] whitespace-nowrap ml-[8px]">
+              <p className="font-sans font-normal leading-[18px] text-rdj-text-tertiary text-[12px] whitespace-nowrap ml-[8px]">
                 {vessel.locationDate}
               </p>
             )}
@@ -77,7 +76,7 @@ export default function VesselCard({ vessel }: VesselCardProps) {
                   <circle cx="6" cy="6" fill="#667085" r="3" />
                 </svg>
               </div>
-              <p className="font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[18px] text-rdj-text-primary text-[12px] overflow-hidden text-ellipsis whitespace-nowrap">
+              <p className="font-sans font-normal leading-[18px] text-rdj-text-primary text-[12px] overflow-hidden text-ellipsis whitespace-nowrap">
                 {vessel.to}
               </p>
             </div>
@@ -88,10 +87,10 @@ export default function VesselCard({ vessel }: VesselCardProps) {
         {vessel.matches && vessel.matches > 0 && (
           <div className="mt-[12px] pt-[12px] border-t border-rdj-border-secondary">
             <div className="flex items-center gap-[6px]">
-              <p className="font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[18px] text-rdj-text-tertiary text-[12px]">
+              <p className="font-sans font-normal leading-[18px] text-rdj-text-tertiary text-[12px]">
                 {vessel.matches} ladingen
               </p>
-              <p className="font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[18px] text-rdj-text-tertiary text-[12px]">
+              <p className="font-sans font-normal leading-[18px] text-rdj-text-tertiary text-[12px]">
                 · 12 matches
               </p>
             </div>

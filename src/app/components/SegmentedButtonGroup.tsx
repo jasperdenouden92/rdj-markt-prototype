@@ -69,7 +69,7 @@ export default function SegmentedButtonGroup({
               {/* Label */}
               {item.label && (
                 <p
-                  className={`font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[20px] relative shrink-0 text-[14px] whitespace-nowrap ${
+                  className={`font-sans font-bold leading-[20px] relative shrink-0 text-[14px] whitespace-nowrap ${
                     isActive ? "text-rdj-text-brand" : "text-[#344054]"
                   }`}
                 >

@@ -67,10 +67,10 @@ Zie bijgevoegd beschikbare vaartuigen van dinsdag 27 januari. Mocht u passende l
           <div className="relative shrink-0 w-full">
             <div className="content-stretch flex gap-[16px] items-start pt-[24px] px-[24px] relative w-full">
               <div className="content-stretch flex flex-[1_0_0] flex-col gap-[4px] items-start min-h-px min-w-px relative">
-                <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[26px] relative shrink-0 text-[#101828] text-[18px] w-full">
+                <p className="font-sans font-bold leading-[26px] relative shrink-0 text-[#101828] text-[18px] w-full">
                   Werklijst e-mailen
                 </p>
-                <p className="font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[20px] relative shrink-0 text-[#475467] text-[14px] w-full">
+                <p className="font-sans font-normal leading-[20px] relative shrink-0 text-[#475467] text-[14px] w-full">
                   Selecteer wat je van de bevrachting wilt e-mailen en naar wie.
                 </p>
               </div>
@@ -94,7 +94,7 @@ Zie bijgevoegd beschikbare vaartuigen van dinsdag 27 januari. Mocht u passende l
           <div className="content-stretch flex flex-col gap-[24px] items-start p-[24px] relative w-full">
             {/* Status */}
             <div className="content-stretch flex flex-col gap-[6px] items-start relative shrink-0 w-full">
-              <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[20px] relative shrink-0 text-[#344054] text-[14px] whitespace-nowrap">Status</p>
+              <p className="font-sans font-bold leading-[20px] relative shrink-0 text-[#344054] text-[14px] whitespace-nowrap">Status</p>
               <div className="content-stretch flex gap-[16px] items-start relative shrink-0 w-full">
                 <RadioButton
                   checked={status === 'werklijst-en-markt'}
@@ -111,7 +111,7 @@ Zie bijgevoegd beschikbare vaartuigen van dinsdag 27 januari. Mocht u passende l
 
             {/* Inhoud */}
             <div className="content-stretch flex flex-col gap-[6px] items-start relative shrink-0 w-full">
-              <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[20px] relative shrink-0 text-[#344054] text-[14px] whitespace-nowrap">Inhoud</p>
+              <p className="font-sans font-bold leading-[20px] relative shrink-0 text-[#344054] text-[14px] whitespace-nowrap">Inhoud</p>
               <div className="content-stretch flex gap-[16px] items-start relative shrink-0 w-full">
                 <RadioButton
                   checked={content === 'lading-en-vaartuigen'}
@@ -135,7 +135,7 @@ Zie bijgevoegd beschikbare vaartuigen van dinsdag 27 januari. Mocht u passende l
             <div className="content-stretch flex flex-col gap-[8px] items-start relative shrink-0 w-full">
               <div className="content-stretch flex gap-[8px] items-start relative shrink-0 w-full">
                 <div className="content-stretch flex flex-[1_0_0] flex-col items-start min-h-px min-w-px relative">
-                  <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[20px] relative shrink-0 text-[#344054] text-[14px] whitespace-nowrap">Ontvangers</p>
+                  <p className="font-sans font-bold leading-[20px] relative shrink-0 text-[#344054] text-[14px] whitespace-nowrap">Ontvangers</p>
                 </div>
                 <button className="content-stretch flex gap-[6px] items-center justify-center overflow-clip relative shrink-0" onClick={addStandaardBevrachters}>
                   <div className="overflow-clip relative shrink-0 size-[20px]">
@@ -147,7 +147,7 @@ Zie bijgevoegd beschikbare vaartuigen van dinsdag 27 januari. Mocht u passende l
                       </div>
                     </div>
                   </div>
-                  <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[20px] relative shrink-0 text-[#145990] text-[14px] whitespace-nowrap">Standaard bevrachters</p>
+                  <p className="font-sans font-bold leading-[20px] relative shrink-0 text-[#145990] text-[14px] whitespace-nowrap">Standaard bevrachters</p>
                 </button>
               </div>
               <div className="content-stretch flex flex-col items-start relative shrink-0 w-full">
@@ -159,7 +159,7 @@ Zie bijgevoegd beschikbare vaartuigen van dinsdag 27 januari. Mocht u passende l
                           {recipients.map(email => (
                             <div key={email} className="bg-white content-stretch flex gap-[3px] items-center justify-center pl-[9px] pr-[4px] py-[2px] relative rounded-[4px] shrink-0">
                               <div aria-hidden="true" className="absolute border border-[#d0d5dd] border-solid inset-0 pointer-events-none rounded-[4px]" />
-                              <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[20px] relative shrink-0 text-[#344054] text-[14px] text-center whitespace-nowrap">{email}</p>
+                              <p className="font-sans font-bold leading-[20px] relative shrink-0 text-[#344054] text-[14px] text-center whitespace-nowrap">{email}</p>
                               <button onClick={() => removeRecipient(email)} className="content-stretch flex flex-col items-start overflow-clip p-[2px] relative rounded-[3px] shrink-0">
                                 <div className="overflow-clip relative shrink-0 size-[12px]">
                                   <div className="absolute inset-1/4">
@@ -194,14 +194,14 @@ Zie bijgevoegd beschikbare vaartuigen van dinsdag 27 januari. Mocht u passende l
                     <div className="bg-white relative rounded-[6px] shrink-0 w-full border-[#fda29b]">
                       <div className="flex flex-row items-center overflow-clip rounded-[inherit] size-full">
                         <div className="content-stretch flex items-center px-[12px] py-[8px] relative w-full">
-                          <p className="flex-1 font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[20px] text-[#667085] text-[14px] outline-none">
+                          <p className="flex-1 font-sans font-normal leading-[20px] text-[#667085] text-[14px] outline-none">
                             Selecteer relaties...
                           </p>
                         </div>
                       </div>
                       <div aria-hidden="true" className="absolute border border-[#fda29b] border-solid inset-0 pointer-events-none rounded-[6px] shadow-[0px_1px_2px_0px_rgba(16,24,40,0.05)]" />
                     </div>
-                    <p className="font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[20px] relative shrink-0 text-[#d92d20] text-[14px] text-left w-full">
+                    <p className="font-sans font-normal leading-[20px] relative shrink-0 text-[#d92d20] text-[14px] text-left w-full">
                       Selecteer ten minste 1 relatie.
                     </p>
                   </div>
@@ -211,11 +211,11 @@ Zie bijgevoegd beschikbare vaartuigen van dinsdag 27 januari. Mocht u passende l
 
             {/* Afzender */}
             <div className="content-stretch flex flex-col gap-[6px] items-start relative shrink-0 w-full">
-              <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[20px] relative shrink-0 text-[#344054] text-[14px] text-left whitespace-nowrap">Afzender</p>
+              <p className="font-sans font-bold leading-[20px] relative shrink-0 text-[#344054] text-[14px] text-left whitespace-nowrap">Afzender</p>
               <div className="bg-white relative rounded-[6px] shrink-0 w-full">
                 <div className="flex flex-row items-center overflow-clip rounded-[inherit] size-full">
                   <div className="content-stretch flex gap-[8px] items-center px-[14px] py-[10px] relative w-full">
-                    <p className="flex-1 font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[20px] text-[#101828] text-[14px] text-left whitespace-nowrap">{sender}</p>
+                    <p className="flex-1 font-sans font-normal leading-[20px] text-[#101828] text-[14px] text-left whitespace-nowrap">{sender}</p>
                     <div className="overflow-clip relative shrink-0 size-[20px]">
                       <div className="absolute bottom-[37.5%] left-1/4 right-1/4 top-[37.5%]">
                         <div className="absolute inset-[-16.67%_-8.33%]">
@@ -233,12 +233,12 @@ Zie bijgevoegd beschikbare vaartuigen van dinsdag 27 januari. Mocht u passende l
 
             {/* Onderwerp */}
             <div className="content-stretch flex flex-col gap-[6px] items-start relative shrink-0 w-full">
-              <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[20px] relative shrink-0 text-[#344054] text-[14px] text-left whitespace-nowrap">Onderwerp</p>
+              <p className="font-sans font-bold leading-[20px] relative shrink-0 text-[#344054] text-[14px] text-left whitespace-nowrap">Onderwerp</p>
               <div className="bg-white relative rounded-[6px] shrink-0 w-full">
                 <div aria-hidden="true" className="absolute border border-[#d0d5dd] border-solid inset-0 pointer-events-none rounded-[6px] shadow-[0px_1px_2px_0px_rgba(16,24,40,0.05)]" />
                 <div className="flex flex-row items-center size-full">
                   <div className="content-stretch flex gap-[8px] items-center px-[14px] py-[10px] relative w-full">
-                    <p className="flex-1 font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[20px] text-[#101828] text-[14px] text-ellipsis text-left whitespace-nowrap">{subject}</p>
+                    <p className="flex-1 font-sans font-normal leading-[20px] text-[#101828] text-[14px] text-ellipsis text-left whitespace-nowrap">{subject}</p>
                   </div>
                 </div>
               </div>
@@ -246,18 +246,18 @@ Zie bijgevoegd beschikbare vaartuigen van dinsdag 27 januari. Mocht u passende l
 
             {/* Begeleidende e-mail */}
             <div className="content-stretch flex flex-col gap-[6px] h-[180px] items-start relative shrink-0 w-full">
-              <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[20px] relative shrink-0 text-[#344054] text-[14px] text-left whitespace-nowrap">Begeleidende e-mail</p>
+              <p className="font-sans font-bold leading-[20px] relative shrink-0 text-[#344054] text-[14px] text-left whitespace-nowrap">Begeleidende e-mail</p>
               <div className="bg-white flex-[1_0_0] relative rounded-[6px] w-full">
                 <div className="overflow-clip rounded-[inherit] size-full">
                   <div className="content-stretch flex items-start px-[14px] py-[12px] relative size-full">
-                    <p className="flex-[1_0_0] font-['Hanken_Grotesk:Regular',sans-serif] font-normal h-full leading-[20px] text-[#101828] text-[14px] text-left whitespace-pre-wrap">
+                    <p className="flex-[1_0_0] font-sans font-normal h-full leading-[20px] text-[#101828] text-[14px] text-left whitespace-pre-wrap">
                       {message}
                     </p>
                   </div>
                 </div>
                 <div aria-hidden="true" className="absolute border border-[#d0d5dd] border-solid inset-0 pointer-events-none rounded-[6px] shadow-[0px_1px_2px_0px_rgba(16,24,40,0.05)]" />
               </div>
-              <p className="font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[20px] relative shrink-0 text-[#475467] text-[14px] text-left w-full">
+              <p className="font-sans font-normal leading-[20px] relative shrink-0 text-[#475467] text-[14px] text-left w-full">
                 De e-mail bevat automatisch een afbeelding en PDF van de geëxporteerde werklijst.
               </p>
             </div>
@@ -281,7 +281,7 @@ Zie bijgevoegd beschikbare vaartuigen van dinsdag 27 januari. Mocht u passende l
                 className="bg-white relative rounded-[6px] shrink-0"
               >
                 <div className="content-stretch flex gap-[6px] items-center justify-center overflow-clip px-[16px] py-[10px] relative rounded-[inherit]">
-                  <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[24px] relative shrink-0 text-[#344054] text-[16px] whitespace-nowrap">Annuleren</p>
+                  <p className="font-sans font-bold leading-[24px] relative shrink-0 text-[#344054] text-[16px] whitespace-nowrap">Annuleren</p>
                 </div>
                 <div aria-hidden="true" className="absolute border border-[#d0d5dd] border-solid inset-0 pointer-events-none rounded-[6px] shadow-[0px_1px_2px_0px_rgba(16,24,40,0.05)]" />
               </button>
@@ -291,7 +291,7 @@ Zie bijgevoegd beschikbare vaartuigen van dinsdag 27 januari. Mocht u passende l
                 className={`bg-[#1567a4] relative rounded-[6px] shrink-0 ${recipients.length === 0 ? 'opacity-50 cursor-not-allowed' : ''}`}
               >
                 <div className="content-stretch flex gap-[6px] items-center justify-center overflow-clip px-[16px] py-[10px] relative rounded-[inherit]">
-                  <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[24px] relative shrink-0 text-[16px] text-white whitespace-nowrap">Verzenden</p>
+                  <p className="font-sans font-bold leading-[24px] relative shrink-0 text-[16px] text-white whitespace-nowrap">Verzenden</p>
                 </div>
                 <div aria-hidden="true" className="absolute border border-[#1567a4] border-solid inset-0 pointer-events-none rounded-[6px] shadow-[0px_1px_2px_0px_rgba(16,24,40,0.05)]" />
               </button>

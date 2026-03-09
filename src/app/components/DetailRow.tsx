@@ -83,7 +83,7 @@ export default function DetailRow({
       <div
         className={`bg-white content-stretch flex items-center py-[8px] relative rounded-[6px] shrink-0 ${labelWidth}`}
       >
-        <p className="flex-[1_0_0] font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[20px] min-h-px min-w-px relative text-rdj-text-secondary text-[14px]">
+        <p className="flex-[1_0_0] font-sans font-normal leading-[20px] min-h-px min-w-px relative text-rdj-text-secondary text-[14px]">
           {label}
         </p>
       </div>
@@ -128,11 +128,11 @@ function DefaultValue({
     <div className="bg-white relative rounded-[6px] shrink-0 w-full">
       <div className="flex flex-row items-center size-full">
         <div className="content-stretch flex flex-col justify-center pl-[12px] pr-[6px] py-[8px] relative w-full">
-          <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[20px] text-rdj-text-primary text-[14px]">
+          <p className="font-sans font-bold leading-[20px] text-rdj-text-primary text-[14px]">
             {value || "—"}
           </p>
           {subtext && (
-            <p className="font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[20px] text-rdj-text-secondary text-[14px]">
+            <p className="font-sans font-normal leading-[20px] text-rdj-text-secondary text-[14px]">
               {subtext}
             </p>
           )}
@@ -158,12 +158,12 @@ function LinkedValue({
         className="content-stretch flex items-center gap-[6px] overflow-clip relative shrink-0 w-full group"
         type="button"
       >
-        <p className="flex-[1_0_0] font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[20px] min-h-px min-w-px overflow-hidden relative text-rdj-text-brand text-[14px] text-ellipsis text-left whitespace-nowrap group-hover:underline">
+        <p className="flex-[1_0_0] font-sans font-bold leading-[20px] min-h-px min-w-px overflow-hidden relative text-rdj-text-brand text-[14px] text-ellipsis text-left whitespace-nowrap group-hover:underline">
           {value || "—"}
         </p>
       </button>
       {subtext && (
-        <p className="font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[20px] text-rdj-text-secondary text-[14px]">
+        <p className="font-sans font-normal leading-[20px] text-rdj-text-secondary text-[14px]">
           {subtext}
         </p>
       )}
@@ -175,7 +175,7 @@ function BadgesValue({ badges }: { badges?: string[] }) {
   if (!badges || badges.length === 0) {
     return (
       <div className="px-[12px] py-[8px]">
-        <p className="font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[20px] text-rdj-text-tertiary text-[14px]">
+        <p className="font-sans font-normal leading-[20px] text-rdj-text-tertiary text-[14px]">
           —
         </p>
       </div>
@@ -196,7 +196,7 @@ function BadgesValue({ badges }: { badges?: string[] }) {
                   aria-hidden="true"
                   className="absolute border border-rdj-border-primary border-solid inset-0 pointer-events-none rounded-[4px]"
                 />
-                <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[18px] relative shrink-0 text-rdj-text-primary text-[12px] text-center whitespace-nowrap">
+                <p className="font-sans font-bold leading-[18px] relative shrink-0 text-rdj-text-primary text-[12px] text-center whitespace-nowrap">
                   {badge}
                 </p>
               </div>
@@ -241,7 +241,7 @@ function UserValue({
           />
         ) : (
           <div className="flex items-center justify-center size-full">
-            <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold text-[11px] text-rdj-text-secondary leading-none">
+            <p className="font-sans font-bold text-[11px] text-rdj-text-secondary leading-none">
               {initials}
             </p>
           </div>
@@ -249,7 +249,7 @@ function UserValue({
       </div>
 
       {/* Name */}
-      <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[20px] text-rdj-text-primary text-[14px] truncate min-w-0">
+      <p className="font-sans font-bold leading-[20px] text-rdj-text-primary text-[14px] truncate min-w-0">
         {value || "—"}
       </p>
     </div>

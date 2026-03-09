@@ -61,7 +61,7 @@ export default function AddInboxItemModal({ isOpen, onClose, onSubmit, itemType:
         <div className="relative shrink-0 w-full">
           <div className="content-stretch flex gap-[16px] items-start pt-[24px] px-[24px] relative w-full">
             <div className="content-stretch flex flex-[1_0_0] flex-col gap-[4px] items-start min-h-px min-w-px relative">
-              <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[26px] relative shrink-0 text-[#101828] text-[18px] w-full">
+              <p className="font-sans font-bold leading-[26px] relative shrink-0 text-[#101828] text-[18px] w-full">
                 Nieuw item toevoegen aan inbox
               </p>
             </div>
@@ -90,7 +90,7 @@ export default function AddInboxItemModal({ isOpen, onClose, onSubmit, itemType:
               className={`content-stretch flex flex-col items-center relative shrink-0 ${itemType === 'lading' ? 'border-b-2 border-[#1567a4]' : ''}`}
             >
               <div className={`content-stretch flex items-center justify-center px-[12px] py-[10px] relative rounded-tl-[6px] rounded-tr-[6px] shrink-0 ${itemType === 'lading' ? 'bg-[#f9fafb]' : 'bg-white'}`}>
-                <p className={`font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[20px] relative shrink-0 text-[14px] whitespace-nowrap ${itemType === 'lading' ? 'text-[#145990]' : 'text-[#667085]'}`}>
+                <p className={`font-sans font-bold leading-[20px] relative shrink-0 text-[14px] whitespace-nowrap ${itemType === 'lading' ? 'text-[#145990]' : 'text-[#667085]'}`}>
                   Lading
                 </p>
               </div>
@@ -100,7 +100,7 @@ export default function AddInboxItemModal({ isOpen, onClose, onSubmit, itemType:
               className={`content-stretch flex flex-col items-center relative shrink-0 ${itemType === 'vaartuig' ? 'border-b-2 border-[#1567a4]' : ''}`}
             >
               <div className={`content-stretch flex items-center justify-center px-[12px] py-[10px] relative rounded-tl-[6px] rounded-tr-[6px] shrink-0 ${itemType === 'vaartuig' ? 'bg-[#f9fafb]' : 'bg-white'}`}>
-                <p className={`font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[20px] relative shrink-0 text-[14px] whitespace-nowrap ${itemType === 'vaartuig' ? 'text-[#145990]' : 'text-[#667085]'}`}>
+                <p className={`font-sans font-bold leading-[20px] relative shrink-0 text-[14px] whitespace-nowrap ${itemType === 'vaartuig' ? 'text-[#145990]' : 'text-[#667085]'}`}>
                   Vaartuig
                 </p>
               </div>
@@ -114,7 +114,7 @@ export default function AddInboxItemModal({ isOpen, onClose, onSubmit, itemType:
             {/* Row 1: Relatie & Contactpersoon */}
             <div className="flex gap-[12px] w-full">
               <div className="flex-1 flex flex-col gap-[6px]">
-                <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[20px] text-[#344054] text-[14px]">
+                <p className="font-sans font-bold leading-[20px] text-[#344054] text-[14px]">
                   Relatie
                 </p>
                 <div className="bg-white relative rounded-[6px] w-full">
@@ -122,13 +122,13 @@ export default function AddInboxItemModal({ isOpen, onClose, onSubmit, itemType:
                     type="text"
                     value={formData.relation}
                     onChange={(e) => setFormData({ ...formData, relation: e.target.value })}
-                    className="w-full px-[12px] py-[8px] rounded-[6px] border border-[#d0d5dd] font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[20px] text-[#101828] text-[14px] focus:outline-none focus:ring-2 focus:ring-[#1567a4]"
+                    className="w-full px-[12px] py-[8px] rounded-[6px] border border-[#d0d5dd] font-sans font-normal leading-[20px] text-[#101828] text-[14px] focus:outline-none focus:ring-2 focus:ring-[#1567a4]"
                     placeholder="Selecteer relatie..."
                   />
                 </div>
               </div>
               <div className="flex-1 flex flex-col gap-[6px]">
-                <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[20px] text-[#344054] text-[14px]">
+                <p className="font-sans font-bold leading-[20px] text-[#344054] text-[14px]">
                   Contactpersoon (optioneel)
                 </p>
                 <div className="bg-white relative rounded-[6px] w-full">
@@ -136,7 +136,7 @@ export default function AddInboxItemModal({ isOpen, onClose, onSubmit, itemType:
                     type="text"
                     value={formData.contactPerson}
                     onChange={(e) => setFormData({ ...formData, contactPerson: e.target.value })}
-                    className="w-full px-[12px] py-[8px] rounded-[6px] border border-[#d0d5dd] font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[20px] text-[#101828] text-[14px] focus:outline-none focus:ring-2 focus:ring-[#1567a4]"
+                    className="w-full px-[12px] py-[8px] rounded-[6px] border border-[#d0d5dd] font-sans font-normal leading-[20px] text-[#101828] text-[14px] focus:outline-none focus:ring-2 focus:ring-[#1567a4]"
                     placeholder="Selecteer contactpersoon..."
                   />
                 </div>
@@ -147,7 +147,7 @@ export default function AddInboxItemModal({ isOpen, onClose, onSubmit, itemType:
             {itemType === 'lading' && (
               <div className="flex gap-[12px] w-full">
                 <div className="w-[160px] flex flex-col gap-[6px]">
-                  <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[20px] text-[#344054] text-[14px]">
+                  <p className="font-sans font-bold leading-[20px] text-[#344054] text-[14px]">
                     Tonnage
                   </p>
                   <div className="bg-white relative rounded-[6px] flex items-center overflow-hidden border border-[#d0d5dd]">
@@ -155,16 +155,16 @@ export default function AddInboxItemModal({ isOpen, onClose, onSubmit, itemType:
                       type="number"
                       value={formData.tonnage}
                       onChange={(e) => setFormData({ ...formData, tonnage: e.target.value })}
-                      className="flex-1 px-[12px] py-[8px] font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[20px] text-[#101828] text-[14px] focus:outline-none"
+                      className="flex-1 px-[12px] py-[8px] font-sans font-normal leading-[20px] text-[#101828] text-[14px] focus:outline-none"
                       placeholder="5000"
                     />
                     <div className="px-[12px] py-[8px] bg-[#f9fafb]">
-                      <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[20px] text-[#475467] text-[14px]">ton</p>
+                      <p className="font-sans font-bold leading-[20px] text-[#475467] text-[14px]">ton</p>
                     </div>
                   </div>
                 </div>
                 <div className="flex-1 flex flex-col gap-[6px]">
-                  <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[20px] text-[#344054] text-[14px]">
+                  <p className="font-sans font-bold leading-[20px] text-[#344054] text-[14px]">
                     Ladingsoort
                   </p>
                   <div className="bg-white relative rounded-[6px] w-full">
@@ -172,7 +172,7 @@ export default function AddInboxItemModal({ isOpen, onClose, onSubmit, itemType:
                       type="text"
                       value={formData.cargoType}
                       onChange={(e) => setFormData({ ...formData, cargoType: e.target.value })}
-                      className="w-full px-[12px] py-[8px] rounded-[6px] border border-[#d0d5dd] font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[20px] text-[#101828] text-[14px] focus:outline-none focus:ring-2 focus:ring-[#1567a4]"
+                      className="w-full px-[12px] py-[8px] rounded-[6px] border border-[#d0d5dd] font-sans font-normal leading-[20px] text-[#101828] text-[14px] focus:outline-none focus:ring-2 focus:ring-[#1567a4]"
                       placeholder="Bijv. Houtpellets"
                     />
                   </div>
@@ -184,7 +184,7 @@ export default function AddInboxItemModal({ isOpen, onClose, onSubmit, itemType:
             {itemType === 'lading' && (
               <div className="flex gap-[12px] w-full">
                 <div className="flex-1 flex flex-col gap-[6px]">
-                  <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[20px] text-[#344054] text-[14px]">
+                  <p className="font-sans font-bold leading-[20px] text-[#344054] text-[14px]">
                     Subsoort (optioneel)
                   </p>
                   <div className="bg-white relative rounded-[6px] w-full">
@@ -192,13 +192,13 @@ export default function AddInboxItemModal({ isOpen, onClose, onSubmit, itemType:
                       type="text"
                       value={formData.cargoSubType}
                       onChange={(e) => setFormData({ ...formData, cargoSubType: e.target.value })}
-                      className="w-full px-[12px] py-[8px] rounded-[6px] border border-[#d0d5dd] font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[20px] text-[#101828] text-[14px] focus:outline-none focus:ring-2 focus:ring-[#1567a4]"
+                      className="w-full px-[12px] py-[8px] rounded-[6px] border border-[#d0d5dd] font-sans font-normal leading-[20px] text-[#101828] text-[14px] focus:outline-none focus:ring-2 focus:ring-[#1567a4]"
                       placeholder="Bijv. Naaldhoutpellets"
                     />
                   </div>
                 </div>
                 <div className="w-[160px] flex flex-col gap-[6px]">
-                  <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[20px] text-[#344054] text-[14px]">
+                  <p className="font-sans font-bold leading-[20px] text-[#344054] text-[14px]">
                     Soortelijk gewicht
                   </p>
                   <div className="bg-white relative rounded-[6px] flex items-center overflow-hidden border border-[#d0d5dd]">
@@ -207,11 +207,11 @@ export default function AddInboxItemModal({ isOpen, onClose, onSubmit, itemType:
                       step="0.01"
                       value={formData.specificWeight}
                       onChange={(e) => setFormData({ ...formData, specificWeight: e.target.value })}
-                      className="flex-1 px-[12px] py-[8px] font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[20px] text-[#101828] text-[14px] focus:outline-none"
+                      className="flex-1 px-[12px] py-[8px] font-sans font-normal leading-[20px] text-[#101828] text-[14px] focus:outline-none"
                       placeholder="0,05"
                     />
                     <div className="px-[12px] py-[8px] bg-[#f9fafb]">
-                      <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[20px] text-[#475467] text-[14px]">
+                      <p className="font-sans font-bold leading-[20px] text-[#475467] text-[14px]">
                         ton/m³
                       </p>
                     </div>
@@ -232,7 +232,7 @@ export default function AddInboxItemModal({ isOpen, onClose, onSubmit, itemType:
                     </div>
                   </div>
                 </div>
-                <p className="flex-1 font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[20px] text-[#145990] text-[14px]">
+                <p className="flex-1 font-sans font-normal leading-[20px] text-[#145990] text-[14px]">
                   Benodigde inhoud: {(parseFloat(formData.tonnage) / parseFloat(formData.specificWeight)).toFixed(0)} m³
                 </p>
               </div>
@@ -241,7 +241,7 @@ export default function AddInboxItemModal({ isOpen, onClose, onSubmit, itemType:
             {/* Row 4: Laadhaven & Laadtermijn */}
             <div className="flex gap-[12px] w-full">
               <div className="flex-1 flex flex-col gap-[6px]">
-                <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[20px] text-[#344054] text-[14px]">
+                <p className="font-sans font-bold leading-[20px] text-[#344054] text-[14px]">
                   {itemType === 'lading' ? 'Laadhaven' : 'Beschikbaar vanaf'}
                 </p>
                 <div className="bg-white relative rounded-[6px] w-full">
@@ -249,13 +249,13 @@ export default function AddInboxItemModal({ isOpen, onClose, onSubmit, itemType:
                     type="text"
                     value={formData.loadPort}
                     onChange={(e) => setFormData({ ...formData, loadPort: e.target.value })}
-                    className="w-full px-[12px] py-[8px] rounded-[6px] border border-[#d0d5dd] font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[20px] text-[#101828] text-[14px] focus:outline-none focus:ring-2 focus:ring-[#1567a4]"
+                    className="w-full px-[12px] py-[8px] rounded-[6px] border border-[#d0d5dd] font-sans font-normal leading-[20px] text-[#101828] text-[14px] focus:outline-none focus:ring-2 focus:ring-[#1567a4]"
                     placeholder={itemType === 'lading' ? "Bijv. IJmuiden Buitenspuikanaal" : "Bijv. Week 12"}
                   />
                 </div>
               </div>
               <div className="w-[270px] flex flex-col gap-[6px]">
-                <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[20px] text-[#344054] text-[14px]">
+                <p className="font-sans font-bold leading-[20px] text-[#344054] text-[14px]">
                   {itemType === 'lading' ? 'Laadtermijn (optioneel)' : 'Locatie (optioneel)'}
                 </p>
                 <div className="bg-white relative rounded-[6px] w-full">
@@ -263,7 +263,7 @@ export default function AddInboxItemModal({ isOpen, onClose, onSubmit, itemType:
                     type="text"
                     value={formData.loadTerms}
                     onChange={(e) => setFormData({ ...formData, loadTerms: e.target.value })}
-                    className="w-full px-[12px] py-[8px] rounded-[6px] border border-[#d0d5dd] font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[20px] text-[#101828] text-[14px] focus:outline-none focus:ring-2 focus:ring-[#1567a4]"
+                    className="w-full px-[12px] py-[8px] rounded-[6px] border border-[#d0d5dd] font-sans font-normal leading-[20px] text-[#101828] text-[14px] focus:outline-none focus:ring-2 focus:ring-[#1567a4]"
                     placeholder={itemType === 'lading' ? "Bijv. Melden bij aankomst" : "Bijv. ARA gebied"}
                   />
                 </div>
@@ -274,7 +274,7 @@ export default function AddInboxItemModal({ isOpen, onClose, onSubmit, itemType:
             {itemType === 'lading' && (
               <div className="flex gap-[12px] w-full">
                 <div className="flex-1 flex flex-col gap-[6px]">
-                  <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[20px] text-[#344054] text-[14px]">
+                  <p className="font-sans font-bold leading-[20px] text-[#344054] text-[14px]">
                     Loshaven
                   </p>
                   <div className="bg-white relative rounded-[6px] w-full">
@@ -282,13 +282,13 @@ export default function AddInboxItemModal({ isOpen, onClose, onSubmit, itemType:
                       type="text"
                       value={formData.unloadPort}
                       onChange={(e) => setFormData({ ...formData, unloadPort: e.target.value })}
-                      className="w-full px-[12px] py-[8px] rounded-[6px] border border-[#d0d5dd] font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[20px] text-[#101828] text-[14px] focus:outline-none focus:ring-2 focus:ring-[#1567a4]"
+                      className="w-full px-[12px] py-[8px] rounded-[6px] border border-[#d0d5dd] font-sans font-normal leading-[20px] text-[#101828] text-[14px] focus:outline-none focus:ring-2 focus:ring-[#1567a4]"
                       placeholder="Bijv. IJmuiden Buitenspuikanaal"
                     />
                   </div>
                 </div>
                 <div className="w-[270px] flex flex-col gap-[6px]">
-                  <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[20px] text-[#344054] text-[14px]">
+                  <p className="font-sans font-bold leading-[20px] text-[#344054] text-[14px]">
                     Lostermijn (optioneel)
                   </p>
                   <div className="bg-white relative rounded-[6px] w-full">
@@ -296,7 +296,7 @@ export default function AddInboxItemModal({ isOpen, onClose, onSubmit, itemType:
                       type="text"
                       value={formData.unloadTerms}
                       onChange={(e) => setFormData({ ...formData, unloadTerms: e.target.value })}
-                      className="w-full px-[12px] py-[8px] rounded-[6px] border border-[#d0d5dd] font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[20px] text-[#101828] text-[14px] focus:outline-none focus:ring-2 focus:ring-[#1567a4]"
+                      className="w-full px-[12px] py-[8px] rounded-[6px] border border-[#d0d5dd] font-sans font-normal leading-[20px] text-[#101828] text-[14px] focus:outline-none focus:ring-2 focus:ring-[#1567a4]"
                       placeholder="Bijv. Melden bij aankomst"
                     />
                   </div>
@@ -307,7 +307,7 @@ export default function AddInboxItemModal({ isOpen, onClose, onSubmit, itemType:
             {/* Row 6: Eigenaar & Prioriteit */}
             <div className="flex gap-[12px] w-full">
               <div className="flex-1 flex flex-col gap-[6px]">
-                <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[20px] text-[#344054] text-[14px]">
+                <p className="font-sans font-bold leading-[20px] text-[#344054] text-[14px]">
                   Eigenaar (optioneel)
                 </p>
                 <div className="bg-white relative rounded-[6px] w-full">
@@ -315,13 +315,13 @@ export default function AddInboxItemModal({ isOpen, onClose, onSubmit, itemType:
                     type="text"
                     value={formData.owner}
                     onChange={(e) => setFormData({ ...formData, owner: e.target.value })}
-                    className="w-full px-[12px] py-[8px] rounded-[6px] border border-[#d0d5dd] font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[20px] text-[#101828] text-[14px] focus:outline-none focus:ring-2 focus:ring-[#1567a4]"
+                    className="w-full px-[12px] py-[8px] rounded-[6px] border border-[#d0d5dd] font-sans font-normal leading-[20px] text-[#101828] text-[14px] focus:outline-none focus:ring-2 focus:ring-[#1567a4]"
                     placeholder="Selecteer eigenaar..."
                   />
                 </div>
               </div>
               <div className="flex-1 flex flex-col gap-[6px]">
-                <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[20px] text-[#344054] text-[14px]">
+                <p className="font-sans font-bold leading-[20px] text-[#344054] text-[14px]">
                   Prioriteit
                 </p>
                 <div className="bg-white relative rounded-[6px] w-full border border-[#d0d5dd] px-[12px] py-[8px] flex items-center gap-[8px]">
@@ -345,7 +345,7 @@ export default function AddInboxItemModal({ isOpen, onClose, onSubmit, itemType:
                       </button>
                     ))}
                   </div>
-                  <p className="font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[20px] text-[#101828] text-[14px]">
+                  <p className="font-sans font-normal leading-[20px] text-[#101828] text-[14px]">
                     {formData.priority}
                   </p>
                 </div>
@@ -362,7 +362,7 @@ export default function AddInboxItemModal({ isOpen, onClose, onSubmit, itemType:
               className="bg-white relative rounded-[6px] shrink-0"
             >
               <div className="content-stretch flex items-center justify-center px-[16px] py-[10px] relative rounded-[inherit]">
-                <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[20px] text-[#344054] text-[14px] whitespace-nowrap">
+                <p className="font-sans font-bold leading-[20px] text-[#344054] text-[14px] whitespace-nowrap">
                   Annuleren
                 </p>
               </div>
@@ -373,7 +373,7 @@ export default function AddInboxItemModal({ isOpen, onClose, onSubmit, itemType:
               className="bg-[#1567a4] relative rounded-[6px] shrink-0 hover:opacity-90"
             >
               <div className="content-stretch flex items-center justify-center px-[16px] py-[10px] relative rounded-[inherit]">
-                <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[20px] text-white text-[14px] whitespace-nowrap">
+                <p className="font-sans font-bold leading-[20px] text-white text-[14px] whitespace-nowrap">
                   Item toevoegen
                 </p>
               </div>

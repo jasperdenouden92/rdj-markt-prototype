@@ -699,7 +699,7 @@ export default function InboxMapView({ onArchive, onMoveToPipeline, mode }: Inbo
         <div className="absolute right-0 top-0 bottom-0 w-[380px] bg-white border-l border-[#eaecf0] overflow-y-auto z-[1000]">
           {/* Panel Header */}
           <div className="flex items-center justify-between px-[20px] py-[16px] border-b border-[#eaecf0]">
-            <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[24px] text-[#101828] text-[16px]">
+            <p className="font-sans font-bold leading-[24px] text-[#101828] text-[16px]">
               {selectedCluster.items.length} {selectedCluster.items.length === 1 ? 'lading' : 'ladingen'} op deze locatie
             </p>
             <button 
@@ -722,7 +722,7 @@ export default function InboxMapView({ onArchive, onMoveToPipeline, mode }: Inbo
               >
                 {/* Title + avatar */}
                 <div className="flex items-start justify-between mb-[10px]">
-                  <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[20px] text-[#101828] text-[14px] flex-1">{item.title}</p>
+                  <p className="font-sans font-bold leading-[20px] text-[#101828] text-[14px] flex-1">{item.title}</p>
                   <div className="ml-[8px] overflow-clip relative shrink-0 size-[28px] rounded-full bg-[#f2f4f7] flex items-center justify-center">
                     {item.owner ? (
                       <svg width="16" height="16" viewBox="0 0 22 22" fill="none">
@@ -741,8 +741,8 @@ export default function InboxMapView({ onArchive, onMoveToPipeline, mode }: Inbo
                   <svg width="14" height="14" viewBox="0 0 14 14" fill="none" className="shrink-0">
                     <circle cx="7" cy="7" r="5" stroke="#667085" strokeWidth="1.2" fill="none"/>
                   </svg>
-                  <p className="font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[18px] text-[#344054] text-[13px] flex-1">{item.loadLocation}</p>
-                  <p className="font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[18px] text-[#667085] text-[13px] shrink-0">{item.loadDate}</p>
+                  <p className="font-sans font-normal leading-[18px] text-[#344054] text-[13px] flex-1">{item.loadLocation}</p>
+                  <p className="font-sans font-normal leading-[18px] text-[#667085] text-[13px] shrink-0">{item.loadDate}</p>
                 </div>
 
                 {/* Unload location + date */}
@@ -751,8 +751,8 @@ export default function InboxMapView({ onArchive, onMoveToPipeline, mode }: Inbo
                     <path d="M7 1C4.24 1 2 3.24 2 6c0 3.75 5 7 5 7s5-3.25 5-7c0-2.76-2.24-5-5-5z" stroke="#667085" strokeWidth="1.2" fill="none"/>
                     <circle cx="7" cy="6" r="1.5" fill="#667085"/>
                   </svg>
-                  <p className="font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[18px] text-[#344054] text-[13px] flex-1">{item.unloadLocation}</p>
-                  <p className="font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[18px] text-[#667085] text-[13px] shrink-0">{item.unloadDate}</p>
+                  <p className="font-sans font-normal leading-[18px] text-[#344054] text-[13px] flex-1">{item.unloadLocation}</p>
+                  <p className="font-sans font-normal leading-[18px] text-[#667085] text-[13px] shrink-0">{item.unloadDate}</p>
                 </div>
 
                 {/* Relation */}
@@ -761,14 +761,14 @@ export default function InboxMapView({ onArchive, onMoveToPipeline, mode }: Inbo
                     <path d="M7 7C8.657 7 10 5.657 10 4C10 2.343 8.657 1 7 1C5.343 1 4 2.343 4 4C4 5.657 5.343 7 7 7Z" stroke="#667085" strokeWidth="1.2" fill="none"/>
                     <path d="M1 13C1 10.239 3.239 8 6 8H8C10.761 8 13 10.239 13 13" stroke="#667085" strokeWidth="1.2" strokeLinecap="round" fill="none"/>
                   </svg>
-                  <p className="font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[18px] text-[#344054] text-[13px] flex-1">{item.relation}</p>
-                  <p className="font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[18px] text-[#667085] text-[13px] shrink-0">{item.relationLink}</p>
+                  <p className="font-sans font-normal leading-[18px] text-[#344054] text-[13px] flex-1">{item.relation}</p>
+                  <p className="font-sans font-normal leading-[18px] text-[#667085] text-[13px] shrink-0">{item.relationLink}</p>
                 </div>
 
                 {/* Bottom row: matches, stars, actions */}
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-[8px]">
-                    <span className="font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[18px] text-[#667085] text-[13px]">{item.matches} matches</span>
+                    <span className="font-sans font-normal leading-[18px] text-[#667085] text-[13px]">{item.matches} matches</span>
                     <div className="flex items-center gap-[2px]">
                       {[1, 2, 3, 4, 5].map(star => (
                         <button

@@ -13,14 +13,10 @@ import Pagination from "../components/Pagination";
 import Badge from "../components/Badge";
 import ActivityFeed from "../components/ActivityFeed";
 import svgPaths from "../../imports/svg-1tovr4micn";
-// import imgAvatar from "figma:asset/a2737d3b5b234fc04041650cb9f114889c6859da.png";
-const imgAvatar = "";
-// import imgAvatar1 from "figma:asset/3627de284acb374a4d9313b3c2dbaeeb87a48224.png";
-const imgAvatar1 = "";
-// import imgAvatar2 from "figma:asset/e7809035038b3816de2a1d67c5de86ebeed325d0.png";
-const imgAvatar2 = "";
-// import imgAvatar3 from "figma:asset/bf485cb6f98c12534c69bc81459ce34f2e24e4a8.png";
-const imgAvatar3 = "";
+import imgAvatar from "../../assets/a2737d3b5b234fc04041650cb9f114889c6859da.png";
+import imgAvatar1 from "../../assets/3627de284acb374a4d9313b3c2dbaeeb87a48224.png";
+import imgAvatar2 from "../../assets/e7809035038b3816de2a1d67c5de86ebeed325d0.png";
+import imgAvatar3 from "../../assets/bf485cb6f98c12534c69bc81459ce34f2e24e4a8.png";
 import Button from "../components/Button";
 import { Send, MailOpen, Check, X } from "lucide-react";
 import { usePijplijnLadingSummary, usePijplijnVaartuigSummary } from "../data/useDetailData";
@@ -285,7 +281,7 @@ export default function PijplijnDetail() {
                 onClick={() => navigate(backPath)}
                 className="content-stretch flex items-center justify-center p-[4px] relative rounded-[6px] shrink-0 hover:bg-rdj-bg-primary-hover"
               >
-                <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[20px] relative shrink-0 text-[#475467] text-[14px] whitespace-nowrap">Markt</p>
+                <p className="font-sans font-bold leading-[20px] relative shrink-0 text-[#475467] text-[14px] whitespace-nowrap">Markt</p>
               </button>
               <div className="overflow-clip relative shrink-0 size-[16px]">
                 <div className="absolute bottom-1/4 left-[37.5%] right-[37.5%] top-1/4">
@@ -300,7 +296,7 @@ export default function PijplijnDetail() {
                 onClick={() => navigate(backPath)}
                 className="content-stretch flex items-center justify-center px-[8px] py-[4px] relative rounded-[6px] shrink-0 hover:bg-rdj-bg-primary-hover"
               >
-                <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[20px] relative shrink-0 text-[#475467] text-[14px] whitespace-nowrap">Pijplijn</p>
+                <p className="font-sans font-bold leading-[20px] relative shrink-0 text-[#475467] text-[14px] whitespace-nowrap">Pijplijn</p>
               </button>
               <div className="overflow-clip relative shrink-0 size-[16px]">
                 <div className="absolute bottom-1/4 left-[37.5%] right-[37.5%] top-1/4">
@@ -312,7 +308,7 @@ export default function PijplijnDetail() {
                 </div>
               </div>
               <div className="bg-[#f9fafb] content-stretch flex items-center justify-center px-[8px] py-[4px] relative rounded-[6px] shrink-0">
-                <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[20px] relative shrink-0 text-[#344054] text-[14px] whitespace-nowrap">
+                <p className="font-sans font-bold leading-[20px] relative shrink-0 text-[#344054] text-[14px] whitespace-nowrap">
                   {summaryLoading ? '...' : (summary?.title?.split(' - ')[0]?.substring(0, 20) || id)}
                 </p>
               </div>
@@ -322,7 +318,7 @@ export default function PijplijnDetail() {
             <div className="flex items-start justify-between">
               <div className="flex-1">
                 <div className="flex items-center gap-[12px] mb-[4px]">
-                  <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[32px] text-[#101828] text-[24px]">
+                  <p className="font-sans font-bold leading-[32px] text-[#101828] text-[24px]">
                     {summaryLoading ? 'Laden...' : (summary?.title || '—')}
                   </p>
                   {summary && (
@@ -332,19 +328,19 @@ export default function PijplijnDetail() {
                           <circle cx="4" cy="4" fill={summary.statusColor} r="4" />
                         </svg>
                       </div>
-                      <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[18px] relative shrink-0 text-[12px] text-center whitespace-nowrap" style={{ color: summary.statusColor }}>
+                      <p className="font-sans font-bold leading-[18px] relative shrink-0 text-[12px] text-center whitespace-nowrap" style={{ color: summary.statusColor }}>
                         {summary.status}
                       </p>
                     </div>
                   )}
                 </div>
-                <p className="font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[24px] text-[#475467] text-[16px]">
+                <p className="font-sans font-normal leading-[24px] text-[#475467] text-[16px]">
                   {summaryLoading ? '' : (summary?.loadSummary || '')}
                 </p>
               </div>
               <button className="bg-white relative rounded-[6px] shrink-0 hover:opacity-80">
                 <div className="content-stretch flex gap-[4px] items-center justify-center overflow-clip px-[14px] py-[10px] relative rounded-[inherit]">
-                  <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[20px] text-[#d92d20] text-[14px] whitespace-nowrap">
+                  <p className="font-sans font-bold leading-[20px] text-[#d92d20] text-[14px] whitespace-nowrap">
                     Uit de markt halen
                   </p>
                 </div>
@@ -357,21 +353,21 @@ export default function PijplijnDetail() {
               <div className="flex gap-[12px]">
                 <button onClick={() => setActiveTab('onderhandelingen')} className="relative pb-[12px] flex items-center gap-[8px]">
                   {activeTab === 'onderhandelingen' && <div className="absolute border-[#1567a4] border-b-2 border-solid inset-x-0 bottom-0 pointer-events-none" />}
-                  <p className={`font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[20px] text-[14px] ${activeTab === 'onderhandelingen' ? 'text-[#145990]' : 'text-[#667085]'}`}>
+                  <p className={`font-sans font-bold leading-[20px] text-[14px] ${activeTab === 'onderhandelingen' ? 'text-[#145990]' : 'text-[#667085]'}`}>
                     Onderhandelingen
                   </p>
                   <Badge label={String(negTableData.length)} variant="brand" type={activeTab === 'onderhandelingen' ? 'color' : 'default'} />
                 </button>
                 <button onClick={() => setActiveTab('matches')} className="relative pb-[12px] flex items-center gap-[8px]">
                   {activeTab === 'matches' && <div className="absolute border-[#1567a4] border-b-2 border-solid inset-x-0 bottom-0 pointer-events-none" />}
-                  <p className={`font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[20px] text-[14px] ${activeTab === 'matches' ? 'text-[#145990]' : 'text-[#667085]'}`}>
+                  <p className={`font-sans font-bold leading-[20px] text-[14px] ${activeTab === 'matches' ? 'text-[#145990]' : 'text-[#667085]'}`}>
                     Matches
                   </p>
                   <Badge label={String(matchData.length)} variant="brand" type={activeTab === 'matches' ? 'color' : 'default'} />
                 </button>
                 <button onClick={() => setActiveTab('activiteit')} className="relative pb-[12px]">
                   {activeTab === 'activiteit' && <div className="absolute border-[#1567a4] border-b-2 border-solid inset-x-0 bottom-0 pointer-events-none" />}
-                  <p className={`font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[20px] text-[14px] ${activeTab === 'activiteit' ? 'text-[#145990]' : 'text-[#667085]'}`}>
+                  <p className={`font-sans font-bold leading-[20px] text-[14px] ${activeTab === 'activiteit' ? 'text-[#145990]' : 'text-[#667085]'}`}>
                     Activiteit
                   </p>
                 </button>

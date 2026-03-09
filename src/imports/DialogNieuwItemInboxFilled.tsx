@@ -1,6 +1,5 @@
 import svgPaths from "./svg-hstiyx955m";
-// import imgAvatar from "figma:asset/a2737d3b5b234fc04041650cb9f114889c6859da.png";
-const imgAvatar = "";
+import imgAvatar from "../assets/a2737d3b5b234fc04041650cb9f114889c6859da.png";
 
 function BackgroundOverlay() {
   return <div className="absolute bg-[#0c111d] inset-0 opacity-70" data-name="Background overlay" />;
@@ -9,7 +8,7 @@ function BackgroundOverlay() {
 function TextAndSupportingText() {
   return (
     <div className="content-stretch flex flex-[1_0_0] flex-col gap-[4px] items-start min-h-px min-w-px relative" data-name="Text and supporting text">
-      <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[26px] relative shrink-0 text-[#101828] text-[18px] w-full">Nieuw item toevoegen aan inbox</p>
+      <p className="font-sans font-bold leading-[26px] relative shrink-0 text-[#101828] text-[18px] w-full">Nieuw item toevoegen aan inbox</p>
     </div>
   );
 }
@@ -31,7 +30,7 @@ function PaddingBottom() {
 function Content2() {
   return (
     <div className="content-stretch flex flex-[1_0_0] gap-[8px] items-center min-h-px min-w-px relative" data-name="Content">
-      <p className="font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[20px] relative shrink-0 text-[#101828] text-[14px] text-left whitespace-nowrap">Agro Delta Groep</p>
+      <p className="font-sans font-normal leading-[20px] relative shrink-0 text-[#101828] text-[14px] text-left whitespace-nowrap">Agro Delta Groep</p>
     </div>
   );
 }
@@ -61,7 +60,7 @@ function Input() {
 function InputWithLabel() {
   return (
     <div className="content-stretch flex flex-col gap-[6px] items-start relative shrink-0 w-full" data-name="Input with label">
-      <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[20px] relative shrink-0 text-[#344054] text-[14px] text-left whitespace-nowrap">Relatie</p>
+      <p className="font-sans font-bold leading-[20px] relative shrink-0 text-[#344054] text-[14px] text-left whitespace-nowrap">Relatie</p>
       <Input />
     </div>
   );
@@ -70,7 +69,7 @@ function InputWithLabel() {
 function Content3() {
   return (
     <div className="content-stretch flex flex-[1_0_0] gap-[8px] items-center min-h-px min-w-px relative" data-name="Content">
-      <p className="font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[20px] relative shrink-0 text-[#101828] text-[14px] text-left whitespace-nowrap">Jesper den Oud</p>
+      <p className="font-sans font-normal leading-[20px] relative shrink-0 text-[#101828] text-[14px] text-left whitespace-nowrap">Jesper den Oud</p>
     </div>
   );
 }
@@ -100,7 +99,7 @@ function Input1() {
 function InputWithLabel1() {
   return (
     <div className="content-stretch flex flex-col gap-[6px] items-start relative shrink-0 w-full" data-name="Input with label">
-      <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[20px] relative shrink-0 text-[#344054] text-[14px] text-left whitespace-nowrap">Contactpersoon (optioneel)</p>
+      <p className="font-sans font-bold leading-[20px] relative shrink-0 text-[#344054] text-[14px] text-left whitespace-nowrap">Contactpersoon (optioneel)</p>
       <Input1 />
     </div>
   );
@@ -124,7 +123,7 @@ function TextInput() {
     <div className="bg-white flex-[1_0_0] min-h-px min-w-px relative rounded-bl-[6px] rounded-tl-[6px] self-stretch" data-name="Text input">
       <div className="flex flex-row items-center overflow-clip rounded-[inherit] size-full">
         <div className="content-stretch flex gap-[8px] items-center px-[12px] py-[8px] relative size-full">
-          <p className="flex-[1_0_0] font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[20px] min-h-px min-w-px overflow-hidden relative text-[#101828] text-[14px] text-ellipsis text-left whitespace-nowrap">5000</p>
+          <p className="flex-[1_0_0] font-sans font-normal leading-[20px] min-h-px min-w-px overflow-hidden relative text-[#101828] text-[14px] text-ellipsis text-left whitespace-nowrap">5000</p>
         </div>
       </div>
       <div aria-hidden="true" className="absolute border border-[#d0d5dd] border-solid inset-0 pointer-events-none rounded-bl-[6px] rounded-tl-[6px]" />
@@ -135,7 +134,7 @@ function TextInput() {
 function AddOn() {
   return (
     <div className="content-stretch flex items-center px-[12px] py-[8px] relative rounded-bl-[8px] rounded-tl-[8px] shrink-0" data-name="Add-on">
-      <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[20px] relative shrink-0 text-[#475467] text-[14px] text-left whitespace-nowrap">ton</p>
+      <p className="font-sans font-bold leading-[20px] relative shrink-0 text-[#475467] text-[14px] text-left whitespace-nowrap">ton</p>
     </div>
   );
 }
@@ -153,7 +152,7 @@ function Input2() {
 function InputWithLabel2() {
   return (
     <div className="content-stretch flex flex-col gap-[6px] items-start relative shrink-0 w-full" data-name="Input with label">
-      <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[20px] relative shrink-0 text-[#344054] text-[14px] text-left whitespace-nowrap">Tonnage</p>
+      <p className="font-sans font-bold leading-[20px] relative shrink-0 text-[#344054] text-[14px] text-left whitespace-nowrap">Tonnage</p>
       <Input2 />
     </div>
   );
@@ -161,7 +160,7 @@ function InputWithLabel2() {
 
 function Content4() {
   return (
-    <div className="content-stretch flex flex-[1_0_0] font-['Hanken_Grotesk:Regular',sans-serif] font-normal gap-[8px] items-center leading-[20px] min-h-px min-w-px relative text-[14px] text-left whitespace-nowrap" data-name="Content">
+    <div className="content-stretch flex flex-[1_0_0] font-sans font-normal gap-[8px] items-center leading-[20px] min-h-px min-w-px relative text-[14px] text-left whitespace-nowrap" data-name="Content">
       <p className="relative shrink-0 text-[#101828]">Houtpellets</p>
       <p className="relative shrink-0 text-[#475467]">0571</p>
     </div>
@@ -193,7 +192,7 @@ function Input3() {
 function InputWithLabel3() {
   return (
     <div className="content-stretch flex flex-col gap-[6px] items-start relative shrink-0 w-full" data-name="Input with label">
-      <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[20px] relative shrink-0 text-[#344054] text-[14px] text-left whitespace-nowrap">Ladingsoort</p>
+      <p className="font-sans font-bold leading-[20px] relative shrink-0 text-[#344054] text-[14px] text-left whitespace-nowrap">Ladingsoort</p>
       <Input3 />
     </div>
   );
@@ -214,7 +213,7 @@ function Row1() {
 
 function Content5() {
   return (
-    <div className="content-stretch flex flex-[1_0_0] font-['Hanken_Grotesk:Regular',sans-serif] font-normal gap-[8px] items-center leading-[20px] min-h-px min-w-px relative text-[14px] text-left whitespace-nowrap" data-name="Content">
+    <div className="content-stretch flex flex-[1_0_0] font-sans font-normal gap-[8px] items-center leading-[20px] min-h-px min-w-px relative text-[14px] text-left whitespace-nowrap" data-name="Content">
       <p className="relative shrink-0 text-[#101828]">Naaldhoutpellets</p>
       <p className="relative shrink-0 text-[#475467]">1120</p>
     </div>
@@ -237,7 +236,7 @@ function Input4() {
 function InputWithLabel4() {
   return (
     <div className="content-stretch flex flex-col gap-[6px] items-start relative shrink-0 w-full" data-name="Input with label">
-      <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[20px] relative shrink-0 text-[#344054] text-[14px] text-left whitespace-nowrap">Subsoort (optioneel)</p>
+      <p className="font-sans font-bold leading-[20px] relative shrink-0 text-[#344054] text-[14px] text-left whitespace-nowrap">Subsoort (optioneel)</p>
       <Input4 />
     </div>
   );
@@ -248,7 +247,7 @@ function TextInput1() {
     <div className="bg-white flex-[1_0_0] min-h-px min-w-px relative rounded-bl-[6px] rounded-tl-[6px] self-stretch" data-name="Text input">
       <div className="flex flex-row items-center overflow-clip rounded-[inherit] size-full">
         <div className="content-stretch flex gap-[8px] items-center px-[12px] py-[8px] relative size-full">
-          <p className="flex-[1_0_0] font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[20px] min-h-px min-w-px overflow-hidden relative text-[#101828] text-[14px] text-ellipsis text-left whitespace-nowrap">0,05</p>
+          <p className="flex-[1_0_0] font-sans font-normal leading-[20px] min-h-px min-w-px overflow-hidden relative text-[#101828] text-[14px] text-ellipsis text-left whitespace-nowrap">0,05</p>
         </div>
       </div>
       <div aria-hidden="true" className="absolute border border-[#d0d5dd] border-solid inset-0 pointer-events-none rounded-bl-[6px] rounded-tl-[6px]" />
@@ -259,9 +258,9 @@ function TextInput1() {
 function AddOn1() {
   return (
     <div className="content-stretch flex items-center px-[12px] py-[8px] relative rounded-bl-[8px] rounded-tl-[8px] shrink-0" data-name="Add-on">
-      <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[0] relative shrink-0 text-[#475467] text-[0px] text-left whitespace-nowrap">
+      <p className="font-sans font-bold leading-[0] relative shrink-0 text-[#475467] text-[0px] text-left whitespace-nowrap">
         <span className="leading-[20px] text-[14px]">ton/m</span>
-        <span className="font-['Codec_Pro:Bold',sans-serif] leading-[20px] not-italic text-[9.030000000000001px]">3</span>
+        <span className="font-display leading-[20px] not-italic text-[9.030000000000001px]">3</span>
       </p>
     </div>
   );
@@ -280,7 +279,7 @@ function Input5() {
 function InputWithLabel5() {
   return (
     <div className="content-stretch flex flex-col gap-[6px] items-start relative shrink-0 w-full" data-name="Input with label">
-      <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[20px] relative shrink-0 text-[#344054] text-[14px] text-left whitespace-nowrap">Soortelijk gewicht</p>
+      <p className="font-sans font-bold leading-[20px] relative shrink-0 text-[#344054] text-[14px] text-left whitespace-nowrap">Soortelijk gewicht</p>
       <Input5 />
     </div>
   );
@@ -311,9 +310,9 @@ function Label() {
           </div>
         </div>
       </div>
-      <p className="flex-[1_0_0] font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[0] min-h-px min-w-px relative text-[#145990] text-[0px]">
+      <p className="flex-[1_0_0] font-sans font-normal leading-[0] min-h-px min-w-px relative text-[#145990] text-[0px]">
         <span className="leading-[20px] text-[14px]">Benodigde inhoud: 5.000 m</span>
-        <span className="font-['Codec_Pro:Regular',sans-serif] leading-[20px] not-italic text-[9.030000000000001px]">3</span>
+        <span className="font-display leading-[20px] not-italic text-[9.030000000000001px]">3</span>
       </p>
     </div>
   );
@@ -331,7 +330,7 @@ function Row2() {
 function Content6() {
   return (
     <div className="content-stretch flex flex-[1_0_0] gap-[8px] items-center min-h-px min-w-px relative" data-name="Content">
-      <p className="font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[20px] relative shrink-0 text-[#101828] text-[14px] text-left whitespace-nowrap">IJmuiden Buitenspuikanaal</p>
+      <p className="font-sans font-normal leading-[20px] relative shrink-0 text-[#101828] text-[14px] text-left whitespace-nowrap">IJmuiden Buitenspuikanaal</p>
     </div>
   );
 }
@@ -361,7 +360,7 @@ function Input6() {
 function InputWithLabel6() {
   return (
     <div className="content-stretch flex flex-col gap-[6px] items-start relative shrink-0 w-full" data-name="Input with label">
-      <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[20px] relative shrink-0 text-[#344054] text-[14px] text-left whitespace-nowrap">Laadhaven</p>
+      <p className="font-sans font-bold leading-[20px] relative shrink-0 text-[#344054] text-[14px] text-left whitespace-nowrap">Laadhaven</p>
       <Input6 />
     </div>
   );
@@ -370,7 +369,7 @@ function InputWithLabel6() {
 function Content7() {
   return (
     <div className="content-stretch flex flex-[1_0_0] gap-[8px] items-center min-h-px min-w-px relative" data-name="Content">
-      <p className="font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[20px] relative shrink-0 text-[#101828] text-[14px] text-left whitespace-nowrap">Melden bij aankomst</p>
+      <p className="font-sans font-normal leading-[20px] relative shrink-0 text-[#101828] text-[14px] text-left whitespace-nowrap">Melden bij aankomst</p>
     </div>
   );
 }
@@ -400,7 +399,7 @@ function Input7() {
 function InputWithLabel7() {
   return (
     <div className="content-stretch flex flex-col gap-[6px] items-start relative shrink-0 w-full" data-name="Input with label">
-      <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[20px] relative shrink-0 text-[#344054] text-[14px] text-left whitespace-nowrap">Laadtermijn (optioneel)</p>
+      <p className="font-sans font-bold leading-[20px] relative shrink-0 text-[#344054] text-[14px] text-left whitespace-nowrap">Laadtermijn (optioneel)</p>
       <Input7 />
     </div>
   );
@@ -422,7 +421,7 @@ function Row4() {
 function Content8() {
   return (
     <div className="content-stretch flex flex-[1_0_0] gap-[8px] items-center min-h-px min-w-px relative" data-name="Content">
-      <p className="font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[20px] relative shrink-0 text-[#101828] text-[14px] text-left whitespace-nowrap">IJmuiden Buitenspuikanaal</p>
+      <p className="font-sans font-normal leading-[20px] relative shrink-0 text-[#101828] text-[14px] text-left whitespace-nowrap">IJmuiden Buitenspuikanaal</p>
     </div>
   );
 }
@@ -452,7 +451,7 @@ function Input8() {
 function InputWithLabel8() {
   return (
     <div className="content-stretch flex flex-col gap-[6px] items-start relative shrink-0 w-full" data-name="Input with label">
-      <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[20px] relative shrink-0 text-[#344054] text-[14px] text-left whitespace-nowrap">Loshaven</p>
+      <p className="font-sans font-bold leading-[20px] relative shrink-0 text-[#344054] text-[14px] text-left whitespace-nowrap">Loshaven</p>
       <Input8 />
     </div>
   );
@@ -461,7 +460,7 @@ function InputWithLabel8() {
 function Content9() {
   return (
     <div className="content-stretch flex flex-[1_0_0] gap-[8px] items-center min-h-px min-w-px relative" data-name="Content">
-      <p className="font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[20px] relative shrink-0 text-[#101828] text-[14px] text-left whitespace-nowrap">Melden bij aankomst</p>
+      <p className="font-sans font-normal leading-[20px] relative shrink-0 text-[#101828] text-[14px] text-left whitespace-nowrap">Melden bij aankomst</p>
     </div>
   );
 }
@@ -491,7 +490,7 @@ function Input9() {
 function InputWithLabel9() {
   return (
     <div className="content-stretch flex flex-col gap-[6px] items-start relative shrink-0 w-full" data-name="Input with label">
-      <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[20px] relative shrink-0 text-[#344054] text-[14px] text-left whitespace-nowrap">Lostermijn (optioneel)</p>
+      <p className="font-sans font-bold leading-[20px] relative shrink-0 text-[#344054] text-[14px] text-left whitespace-nowrap">Lostermijn (optioneel)</p>
       <Input9 />
     </div>
   );
@@ -521,7 +520,7 @@ function Content10() {
         <img alt="" className="absolute inset-0 max-w-none object-cover pointer-events-none rounded-[9999px] size-full" src={imgAvatar} />
         <ContrastBorder />
       </div>
-      <p className="font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[20px] relative shrink-0 text-[#101828] text-[14px] text-left whitespace-nowrap">Pelger de Jong</p>
+      <p className="font-sans font-normal leading-[20px] relative shrink-0 text-[#101828] text-[14px] text-left whitespace-nowrap">Pelger de Jong</p>
     </div>
   );
 }
@@ -551,7 +550,7 @@ function Input10() {
 function InputWithLabel10() {
   return (
     <div className="content-stretch flex flex-col gap-[6px] items-start relative shrink-0 w-full" data-name="Input with label">
-      <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[20px] relative shrink-0 text-[#344054] text-[14px] text-left whitespace-nowrap">Eigenaar (optioneel)</p>
+      <p className="font-sans font-bold leading-[20px] relative shrink-0 text-[#344054] text-[14px] text-left whitespace-nowrap">Eigenaar (optioneel)</p>
       <Input10 />
     </div>
   );
@@ -587,7 +586,7 @@ function Content11() {
         </div>
         <Star />
       </div>
-      <p className="font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[20px] relative shrink-0 text-[#101828] text-[14px] text-left whitespace-nowrap">1</p>
+      <p className="font-sans font-normal leading-[20px] relative shrink-0 text-[#101828] text-[14px] text-left whitespace-nowrap">1</p>
     </div>
   );
 }
@@ -617,7 +616,7 @@ function Input11() {
 function InputWithLabel11() {
   return (
     <div className="content-stretch flex flex-col gap-[6px] items-start relative shrink-0 w-full" data-name="Input with label">
-      <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[20px] relative shrink-0 text-[#344054] text-[14px] text-left whitespace-nowrap">Prioriteit (optioneel)</p>
+      <p className="font-sans font-bold leading-[20px] relative shrink-0 text-[#344054] text-[14px] text-left whitespace-nowrap">Prioriteit (optioneel)</p>
       <Input11 />
     </div>
   );
@@ -647,14 +646,14 @@ function Content1() {
               <div className="bg-white flex-[1_0_0] h-[36px] min-h-px min-w-px relative rounded-[4px] shadow-[0px_1px_3px_0px_rgba(16,24,40,0.1),0px_1px_2px_0px_rgba(16,24,40,0.06)]" data-name="Tab button base">
                 <div className="flex flex-row items-center justify-center overflow-clip rounded-[inherit] size-full">
                   <div className="content-stretch flex items-center justify-center px-[12px] py-[8px] relative size-full">
-                    <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[20px] relative shrink-0 text-[#344054] text-[14px] whitespace-nowrap">Lading</p>
+                    <p className="font-sans font-bold leading-[20px] relative shrink-0 text-[#344054] text-[14px] whitespace-nowrap">Lading</p>
                   </div>
                 </div>
               </div>
               <div className="flex-[1_0_0] h-[36px] min-h-px min-w-px relative rounded-[4px]" data-name="Tab button base">
                 <div className="flex flex-row items-center justify-center overflow-clip rounded-[inherit] size-full">
                   <div className="content-stretch flex items-center justify-center px-[12px] py-[8px] relative size-full">
-                    <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[20px] relative shrink-0 text-[#667085] text-[14px] whitespace-nowrap">Vaartuig</p>
+                    <p className="font-sans font-bold leading-[20px] relative shrink-0 text-[#667085] text-[14px] whitespace-nowrap">Vaartuig</p>
                   </div>
                 </div>
               </div>
@@ -687,7 +686,7 @@ function DividerWrap() {
 function TextPadding() {
   return (
     <div className="content-stretch flex items-center justify-center px-[2px] relative shrink-0" data-name="Text padding">
-      <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[20px] relative shrink-0 text-[#344054] text-[14px] whitespace-nowrap">Annuleren</p>
+      <p className="font-sans font-bold leading-[20px] relative shrink-0 text-[#344054] text-[14px] whitespace-nowrap">Annuleren</p>
     </div>
   );
 }
@@ -695,7 +694,7 @@ function TextPadding() {
 function TextPadding1() {
   return (
     <div className="content-stretch flex items-center justify-center px-[2px] relative shrink-0" data-name="Text padding">
-      <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[20px] relative shrink-0 text-[14px] text-white whitespace-nowrap">Toevoegen</p>
+      <p className="font-sans font-bold leading-[20px] relative shrink-0 text-[14px] text-white whitespace-nowrap">Toevoegen</p>
     </div>
   );
 }
@@ -767,7 +766,7 @@ function Modal() {
 function TextAndSupportingText1() {
   return (
     <div className="content-stretch flex flex-[1_0_0] flex-col gap-[4px] items-start min-h-px min-w-px relative" data-name="Text and supporting text">
-      <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[26px] relative shrink-0 text-[#101828] text-[18px] w-full">Nieuw item toevoegen aan inbox</p>
+      <p className="font-sans font-bold leading-[26px] relative shrink-0 text-[#101828] text-[18px] w-full">Nieuw item toevoegen aan inbox</p>
     </div>
   );
 }
@@ -789,7 +788,7 @@ function PaddingBottom1() {
 function InputWithLabel12() {
   return (
     <div className="content-stretch flex flex-col items-start relative shrink-0" data-name="Input with label">
-      <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[20px] relative shrink-0 text-[#344054] text-[14px] whitespace-nowrap">Type</p>
+      <p className="font-sans font-bold leading-[20px] relative shrink-0 text-[#344054] text-[14px] whitespace-nowrap">Type</p>
     </div>
   );
 }
@@ -819,7 +818,7 @@ function Input12() {
 function TextAndSupportingText2() {
   return (
     <div className="content-stretch flex flex-col items-start relative shrink-0" data-name="Text and supporting text">
-      <p className="font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[20px] relative shrink-0 text-[#344054] text-[14px] whitespace-nowrap">Duwbak</p>
+      <p className="font-sans font-normal leading-[20px] relative shrink-0 text-[#344054] text-[14px] whitespace-nowrap">Duwbak</p>
     </div>
   );
 }
@@ -837,7 +836,7 @@ function Input13() {
 function TextAndSupportingText3() {
   return (
     <div className="content-stretch flex flex-col items-start relative shrink-0" data-name="Text and supporting text">
-      <p className="font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[20px] relative shrink-0 text-[#344054] text-[14px] whitespace-nowrap">Motorschip</p>
+      <p className="font-sans font-normal leading-[20px] relative shrink-0 text-[#344054] text-[14px] whitespace-nowrap">Motorschip</p>
     </div>
   );
 }
@@ -869,7 +868,7 @@ function InputDropdown() {
 function Content15() {
   return (
     <div className="content-stretch flex flex-[1_0_0] gap-[8px] items-center min-h-px min-w-px relative" data-name="Content">
-      <p className="font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[20px] relative shrink-0 text-[#101828] text-[14px] text-left whitespace-nowrap">Agro Delta Groep</p>
+      <p className="font-sans font-normal leading-[20px] relative shrink-0 text-[#101828] text-[14px] text-left whitespace-nowrap">Agro Delta Groep</p>
     </div>
   );
 }
@@ -899,7 +898,7 @@ function Input14() {
 function InputWithLabel13() {
   return (
     <div className="content-stretch flex flex-col gap-[6px] items-start relative shrink-0 w-full" data-name="Input with label">
-      <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[20px] relative shrink-0 text-[#344054] text-[14px] text-left whitespace-nowrap">Relatie</p>
+      <p className="font-sans font-bold leading-[20px] relative shrink-0 text-[#344054] text-[14px] text-left whitespace-nowrap">Relatie</p>
       <Input14 />
     </div>
   );
@@ -908,7 +907,7 @@ function InputWithLabel13() {
 function Content16() {
   return (
     <div className="content-stretch flex flex-[1_0_0] gap-[8px] items-center min-h-px min-w-px relative" data-name="Content">
-      <p className="font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[20px] relative shrink-0 text-[#101828] text-[14px] text-left whitespace-nowrap">Jesper den Oud</p>
+      <p className="font-sans font-normal leading-[20px] relative shrink-0 text-[#101828] text-[14px] text-left whitespace-nowrap">Jesper den Oud</p>
     </div>
   );
 }
@@ -938,7 +937,7 @@ function Input15() {
 function InputWithLabel14() {
   return (
     <div className="content-stretch flex flex-col gap-[6px] items-start relative shrink-0 w-full" data-name="Input with label">
-      <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[20px] relative shrink-0 text-[#344054] text-[14px] text-left whitespace-nowrap">Contactpersoon (optioneel)</p>
+      <p className="font-sans font-bold leading-[20px] relative shrink-0 text-[#344054] text-[14px] text-left whitespace-nowrap">Contactpersoon (optioneel)</p>
       <Input15 />
     </div>
   );
@@ -977,7 +976,7 @@ function Input16() {
 function InputWithLabel15() {
   return (
     <div className="content-stretch flex flex-col gap-[6px] items-start relative shrink-0 w-full" data-name="Input with label">
-      <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[20px] relative shrink-0 text-[#344054] text-[14px] text-left whitespace-nowrap">Naam vaartuig *</p>
+      <p className="font-sans font-bold leading-[20px] relative shrink-0 text-[#344054] text-[14px] text-left whitespace-nowrap">Naam vaartuig *</p>
       <Input16 />
     </div>
   );
@@ -1003,7 +1002,7 @@ function Input17() {
 function InputWithLabel16() {
   return (
     <div className="content-stretch flex flex-col gap-[6px] items-start relative shrink-0 w-full" data-name="Input with label">
-      <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[20px] relative shrink-0 text-[#344054] text-[14px] text-left whitespace-nowrap">Huidige locatie</p>
+      <p className="font-sans font-bold leading-[20px] relative shrink-0 text-[#344054] text-[14px] text-left whitespace-nowrap">Huidige locatie</p>
       <Input17 />
     </div>
   );
@@ -1012,7 +1011,7 @@ function InputWithLabel16() {
 function Content19() {
   return (
     <div className="content-stretch flex flex-[1_0_0] gap-[8px] items-center min-h-px min-w-px relative" data-name="Content">
-      <p className="flex-[1_0_0] font-['Hanken_Grotesk:Regular',sans-serif] font-normal h-[18px] leading-[20px] min-h-px min-w-px overflow-hidden relative text-[#667085] text-[14px] text-ellipsis text-left whitespace-nowrap">Selecteer een datum</p>
+      <p className="flex-[1_0_0] font-sans font-normal h-[18px] leading-[20px] min-h-px min-w-px overflow-hidden relative text-[#667085] text-[14px] text-ellipsis text-left whitespace-nowrap">Selecteer een datum</p>
     </div>
   );
 }
@@ -1033,7 +1032,7 @@ function Input18() {
 function InputWithLabel17() {
   return (
     <div className="content-stretch flex flex-col gap-[6px] items-start relative shrink-0 w-full" data-name="Input with label">
-      <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[20px] relative shrink-0 text-[#344054] text-[14px] text-left whitespace-nowrap">Beschikbaar vanaf</p>
+      <p className="font-sans font-bold leading-[20px] relative shrink-0 text-[#344054] text-[14px] text-left whitespace-nowrap">Beschikbaar vanaf</p>
       <Input18 />
     </div>
   );
@@ -1066,7 +1065,7 @@ function TextInput2() {
 function AddOn2() {
   return (
     <div className="content-stretch flex items-center pl-[14px] pr-[12px] py-[10px] relative rounded-bl-[8px] rounded-tl-[8px] shrink-0" data-name="Add-on">
-      <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[20px] relative shrink-0 text-[#475467] text-[14px] text-left whitespace-nowrap">m</p>
+      <p className="font-sans font-bold leading-[20px] relative shrink-0 text-[#475467] text-[14px] text-left whitespace-nowrap">m</p>
     </div>
   );
 }
@@ -1084,7 +1083,7 @@ function Input19() {
 function InputWithLabel18() {
   return (
     <div className="content-stretch flex flex-col gap-[6px] items-start relative shrink-0 w-full" data-name="Input with label">
-      <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[20px] relative shrink-0 text-[#344054] text-[14px] text-left whitespace-nowrap">Lengte</p>
+      <p className="font-sans font-bold leading-[20px] relative shrink-0 text-[#344054] text-[14px] text-left whitespace-nowrap">Lengte</p>
       <Input19 />
     </div>
   );
@@ -1104,7 +1103,7 @@ function TextInput3() {
 function AddOn3() {
   return (
     <div className="content-stretch flex items-center pl-[14px] pr-[12px] py-[10px] relative rounded-bl-[8px] rounded-tl-[8px] shrink-0" data-name="Add-on">
-      <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[20px] relative shrink-0 text-[#475467] text-[14px] text-left whitespace-nowrap">m</p>
+      <p className="font-sans font-bold leading-[20px] relative shrink-0 text-[#475467] text-[14px] text-left whitespace-nowrap">m</p>
     </div>
   );
 }
@@ -1122,7 +1121,7 @@ function Input20() {
 function InputWithLabel19() {
   return (
     <div className="content-stretch flex flex-col gap-[6px] items-start relative shrink-0 w-full" data-name="Input with label">
-      <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[20px] relative shrink-0 text-[#344054] text-[14px] text-left whitespace-nowrap">Breedte</p>
+      <p className="font-sans font-bold leading-[20px] relative shrink-0 text-[#344054] text-[14px] text-left whitespace-nowrap">Breedte</p>
       <Input20 />
     </div>
   );
@@ -1142,7 +1141,7 @@ function TextInput4() {
 function AddOn4() {
   return (
     <div className="content-stretch flex items-center pl-[14px] pr-[12px] py-[10px] relative rounded-bl-[8px] rounded-tl-[8px] shrink-0" data-name="Add-on">
-      <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[20px] relative shrink-0 text-[#475467] text-[14px] text-left whitespace-nowrap">cm</p>
+      <p className="font-sans font-bold leading-[20px] relative shrink-0 text-[#475467] text-[14px] text-left whitespace-nowrap">cm</p>
     </div>
   );
 }
@@ -1160,7 +1159,7 @@ function Input21() {
 function InputWithLabel20() {
   return (
     <div className="content-stretch flex flex-col gap-[6px] items-start relative shrink-0 w-full" data-name="Input with label">
-      <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[20px] relative shrink-0 text-[#344054] text-[14px] text-left whitespace-nowrap">Diepgang</p>
+      <p className="font-sans font-bold leading-[20px] relative shrink-0 text-[#344054] text-[14px] text-left whitespace-nowrap">Diepgang</p>
       <Input21 />
     </div>
   );
@@ -1180,7 +1179,7 @@ function TextInput5() {
 function AddOn5() {
   return (
     <div className="content-stretch flex items-center pl-[14px] pr-[12px] py-[10px] relative rounded-bl-[8px] rounded-tl-[8px] shrink-0" data-name="Add-on">
-      <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[20px] relative shrink-0 text-[#475467] text-[14px] text-left whitespace-nowrap">cm</p>
+      <p className="font-sans font-bold leading-[20px] relative shrink-0 text-[#475467] text-[14px] text-left whitespace-nowrap">cm</p>
     </div>
   );
 }
@@ -1198,7 +1197,7 @@ function Input22() {
 function InputWithLabel21() {
   return (
     <div className="content-stretch flex flex-col gap-[6px] items-start relative shrink-0 w-full" data-name="Input with label">
-      <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[20px] relative shrink-0 text-[#344054] text-[14px] text-left whitespace-nowrap">Kruiphoogte</p>
+      <p className="font-sans font-bold leading-[20px] relative shrink-0 text-[#344054] text-[14px] text-left whitespace-nowrap">Kruiphoogte</p>
       <Input22 />
     </div>
   );
@@ -1226,7 +1225,7 @@ function Frame() {
 function Content20() {
   return (
     <div className="content-stretch flex flex-[1_0_0] gap-[8px] items-center min-h-px min-w-px relative" data-name="Content">
-      <p className="flex-[1_0_0] font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[20px] min-h-px min-w-px overflow-hidden relative text-[#667085] text-[14px] text-ellipsis text-left whitespace-nowrap">Voeg bijzonderheden toe...</p>
+      <p className="flex-[1_0_0] font-sans font-normal leading-[20px] min-h-px min-w-px overflow-hidden relative text-[#667085] text-[14px] text-ellipsis text-left whitespace-nowrap">Voeg bijzonderheden toe...</p>
     </div>
   );
 }
@@ -1247,7 +1246,7 @@ function Input23() {
 function InputWithLabel22() {
   return (
     <div className="content-stretch flex flex-col gap-[6px] items-start relative shrink-0 w-full" data-name="Input with label">
-      <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[20px] relative shrink-0 text-[#344054] text-[14px] text-left whitespace-nowrap">Bijzonderheden</p>
+      <p className="font-sans font-bold leading-[20px] relative shrink-0 text-[#344054] text-[14px] text-left whitespace-nowrap">Bijzonderheden</p>
       <Input23 />
     </div>
   );
@@ -1264,7 +1263,7 @@ function Content21() {
         <img alt="" className="absolute inset-0 max-w-none object-cover pointer-events-none rounded-[9999px] size-full" src={imgAvatar} />
         <ContrastBorder1 />
       </div>
-      <p className="font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[20px] relative shrink-0 text-[#101828] text-[14px] text-left whitespace-nowrap">Pelger de Jong</p>
+      <p className="font-sans font-normal leading-[20px] relative shrink-0 text-[#101828] text-[14px] text-left whitespace-nowrap">Pelger de Jong</p>
     </div>
   );
 }
@@ -1294,7 +1293,7 @@ function Input24() {
 function InputWithLabel23() {
   return (
     <div className="content-stretch flex flex-col gap-[6px] items-start relative shrink-0 w-full" data-name="Input with label">
-      <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[20px] relative shrink-0 text-[#344054] text-[14px] text-left whitespace-nowrap">Eigenaar (optioneel)</p>
+      <p className="font-sans font-bold leading-[20px] relative shrink-0 text-[#344054] text-[14px] text-left whitespace-nowrap">Eigenaar (optioneel)</p>
       <Input24 />
     </div>
   );
@@ -1330,7 +1329,7 @@ function Content22() {
         </div>
         <Star1 />
       </div>
-      <p className="font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[20px] relative shrink-0 text-[#101828] text-[14px] text-left whitespace-nowrap">1</p>
+      <p className="font-sans font-normal leading-[20px] relative shrink-0 text-[#101828] text-[14px] text-left whitespace-nowrap">1</p>
     </div>
   );
 }
@@ -1360,7 +1359,7 @@ function Input25() {
 function InputWithLabel24() {
   return (
     <div className="content-stretch flex flex-col gap-[6px] items-start relative shrink-0 w-full" data-name="Input with label">
-      <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[20px] relative shrink-0 text-[#344054] text-[14px] text-left whitespace-nowrap">Prioriteit (optioneel)</p>
+      <p className="font-sans font-bold leading-[20px] relative shrink-0 text-[#344054] text-[14px] text-left whitespace-nowrap">Prioriteit (optioneel)</p>
       <Input25 />
     </div>
   );
@@ -1390,14 +1389,14 @@ function Content14() {
               <div className="flex-[1_0_0] h-[36px] min-h-px min-w-px relative rounded-[4px]" data-name="Tab button base">
                 <div className="flex flex-row items-center justify-center overflow-clip rounded-[inherit] size-full">
                   <div className="content-stretch flex items-center justify-center px-[12px] py-[8px] relative size-full">
-                    <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[20px] relative shrink-0 text-[#667085] text-[14px] whitespace-nowrap">Lading</p>
+                    <p className="font-sans font-bold leading-[20px] relative shrink-0 text-[#667085] text-[14px] whitespace-nowrap">Lading</p>
                   </div>
                 </div>
               </div>
               <div className="bg-white flex-[1_0_0] h-[36px] min-h-px min-w-px relative rounded-[4px] shadow-[0px_1px_3px_0px_rgba(16,24,40,0.1),0px_1px_2px_0px_rgba(16,24,40,0.06)]" data-name="Tab button base">
                 <div className="flex flex-row items-center justify-center overflow-clip rounded-[inherit] size-full">
                   <div className="content-stretch flex items-center justify-center px-[12px] py-[8px] relative size-full">
-                    <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[20px] relative shrink-0 text-[#344054] text-[14px] whitespace-nowrap">Vaartuig</p>
+                    <p className="font-sans font-bold leading-[20px] relative shrink-0 text-[#344054] text-[14px] whitespace-nowrap">Vaartuig</p>
                   </div>
                 </div>
               </div>
@@ -1435,7 +1434,7 @@ function DividerWrap1() {
 function TextPadding2() {
   return (
     <div className="content-stretch flex items-center justify-center px-[2px] relative shrink-0" data-name="Text padding">
-      <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[20px] relative shrink-0 text-[#344054] text-[14px] whitespace-nowrap">Annuleren</p>
+      <p className="font-sans font-bold leading-[20px] relative shrink-0 text-[#344054] text-[14px] whitespace-nowrap">Annuleren</p>
     </div>
   );
 }
@@ -1443,7 +1442,7 @@ function TextPadding2() {
 function TextPadding3() {
   return (
     <div className="content-stretch flex items-center justify-center px-[2px] relative shrink-0" data-name="Text padding">
-      <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[20px] relative shrink-0 text-[14px] text-white whitespace-nowrap">Toevoegen</p>
+      <p className="font-sans font-bold leading-[20px] relative shrink-0 text-[14px] text-white whitespace-nowrap">Toevoegen</p>
     </div>
   );
 }

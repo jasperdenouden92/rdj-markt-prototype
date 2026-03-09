@@ -37,7 +37,7 @@ export default function FloatingActionBar({
         <div className="bg-rdj-bg-primary rounded-[16px] shadow-[0px_20px_24px_-4px_rgba(16,24,40,0.08),0px_8px_8px_-4px_rgba(16,24,40,0.03)] border border-rdj-border-primary">
           <div className="flex items-center px-[20px] py-[12px] gap-[16px]">
             {/* Selection count */}
-            <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[24px] text-rdj-text-primary text-[16px] whitespace-nowrap">
+            <p className="font-sans font-bold leading-[24px] text-rdj-text-primary text-[16px] whitespace-nowrap">
               {selectedCount} {itemLabel} geselecteerd
             </p>
 

@@ -153,7 +153,7 @@ export default function ItemOfferCard({ type, value, onChange, label }: ItemOffe
     return (
       <div className="flex flex-col gap-[6px]">
         {label && (
-          <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[20px] text-rdj-text-primary text-[14px]">
+          <p className="font-sans font-bold leading-[20px] text-rdj-text-primary text-[14px]">
             {label}
           </p>
         )}
@@ -173,7 +173,7 @@ export default function ItemOfferCard({ type, value, onChange, label }: ItemOffe
     return (
       <div ref={wrapperRef} className="flex flex-col gap-[6px]">
         {label && (
-          <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[20px] text-rdj-text-primary text-[14px]">
+          <p className="font-sans font-bold leading-[20px] text-rdj-text-primary text-[14px]">
             {label}
           </p>
         )}
@@ -191,7 +191,7 @@ export default function ItemOfferCard({ type, value, onChange, label }: ItemOffe
               value={searchQuery}
               onChange={(e) => handleSearchChange(e.target.value)}
               placeholder={`Zoek een ${type}...`}
-              className="flex-1 font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[20px] text-rdj-text-primary text-[14px] outline-none border-0 bg-transparent placeholder:text-rdj-text-tertiary"
+              className="flex-1 font-sans font-normal leading-[20px] text-rdj-text-primary text-[14px] outline-none border-0 bg-transparent placeholder:text-rdj-text-tertiary"
             />
           </div>
 
@@ -199,11 +199,11 @@ export default function ItemOfferCard({ type, value, onChange, label }: ItemOffe
           <div className="absolute z-50 top-full left-0 right-0 mt-[4px] bg-white border border-rdj-border-secondary rounded-[8px] shadow-[0px_4px_6px_-2px_rgba(16,24,40,0.03),0px_12px_16px_-4px_rgba(16,24,40,0.08)] max-h-[280px] overflow-y-auto">
             {loading ? (
               <div className="px-[14px] py-[10px]">
-                <p className="font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[20px] text-rdj-text-tertiary text-[14px]">Laden...</p>
+                <p className="font-sans font-normal leading-[20px] text-rdj-text-tertiary text-[14px]">Laden...</p>
               </div>
             ) : options.length === 0 ? (
               <div className="px-[14px] py-[10px]">
-                <p className="font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[20px] text-rdj-text-tertiary text-[14px]">
+                <p className="font-sans font-normal leading-[20px] text-rdj-text-tertiary text-[14px]">
                   Geen {type === "vaartuig" ? "vaartuigen" : "ladingen"} gevonden
                 </p>
               </div>
@@ -211,7 +211,7 @@ export default function ItemOfferCard({ type, value, onChange, label }: ItemOffe
               <>
                 {!searchQuery && (
                   <div className="px-[14px] pt-[8px] pb-[4px]">
-                    <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[18px] text-rdj-text-tertiary text-[12px] uppercase tracking-wide">
+                    <p className="font-sans font-bold leading-[18px] text-rdj-text-tertiary text-[12px] uppercase tracking-wide">
                       {type === "vaartuig" ? "Beschikbare vaartuigen" : "Beschikbare ladingen"}
                     </p>
                   </div>
@@ -222,10 +222,10 @@ export default function ItemOfferCard({ type, value, onChange, label }: ItemOffe
                     onClick={() => handleSelect(option)}
                     className="w-full text-left px-[14px] py-[10px] flex flex-col gap-[2px] hover:bg-rdj-bg-primary-hover transition-colors"
                   >
-                    <p className="font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[20px] text-rdj-text-primary text-[14px]">
+                    <p className="font-sans font-normal leading-[20px] text-rdj-text-primary text-[14px]">
                       {option.naam}
                     </p>
-                    <p className="font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[18px] text-rdj-text-secondary text-[12px]">
+                    <p className="font-sans font-normal leading-[18px] text-rdj-text-secondary text-[12px]">
                       {option.subtext}{option.meta ? ` · ${option.meta}` : ""}
                     </p>
                   </button>
@@ -242,7 +242,7 @@ export default function ItemOfferCard({ type, value, onChange, label }: ItemOffe
   return (
     <div className="flex flex-col gap-[6px]">
       {label && (
-        <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[20px] text-rdj-text-primary text-[14px]">
+        <p className="font-sans font-bold leading-[20px] text-rdj-text-primary text-[14px]">
           {label}
         </p>
       )}
@@ -250,10 +250,10 @@ export default function ItemOfferCard({ type, value, onChange, label }: ItemOffe
         <div aria-hidden="true" className="absolute border border-rdj-border-secondary border-solid inset-0 pointer-events-none rounded-[10px]" />
         <div className="flex items-start p-[16px]">
           <div className="flex flex-1 flex-col gap-[2px] items-start justify-center min-w-0">
-            <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[20px] text-rdj-text-primary text-[14px]">
+            <p className="font-sans font-bold leading-[20px] text-rdj-text-primary text-[14px]">
               {value!.naam}
             </p>
-            <p className="font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[18px] text-rdj-text-secondary text-[12px] overflow-hidden text-ellipsis whitespace-nowrap">
+            <p className="font-sans font-normal leading-[18px] text-rdj-text-secondary text-[12px] overflow-hidden text-ellipsis whitespace-nowrap">
               {value!.subtext}{value!.meta ? ` · ${value!.meta}` : ""}
             </p>
           </div>

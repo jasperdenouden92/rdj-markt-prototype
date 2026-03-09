@@ -1,8 +1,7 @@
 import { useState, useRef, useEffect, useCallback } from "react";
 import { Link, useLocation } from "react-router";
 import svgPaths from "../../imports/svg-5lxjaeghl9";
-// import imgAvatar from "figma:asset/a2737d3b5b234fc04041650cb9f114889c6859da.png";
-const imgAvatar = "";
+import imgAvatar from "../../assets/a2737d3b5b234fc04041650cb9f114889c6859da.png";
 import svgPathsMenu from "../../imports/svg-80ushx2b4a";
 
 export default function Sidebar() {
@@ -182,7 +181,7 @@ export default function Sidebar() {
                         </div>
                       </div>
                     </div>
-                    <p className="font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[18px] relative shrink-0 text-[#344054] text-[12px] whitespace-nowrap">Lading</p>
+                    <p className="font-sans font-normal leading-[18px] relative shrink-0 text-[#344054] text-[12px] whitespace-nowrap">Lading</p>
                   </div>
                   
                   {/* Vloot */}
@@ -198,7 +197,7 @@ export default function Sidebar() {
                         </div>
                       </div>
                     </div>
-                    <p className="font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[18px] relative shrink-0 text-[#344054] text-[12px] whitespace-nowrap">Vloot</p>
+                    <p className="font-sans font-normal leading-[18px] relative shrink-0 text-[#344054] text-[12px] whitespace-nowrap">Vloot</p>
                   </div>
                   
                   {/* Planning */}
@@ -214,7 +213,7 @@ export default function Sidebar() {
                         </div>
                       </div>
                     </div>
-                    <p className="font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[18px] relative shrink-0 text-[#344054] text-[12px] whitespace-nowrap">Planning</p>
+                    <p className="font-sans font-normal leading-[18px] relative shrink-0 text-[#344054] text-[12px] whitespace-nowrap">Planning</p>
                   </div>
                   
                   {/* Markt (Active) */}
@@ -236,7 +235,7 @@ export default function Sidebar() {
                         </div>
                       </div>
                     </div>
-                    <p className="font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[18px] relative shrink-0 text-[#344054] text-[12px] whitespace-nowrap">Markt</p>
+                    <p className="font-sans font-normal leading-[18px] relative shrink-0 text-[#344054] text-[12px] whitespace-nowrap">Markt</p>
                   </div>
                   
                   {/* Backoffice */}
@@ -252,7 +251,7 @@ export default function Sidebar() {
                         </div>
                       </div>
                     </div>
-                    <p className="font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[18px] relative shrink-0 text-[#344054] text-[12px] whitespace-nowrap">Backoffice</p>
+                    <p className="font-sans font-normal leading-[18px] relative shrink-0 text-[#344054] text-[12px] whitespace-nowrap">Backoffice</p>
                   </div>
                   
                   {/* Relaties */}
@@ -268,7 +267,7 @@ export default function Sidebar() {
                         </div>
                       </div>
                     </div>
-                    <p className="font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[18px] relative shrink-0 text-[#344054] text-[12px] whitespace-nowrap">Relaties</p>
+                    <p className="font-sans font-normal leading-[18px] relative shrink-0 text-[#344054] text-[12px] whitespace-nowrap">Relaties</p>
                   </div>
                 </div>
               </div>
@@ -355,7 +354,7 @@ export default function Sidebar() {
                         >
                           <div className="flex flex-row items-center size-full">
                             <div className="content-stretch flex items-center px-[8px] py-[9px] relative w-full">
-                              <p className={`flex-[1_0_0] font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[20px] min-h-px min-w-px relative text-[14px] ${
+                              <p className={`flex-[1_0_0] font-sans font-bold leading-[20px] min-h-px min-w-px relative text-[14px] ${
                                 isActive ? 'text-[#182230]' : 'text-[#344054]'
                               }`}>
                                 {item.label}

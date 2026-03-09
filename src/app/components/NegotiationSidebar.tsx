@@ -2,8 +2,7 @@ import { useState } from "react";
 import { useParams, useNavigate, useLocation } from "react-router";
 import { toast } from "sonner";
 import svgPaths from "../../imports/svg-kcwma38iau";
-// import imgAvatar from "figma:asset/a2737d3b5b234fc04041650cb9f114889c6859da.png";
-const imgAvatar = "";
+import imgAvatar from "../../assets/a2737d3b5b234fc04041650cb9f114889c6859da.png";
 
 interface TimelineEvent {
   id: string;
@@ -266,7 +265,7 @@ export default function NegotiationSidebar({ onClose }: NegotiationSidebarProps)
       {/* Header */}
       <div className="border-b border-[#eaecf0] px-[24px] py-[20px]">
         <div className="flex items-start justify-between">
-          <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[28px] text-[#101828] text-[18px]">
+          <p className="font-sans font-bold leading-[28px] text-[#101828] text-[18px]">
             Onderhandeling met Rederij Alfa
           </p>
           <button 
@@ -306,7 +305,7 @@ export default function NegotiationSidebar({ onClose }: NegotiationSidebarProps)
                 {/* Header with title, timestamp, avatar and menu */}
                 <div className="flex items-center justify-between h-[32px] mb-[12px]">
                   <div className="flex items-center gap-[8px] flex-1">
-                    <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[20px] text-[#344054] text-[14px]">
+                    <p className="font-sans font-bold leading-[20px] text-[#344054] text-[14px]">
                       {event.title}
                       {event.description && (
                         <span className="text-[#145990] underline decoration-solid ml-[4px]">
@@ -314,7 +313,7 @@ export default function NegotiationSidebar({ onClose }: NegotiationSidebarProps)
                         </span>
                       )}
                     </p>
-                    <p className="font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[18px] text-[#475467] text-[12px]">
+                    <p className="font-sans font-normal leading-[18px] text-[#475467] text-[12px]">
                       {event.timestamp}
                     </p>
                   </div>
@@ -341,7 +340,7 @@ export default function NegotiationSidebar({ onClose }: NegotiationSidebarProps)
 
                 {/* Quote */}
                 {event.quote && (
-                  <p className="font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[20px] text-[#475467] text-[14px] mb-[12px]">
+                  <p className="font-sans font-normal leading-[20px] text-[#475467] text-[14px] mb-[12px]">
                     {event.quote}
                   </p>
                 )}
@@ -354,11 +353,11 @@ export default function NegotiationSidebar({ onClose }: NegotiationSidebarProps)
                       {/* Title and subtitle */}
                       {event.details.title && (
                         <div className="content-stretch flex flex-col items-start justify-center relative shrink-0 w-full">
-                          <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[20px] text-[14px] text-black">
+                          <p className="font-sans font-bold leading-[20px] text-[14px] text-black">
                             {event.details.title}
                           </p>
                           {event.details.subtitle && (
-                            <p className="font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[18px] text-[#475467] text-[12px]">
+                            <p className="font-sans font-normal leading-[18px] text-[#475467] text-[12px]">
                               {event.details.subtitle.includes('→') ? (
                                 event.details.subtitle
                               ) : event.details.subtitle.includes('(-') ? (
@@ -391,7 +390,7 @@ export default function NegotiationSidebar({ onClose }: NegotiationSidebarProps)
                                 </div>
                               </div>
                             </div>
-                            <div className="content-stretch flex flex-[1_0_0] font-['Hanken_Grotesk:Regular',sans-serif] font-normal gap-[4px] items-center min-h-px min-w-px relative text-[12px]">
+                            <div className="content-stretch flex flex-[1_0_0] font-sans font-normal gap-[4px] items-center min-h-px min-w-px relative text-[12px]">
                               <p className="flex-[1_0_0] leading-[18px] min-h-px min-w-px overflow-hidden relative text-[#101828] text-ellipsis">
                                 {event.details.loadingLocation}
                               </p>
@@ -412,7 +411,7 @@ export default function NegotiationSidebar({ onClose }: NegotiationSidebarProps)
                                 </div>
                               </div>
                             </div>
-                            <div className="content-stretch flex flex-[1_0_0] font-['Hanken_Grotesk:Regular',sans-serif] font-normal gap-[4px] items-center min-h-px min-w-px relative text-[12px]">
+                            <div className="content-stretch flex flex-[1_0_0] font-sans font-normal gap-[4px] items-center min-h-px min-w-px relative text-[12px]">
                               <p className="flex-[1_0_0] leading-[18px] min-h-px min-w-px overflow-hidden relative text-[#101828] text-ellipsis">
                                 {event.details.unloadingLocation}
                               </p>
@@ -432,11 +431,11 @@ export default function NegotiationSidebar({ onClose }: NegotiationSidebarProps)
                   <div className="content-stretch flex flex-col gap-[16px] items-start py-[12px] relative shrink-0 w-full">
                     {/* Deadline */}
                     <div className="content-stretch flex gap-[8px] items-start relative shrink-0 w-full">
-                      <p className="font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[18px] relative self-stretch shrink-0 text-[#475467] text-[12px] w-[200px]">
+                      <p className="font-sans font-normal leading-[18px] relative self-stretch shrink-0 text-[#475467] text-[12px] w-[200px]">
                         Deadline
                       </p>
                       <div className="content-stretch flex flex-[1_0_0] h-[18px] items-center min-h-px min-w-px relative">
-                        <p className="flex-[1_0_0] font-['Hanken_Grotesk:Bold',sans-serif] font-bold h-full leading-[18px] min-h-px min-w-px relative text-[#344054] text-[12px]">
+                        <p className="flex-[1_0_0] font-sans font-bold h-full leading-[18px] min-h-px min-w-px relative text-[#344054] text-[12px]">
                           {event.details.deadline}
                         </p>
                       </div>
@@ -445,15 +444,15 @@ export default function NegotiationSidebar({ onClose }: NegotiationSidebarProps)
                     {/* Liggeld laden */}
                     {event.details.liggeldLaden && (
                       <div className="content-stretch flex gap-[8px] items-start leading-[18px] relative shrink-0 text-[12px] w-full">
-                        <p className="font-['Hanken_Grotesk:Regular',sans-serif] font-normal relative self-stretch shrink-0 text-[#475467] w-[200px]">
+                        <p className="font-sans font-normal relative self-stretch shrink-0 text-[#475467] w-[200px]">
                           Liggeld laden
                         </p>
                         <div className="content-stretch flex flex-[1_0_0] flex-col items-start justify-center min-h-px min-w-px relative">
-                          <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold relative shrink-0 text-[#344054] w-full">
+                          <p className="font-sans font-bold relative shrink-0 text-[#344054] w-full">
                             {event.details.liggeldLaden}
                           </p>
                           {event.details.liggeldLadenSub && (
-                            <p className="font-['Hanken_Grotesk:Regular',sans-serif] font-normal relative shrink-0 text-[#475467] w-full">
+                            <p className="font-sans font-normal relative shrink-0 text-[#475467] w-full">
                               {event.details.liggeldLadenSub}
                             </p>
                           )}
@@ -464,11 +463,11 @@ export default function NegotiationSidebar({ onClose }: NegotiationSidebarProps)
                     {/* Lostijd */}
                     {event.details.lostijd && (
                       <div className="content-stretch flex gap-[8px] items-start relative shrink-0 w-full">
-                        <p className="font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[18px] relative self-stretch shrink-0 text-[#475467] text-[12px] w-[200px]">
+                        <p className="font-sans font-normal leading-[18px] relative self-stretch shrink-0 text-[#475467] text-[12px] w-[200px]">
                           Lostijd
                         </p>
                         <div className="content-stretch flex flex-[1_0_0] flex-col items-start justify-center min-h-px min-w-px relative">
-                          <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[18px] relative shrink-0 text-[#344054] text-[12px] w-full">
+                          <p className="font-sans font-bold leading-[18px] relative shrink-0 text-[#344054] text-[12px] w-full">
                             {event.details.lostijd}
                           </p>
                         </div>
@@ -478,15 +477,15 @@ export default function NegotiationSidebar({ onClose }: NegotiationSidebarProps)
                     {/* Liggeld lossen */}
                     {event.details.liggeldLossen && (
                       <div className="content-stretch flex gap-[8px] items-start leading-[18px] relative shrink-0 text-[12px] w-full">
-                        <p className="font-['Hanken_Grotesk:Regular',sans-serif] font-normal relative self-stretch shrink-0 text-[#475467] w-[200px]">
+                        <p className="font-sans font-normal relative self-stretch shrink-0 text-[#475467] w-[200px]">
                           Liggeld lossen
                         </p>
                         <div className="content-stretch flex flex-[1_0_0] flex-col items-start justify-center min-h-px min-w-px relative">
-                          <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold relative shrink-0 text-[#344054] w-full">
+                          <p className="font-sans font-bold relative shrink-0 text-[#344054] w-full">
                             {event.details.liggeldLossen}
                           </p>
                           {event.details.liggeldLossenSub && (
-                            <p className="font-['Hanken_Grotesk:Regular',sans-serif] font-normal relative shrink-0 text-[#475467] w-full">
+                            <p className="font-sans font-normal relative shrink-0 text-[#475467] w-full">
                               {event.details.liggeldLossenSub}
                             </p>
                           )}
@@ -497,15 +496,15 @@ export default function NegotiationSidebar({ onClose }: NegotiationSidebarProps)
                     {/* Laagwater toeslag */}
                     {event.details.laagwaterToeslag && (
                       <div className="content-stretch flex gap-[8px] items-start leading-[18px] relative shrink-0 text-[12px] w-full">
-                        <p className="font-['Hanken_Grotesk:Regular',sans-serif] font-normal relative self-stretch shrink-0 text-[#475467] w-[200px]">
+                        <p className="font-sans font-normal relative self-stretch shrink-0 text-[#475467] w-[200px]">
                           Laagwater toeslag
                         </p>
                         <div className="content-stretch flex flex-[1_0_0] flex-col items-start justify-center min-h-px min-w-px relative">
-                          <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold h-[18px] relative shrink-0 text-[#344054] w-full">
+                          <p className="font-sans font-bold h-[18px] relative shrink-0 text-[#344054] w-full">
                             {event.details.laagwaterToeslag}
                           </p>
                           {event.details.laagwaterToeslagSub && (
-                            <p className="font-['Hanken_Grotesk:Regular',sans-serif] font-normal relative shrink-0 text-[#475467] w-full">
+                            <p className="font-sans font-normal relative shrink-0 text-[#475467] w-full">
                               {event.details.laagwaterToeslagSub}
                             </p>
                           )}
@@ -517,7 +516,7 @@ export default function NegotiationSidebar({ onClose }: NegotiationSidebarProps)
 
                 {/* Message */}
                 {event.message && (
-                  <p className="font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[20px] text-[#475467] text-[14px] mb-[12px]">
+                  <p className="font-sans font-normal leading-[20px] text-[#475467] text-[14px] mb-[12px]">
                     {event.message}
                   </p>
                 )}
@@ -538,7 +537,7 @@ export default function NegotiationSidebar({ onClose }: NegotiationSidebarProps)
                               </div>
                             </div>
                           </div>
-                          <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[20px] text-[#344054] text-[14px] whitespace-nowrap">
+                          <p className="font-sans font-bold leading-[20px] text-[#344054] text-[14px] whitespace-nowrap">
                             Afgewezen
                           </p>
                         </div>
@@ -562,7 +561,7 @@ export default function NegotiationSidebar({ onClose }: NegotiationSidebarProps)
                               </div>
                             </div>
                           </div>
-                          <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[20px] text-[#344054] text-[14px] whitespace-nowrap">
+                          <p className="font-sans font-bold leading-[20px] text-[#344054] text-[14px] whitespace-nowrap">
                             Nieuw bod
                           </p>
                         </div>
@@ -586,7 +585,7 @@ export default function NegotiationSidebar({ onClose }: NegotiationSidebarProps)
                               </div>
                             </div>
                           </div>
-                          <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[20px] text-[14px] text-white whitespace-nowrap">
+                          <p className="font-sans font-bold leading-[20px] text-[14px] text-white whitespace-nowrap">
                             Goedgekeurd
                           </p>
                         </div>
@@ -612,7 +611,7 @@ export default function NegotiationSidebar({ onClose }: NegotiationSidebarProps)
                                 </div>
                               </div>
                             </div>
-                            <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[20px] text-[#667085] text-[14px] whitespace-nowrap">
+                            <p className="font-sans font-bold leading-[20px] text-[#667085] text-[14px] whitespace-nowrap">
                               Doorgestuurd naar laadplanning
                             </p>
                           </div>
@@ -626,7 +625,7 @@ export default function NegotiationSidebar({ onClose }: NegotiationSidebarProps)
                       >
                         <div className="flex flex-row items-center justify-center overflow-clip rounded-[inherit] size-full">
                           <div className="content-stretch flex items-center justify-center px-[14px] py-[10px] relative w-full">
-                            <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[20px] text-white text-[14px] whitespace-nowrap">
+                            <p className="font-sans font-bold leading-[20px] text-white text-[14px] whitespace-nowrap">
                               Doorsturen naar laadplanning
                             </p>
                           </div>

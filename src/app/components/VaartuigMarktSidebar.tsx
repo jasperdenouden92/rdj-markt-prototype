@@ -31,7 +31,7 @@ export default function VaartuigMarktSidebar({ id, onEdit, onResetToBron }: Vaar
     return (
       <DetailsSidebar activeTab={activeTab} onTabChange={setActiveTab}>
         <div className="flex items-center justify-center py-[40px] w-full">
-          <p className="font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[20px] text-rdj-text-tertiary text-[14px]">
+          <p className="font-sans font-normal leading-[20px] text-rdj-text-tertiary text-[14px]">
             Laden...
           </p>
         </div>
@@ -43,7 +43,7 @@ export default function VaartuigMarktSidebar({ id, onEdit, onResetToBron }: Vaar
     return (
       <DetailsSidebar activeTab={activeTab} onTabChange={setActiveTab}>
         <div className="flex items-center justify-center py-[40px] w-full">
-          <p className="font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[20px] text-rdj-text-tertiary text-[14px]">
+          <p className="font-sans font-normal leading-[20px] text-rdj-text-tertiary text-[14px]">
             {error || "Geen data gevonden"}
           </p>
         </div>

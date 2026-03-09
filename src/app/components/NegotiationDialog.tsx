@@ -4,8 +4,7 @@ import { X } from "lucide-react";
 import { toast } from "sonner";
 import Badge from "./Badge";
 import svgPaths from "../../imports/svg-kcwma38iau";
-// import imgAvatar from "figma:asset/a2737d3b5b234fc04041650cb9f114889c6859da.png";
-const imgAvatar = "";
+import imgAvatar from "../../assets/a2737d3b5b234fc04041650cb9f114889c6859da.png";
 
 /* ── Timeline types ── */
 interface TimelineEvent {
@@ -343,7 +342,7 @@ export default function NegotiationDialog({
     children: React.ReactNode;
   }) => (
     <div className="flex gap-[8px] items-start py-[8px] w-full">
-      <p className="font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[20px] text-rdj-text-secondary text-[14px] w-[140px] shrink-0">
+      <p className="font-sans font-normal leading-[20px] text-rdj-text-secondary text-[14px] w-[140px] shrink-0">
         {label}
       </p>
       <div className="flex-1 min-w-0">{children}</div>
@@ -358,14 +357,14 @@ export default function NegotiationDialog({
     className?: string;
   }) => (
     <p
-      className={`font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[20px] text-rdj-text-primary text-[14px] ${className}`}
+      className={`font-sans font-bold leading-[20px] text-rdj-text-primary text-[14px] ${className}`}
     >
       {children}
     </p>
   );
 
   const SubText = ({ children }: { children: React.ReactNode }) => (
-    <p className="font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[20px] text-rdj-text-secondary text-[14px]">
+    <p className="font-sans font-normal leading-[20px] text-rdj-text-secondary text-[14px]">
       {children}
     </p>
   );
@@ -384,12 +383,12 @@ export default function NegotiationDialog({
         <div className="border-b border-rdj-border-secondary px-[32px] py-[20px] shrink-0">
           <div className="flex items-start justify-between">
             <div className="flex flex-col gap-[4px]">
-              <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[28px] text-rdj-text-primary text-[18px]">
+              <p className="font-sans font-bold leading-[28px] text-rdj-text-primary text-[18px]">
                 {title}
               </p>
-              <p className="font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[20px] text-rdj-text-secondary text-[14px]">
+              <p className="font-sans font-normal leading-[20px] text-rdj-text-secondary text-[14px]">
                 Onderhandeling met{" "}
-                <span className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold text-rdj-text-primary">
+                <span className="font-sans font-bold text-rdj-text-primary">
                   {relationName}
                 </span>
               </p>
@@ -427,7 +426,7 @@ export default function NegotiationDialog({
                     {/* Event header */}
                     <div className="flex items-center justify-between h-[32px] mb-[12px]">
                       <div className="flex items-center gap-[8px] flex-1">
-                        <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[20px] text-[#344054] text-[14px]">
+                        <p className="font-sans font-bold leading-[20px] text-[#344054] text-[14px]">
                           {event.title}
                           {event.description && (
                             <span className="text-[#145990] underline decoration-solid ml-[4px]">
@@ -435,7 +434,7 @@ export default function NegotiationDialog({
                             </span>
                           )}
                         </p>
-                        <p className="font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[18px] text-[#475467] text-[12px]">
+                        <p className="font-sans font-normal leading-[18px] text-[#475467] text-[12px]">
                           {event.timestamp}
                         </p>
                       </div>
@@ -489,7 +488,7 @@ export default function NegotiationDialog({
 
                     {/* Quote */}
                     {event.quote && (
-                      <p className="font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[20px] text-[#475467] text-[14px] mb-[12px]">
+                      <p className="font-sans font-normal leading-[20px] text-[#475467] text-[14px] mb-[12px]">
                         {event.quote}
                       </p>
                     )}
@@ -505,18 +504,18 @@ export default function NegotiationDialog({
                           {/* Title and subtitle */}
                           {event.details.title && (
                             <div className="content-stretch flex flex-col items-start justify-center relative shrink-0 w-full">
-                              <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[20px] text-[14px] text-black">
+                              <p className="font-sans font-bold leading-[20px] text-[14px] text-black">
                                 {event.details.title}
                               </p>
                               {event.details.subtitle && (
-                                <p className="font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[18px] text-[#475467] text-[12px]">
+                                <p className="font-sans font-normal leading-[18px] text-[#475467] text-[12px]">
                                   {event.details.subtitle.includes("→") ? (
                                     <>
                                       <span className="line-through text-rdj-text-secondary">
                                         {event.details.subtitle.split("→")[0].trim()}
                                       </span>
                                       {" "}
-                                      <span className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold text-rdj-text-primary">
+                                      <span className="font-sans font-bold text-rdj-text-primary">
                                         {event.details.subtitle.split("→")[1].trim()}
                                       </span>
                                     </>
@@ -562,7 +561,7 @@ export default function NegotiationDialog({
                                       </div>
                                     </div>
                                   </div>
-                                  <div className="content-stretch flex flex-[1_0_0] font-['Hanken_Grotesk:Regular',sans-serif] font-normal gap-[4px] items-center min-h-px min-w-px relative text-[12px]">
+                                  <div className="content-stretch flex flex-[1_0_0] font-sans font-normal gap-[4px] items-center min-h-px min-w-px relative text-[12px]">
                                     <p className="flex-[1_0_0] leading-[18px] min-h-px min-w-px overflow-hidden relative text-[#101828] text-ellipsis">
                                       {event.details.loadingLocation}
                                     </p>
@@ -598,7 +597,7 @@ export default function NegotiationDialog({
                                       </div>
                                     </div>
                                   </div>
-                                  <div className="content-stretch flex flex-[1_0_0] font-['Hanken_Grotesk:Regular',sans-serif] font-normal gap-[4px] items-center min-h-px min-w-px relative text-[12px]">
+                                  <div className="content-stretch flex flex-[1_0_0] font-sans font-normal gap-[4px] items-center min-h-px min-w-px relative text-[12px]">
                                     <p className="flex-[1_0_0] leading-[18px] min-h-px min-w-px overflow-hidden relative text-[#101828] text-ellipsis">
                                       {event.details.unloadingLocation}
                                     </p>
@@ -617,24 +616,24 @@ export default function NegotiationDialog({
                     {event.details?.deadline && (
                       <div className="content-stretch flex flex-col gap-[16px] items-start py-[12px] relative shrink-0 w-full">
                         <div className="content-stretch flex gap-[8px] items-start relative shrink-0 w-full">
-                          <p className="font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[18px] relative self-stretch shrink-0 text-[#475467] text-[12px] w-[200px]">
+                          <p className="font-sans font-normal leading-[18px] relative self-stretch shrink-0 text-[#475467] text-[12px] w-[200px]">
                             Deadline
                           </p>
-                          <p className="flex-[1_0_0] font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[18px] min-h-px min-w-px relative text-[#344054] text-[12px]">
+                          <p className="flex-[1_0_0] font-sans font-bold leading-[18px] min-h-px min-w-px relative text-[#344054] text-[12px]">
                             {event.details.deadline}
                           </p>
                         </div>
                         {event.details.liggeldLaden && (
                           <div className="content-stretch flex gap-[8px] items-start leading-[18px] relative shrink-0 text-[12px] w-full">
-                            <p className="font-['Hanken_Grotesk:Regular',sans-serif] font-normal relative self-stretch shrink-0 text-[#475467] w-[200px]">
+                            <p className="font-sans font-normal relative self-stretch shrink-0 text-[#475467] w-[200px]">
                               Liggeld laden
                             </p>
                             <div className="content-stretch flex flex-[1_0_0] flex-col items-start justify-center min-h-px min-w-px relative">
-                              <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold relative shrink-0 text-[#344054] w-full">
+                              <p className="font-sans font-bold relative shrink-0 text-[#344054] w-full">
                                 {event.details.liggeldLaden}
                               </p>
                               {event.details.liggeldLadenSub && (
-                                <p className="font-['Hanken_Grotesk:Regular',sans-serif] font-normal relative shrink-0 text-[#475467] w-full">
+                                <p className="font-sans font-normal relative shrink-0 text-[#475467] w-full">
                                   {event.details.liggeldLadenSub}
                                 </p>
                               )}
@@ -643,25 +642,25 @@ export default function NegotiationDialog({
                         )}
                         {event.details.lostijd && (
                           <div className="content-stretch flex gap-[8px] items-start relative shrink-0 w-full">
-                            <p className="font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[18px] relative self-stretch shrink-0 text-[#475467] text-[12px] w-[200px]">
+                            <p className="font-sans font-normal leading-[18px] relative self-stretch shrink-0 text-[#475467] text-[12px] w-[200px]">
                               Lostijd
                             </p>
-                            <p className="flex-[1_0_0] font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[18px] min-h-px min-w-px relative text-[#344054] text-[12px]">
+                            <p className="flex-[1_0_0] font-sans font-bold leading-[18px] min-h-px min-w-px relative text-[#344054] text-[12px]">
                               {event.details.lostijd}
                             </p>
                           </div>
                         )}
                         {event.details.liggeldLossen && (
                           <div className="content-stretch flex gap-[8px] items-start leading-[18px] relative shrink-0 text-[12px] w-full">
-                            <p className="font-['Hanken_Grotesk:Regular',sans-serif] font-normal relative self-stretch shrink-0 text-[#475467] w-[200px]">
+                            <p className="font-sans font-normal relative self-stretch shrink-0 text-[#475467] w-[200px]">
                               Liggeld lossen
                             </p>
                             <div className="content-stretch flex flex-[1_0_0] flex-col items-start justify-center min-h-px min-w-px relative">
-                              <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold relative shrink-0 text-[#344054] w-full">
+                              <p className="font-sans font-bold relative shrink-0 text-[#344054] w-full">
                                 {event.details.liggeldLossen}
                               </p>
                               {event.details.liggeldLossenSub && (
-                                <p className="font-['Hanken_Grotesk:Regular',sans-serif] font-normal relative shrink-0 text-[#475467] w-full">
+                                <p className="font-sans font-normal relative shrink-0 text-[#475467] w-full">
                                   {event.details.liggeldLossenSub}
                                 </p>
                               )}
@@ -670,15 +669,15 @@ export default function NegotiationDialog({
                         )}
                         {event.details.laagwaterToeslag && (
                           <div className="content-stretch flex gap-[8px] items-start leading-[18px] relative shrink-0 text-[12px] w-full">
-                            <p className="font-['Hanken_Grotesk:Regular',sans-serif] font-normal relative self-stretch shrink-0 text-[#475467] w-[200px]">
+                            <p className="font-sans font-normal relative self-stretch shrink-0 text-[#475467] w-[200px]">
                               Laagwater toeslag
                             </p>
                             <div className="content-stretch flex flex-[1_0_0] flex-col items-start justify-center min-h-px min-w-px relative">
-                              <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold relative shrink-0 text-[#344054] w-full">
+                              <p className="font-sans font-bold relative shrink-0 text-[#344054] w-full">
                                 {event.details.laagwaterToeslag}
                               </p>
                               {event.details.laagwaterToeslagSub && (
-                                <p className="font-['Hanken_Grotesk:Regular',sans-serif] font-normal relative shrink-0 text-[#475467] w-full">
+                                <p className="font-sans font-normal relative shrink-0 text-[#475467] w-full">
                                   {event.details.laagwaterToeslagSub}
                                 </p>
                               )}
@@ -690,7 +689,7 @@ export default function NegotiationDialog({
 
                     {/* Message */}
                     {event.message && (
-                      <p className="font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[20px] text-[#475467] text-[14px] mb-[12px]">
+                      <p className="font-sans font-normal leading-[20px] text-[#475467] text-[14px] mb-[12px]">
                         {event.message}
                       </p>
                     )}
@@ -721,7 +720,7 @@ export default function NegotiationDialog({
                                   </div>
                                 </div>
                               </div>
-                              <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[20px] text-[#344054] text-[14px] whitespace-nowrap">
+                              <p className="font-sans font-bold leading-[20px] text-[#344054] text-[14px] whitespace-nowrap">
                                 Afgewezen
                               </p>
                             </div>
@@ -757,7 +756,7 @@ export default function NegotiationDialog({
                                   </div>
                                 </div>
                               </div>
-                              <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[20px] text-[#344054] text-[14px] whitespace-nowrap">
+                              <p className="font-sans font-bold leading-[20px] text-[#344054] text-[14px] whitespace-nowrap">
                                 Nieuw bod
                               </p>
                             </div>
@@ -793,7 +792,7 @@ export default function NegotiationDialog({
                                   </div>
                                 </div>
                               </div>
-                              <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[20px] text-[14px] text-white whitespace-nowrap">
+                              <p className="font-sans font-bold leading-[20px] text-[14px] text-white whitespace-nowrap">
                                 Goedgekeurd
                               </p>
                             </div>
@@ -833,7 +832,7 @@ export default function NegotiationDialog({
                                     </div>
                                   </div>
                                 </div>
-                                <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[20px] text-[#667085] text-[14px] whitespace-nowrap">
+                                <p className="font-sans font-bold leading-[20px] text-[#667085] text-[14px] whitespace-nowrap">
                                   Doorgestuurd naar laadplanning
                                 </p>
                               </div>
@@ -850,7 +849,7 @@ export default function NegotiationDialog({
                           >
                             <div className="flex flex-row items-center justify-center overflow-clip rounded-[inherit] size-full">
                               <div className="content-stretch flex items-center justify-center px-[14px] py-[10px] relative w-full">
-                                <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[20px] text-white text-[14px] whitespace-nowrap">
+                                <p className="font-sans font-bold leading-[20px] text-white text-[14px] whitespace-nowrap">
                                   Doorsturen naar laadplanning
                                 </p>
                               </div>
@@ -876,7 +875,7 @@ export default function NegotiationDialog({
               <div className="flex gap-[16px] border-b border-rdj-border-secondary mb-[16px]">
                 <button
                   onClick={() => setDetailTab("details")}
-                  className={`relative pb-[12px] font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[20px] text-[14px] ${
+                  className={`relative pb-[12px] font-sans font-bold leading-[20px] text-[14px] ${
                     detailTab === "details"
                       ? "text-rdj-text-brand"
                       : "text-rdj-text-secondary"
@@ -889,7 +888,7 @@ export default function NegotiationDialog({
                 </button>
                 <button
                   onClick={() => setDetailTab("condities")}
-                  className={`relative pb-[12px] font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[20px] text-[14px] ${
+                  className={`relative pb-[12px] font-sans font-bold leading-[20px] text-[14px] ${
                     detailTab === "condities"
                       ? "text-rdj-text-brand"
                       : "text-rdj-text-secondary"
@@ -905,18 +904,18 @@ export default function NegotiationDialog({
               {detailTab === "details" && (
                 <div className="flex flex-col">
                   {/* Description */}
-                  <p className="font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[20px] text-rdj-text-secondary text-[14px] mb-[16px]">
+                  <p className="font-sans font-normal leading-[20px] text-rdj-text-secondary text-[14px] mb-[16px]">
                     {mockDetails.description}
                   </p>
 
                   <DetailRow label="Partij">
-                    <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[20px] text-rdj-text-brand text-[14px] cursor-pointer">
+                    <p className="font-sans font-bold leading-[20px] text-rdj-text-brand text-[14px] cursor-pointer">
                       {mockDetails.partij}
                     </p>
                   </DetailRow>
 
                   <DetailRow label="Subpartij">
-                    <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[20px] text-rdj-text-brand text-[14px] cursor-pointer">
+                    <p className="font-sans font-bold leading-[20px] text-rdj-text-brand text-[14px] cursor-pointer">
                       {mockDetails.subpartij}
                     </p>
                   </DetailRow>
@@ -986,7 +985,7 @@ export default function NegotiationDialog({
                   <DetailRow label="Contactgegevens">
                     <div>
                       <BoldText>{mockDetails.contact.name}</BoldText>
-                      <p className="font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[20px] text-rdj-text-brand text-[14px] cursor-pointer">
+                      <p className="font-sans font-normal leading-[20px] text-rdj-text-brand text-[14px] cursor-pointer">
                         {mockDetails.contact.email}
                       </p>
                       <SubText>{mockDetails.contact.phone}</SubText>
@@ -997,7 +996,7 @@ export default function NegotiationDialog({
 
               {detailTab === "condities" && (
                 <div className="flex flex-col gap-[16px]">
-                  <p className="font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[20px] text-rdj-text-secondary text-[14px]">
+                  <p className="font-sans font-normal leading-[20px] text-rdj-text-secondary text-[14px]">
                     Geen aanvullende condities vastgelegd.
                   </p>
                 </div>

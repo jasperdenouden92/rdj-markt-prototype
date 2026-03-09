@@ -1,14 +1,9 @@
 import svgPaths from "./svg-tywkapk8us";
-// import imgMarktPijplijnEigenLadingDetailOnderhandelingen from "figma:asset/a2737d3b5b234fc04041650cb9f114889c6859da.png";
-const imgMarktPijplijnEigenLadingDetailOnderhandelingen = "";
-// import imgMarktPijplijnEigenLadingDetailOnderhandelingen1 from "figma:asset/3627de284acb374a4d9313b3c2dbaeeb87a48224.png";
-const imgMarktPijplijnEigenLadingDetailOnderhandelingen1 = "";
-// import imgMarktPijplijnEigenLadingDetailOnderhandelingen2 from "figma:asset/e7809035038b3816de2a1d67c5de86ebeed325d0.png";
-const imgMarktPijplijnEigenLadingDetailOnderhandelingen2 = "";
-// import imgMarktPijplijnEigenLadingDetailOnderhandelingen3 from "figma:asset/bf485cb6f98c12534c69bc81459ce34f2e24e4a8.png";
-const imgMarktPijplijnEigenLadingDetailOnderhandelingen3 = "";
-// import imgMarktPijplijnEigenLadingDetailOnderhandelingen4 from "figma:asset/9e45f45f537bea4bf653bc0307471e5ff5545f63.png";
-const imgMarktPijplijnEigenLadingDetailOnderhandelingen4 = "";
+import imgMarktPijplijnEigenLadingDetailOnderhandelingen from "../assets/a2737d3b5b234fc04041650cb9f114889c6859da.png";
+import imgMarktPijplijnEigenLadingDetailOnderhandelingen1 from "../assets/3627de284acb374a4d9313b3c2dbaeeb87a48224.png";
+import imgMarktPijplijnEigenLadingDetailOnderhandelingen2 from "../assets/e7809035038b3816de2a1d67c5de86ebeed325d0.png";
+import imgMarktPijplijnEigenLadingDetailOnderhandelingen3 from "../assets/bf485cb6f98c12534c69bc81459ce34f2e24e4a8.png";
+import imgMarktPijplijnEigenLadingDetailOnderhandelingen4 from "../assets/9e45f45f537bea4bf653bc0307471e5ff5545f63.png";
 
 export default function MarktPijplijnEigenLadingDetailOnderhandelingen() {
   return (
@@ -51,7 +46,7 @@ export default function MarktPijplijnEigenLadingDetailOnderhandelingen() {
                             </div>
                           </div>
                         </div>
-                        <p className="font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[18px] relative shrink-0 text-[#344054] text-[12px] whitespace-nowrap">Lading</p>
+                        <p className="font-sans font-normal leading-[18px] relative shrink-0 text-[#344054] text-[12px] whitespace-nowrap">Lading</p>
                       </div>
                       <div className="content-stretch flex flex-col gap-[4px] items-center relative shrink-0" data-name="Item">
                         <div className="content-stretch flex items-center justify-center overflow-clip p-[8px] relative rounded-[4px] shrink-0 size-[40px]" data-name="_Nav item button">
@@ -65,7 +60,7 @@ export default function MarktPijplijnEigenLadingDetailOnderhandelingen() {
                             </div>
                           </div>
                         </div>
-                        <p className="font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[18px] relative shrink-0 text-[#344054] text-[12px] whitespace-nowrap">Vloot</p>
+                        <p className="font-sans font-normal leading-[18px] relative shrink-0 text-[#344054] text-[12px] whitespace-nowrap">Vloot</p>
                       </div>
                       <div className="content-stretch flex flex-col gap-[4px] items-center relative shrink-0 w-full" data-name="Item">
                         <div className="content-stretch flex items-center justify-center overflow-clip p-[8px] relative rounded-[4px] shrink-0" data-name="_Nav item button">
@@ -79,7 +74,7 @@ export default function MarktPijplijnEigenLadingDetailOnderhandelingen() {
                             </div>
                           </div>
                         </div>
-                        <p className="font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[18px] relative shrink-0 text-[#344054] text-[12px] whitespace-nowrap">Planning</p>
+                        <p className="font-sans font-normal leading-[18px] relative shrink-0 text-[#344054] text-[12px] whitespace-nowrap">Planning</p>
                       </div>
                       <div className="content-stretch flex flex-col gap-[4px] items-center relative shrink-0" data-name="Item">
                         <div className="bg-[#e3effb] content-stretch flex items-center justify-center overflow-clip p-[8px] relative rounded-[4px] shrink-0 size-[40px]" data-name="_Nav item button">
@@ -93,7 +88,7 @@ export default function MarktPijplijnEigenLadingDetailOnderhandelingen() {
                             </div>
                           </div>
                         </div>
-                        <p className="font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[18px] relative shrink-0 text-[#344054] text-[12px] whitespace-nowrap">Markt</p>
+                        <p className="font-sans font-normal leading-[18px] relative shrink-0 text-[#344054] text-[12px] whitespace-nowrap">Markt</p>
                       </div>
                       <div className="content-stretch flex flex-col gap-[4px] items-center relative shrink-0" data-name="Item">
                         <div className="content-stretch flex items-center justify-center overflow-clip p-[8px] relative rounded-[4px] shrink-0 size-[40px]" data-name="_Nav item button">
@@ -107,7 +102,7 @@ export default function MarktPijplijnEigenLadingDetailOnderhandelingen() {
                             </div>
                           </div>
                         </div>
-                        <p className="font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[18px] relative shrink-0 text-[#344054] text-[12px] whitespace-nowrap">Backoffice</p>
+                        <p className="font-sans font-normal leading-[18px] relative shrink-0 text-[#344054] text-[12px] whitespace-nowrap">Backoffice</p>
                       </div>
                       <div className="content-stretch flex flex-col gap-[4px] items-center relative shrink-0" data-name="Item">
                         <div className="content-stretch flex items-center justify-center overflow-clip p-[8px] relative rounded-[4px] shrink-0 size-[40px]" data-name="_Nav item button">
@@ -121,7 +116,7 @@ export default function MarktPijplijnEigenLadingDetailOnderhandelingen() {
                             </div>
                           </div>
                         </div>
-                        <p className="font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[18px] relative shrink-0 text-[#344054] text-[12px] whitespace-nowrap">Relaties</p>
+                        <p className="font-sans font-normal leading-[18px] relative shrink-0 text-[#344054] text-[12px] whitespace-nowrap">Relaties</p>
                       </div>
                     </div>
                   </div>
@@ -163,7 +158,7 @@ export default function MarktPijplijnEigenLadingDetailOnderhandelingen() {
                 <div className="content-stretch flex items-center pl-[24px] relative shrink-0" data-name="Breadcrumbs">
                   <div className="content-stretch flex gap-[8px] items-center relative shrink-0" data-name="Tabs">
                     <div className="content-stretch flex items-center justify-center p-[4px] relative rounded-[6px] shrink-0" data-name="_Breadcrumb button base">
-                      <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[20px] relative shrink-0 text-[#475467] text-[14px] whitespace-nowrap">Markt</p>
+                      <p className="font-sans font-bold leading-[20px] relative shrink-0 text-[#475467] text-[14px] whitespace-nowrap">Markt</p>
                     </div>
                     <div className="overflow-clip relative shrink-0 size-[16px]" data-name="chevron-right">
                       <div className="absolute bottom-1/4 left-[37.5%] right-[37.5%] top-1/4" data-name="Icon">
@@ -175,7 +170,7 @@ export default function MarktPijplijnEigenLadingDetailOnderhandelingen() {
                       </div>
                     </div>
                     <div className="content-stretch flex items-center justify-center px-[8px] py-[4px] relative rounded-[6px] shrink-0" data-name="_Breadcrumb button base">
-                      <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[20px] relative shrink-0 text-[#475467] text-[14px] whitespace-nowrap">Pijplijn</p>
+                      <p className="font-sans font-bold leading-[20px] relative shrink-0 text-[#475467] text-[14px] whitespace-nowrap">Pijplijn</p>
                     </div>
                     <div className="overflow-clip relative shrink-0 size-[16px]" data-name="chevron-right">
                       <div className="absolute bottom-1/4 left-[37.5%] right-[37.5%] top-1/4" data-name="Icon">
@@ -187,7 +182,7 @@ export default function MarktPijplijnEigenLadingDetailOnderhandelingen() {
                       </div>
                     </div>
                     <div className="bg-[#f9fafb] content-stretch flex items-center justify-center px-[8px] py-[4px] relative rounded-[6px] shrink-0" data-name="_Breadcrumb button base">
-                      <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[20px] relative shrink-0 text-[#344054] text-[14px] whitespace-nowrap">CRG164-01</p>
+                      <p className="font-sans font-bold leading-[20px] relative shrink-0 text-[#344054] text-[14px] whitespace-nowrap">CRG164-01</p>
                     </div>
                   </div>
                 </div>
@@ -237,10 +232,10 @@ export default function MarktPijplijnEigenLadingDetailOnderhandelingen() {
                         <div className="content-start flex flex-wrap gap-[20px_16px] items-start relative shrink-0 w-full" data-name="Content">
                           <div className="content-stretch flex flex-[1_0_0] flex-col gap-[4px] items-start min-h-px min-w-[320px] relative" data-name="Text and supporting text">
                             <div className="content-stretch flex gap-[12px] items-center relative shrink-0 w-full">
-                              <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[38px] relative shrink-0 text-[#101828] text-[30px] whitespace-nowrap">m/v Merganser - Agro Delta Groep</p>
+                              <p className="font-sans font-bold leading-[38px] relative shrink-0 text-[#101828] text-[30px] whitespace-nowrap">m/v Merganser - Agro Delta Groep</p>
                               <div className="bg-[#f9fafb] content-stretch flex gap-[4px] items-center pl-[8px] pr-[6px] py-[2px] relative rounded-[4px] shrink-0" data-name="Badge">
                                 <div aria-hidden="true" className="absolute border border-[#eaecf0] border-solid inset-0 pointer-events-none rounded-[4px]" />
-                                <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[20px] relative shrink-0 text-[#344054] text-[14px] text-center whitespace-nowrap">In de markt</p>
+                                <p className="font-sans font-bold leading-[20px] relative shrink-0 text-[#344054] text-[14px] text-center whitespace-nowrap">In de markt</p>
                                 <div className="overflow-clip relative shrink-0 size-[12px]" data-name="chevron-down">
                                   <div className="absolute bottom-[37.5%] left-1/4 right-1/4 top-[37.5%]" data-name="Icon">
                                     <div className="absolute inset-[-25%_-12.5%]">
@@ -252,11 +247,11 @@ export default function MarktPijplijnEigenLadingDetailOnderhandelingen() {
                                 </div>
                               </div>
                             </div>
-                            <p className="font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[0] relative shrink-0 text-[#475467] text-[0px] text-[16px] whitespace-nowrap">
+                            <p className="font-sans font-normal leading-[0] relative shrink-0 text-[#475467] text-[0px] text-[16px] whitespace-nowrap">
                               <span className="leading-[24px]">{`Vanuit `}</span>
-                              <span className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[24px]">Rotterdam (Do 15 Jan)</span>
+                              <span className="font-sans font-bold leading-[24px]">Rotterdam (Do 15 Jan)</span>
                               <span className="leading-[24px]">{` naar `}</span>
-                              <span className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[24px]">Mannheim (Af te stemmen)</span>
+                              <span className="font-sans font-bold leading-[24px]">Mannheim (Af te stemmen)</span>
                             </p>
                           </div>
                           <div className="content-stretch flex gap-[12px] items-center relative shrink-0" data-name="Actions">
@@ -272,7 +267,7 @@ export default function MarktPijplijnEigenLadingDetailOnderhandelingen() {
                                   </div>
                                 </div>
                                 <div className="content-stretch flex items-center justify-center px-[2px] relative shrink-0" data-name="Text padding">
-                                  <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[20px] relative shrink-0 text-[#b42318] text-[14px] whitespace-nowrap">Uit markt halen</p>
+                                  <p className="font-sans font-bold leading-[20px] relative shrink-0 text-[#b42318] text-[14px] whitespace-nowrap">Uit markt halen</p>
                                 </div>
                               </div>
                               <div aria-hidden="true" className="absolute border border-[#d0d5dd] border-solid inset-0 pointer-events-none rounded-[6px] shadow-[0px_1px_2px_0px_rgba(16,24,40,0.05)]" />
@@ -283,21 +278,21 @@ export default function MarktPijplijnEigenLadingDetailOnderhandelingen() {
                             <div className="content-stretch flex gap-[12px] items-center relative shrink-0 w-full" data-name="Tabs">
                               <div className="content-stretch flex gap-[8px] h-[32px] items-center justify-center pb-[12px] px-[4px] relative shrink-0" data-name="Tab button base">
                                 <div aria-hidden="true" className="absolute border-[#1567a4] border-b-2 border-solid inset-0 pointer-events-none" />
-                                <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[20px] relative shrink-0 text-[#145990] text-[14px] whitespace-nowrap">Onderhandelingen</p>
+                                <p className="font-sans font-bold leading-[20px] relative shrink-0 text-[#145990] text-[14px] whitespace-nowrap">Onderhandelingen</p>
                                 <div className="bg-[#f2f8fd] content-stretch flex items-center px-[8px] py-[2px] relative rounded-[9999px] shrink-0" data-name="Badge">
                                   <div aria-hidden="true" className="absolute border border-[#c1dff6] border-solid inset-0 pointer-events-none rounded-[9999px]" />
-                                  <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[18px] relative shrink-0 text-[#145990] text-[12px] text-center whitespace-nowrap">4</p>
+                                  <p className="font-sans font-bold leading-[18px] relative shrink-0 text-[#145990] text-[12px] text-center whitespace-nowrap">4</p>
                                 </div>
                               </div>
                               <div className="content-stretch flex gap-[8px] h-[32px] items-center justify-center pb-[12px] px-[4px] relative shrink-0" data-name="Tab button base">
-                                <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[20px] relative shrink-0 text-[#667085] text-[14px] whitespace-nowrap">Matches</p>
+                                <p className="font-sans font-bold leading-[20px] relative shrink-0 text-[#667085] text-[14px] whitespace-nowrap">Matches</p>
                                 <div className="bg-[#f9fafb] content-stretch flex items-center px-[8px] py-[2px] relative rounded-[9999px] shrink-0" data-name="Badge">
                                   <div aria-hidden="true" className="absolute border border-[#eaecf0] border-solid inset-0 pointer-events-none rounded-[9999px]" />
-                                  <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[18px] relative shrink-0 text-[#344054] text-[12px] text-center whitespace-nowrap">5</p>
+                                  <p className="font-sans font-bold leading-[18px] relative shrink-0 text-[#344054] text-[12px] text-center whitespace-nowrap">5</p>
                                 </div>
                               </div>
                               <div className="content-stretch flex h-[32px] items-center justify-center pb-[12px] px-[4px] relative shrink-0" data-name="Tab button base">
-                                <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[20px] relative shrink-0 text-[#667085] text-[14px] whitespace-nowrap">Activiteit</p>
+                                <p className="font-sans font-bold leading-[20px] relative shrink-0 text-[#667085] text-[14px] whitespace-nowrap">Activiteit</p>
                               </div>
                             </div>
                           </div>
@@ -308,11 +303,11 @@ export default function MarktPijplijnEigenLadingDetailOnderhandelingen() {
                       <div className="content-stretch flex gap-[16px] items-center relative shrink-0 w-full z-[2]" data-name="Content">
                         <div className="flex flex-[1_0_0] flex-row items-center self-stretch">
                           <div className="content-stretch flex flex-[1_0_0] flex-col gap-[4px] h-full items-start justify-center min-h-px min-w-px relative" data-name="Text and supporting text">
-                            <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[26px] relative shrink-0 text-[#101828] text-[18px] w-full">Onderhandelingen</p>
+                            <p className="font-sans font-bold leading-[26px] relative shrink-0 text-[#101828] text-[18px] w-full">Onderhandelingen</p>
                           </div>
                         </div>
                         <div className="content-stretch flex gap-[6px] items-center justify-center overflow-clip relative shrink-0" data-name="Buttons/Button">
-                          <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[20px] relative shrink-0 text-[#145990] text-[14px] whitespace-nowrap">Actieve onderhandelingen</p>
+                          <p className="font-sans font-bold leading-[20px] relative shrink-0 text-[#145990] text-[14px] whitespace-nowrap">Actieve onderhandelingen</p>
                           <div className="overflow-clip relative shrink-0 size-[20px]" data-name="chevron-down">
                             <div className="absolute bottom-[37.5%] left-1/4 right-1/4 top-[37.5%]" data-name="Icon">
                               <div className="absolute inset-[-16.67%_-8.33%]">
@@ -341,14 +336,14 @@ export default function MarktPijplijnEigenLadingDetailOnderhandelingen() {
                     </div>
                     <div className="content-stretch flex items-center justify-between max-w-[1116px] py-[20px] relative shrink-0 w-full" data-name="Pagination">
                       <div className="content-stretch flex gap-[8px] items-center relative shrink-0" data-name="Amount">
-                        <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[20px] relative shrink-0 text-[#344054] text-[14px] whitespace-nowrap">Regels per pagina</p>
+                        <p className="font-sans font-bold leading-[20px] relative shrink-0 text-[#344054] text-[14px] whitespace-nowrap">Regels per pagina</p>
                         <button className="content-stretch cursor-pointer flex flex-col gap-[8px] items-start relative shrink-0 w-[80px]" data-name="Input dropdown">
                           <div className="content-stretch flex flex-col gap-[6px] items-start relative shrink-0 w-full" data-name="Input with label">
                             <div className="bg-white relative rounded-[6px] shrink-0 w-full" data-name="Input">
                               <div className="flex flex-row items-center overflow-clip rounded-[inherit] size-full">
                                 <div className="content-stretch flex gap-[8px] items-center px-[12px] py-[8px] relative w-full">
                                   <div className="content-stretch flex flex-[1_0_0] gap-[8px] items-center min-h-px min-w-px relative" data-name="Content">
-                                    <p className="font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[20px] relative shrink-0 text-[#101828] text-[14px] text-left whitespace-nowrap">50</p>
+                                    <p className="font-sans font-normal leading-[20px] relative shrink-0 text-[#101828] text-[14px] text-left whitespace-nowrap">50</p>
                                   </div>
                                   <div className="overflow-clip relative shrink-0 size-[20px]" data-name="chevron-down">
                                     <div className="absolute bottom-[37.5%] left-1/4 right-1/4 top-[37.5%]" data-name="Icon">
@@ -367,7 +362,7 @@ export default function MarktPijplijnEigenLadingDetailOnderhandelingen() {
                         </button>
                       </div>
                       <div className="content-stretch flex gap-[12px] items-center relative shrink-0" data-name="Navigation">
-                        <p className="font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[0] relative shrink-0 text-[#344054] text-[0px] text-[14px] whitespace-nowrap">
+                        <p className="font-sans font-normal leading-[0] relative shrink-0 text-[#344054] text-[0px] text-[14px] whitespace-nowrap">
                           <span className="leading-[20px]">1</span>
                           <span className="leading-[20px]">{` tot 5`}</span>
                           <span className="leading-[20px]">0</span>
@@ -388,14 +383,14 @@ export default function MarktPijplijnEigenLadingDetailOnderhandelingen() {
                           </div>
                         </div>
                         <div className="content-stretch flex gap-[8px] items-center relative shrink-0" data-name="Page dropdown">
-                          <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[20px] relative shrink-0 text-[#344054] text-[14px] whitespace-nowrap">Pagina</p>
+                          <p className="font-sans font-bold leading-[20px] relative shrink-0 text-[#344054] text-[14px] whitespace-nowrap">Pagina</p>
                           <button className="content-stretch cursor-pointer flex flex-col gap-[8px] items-start relative shrink-0 w-[64px]" data-name="Input dropdown">
                             <div className="content-stretch flex flex-col gap-[6px] items-start relative shrink-0 w-full" data-name="Input with label">
                               <div className="bg-white relative rounded-[6px] shrink-0 w-full" data-name="Input">
                                 <div className="flex flex-row items-center overflow-clip rounded-[inherit] size-full">
                                   <div className="content-stretch flex gap-[8px] items-center px-[12px] py-[8px] relative w-full">
                                     <div className="content-stretch flex flex-[1_0_0] gap-[8px] items-center min-h-px min-w-px relative" data-name="Content">
-                                      <p className="font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[20px] relative shrink-0 text-[#101828] text-[14px] text-left whitespace-nowrap">1</p>
+                                      <p className="font-sans font-normal leading-[20px] relative shrink-0 text-[#101828] text-[14px] text-left whitespace-nowrap">1</p>
                                     </div>
                                     <div className="overflow-clip relative shrink-0 size-[20px]" data-name="chevron-down">
                                       <div className="absolute bottom-[37.5%] left-1/4 right-1/4 top-[37.5%]" data-name="Icon">
@@ -412,7 +407,7 @@ export default function MarktPijplijnEigenLadingDetailOnderhandelingen() {
                               </div>
                             </div>
                           </button>
-                          <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[20px] relative shrink-0 text-[#344054] text-[14px] whitespace-nowrap">van 10</p>
+                          <p className="font-sans font-bold leading-[20px] relative shrink-0 text-[#344054] text-[14px] whitespace-nowrap">van 10</p>
                         </div>
                         <div className="content-stretch flex h-[20px] items-center justify-end relative shrink-0" data-name="Button wrap">
                           <div className="content-stretch flex items-center justify-center overflow-clip p-[8px] relative rounded-[6px] shrink-0" data-name="Buttons/Button">
@@ -464,7 +459,7 @@ export default function MarktPijplijnEigenLadingDetailOnderhandelingen() {
                           <div className="flex flex-row items-center size-full">
                             <div className="content-stretch flex items-center px-[16px] py-[12px] relative size-full">
                               <div className="content-stretch flex items-center relative shrink-0" data-name="Table header">
-                                <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[18px] relative shrink-0 text-[#475467] text-[12px] whitespace-nowrap">Relatie</p>
+                                <p className="font-sans font-bold leading-[18px] relative shrink-0 text-[#475467] text-[12px] whitespace-nowrap">Relatie</p>
                               </div>
                             </div>
                           </div>
@@ -473,7 +468,7 @@ export default function MarktPijplijnEigenLadingDetailOnderhandelingen() {
                           <div aria-hidden="true" className="absolute border-[#eaecf0] border-b border-solid inset-0 pointer-events-none" />
                           <div className="flex flex-row items-center size-full">
                             <div className="content-stretch flex gap-[8px] items-center p-[16px] relative size-full">
-                              <p className="flex-[1_0_0] font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[20px] min-h-px min-w-px relative text-[#101828] text-[14px]">{`Janson & Janson B.V.`}</p>
+                              <p className="flex-[1_0_0] font-sans font-bold leading-[20px] min-h-px min-w-px relative text-[#101828] text-[14px]">{`Janson & Janson B.V.`}</p>
                             </div>
                           </div>
                         </div>
@@ -481,7 +476,7 @@ export default function MarktPijplijnEigenLadingDetailOnderhandelingen() {
                           <div aria-hidden="true" className="absolute border-[#eaecf0] border-b border-solid inset-0 pointer-events-none" />
                           <div className="flex flex-row items-center size-full">
                             <div className="content-stretch flex gap-[8px] items-center p-[16px] relative size-full">
-                              <p className="flex-[1_0_0] font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[20px] min-h-px min-w-px relative text-[#101828] text-[14px]">De Volharding C.V.</p>
+                              <p className="flex-[1_0_0] font-sans font-bold leading-[20px] min-h-px min-w-px relative text-[#101828] text-[14px]">De Volharding C.V.</p>
                             </div>
                           </div>
                         </div>
@@ -489,7 +484,7 @@ export default function MarktPijplijnEigenLadingDetailOnderhandelingen() {
                           <div aria-hidden="true" className="absolute border-[#eaecf0] border-b border-solid inset-0 pointer-events-none" />
                           <div className="flex flex-row items-center size-full">
                             <div className="content-stretch flex gap-[8px] items-center p-[16px] relative size-full">
-                              <p className="flex-[1_0_0] font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[20px] min-h-px min-w-px relative text-[#101828] text-[14px]">Rederij Alfa</p>
+                              <p className="flex-[1_0_0] font-sans font-bold leading-[20px] min-h-px min-w-px relative text-[#101828] text-[14px]">Rederij Alfa</p>
                             </div>
                           </div>
                         </div>
@@ -498,12 +493,12 @@ export default function MarktPijplijnEigenLadingDetailOnderhandelingen() {
                           <div className="flex flex-row items-center size-full">
                             <div className="content-stretch flex gap-[8px] items-center pl-[24px] pr-[16px] py-[16px] relative size-full">
                               <div className="content-stretch flex flex-col items-start relative shrink-0" data-name="Text and supporting text">
-                                <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[20px] relative shrink-0 text-[#101828] text-[14px] whitespace-nowrap">Rederij Abel</p>
+                                <p className="font-sans font-bold leading-[20px] relative shrink-0 text-[#101828] text-[14px] whitespace-nowrap">Rederij Abel</p>
                               </div>
                               <div className="-translate-y-1/2 absolute bg-white right-[16px] rounded-[6px] top-1/2" data-name="Buttons/Button">
                                 <div className="content-stretch flex gap-[4px] items-center justify-center overflow-clip px-[12px] py-[8px] relative rounded-[inherit]">
                                   <div className="content-stretch flex items-center justify-center px-[2px] relative shrink-0" data-name="Text padding">
-                                    <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[20px] relative shrink-0 text-[#145990] text-[14px] whitespace-nowrap">Openen</p>
+                                    <p className="font-sans font-bold leading-[20px] relative shrink-0 text-[#145990] text-[14px] whitespace-nowrap">Openen</p>
                                   </div>
                                 </div>
                                 <div aria-hidden="true" className="absolute border border-[#d0d5dd] border-solid inset-0 pointer-events-none rounded-[6px] shadow-[0px_1px_2px_0px_rgba(16,24,40,0.05)]" />
@@ -515,7 +510,7 @@ export default function MarktPijplijnEigenLadingDetailOnderhandelingen() {
                           <div aria-hidden="true" className="absolute border-[#eaecf0] border-b border-solid inset-0 pointer-events-none" />
                           <div className="flex flex-row items-center size-full">
                             <div className="content-stretch flex gap-[8px] items-center p-[16px] relative size-full">
-                              <p className="flex-[1_0_0] font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[20px] min-h-px min-w-px relative text-[#101828] text-[14px]">Vaart Wel B.V.</p>
+                              <p className="flex-[1_0_0] font-sans font-bold leading-[20px] min-h-px min-w-px relative text-[#101828] text-[14px]">Vaart Wel B.V.</p>
                             </div>
                           </div>
                         </div>
@@ -523,7 +518,7 @@ export default function MarktPijplijnEigenLadingDetailOnderhandelingen() {
                           <div aria-hidden="true" className="absolute border-[#eaecf0] border-b border-solid inset-0 pointer-events-none" />
                           <div className="flex flex-row items-center size-full">
                             <div className="content-stretch flex gap-[8px] items-center p-[16px] relative size-full">
-                              <p className="flex-[1_0_0] font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[20px] min-h-px min-w-px relative text-[#101828] text-[14px]">Flevo Shipping</p>
+                              <p className="flex-[1_0_0] font-sans font-bold leading-[20px] min-h-px min-w-px relative text-[#101828] text-[14px]">Flevo Shipping</p>
                             </div>
                           </div>
                         </div>
@@ -531,7 +526,7 @@ export default function MarktPijplijnEigenLadingDetailOnderhandelingen() {
                           <div aria-hidden="true" className="absolute border-[#eaecf0] border-b border-solid inset-0 pointer-events-none" />
                           <div className="flex flex-row items-center size-full">
                             <div className="content-stretch flex gap-[8px] items-center p-[16px] relative size-full">
-                              <p className="flex-[1_0_0] font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[20px] min-h-px min-w-px relative text-[#101828] text-[14px]">De Blauwe Golf B.V.</p>
+                              <p className="flex-[1_0_0] font-sans font-bold leading-[20px] min-h-px min-w-px relative text-[#101828] text-[14px]">De Blauwe Golf B.V.</p>
                             </div>
                           </div>
                         </div>
@@ -539,7 +534,7 @@ export default function MarktPijplijnEigenLadingDetailOnderhandelingen() {
                           <div aria-hidden="true" className="absolute border-[#eaecf0] border-b border-solid inset-0 pointer-events-none" />
                           <div className="flex flex-row items-center size-full">
                             <div className="content-stretch flex gap-[8px] items-center p-[16px] relative size-full">
-                              <p className="flex-[1_0_0] font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[20px] min-h-px min-w-px relative text-[#101828] text-[14px]">IJsseldelta Transport</p>
+                              <p className="flex-[1_0_0] font-sans font-bold leading-[20px] min-h-px min-w-px relative text-[#101828] text-[14px]">IJsseldelta Transport</p>
                             </div>
                           </div>
                         </div>
@@ -547,7 +542,7 @@ export default function MarktPijplijnEigenLadingDetailOnderhandelingen() {
                           <div aria-hidden="true" className="absolute border-[#eaecf0] border-b border-solid inset-0 pointer-events-none" />
                           <div className="flex flex-row items-center size-full">
                             <div className="content-stretch flex gap-[8px] items-center p-[16px] relative size-full">
-                              <p className="flex-[1_0_0] font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[20px] min-h-px min-w-px relative text-[#101828] text-[14px]">De Nieuwe Hanze N.V.</p>
+                              <p className="flex-[1_0_0] font-sans font-bold leading-[20px] min-h-px min-w-px relative text-[#101828] text-[14px]">De Nieuwe Hanze N.V.</p>
                             </div>
                           </div>
                         </div>
@@ -558,7 +553,7 @@ export default function MarktPijplijnEigenLadingDetailOnderhandelingen() {
                           <div className="flex flex-row items-center justify-end size-full">
                             <div className="content-stretch flex items-center justify-end px-[16px] py-[12px] relative size-full">
                               <div className="content-stretch flex items-center relative shrink-0" data-name="Table header">
-                                <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[18px] relative shrink-0 text-[#475467] text-[12px] whitespace-nowrap">Vrachtprijs</p>
+                                <p className="font-sans font-bold leading-[18px] relative shrink-0 text-[#475467] text-[12px] whitespace-nowrap">Vrachtprijs</p>
                               </div>
                             </div>
                           </div>
@@ -567,7 +562,7 @@ export default function MarktPijplijnEigenLadingDetailOnderhandelingen() {
                           <div aria-hidden="true" className="absolute border-[#eaecf0] border-b border-solid inset-0 pointer-events-none" />
                           <div className="flex flex-row items-center justify-end size-full">
                             <div className="content-stretch flex items-center justify-end p-[16px] relative size-full">
-                              <div className="content-stretch flex flex-col font-['Hanken_Grotesk:Regular',sans-serif] font-normal items-end justify-center leading-[20px] relative shrink-0 text-[14px] whitespace-nowrap" data-name="Text and supporting text">
+                              <div className="content-stretch flex flex-col font-sans font-normal items-end justify-center leading-[20px] relative shrink-0 text-[14px] whitespace-nowrap" data-name="Text and supporting text">
                                 <p className="relative shrink-0 text-[#101828]">€3,40 per ton</p>
                                 <p className="relative shrink-0 text-[#475467]">+10%</p>
                               </div>
@@ -578,7 +573,7 @@ export default function MarktPijplijnEigenLadingDetailOnderhandelingen() {
                           <div aria-hidden="true" className="absolute border-[#eaecf0] border-b border-solid inset-0 pointer-events-none" />
                           <div className="flex flex-row items-center justify-end size-full">
                             <div className="content-stretch flex items-center justify-end p-[16px] relative size-full">
-                              <div className="content-stretch flex flex-col font-['Hanken_Grotesk:Regular',sans-serif] font-normal items-end justify-center leading-[20px] relative shrink-0 text-[14px] whitespace-nowrap" data-name="Text and supporting text">
+                              <div className="content-stretch flex flex-col font-sans font-normal items-end justify-center leading-[20px] relative shrink-0 text-[14px] whitespace-nowrap" data-name="Text and supporting text">
                                 <p className="relative shrink-0 text-[#101828]">€3,60 per ton</p>
                                 <p className="relative shrink-0 text-[#dc6803]">-4%</p>
                               </div>
@@ -589,7 +584,7 @@ export default function MarktPijplijnEigenLadingDetailOnderhandelingen() {
                           <div aria-hidden="true" className="absolute border-[#eaecf0] border-b border-solid inset-0 pointer-events-none" />
                           <div className="flex flex-row items-center justify-end size-full">
                             <div className="content-stretch flex items-center justify-end p-[16px] relative size-full">
-                              <div className="content-stretch flex flex-col font-['Hanken_Grotesk:Regular',sans-serif] font-normal items-end justify-center leading-[20px] relative shrink-0 text-[14px] whitespace-nowrap" data-name="Text and supporting text">
+                              <div className="content-stretch flex flex-col font-sans font-normal items-end justify-center leading-[20px] relative shrink-0 text-[14px] whitespace-nowrap" data-name="Text and supporting text">
                                 <p className="relative shrink-0 text-[#101828]">€3,70 per ton</p>
                                 <p className="relative shrink-0 text-[#475467]">+10%</p>
                               </div>
@@ -600,7 +595,7 @@ export default function MarktPijplijnEigenLadingDetailOnderhandelingen() {
                           <div aria-hidden="true" className="absolute border-[#eaecf0] border-b border-solid inset-0 pointer-events-none" />
                           <div className="flex flex-row items-center justify-end size-full">
                             <div className="content-stretch flex items-center justify-end p-[16px] relative size-full">
-                              <div className="content-stretch flex flex-col font-['Hanken_Grotesk:Regular',sans-serif] font-normal items-end justify-center leading-[20px] relative shrink-0 text-[14px] whitespace-nowrap" data-name="Text and supporting text">
+                              <div className="content-stretch flex flex-col font-sans font-normal items-end justify-center leading-[20px] relative shrink-0 text-[14px] whitespace-nowrap" data-name="Text and supporting text">
                                 <p className="relative shrink-0 text-[#101828]">€3,80 per ton</p>
                                 <p className="relative shrink-0 text-[#475467]">+5%</p>
                               </div>
@@ -611,7 +606,7 @@ export default function MarktPijplijnEigenLadingDetailOnderhandelingen() {
                           <div aria-hidden="true" className="absolute border-[#eaecf0] border-b border-solid inset-0 pointer-events-none" />
                           <div className="flex flex-row items-center justify-end size-full">
                             <div className="content-stretch flex items-center justify-end p-[16px] relative size-full">
-                              <div className="content-stretch flex flex-col font-['Hanken_Grotesk:Regular',sans-serif] font-normal items-end justify-center leading-[20px] relative shrink-0 text-[14px] whitespace-nowrap" data-name="Text and supporting text">
+                              <div className="content-stretch flex flex-col font-sans font-normal items-end justify-center leading-[20px] relative shrink-0 text-[14px] whitespace-nowrap" data-name="Text and supporting text">
                                 <p className="relative shrink-0 text-[#101828]">€3,90 per ton</p>
                                 <p className="relative shrink-0 text-[#475467]">+4%</p>
                               </div>
@@ -622,7 +617,7 @@ export default function MarktPijplijnEigenLadingDetailOnderhandelingen() {
                           <div aria-hidden="true" className="absolute border-[#eaecf0] border-b border-solid inset-0 pointer-events-none" />
                           <div className="flex flex-row items-center justify-end size-full">
                             <div className="content-stretch flex gap-[8px] items-center justify-end p-[16px] relative size-full">
-                              <p className="font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[20px] relative shrink-0 text-[#475467] text-[14px] whitespace-nowrap">-</p>
+                              <p className="font-sans font-normal leading-[20px] relative shrink-0 text-[#475467] text-[14px] whitespace-nowrap">-</p>
                             </div>
                           </div>
                         </div>
@@ -630,7 +625,7 @@ export default function MarktPijplijnEigenLadingDetailOnderhandelingen() {
                           <div aria-hidden="true" className="absolute border-[#eaecf0] border-b border-solid inset-0 pointer-events-none" />
                           <div className="flex flex-row items-center justify-end size-full">
                             <div className="content-stretch flex gap-[8px] items-center justify-end p-[16px] relative size-full">
-                              <p className="font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[20px] relative shrink-0 text-[#475467] text-[14px] whitespace-nowrap">-</p>
+                              <p className="font-sans font-normal leading-[20px] relative shrink-0 text-[#475467] text-[14px] whitespace-nowrap">-</p>
                             </div>
                           </div>
                         </div>
@@ -638,7 +633,7 @@ export default function MarktPijplijnEigenLadingDetailOnderhandelingen() {
                           <div aria-hidden="true" className="absolute border-[#eaecf0] border-b border-solid inset-0 pointer-events-none" />
                           <div className="flex flex-row items-center justify-end size-full">
                             <div className="content-stretch flex gap-[8px] items-center justify-end p-[16px] relative size-full">
-                              <p className="font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[20px] relative shrink-0 text-[#475467] text-[14px] whitespace-nowrap">-</p>
+                              <p className="font-sans font-normal leading-[20px] relative shrink-0 text-[#475467] text-[14px] whitespace-nowrap">-</p>
                             </div>
                           </div>
                         </div>
@@ -646,7 +641,7 @@ export default function MarktPijplijnEigenLadingDetailOnderhandelingen() {
                           <div aria-hidden="true" className="absolute border-[#eaecf0] border-b border-solid inset-0 pointer-events-none" />
                           <div className="flex flex-row items-center justify-end size-full">
                             <div className="content-stretch flex gap-[8px] items-center justify-end p-[16px] relative size-full">
-                              <p className="font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[20px] relative shrink-0 text-[#475467] text-[14px] whitespace-nowrap">-</p>
+                              <p className="font-sans font-normal leading-[20px] relative shrink-0 text-[#475467] text-[14px] whitespace-nowrap">-</p>
                             </div>
                           </div>
                         </div>
@@ -657,7 +652,7 @@ export default function MarktPijplijnEigenLadingDetailOnderhandelingen() {
                           <div className="flex flex-row items-center justify-end size-full">
                             <div className="content-stretch flex items-center justify-end px-[16px] py-[12px] relative size-full">
                               <div className="content-stretch flex items-center relative shrink-0" data-name="Table header">
-                                <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[18px] relative shrink-0 text-[#475467] text-[12px] whitespace-nowrap">Tonnage</p>
+                                <p className="font-sans font-bold leading-[18px] relative shrink-0 text-[#475467] text-[12px] whitespace-nowrap">Tonnage</p>
                               </div>
                             </div>
                           </div>
@@ -666,7 +661,7 @@ export default function MarktPijplijnEigenLadingDetailOnderhandelingen() {
                           <div aria-hidden="true" className="absolute border-[#eaecf0] border-b border-solid inset-0 pointer-events-none" />
                           <div className="flex flex-row items-center justify-end size-full">
                             <div className="content-stretch flex gap-[8px] items-center justify-end p-[16px] relative size-full">
-                              <p className="font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[20px] relative shrink-0 text-[#475467] text-[14px] whitespace-nowrap">2.345 ton</p>
+                              <p className="font-sans font-normal leading-[20px] relative shrink-0 text-[#475467] text-[14px] whitespace-nowrap">2.345 ton</p>
                             </div>
                           </div>
                         </div>
@@ -674,7 +669,7 @@ export default function MarktPijplijnEigenLadingDetailOnderhandelingen() {
                           <div aria-hidden="true" className="absolute border-[#eaecf0] border-b border-solid inset-0 pointer-events-none" />
                           <div className="flex flex-row items-center justify-end size-full">
                             <div className="content-stretch flex gap-[8px] items-center justify-end p-[16px] relative size-full">
-                              <p className="font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[20px] relative shrink-0 text-[#475467] text-[14px] whitespace-nowrap">3.678 ton</p>
+                              <p className="font-sans font-normal leading-[20px] relative shrink-0 text-[#475467] text-[14px] whitespace-nowrap">3.678 ton</p>
                             </div>
                           </div>
                         </div>
@@ -682,7 +677,7 @@ export default function MarktPijplijnEigenLadingDetailOnderhandelingen() {
                           <div aria-hidden="true" className="absolute border-[#eaecf0] border-b border-solid inset-0 pointer-events-none" />
                           <div className="flex flex-row items-center justify-end size-full">
                             <div className="content-stretch flex gap-[8px] items-center justify-end p-[16px] relative size-full">
-                              <p className="font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[20px] relative shrink-0 text-[#475467] text-[14px] whitespace-nowrap">2.890 ton</p>
+                              <p className="font-sans font-normal leading-[20px] relative shrink-0 text-[#475467] text-[14px] whitespace-nowrap">2.890 ton</p>
                             </div>
                           </div>
                         </div>
@@ -690,7 +685,7 @@ export default function MarktPijplijnEigenLadingDetailOnderhandelingen() {
                           <div aria-hidden="true" className="absolute border-[#eaecf0] border-b border-solid inset-0 pointer-events-none" />
                           <div className="flex flex-row items-center justify-end size-full">
                             <div className="content-stretch flex gap-[8px] items-center justify-end px-[16px] py-[12px] relative size-full">
-                              <p className="font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[20px] relative shrink-0 text-[#475467] text-[14px] whitespace-nowrap">4.123 ton</p>
+                              <p className="font-sans font-normal leading-[20px] relative shrink-0 text-[#475467] text-[14px] whitespace-nowrap">4.123 ton</p>
                             </div>
                           </div>
                         </div>
@@ -698,7 +693,7 @@ export default function MarktPijplijnEigenLadingDetailOnderhandelingen() {
                           <div aria-hidden="true" className="absolute border-[#eaecf0] border-b border-solid inset-0 pointer-events-none" />
                           <div className="flex flex-row items-center justify-end size-full">
                             <div className="content-stretch flex gap-[8px] items-center justify-end p-[16px] relative size-full">
-                              <p className="font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[20px] relative shrink-0 text-[#475467] text-[14px] whitespace-nowrap">3.456 ton</p>
+                              <p className="font-sans font-normal leading-[20px] relative shrink-0 text-[#475467] text-[14px] whitespace-nowrap">3.456 ton</p>
                             </div>
                           </div>
                         </div>
@@ -706,7 +701,7 @@ export default function MarktPijplijnEigenLadingDetailOnderhandelingen() {
                           <div aria-hidden="true" className="absolute border-[#eaecf0] border-b border-solid inset-0 pointer-events-none" />
                           <div className="flex flex-row items-center justify-end size-full">
                             <div className="content-stretch flex gap-[8px] items-center justify-end p-[16px] relative size-full">
-                              <p className="font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[20px] relative shrink-0 text-[#475467] text-[14px] whitespace-nowrap">2.765 ton</p>
+                              <p className="font-sans font-normal leading-[20px] relative shrink-0 text-[#475467] text-[14px] whitespace-nowrap">2.765 ton</p>
                             </div>
                           </div>
                         </div>
@@ -714,7 +709,7 @@ export default function MarktPijplijnEigenLadingDetailOnderhandelingen() {
                           <div aria-hidden="true" className="absolute border-[#eaecf0] border-b border-solid inset-0 pointer-events-none" />
                           <div className="flex flex-row items-center justify-end size-full">
                             <div className="content-stretch flex gap-[8px] items-center justify-end p-[16px] relative size-full">
-                              <p className="font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[20px] relative shrink-0 text-[#475467] text-[14px] whitespace-nowrap">3.234 ton</p>
+                              <p className="font-sans font-normal leading-[20px] relative shrink-0 text-[#475467] text-[14px] whitespace-nowrap">3.234 ton</p>
                             </div>
                           </div>
                         </div>
@@ -722,7 +717,7 @@ export default function MarktPijplijnEigenLadingDetailOnderhandelingen() {
                           <div aria-hidden="true" className="absolute border-[#eaecf0] border-b border-solid inset-0 pointer-events-none" />
                           <div className="flex flex-row items-center justify-end size-full">
                             <div className="content-stretch flex gap-[8px] items-center justify-end p-[16px] relative size-full">
-                              <p className="font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[20px] relative shrink-0 text-[#475467] text-[14px] whitespace-nowrap">4.000 ton</p>
+                              <p className="font-sans font-normal leading-[20px] relative shrink-0 text-[#475467] text-[14px] whitespace-nowrap">4.000 ton</p>
                             </div>
                           </div>
                         </div>
@@ -730,7 +725,7 @@ export default function MarktPijplijnEigenLadingDetailOnderhandelingen() {
                           <div aria-hidden="true" className="absolute border-[#eaecf0] border-b border-solid inset-0 pointer-events-none" />
                           <div className="flex flex-row items-center justify-end size-full">
                             <div className="content-stretch flex gap-[8px] items-center justify-end p-[16px] relative size-full">
-                              <p className="font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[20px] relative shrink-0 text-[#475467] text-[14px] whitespace-nowrap">2.111 ton</p>
+                              <p className="font-sans font-normal leading-[20px] relative shrink-0 text-[#475467] text-[14px] whitespace-nowrap">2.111 ton</p>
                             </div>
                           </div>
                         </div>
@@ -741,7 +736,7 @@ export default function MarktPijplijnEigenLadingDetailOnderhandelingen() {
                           <div className="flex flex-row items-center size-full">
                             <div className="content-stretch flex items-center px-[16px] py-[12px] relative size-full">
                               <div className="content-stretch flex gap-[4px] items-center relative shrink-0" data-name="Table header">
-                                <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[18px] relative shrink-0 text-[#475467] text-[12px] whitespace-nowrap">Deadline</p>
+                                <p className="font-sans font-bold leading-[18px] relative shrink-0 text-[#475467] text-[12px] whitespace-nowrap">Deadline</p>
                                 <div className="overflow-clip relative shrink-0 size-[16px]" data-name="arrow-down">
                                   <div className="absolute inset-[20.83%]" data-name="Icon">
                                     <div className="absolute inset-[-7.14%]">
@@ -759,7 +754,7 @@ export default function MarktPijplijnEigenLadingDetailOnderhandelingen() {
                           <div aria-hidden="true" className="absolute border-[#eaecf0] border-b border-solid inset-0 pointer-events-none" />
                           <div className="flex flex-row items-center size-full">
                             <div className="content-stretch flex gap-[8px] items-center p-[16px] relative size-full">
-                              <div className="flex flex-col font-['Hanken_Grotesk:Bold',sans-serif] font-bold justify-center leading-[0] relative shrink-0 text-[#dc6803] text-[14px] whitespace-nowrap">
+                              <div className="flex flex-col font-sans font-bold justify-center leading-[0] relative shrink-0 text-[#dc6803] text-[14px] whitespace-nowrap">
                                 <p className="leading-[20px]">Za 14 Feb, 16:00</p>
                               </div>
                             </div>
@@ -769,7 +764,7 @@ export default function MarktPijplijnEigenLadingDetailOnderhandelingen() {
                           <div aria-hidden="true" className="absolute border-[#eaecf0] border-b border-solid inset-0 pointer-events-none" />
                           <div className="flex flex-row items-center size-full">
                             <div className="content-stretch flex gap-[8px] items-center p-[16px] relative size-full">
-                              <div className="flex flex-col font-['Hanken_Grotesk:Bold',sans-serif] font-bold justify-center leading-[0] relative shrink-0 text-[#dc6803] text-[14px] whitespace-nowrap">
+                              <div className="flex flex-col font-sans font-bold justify-center leading-[0] relative shrink-0 text-[#dc6803] text-[14px] whitespace-nowrap">
                                 <p className="leading-[20px]">Eergisteren, 9:00</p>
                               </div>
                             </div>
@@ -779,7 +774,7 @@ export default function MarktPijplijnEigenLadingDetailOnderhandelingen() {
                           <div aria-hidden="true" className="absolute border-[#eaecf0] border-b border-solid inset-0 pointer-events-none" />
                           <div className="flex flex-row items-center size-full">
                             <div className="content-stretch flex gap-[8px] items-center p-[16px] relative size-full">
-                              <p className="font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[20px] relative shrink-0 text-[#475467] text-[14px] whitespace-nowrap">Morgen, 10:00</p>
+                              <p className="font-sans font-normal leading-[20px] relative shrink-0 text-[#475467] text-[14px] whitespace-nowrap">Morgen, 10:00</p>
                             </div>
                           </div>
                         </div>
@@ -787,7 +782,7 @@ export default function MarktPijplijnEigenLadingDetailOnderhandelingen() {
                           <div aria-hidden="true" className="absolute border-[#eaecf0] border-b border-solid inset-0 pointer-events-none" />
                           <div className="flex flex-row items-center size-full">
                             <div className="content-stretch flex gap-[8px] items-center px-[16px] py-[12px] relative size-full">
-                              <p className="font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[20px] relative shrink-0 text-[#475467] text-[14px] whitespace-nowrap">Morgen, 11:00</p>
+                              <p className="font-sans font-normal leading-[20px] relative shrink-0 text-[#475467] text-[14px] whitespace-nowrap">Morgen, 11:00</p>
                             </div>
                           </div>
                         </div>
@@ -795,7 +790,7 @@ export default function MarktPijplijnEigenLadingDetailOnderhandelingen() {
                           <div aria-hidden="true" className="absolute border-[#eaecf0] border-b border-solid inset-0 pointer-events-none" />
                           <div className="flex flex-row items-center size-full">
                             <div className="content-stretch flex gap-[8px] items-center p-[16px] relative size-full">
-                              <p className="font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[20px] relative shrink-0 text-[#475467] text-[14px] whitespace-nowrap">Do 19 Feb, 11:15</p>
+                              <p className="font-sans font-normal leading-[20px] relative shrink-0 text-[#475467] text-[14px] whitespace-nowrap">Do 19 Feb, 11:15</p>
                             </div>
                           </div>
                         </div>
@@ -803,7 +798,7 @@ export default function MarktPijplijnEigenLadingDetailOnderhandelingen() {
                           <div aria-hidden="true" className="absolute border-[#eaecf0] border-b border-solid inset-0 pointer-events-none" />
                           <div className="flex flex-row items-center size-full">
                             <div className="content-stretch flex gap-[8px] items-center p-[16px] relative size-full">
-                              <p className="font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[20px] relative shrink-0 text-[#475467] text-[14px] whitespace-nowrap">Vr 20 Feb</p>
+                              <p className="font-sans font-normal leading-[20px] relative shrink-0 text-[#475467] text-[14px] whitespace-nowrap">Vr 20 Feb</p>
                             </div>
                           </div>
                         </div>
@@ -811,7 +806,7 @@ export default function MarktPijplijnEigenLadingDetailOnderhandelingen() {
                           <div aria-hidden="true" className="absolute border-[#eaecf0] border-b border-solid inset-0 pointer-events-none" />
                           <div className="flex flex-row items-center size-full">
                             <div className="content-stretch flex gap-[8px] items-center p-[16px] relative size-full">
-                              <p className="font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[20px] relative shrink-0 text-[#475467] text-[14px] whitespace-nowrap">Vr 20 Feb</p>
+                              <p className="font-sans font-normal leading-[20px] relative shrink-0 text-[#475467] text-[14px] whitespace-nowrap">Vr 20 Feb</p>
                             </div>
                           </div>
                         </div>
@@ -819,7 +814,7 @@ export default function MarktPijplijnEigenLadingDetailOnderhandelingen() {
                           <div aria-hidden="true" className="absolute border-[#eaecf0] border-b border-solid inset-0 pointer-events-none" />
                           <div className="flex flex-row items-center size-full">
                             <div className="content-stretch flex gap-[8px] items-center p-[16px] relative size-full">
-                              <p className="font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[20px] relative shrink-0 text-[#475467] text-[14px] whitespace-nowrap">Za 21 Feb</p>
+                              <p className="font-sans font-normal leading-[20px] relative shrink-0 text-[#475467] text-[14px] whitespace-nowrap">Za 21 Feb</p>
                             </div>
                           </div>
                         </div>
@@ -827,7 +822,7 @@ export default function MarktPijplijnEigenLadingDetailOnderhandelingen() {
                           <div aria-hidden="true" className="absolute border-[#eaecf0] border-b border-solid inset-0 pointer-events-none" />
                           <div className="flex flex-row items-center size-full">
                             <div className="content-stretch flex gap-[8px] items-center p-[16px] relative size-full">
-                              <p className="font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[20px] relative shrink-0 text-[#475467] text-[14px] whitespace-nowrap">-</p>
+                              <p className="font-sans font-normal leading-[20px] relative shrink-0 text-[#475467] text-[14px] whitespace-nowrap">-</p>
                             </div>
                           </div>
                         </div>
@@ -838,7 +833,7 @@ export default function MarktPijplijnEigenLadingDetailOnderhandelingen() {
                           <div className="flex flex-row items-center size-full">
                             <div className="content-stretch flex items-center px-[16px] py-[12px] relative size-full">
                               <div className="content-stretch flex items-center relative shrink-0" data-name="Table header">
-                                <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[18px] relative shrink-0 text-[#475467] text-[12px] whitespace-nowrap">Status</p>
+                                <p className="font-sans font-bold leading-[18px] relative shrink-0 text-[#475467] text-[12px] whitespace-nowrap">Status</p>
                               </div>
                             </div>
                           </div>
@@ -858,7 +853,7 @@ export default function MarktPijplijnEigenLadingDetailOnderhandelingen() {
                                     </div>
                                   </div>
                                 </div>
-                                <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[18px] relative shrink-0 text-[#067647] text-[12px] text-center whitespace-nowrap">Goedgekeurd</p>
+                                <p className="font-sans font-bold leading-[18px] relative shrink-0 text-[#067647] text-[12px] text-center whitespace-nowrap">Goedgekeurd</p>
                               </div>
                             </div>
                           </div>
@@ -878,7 +873,7 @@ export default function MarktPijplijnEigenLadingDetailOnderhandelingen() {
                                     </div>
                                   </div>
                                 </div>
-                                <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[18px] relative shrink-0 text-[#067647] text-[12px] text-center whitespace-nowrap">Goedgekeurd</p>
+                                <p className="font-sans font-bold leading-[18px] relative shrink-0 text-[#067647] text-[12px] text-center whitespace-nowrap">Goedgekeurd</p>
                               </div>
                             </div>
                           </div>
@@ -898,7 +893,7 @@ export default function MarktPijplijnEigenLadingDetailOnderhandelingen() {
                                     </div>
                                   </div>
                                 </div>
-                                <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[18px] relative shrink-0 text-[#175cd3] text-[12px] text-center whitespace-nowrap">Bod verstuurd</p>
+                                <p className="font-sans font-bold leading-[18px] relative shrink-0 text-[#175cd3] text-[12px] text-center whitespace-nowrap">Bod verstuurd</p>
                               </div>
                             </div>
                           </div>
@@ -918,7 +913,7 @@ export default function MarktPijplijnEigenLadingDetailOnderhandelingen() {
                                     </div>
                                   </div>
                                 </div>
-                                <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[18px] relative shrink-0 text-[#175cd3] text-[12px] text-center whitespace-nowrap">Bod ontvangen</p>
+                                <p className="font-sans font-bold leading-[18px] relative shrink-0 text-[#175cd3] text-[12px] text-center whitespace-nowrap">Bod ontvangen</p>
                               </div>
                             </div>
                           </div>
@@ -938,7 +933,7 @@ export default function MarktPijplijnEigenLadingDetailOnderhandelingen() {
                                     </div>
                                   </div>
                                 </div>
-                                <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[18px] relative shrink-0 text-[#b42318] text-[12px] text-center whitespace-nowrap">Afgewezen</p>
+                                <p className="font-sans font-bold leading-[18px] relative shrink-0 text-[#b42318] text-[12px] text-center whitespace-nowrap">Afgewezen</p>
                               </div>
                             </div>
                           </div>
@@ -956,7 +951,7 @@ export default function MarktPijplijnEigenLadingDetailOnderhandelingen() {
                                     </svg>
                                   </div>
                                 </div>
-                                <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[18px] relative shrink-0 text-[#344054] text-[12px] text-center whitespace-nowrap">Via werklijst</p>
+                                <p className="font-sans font-bold leading-[18px] relative shrink-0 text-[#344054] text-[12px] text-center whitespace-nowrap">Via werklijst</p>
                               </div>
                             </div>
                           </div>
@@ -974,7 +969,7 @@ export default function MarktPijplijnEigenLadingDetailOnderhandelingen() {
                                     </svg>
                                   </div>
                                 </div>
-                                <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[18px] relative shrink-0 text-[#344054] text-[12px] text-center whitespace-nowrap">Via werklijst</p>
+                                <p className="font-sans font-bold leading-[18px] relative shrink-0 text-[#344054] text-[12px] text-center whitespace-nowrap">Via werklijst</p>
                               </div>
                             </div>
                           </div>
@@ -992,7 +987,7 @@ export default function MarktPijplijnEigenLadingDetailOnderhandelingen() {
                                     </svg>
                                   </div>
                                 </div>
-                                <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[18px] relative shrink-0 text-[#344054] text-[12px] text-center whitespace-nowrap">Via werklijst</p>
+                                <p className="font-sans font-bold leading-[18px] relative shrink-0 text-[#344054] text-[12px] text-center whitespace-nowrap">Via werklijst</p>
                               </div>
                             </div>
                           </div>
@@ -1010,7 +1005,7 @@ export default function MarktPijplijnEigenLadingDetailOnderhandelingen() {
                                     </svg>
                                   </div>
                                 </div>
-                                <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[18px] relative shrink-0 text-[#344054] text-[12px] text-center whitespace-nowrap">Via werklijst</p>
+                                <p className="font-sans font-bold leading-[18px] relative shrink-0 text-[#344054] text-[12px] text-center whitespace-nowrap">Via werklijst</p>
                               </div>
                             </div>
                           </div>
@@ -1022,7 +1017,7 @@ export default function MarktPijplijnEigenLadingDetailOnderhandelingen() {
                           <div className="flex flex-row items-center size-full">
                             <div className="content-stretch flex items-center px-[16px] py-[12px] relative size-full">
                               <div className="content-stretch flex items-center relative shrink-0" data-name="Table header">
-                                <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[18px] relative shrink-0 text-[#475467] text-[12px] whitespace-nowrap">Laatste update</p>
+                                <p className="font-sans font-bold leading-[18px] relative shrink-0 text-[#475467] text-[12px] whitespace-nowrap">Laatste update</p>
                               </div>
                             </div>
                           </div>
@@ -1035,7 +1030,7 @@ export default function MarktPijplijnEigenLadingDetailOnderhandelingen() {
                                 <img alt="" className="absolute inset-0 max-w-none object-cover pointer-events-none rounded-[9999px] size-full" src={imgMarktPijplijnEigenLadingDetailOnderhandelingen1} />
                                 <div className="absolute border-[0.5px] border-[rgba(0,0,0,0.08)] border-solid inset-0 rounded-[9999px]" data-name="Contrast border" />
                               </div>
-                              <div className="content-stretch flex flex-col font-['Hanken_Grotesk:Regular',sans-serif] font-normal items-start leading-[20px] relative shrink-0 text-[14px] whitespace-nowrap" data-name="Text and supporting text">
+                              <div className="content-stretch flex flex-col font-sans font-normal items-start leading-[20px] relative shrink-0 text-[14px] whitespace-nowrap" data-name="Text and supporting text">
                                 <p className="relative shrink-0 text-[#101828]">Erick Nieuwkoop</p>
                                 <p className="relative shrink-0 text-[#475467]">Ma 9 Feb 07:28</p>
                               </div>
@@ -1050,7 +1045,7 @@ export default function MarktPijplijnEigenLadingDetailOnderhandelingen() {
                                 <img alt="" className="absolute inset-0 max-w-none object-cover pointer-events-none rounded-[9999px] size-full" src={imgMarktPijplijnEigenLadingDetailOnderhandelingen2} />
                                 <div className="absolute border-[0.5px] border-[rgba(0,0,0,0.08)] border-solid inset-0 rounded-[9999px]" data-name="Contrast border" />
                               </div>
-                              <div className="content-stretch flex flex-col font-['Hanken_Grotesk:Regular',sans-serif] font-normal items-start leading-[20px] relative shrink-0 text-[14px] whitespace-nowrap" data-name="Text and supporting text">
+                              <div className="content-stretch flex flex-col font-sans font-normal items-start leading-[20px] relative shrink-0 text-[14px] whitespace-nowrap" data-name="Text and supporting text">
                                 <p className="relative shrink-0 text-[#101828]">Mitchell den Hoed</p>
                                 <p className="relative shrink-0 text-[#475467]">Di 10 Feb 19:53</p>
                               </div>
@@ -1065,7 +1060,7 @@ export default function MarktPijplijnEigenLadingDetailOnderhandelingen() {
                                 <img alt="" className="absolute inset-0 max-w-none object-cover pointer-events-none rounded-[9999px] size-full" src={imgMarktPijplijnEigenLadingDetailOnderhandelingen3} />
                                 <div className="absolute border-[0.5px] border-[rgba(0,0,0,0.08)] border-solid inset-0 rounded-[9999px]" data-name="Contrast border" />
                               </div>
-                              <div className="content-stretch flex flex-col font-['Hanken_Grotesk:Regular',sans-serif] font-normal items-start leading-[20px] relative shrink-0 text-[14px] whitespace-nowrap" data-name="Text and supporting text">
+                              <div className="content-stretch flex flex-col font-sans font-normal items-start leading-[20px] relative shrink-0 text-[14px] whitespace-nowrap" data-name="Text and supporting text">
                                 <p className="relative shrink-0 text-[#101828]">Khoa Nguyen</p>
                                 <p className="relative shrink-0 text-[#475467]">Zo 8 Feb 21:12</p>
                               </div>
@@ -1083,7 +1078,7 @@ export default function MarktPijplijnEigenLadingDetailOnderhandelingen() {
                                 </div>
                                 <div className="absolute border-[0.5px] border-[rgba(0,0,0,0.08)] border-solid inset-0 rounded-[9999px]" data-name="Contrast border" />
                               </div>
-                              <div className="content-stretch flex flex-col font-['Hanken_Grotesk:Regular',sans-serif] font-normal items-start leading-[20px] relative shrink-0 text-[14px] whitespace-nowrap" data-name="Text and supporting text">
+                              <div className="content-stretch flex flex-col font-sans font-normal items-start leading-[20px] relative shrink-0 text-[14px] whitespace-nowrap" data-name="Text and supporting text">
                                 <p className="relative shrink-0 text-[#101828]">Pelger de Jong</p>
                                 <p className="relative shrink-0 text-[#475467]">Za 7 Feb 18:39</p>
                               </div>
@@ -1098,7 +1093,7 @@ export default function MarktPijplijnEigenLadingDetailOnderhandelingen() {
                                 <img alt="" className="absolute inset-0 max-w-none object-cover pointer-events-none rounded-[9999px] size-full" src={imgMarktPijplijnEigenLadingDetailOnderhandelingen2} />
                                 <div className="absolute border-[0.5px] border-[rgba(0,0,0,0.08)] border-solid inset-0 rounded-[9999px]" data-name="Contrast border" />
                               </div>
-                              <div className="content-stretch flex flex-col font-['Hanken_Grotesk:Regular',sans-serif] font-normal items-start leading-[20px] relative shrink-0 text-[14px] whitespace-nowrap" data-name="Text and supporting text">
+                              <div className="content-stretch flex flex-col font-sans font-normal items-start leading-[20px] relative shrink-0 text-[14px] whitespace-nowrap" data-name="Text and supporting text">
                                 <p className="relative shrink-0 text-[#101828]">Mitchell den Hoed</p>
                                 <p className="relative shrink-0 text-[#475467]">Vr 6 Feb 11:47</p>
                               </div>
@@ -1113,7 +1108,7 @@ export default function MarktPijplijnEigenLadingDetailOnderhandelingen() {
                                 <img alt="" className="absolute inset-0 max-w-none object-cover pointer-events-none rounded-[9999px] size-full" src={imgMarktPijplijnEigenLadingDetailOnderhandelingen3} />
                                 <div className="absolute border-[0.5px] border-[rgba(0,0,0,0.08)] border-solid inset-0 rounded-[9999px]" data-name="Contrast border" />
                               </div>
-                              <div className="content-stretch flex flex-col font-['Hanken_Grotesk:Regular',sans-serif] font-normal items-start leading-[20px] relative shrink-0 text-[14px] whitespace-nowrap" data-name="Text and supporting text">
+                              <div className="content-stretch flex flex-col font-sans font-normal items-start leading-[20px] relative shrink-0 text-[14px] whitespace-nowrap" data-name="Text and supporting text">
                                 <p className="relative shrink-0 text-[#101828]">Khoa Nguyen</p>
                                 <p className="relative shrink-0 text-[#475467]">Vr 6 Feb 09:01</p>
                               </div>
@@ -1128,7 +1123,7 @@ export default function MarktPijplijnEigenLadingDetailOnderhandelingen() {
                                 <img alt="" className="absolute inset-0 max-w-none object-cover pointer-events-none rounded-[9999px] size-full" src={imgMarktPijplijnEigenLadingDetailOnderhandelingen3} />
                                 <div className="absolute border-[0.5px] border-[rgba(0,0,0,0.08)] border-solid inset-0 rounded-[9999px]" data-name="Contrast border" />
                               </div>
-                              <div className="content-stretch flex flex-col font-['Hanken_Grotesk:Regular',sans-serif] font-normal items-start leading-[20px] relative shrink-0 text-[14px] whitespace-nowrap" data-name="Text and supporting text">
+                              <div className="content-stretch flex flex-col font-sans font-normal items-start leading-[20px] relative shrink-0 text-[14px] whitespace-nowrap" data-name="Text and supporting text">
                                 <p className="relative shrink-0 text-[#101828]">Khoa Nguyen</p>
                                 <p className="relative shrink-0 text-[#475467]">Do 5 Feb 16:22</p>
                               </div>
@@ -1143,7 +1138,7 @@ export default function MarktPijplijnEigenLadingDetailOnderhandelingen() {
                                 <img alt="" className="absolute inset-0 max-w-none object-cover pointer-events-none rounded-[9999px] size-full" src={imgMarktPijplijnEigenLadingDetailOnderhandelingen4} />
                                 <div className="absolute border-[0.5px] border-[rgba(0,0,0,0.08)] border-solid inset-0 rounded-[9999px]" data-name="Contrast border" />
                               </div>
-                              <div className="content-stretch flex flex-col font-['Hanken_Grotesk:Regular',sans-serif] font-normal items-start leading-[20px] relative shrink-0 text-[14px] whitespace-nowrap" data-name="Text and supporting text">
+                              <div className="content-stretch flex flex-col font-sans font-normal items-start leading-[20px] relative shrink-0 text-[14px] whitespace-nowrap" data-name="Text and supporting text">
                                 <p className="relative shrink-0 text-[#101828]">Jan-Willem van der Kraan</p>
                                 <p className="relative shrink-0 text-[#475467]">Do 5 Feb 14:55</p>
                               </div>
@@ -1158,7 +1153,7 @@ export default function MarktPijplijnEigenLadingDetailOnderhandelingen() {
                                 <img alt="" className="absolute inset-0 max-w-none object-cover pointer-events-none rounded-[9999px] size-full" src={imgMarktPijplijnEigenLadingDetailOnderhandelingen1} />
                                 <div className="absolute border-[0.5px] border-[rgba(0,0,0,0.08)] border-solid inset-0 rounded-[9999px]" data-name="Contrast border" />
                               </div>
-                              <div className="content-stretch flex flex-col font-['Hanken_Grotesk:Regular',sans-serif] font-normal items-start leading-[20px] relative shrink-0 text-[14px] whitespace-nowrap" data-name="Text and supporting text">
+                              <div className="content-stretch flex flex-col font-sans font-normal items-start leading-[20px] relative shrink-0 text-[14px] whitespace-nowrap" data-name="Text and supporting text">
                                 <p className="relative shrink-0 text-[#101828]">Erick Nieuwkoop</p>
                                 <p className="relative shrink-0 text-[#475467]">Wo 11 Feb 12:06</p>
                               </div>
@@ -1180,14 +1175,14 @@ export default function MarktPijplijnEigenLadingDetailOnderhandelingen() {
                         <div className="bg-[#f2f8fd] h-full relative rounded-[4px] shrink-0" data-name="Tab button base">
                           <div className="flex flex-row items-center justify-center overflow-clip rounded-[inherit] size-full">
                             <div className="content-stretch flex h-full items-center justify-center px-[12px] py-[8px] relative">
-                              <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[20px] relative shrink-0 text-[#344054] text-[14px] whitespace-nowrap">Details</p>
+                              <p className="font-sans font-bold leading-[20px] relative shrink-0 text-[#344054] text-[14px] whitespace-nowrap">Details</p>
                             </div>
                           </div>
                         </div>
                         <div className="h-full relative rounded-[4px] shrink-0" data-name="Tab button base">
                           <div className="flex flex-row items-center justify-center overflow-clip rounded-[inherit] size-full">
                             <div className="content-stretch flex h-full items-center justify-center px-[12px] py-[8px] relative">
-                              <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[20px] relative shrink-0 text-[#667085] text-[14px] whitespace-nowrap">Condities</p>
+                              <p className="font-sans font-bold leading-[20px] relative shrink-0 text-[#667085] text-[14px] whitespace-nowrap">Condities</p>
                             </div>
                           </div>
                         </div>
@@ -1197,41 +1192,41 @@ export default function MarktPijplijnEigenLadingDetailOnderhandelingen() {
                       <div aria-hidden="true" className="absolute border-[#eaecf0] border-l border-solid inset-0 pointer-events-none" />
                       <div className="content-stretch flex flex-col gap-[16px] items-center px-[24px] py-[16px] relative shrink-0 w-[400px]" data-name="Section">
                         <div aria-hidden="true" className="absolute border-[#eaecf0] border-l border-solid inset-0 pointer-events-none" />
-                        <p className="font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[20px] relative shrink-0 text-[#475467] text-[14px] w-full">Partij krijgt voorrang ten op zichte van de andere partijen in april.</p>
+                        <p className="font-sans font-normal leading-[20px] relative shrink-0 text-[#475467] text-[14px] w-full">Partij krijgt voorrang ten op zichte van de andere partijen in april.</p>
                         <div className="content-stretch flex flex-col gap-[8px] items-center relative shrink-0 w-full" data-name="Subsection">
                           <div className="content-stretch flex gap-[16px] items-center relative shrink-0 w-full" data-name="Row">
                             <div className="bg-white content-stretch flex items-center py-[8px] relative rounded-[6px] shrink-0 w-[144px]" data-name="Label">
-                              <p className="flex-[1_0_0] font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[20px] min-h-px min-w-px relative text-[#475467] text-[14px]">Partij</p>
+                              <p className="flex-[1_0_0] font-sans font-normal leading-[20px] min-h-px min-w-px relative text-[#475467] text-[14px]">Partij</p>
                             </div>
                             <div className="flex-[1_0_0] min-h-px min-w-px relative" data-name="Data">
                               <div className="content-stretch flex flex-col items-start px-[12px] relative w-full">
                                 <div className="content-stretch flex gap-[6px] items-center justify-center overflow-clip relative shrink-0 w-full" data-name="Buttons/Button">
-                                  <p className="flex-[1_0_0] font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[20px] min-h-px min-w-px overflow-hidden relative text-[#145990] text-[14px] text-ellipsis whitespace-nowrap">CRG164</p>
+                                  <p className="flex-[1_0_0] font-sans font-bold leading-[20px] min-h-px min-w-px overflow-hidden relative text-[#145990] text-[14px] text-ellipsis whitespace-nowrap">CRG164</p>
                                 </div>
                               </div>
                             </div>
                           </div>
                           <div className="content-stretch flex gap-[16px] items-center relative shrink-0 w-full" data-name="Row">
                             <div className="bg-white content-stretch flex items-center py-[8px] relative rounded-[6px] shrink-0 w-[144px]" data-name="Label">
-                              <p className="flex-[1_0_0] font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[20px] min-h-px min-w-px relative text-[#475467] text-[14px]">Subpartij</p>
+                              <p className="flex-[1_0_0] font-sans font-normal leading-[20px] min-h-px min-w-px relative text-[#475467] text-[14px]">Subpartij</p>
                             </div>
                             <div className="flex-[1_0_0] min-h-px min-w-px relative" data-name="Data">
                               <div className="content-stretch flex flex-col items-start px-[12px] relative w-full">
                                 <div className="content-stretch flex gap-[6px] items-center justify-center overflow-clip relative shrink-0 w-full" data-name="Buttons/Button">
-                                  <p className="flex-[1_0_0] font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[20px] min-h-px min-w-px overflow-hidden relative text-[#145990] text-[14px] text-ellipsis whitespace-nowrap">CRG164-01</p>
+                                  <p className="flex-[1_0_0] font-sans font-bold leading-[20px] min-h-px min-w-px overflow-hidden relative text-[#145990] text-[14px] text-ellipsis whitespace-nowrap">CRG164-01</p>
                                 </div>
                               </div>
                             </div>
                           </div>
                           <div className="content-stretch flex gap-[16px] items-start relative shrink-0 w-full" data-name="Row">
                             <div className="bg-white content-stretch flex items-center py-[8px] relative rounded-[6px] shrink-0 w-[144px]" data-name="Label">
-                              <p className="flex-[1_0_0] font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[20px] min-h-px min-w-px relative text-[#475467] text-[14px]">Tonnage</p>
+                              <p className="flex-[1_0_0] font-sans font-normal leading-[20px] min-h-px min-w-px relative text-[#475467] text-[14px]">Tonnage</p>
                             </div>
                             <div className="content-stretch flex flex-[1_0_0] flex-col items-start min-h-px min-w-px relative" data-name="Data">
                               <div className="bg-white relative rounded-[6px] shrink-0 w-full" data-name="Label">
                                 <div className="flex flex-row items-center size-full">
                                   <div className="content-stretch flex items-center pl-[12px] pr-[6px] py-[8px] relative w-full">
-                                    <p className="flex-[1_0_0] font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[20px] min-h-px min-w-px relative text-[#101828] text-[14px]">2.000 t</p>
+                                    <p className="flex-[1_0_0] font-sans font-bold leading-[20px] min-h-px min-w-px relative text-[#101828] text-[14px]">2.000 t</p>
                                   </div>
                                 </div>
                               </div>
@@ -1239,18 +1234,18 @@ export default function MarktPijplijnEigenLadingDetailOnderhandelingen() {
                           </div>
                           <div className="content-stretch flex gap-[16px] items-start relative shrink-0 w-full" data-name="Row">
                             <div className="bg-white content-stretch flex items-center py-[8px] relative rounded-[6px] shrink-0 w-[144px]" data-name="Label">
-                              <p className="flex-[1_0_0] font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[20px] min-h-px min-w-px relative text-[#475467] text-[14px]">Ex.</p>
+                              <p className="flex-[1_0_0] font-sans font-normal leading-[20px] min-h-px min-w-px relative text-[#475467] text-[14px]">Ex.</p>
                             </div>
                             <div className="content-stretch flex flex-[1_0_0] flex-col items-start min-h-px min-w-px relative" data-name="Data">
                               <div className="bg-white relative rounded-[6px] shrink-0 w-full" data-name="Label">
                                 <div className="flex flex-row items-center size-full">
                                   <div className="content-stretch flex items-center pl-[12px] pr-[6px] py-[8px] relative w-full">
-                                    <p className="flex-[1_0_0] font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[0] min-h-px min-w-px relative text-[#101828] text-[0px] text-[14px]">
+                                    <p className="flex-[1_0_0] font-sans font-bold leading-[0] min-h-px min-w-px relative text-[#101828] text-[0px] text-[14px]">
                                       <span className="leading-[20px]">
                                         Merganser
                                         <br aria-hidden="true" />
                                       </span>
-                                      <span className="font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[20px]">Zeeboot</span>
+                                      <span className="font-sans font-normal leading-[20px]">Zeeboot</span>
                                     </p>
                                   </div>
                                 </div>
@@ -1259,13 +1254,13 @@ export default function MarktPijplijnEigenLadingDetailOnderhandelingen() {
                           </div>
                           <div className="content-stretch flex gap-[16px] items-start relative shrink-0 w-full" data-name="Row">
                             <div className="bg-white content-stretch flex items-center py-[8px] relative rounded-[6px] shrink-0 w-[144px]" data-name="Label">
-                              <p className="flex-[1_0_0] font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[20px] min-h-px min-w-px relative text-[#475467] text-[14px]">Lading</p>
+                              <p className="flex-[1_0_0] font-sans font-normal leading-[20px] min-h-px min-w-px relative text-[#475467] text-[14px]">Lading</p>
                             </div>
                             <div className="content-stretch flex flex-[1_0_0] flex-col items-start min-h-px min-w-px relative" data-name="Data">
                               <div className="bg-white relative rounded-[6px] shrink-0 w-full" data-name="Label">
                                 <div className="flex flex-row items-center size-full">
                                   <div className="content-stretch flex items-center pl-[12px] pr-[6px] py-[8px] relative w-full">
-                                    <p className="flex-[1_0_0] font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[20px] min-h-px min-w-px relative text-[#101828] text-[14px]">Houtpellets (0571)</p>
+                                    <p className="flex-[1_0_0] font-sans font-bold leading-[20px] min-h-px min-w-px relative text-[#101828] text-[14px]">Houtpellets (0571)</p>
                                   </div>
                                 </div>
                               </div>
@@ -1273,13 +1268,13 @@ export default function MarktPijplijnEigenLadingDetailOnderhandelingen() {
                           </div>
                           <div className="content-stretch flex gap-[16px] items-start relative shrink-0 w-full" data-name="Row">
                             <div className="bg-white content-stretch flex items-center py-[8px] relative rounded-[6px] shrink-0 w-[144px]" data-name="Label">
-                              <p className="flex-[1_0_0] font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[20px] min-h-px min-w-px relative text-[#475467] text-[14px]">Subsoort</p>
+                              <p className="flex-[1_0_0] font-sans font-normal leading-[20px] min-h-px min-w-px relative text-[#475467] text-[14px]">Subsoort</p>
                             </div>
                             <div className="content-stretch flex flex-[1_0_0] flex-col items-start min-h-px min-w-px relative" data-name="Data">
                               <div className="bg-white relative rounded-[6px] shrink-0 w-full" data-name="Label">
                                 <div className="flex flex-row items-center size-full">
                                   <div className="content-stretch flex items-center pl-[12px] pr-[6px] py-[8px] relative w-full">
-                                    <p className="flex-[1_0_0] font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[20px] min-h-px min-w-px relative text-[#101828] text-[14px]">USA/FRAM</p>
+                                    <p className="flex-[1_0_0] font-sans font-bold leading-[20px] min-h-px min-w-px relative text-[#101828] text-[14px]">USA/FRAM</p>
                                   </div>
                                 </div>
                               </div>
@@ -1287,13 +1282,13 @@ export default function MarktPijplijnEigenLadingDetailOnderhandelingen() {
                           </div>
                           <div className="content-stretch flex gap-[16px] items-start relative shrink-0 w-full" data-name="Row">
                             <div className="bg-white content-stretch flex items-center py-[8px] relative rounded-[6px] shrink-0 w-[144px]" data-name="Label">
-                              <p className="flex-[1_0_0] font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[20px] min-h-px min-w-px relative text-[#475467] text-[14px]">Soortelijk gewicht</p>
+                              <p className="flex-[1_0_0] font-sans font-normal leading-[20px] min-h-px min-w-px relative text-[#475467] text-[14px]">Soortelijk gewicht</p>
                             </div>
                             <div className="content-stretch flex flex-[1_0_0] flex-col items-start min-h-px min-w-px relative" data-name="Data">
                               <div className="bg-white relative rounded-[6px] shrink-0 w-full" data-name="Label">
                                 <div className="flex flex-row items-center size-full">
                                   <div className="content-stretch flex items-center pl-[12px] pr-[6px] py-[8px] relative w-full">
-                                    <p className="flex-[1_0_0] font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[0] min-h-px min-w-px relative text-[#101828] text-[0px]">
+                                    <p className="flex-[1_0_0] font-sans font-bold leading-[0] min-h-px min-w-px relative text-[#101828] text-[0px]">
                                       <span className="leading-[20px] text-[14px]">0,05 t/m</span>
                                       <span className="leading-[20px] text-[9.030000000000001px]">3</span>
                                     </p>
@@ -1303,12 +1298,12 @@ export default function MarktPijplijnEigenLadingDetailOnderhandelingen() {
                             </div>
                           </div>
                           <div className="content-stretch flex gap-[16px] items-center relative shrink-0 w-full" data-name="Row">
-                            <p className="font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[20px] relative shrink-0 text-[#475467] text-[14px] w-[144px]">Inhoud</p>
+                            <p className="font-sans font-normal leading-[20px] relative shrink-0 text-[#475467] text-[14px] w-[144px]">Inhoud</p>
                             <div className="content-stretch flex flex-[1_0_0] flex-col items-start min-h-px min-w-px relative" data-name="Data">
                               <div className="bg-white relative rounded-[6px] shrink-0 w-full" data-name="Label">
                                 <div className="flex flex-row items-center size-full">
                                   <div className="content-stretch flex items-center pl-[12px] pr-[6px] py-[8px] relative w-full">
-                                    <p className="flex-[1_0_0] font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[0] min-h-px min-w-px relative text-[#101828] text-[0px]">
+                                    <p className="flex-[1_0_0] font-sans font-bold leading-[0] min-h-px min-w-px relative text-[#101828] text-[0px]">
                                       <span className="leading-[20px] text-[14px]">5.000 m</span>
                                       <span className="leading-[20px] text-[9.030000000000001px]">3</span>
                                     </p>
@@ -1319,7 +1314,7 @@ export default function MarktPijplijnEigenLadingDetailOnderhandelingen() {
                           </div>
                           <div className="content-stretch flex gap-[16px] items-start relative shrink-0 w-full" data-name="Row">
                             <div className="bg-white content-stretch flex items-center py-[8px] relative rounded-[6px] shrink-0 w-[144px]" data-name="Label">
-                              <p className="flex-[1_0_0] font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[20px] min-h-px min-w-px relative text-[#475467] text-[14px]">Bijzonderheden</p>
+                              <p className="flex-[1_0_0] font-sans font-normal leading-[20px] min-h-px min-w-px relative text-[#475467] text-[14px]">Bijzonderheden</p>
                             </div>
                             <div className="content-stretch flex flex-[1_0_0] flex-col items-start min-h-px min-w-px relative" data-name="Data">
                               <div className="bg-white h-[36px] relative rounded-[6px] shrink-0 w-full" data-name="Label">
@@ -1328,15 +1323,15 @@ export default function MarktPijplijnEigenLadingDetailOnderhandelingen() {
                                     <div className="content-stretch flex flex-[1_0_0] gap-[4px] items-start min-h-px min-w-px relative" data-name="Badges">
                                       <div className="bg-white content-stretch flex items-center px-[6px] py-[2px] relative rounded-[4px] shrink-0" data-name="Badge">
                                         <div aria-hidden="true" className="absolute border border-[#d0d5dd] border-solid inset-0 pointer-events-none rounded-[4px]" />
-                                        <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[18px] relative shrink-0 text-[#344054] text-[12px] text-center whitespace-nowrap">KS</p>
+                                        <p className="font-sans font-bold leading-[18px] relative shrink-0 text-[#344054] text-[12px] text-center whitespace-nowrap">KS</p>
                                       </div>
                                       <div className="bg-white content-stretch flex items-center px-[6px] py-[2px] relative rounded-[4px] shrink-0" data-name="Badge">
                                         <div aria-hidden="true" className="absolute border border-[#d0d5dd] border-solid inset-0 pointer-events-none rounded-[4px]" />
-                                        <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[18px] relative shrink-0 text-[#344054] text-[12px] text-center whitespace-nowrap">LK</p>
+                                        <p className="font-sans font-bold leading-[18px] relative shrink-0 text-[#344054] text-[12px] text-center whitespace-nowrap">LK</p>
                                       </div>
                                       <div className="bg-white content-stretch flex items-center px-[6px] py-[2px] relative rounded-[4px] shrink-0" data-name="Badge">
                                         <div aria-hidden="true" className="absolute border border-[#d0d5dd] border-solid inset-0 pointer-events-none rounded-[4px]" />
-                                        <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[18px] relative shrink-0 text-[#344054] text-[12px] text-center whitespace-nowrap">GMP</p>
+                                        <p className="font-sans font-bold leading-[18px] relative shrink-0 text-[#344054] text-[12px] text-center whitespace-nowrap">GMP</p>
                                       </div>
                                     </div>
                                   </div>
@@ -1345,56 +1340,56 @@ export default function MarktPijplijnEigenLadingDetailOnderhandelingen() {
                             </div>
                           </div>
                           <div className="content-stretch flex gap-[16px] items-center relative shrink-0 w-full" data-name="Row">
-                            <p className="font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[20px] relative shrink-0 text-[#475467] text-[14px] w-[144px]">Laadhaven</p>
+                            <p className="font-sans font-normal leading-[20px] relative shrink-0 text-[#475467] text-[14px] w-[144px]">Laadhaven</p>
                             <div className="bg-white flex-[1_0_0] min-h-px min-w-px relative rounded-[6px]" data-name="Label">
                               <div className="flex flex-row items-center size-full">
                                 <div className="content-stretch flex items-center pl-[12px] pr-[6px] py-[8px] relative w-full">
-                                  <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[0] relative shrink-0 text-[#101828] text-[0px] text-[14px] w-[163.333px]">
+                                  <p className="font-sans font-bold leading-[0] relative shrink-0 text-[#101828] text-[0px] text-[14px] w-[163.333px]">
                                     <span className="leading-[20px]">IJmuiden Buitenspuikkanaal</span>
                                     <span className="leading-[20px]">
                                       <br aria-hidden="true" />
                                     </span>
-                                    <span className="font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[20px] text-[#475467]">Amsterdam</span>
+                                    <span className="font-sans font-normal leading-[20px] text-[#475467]">Amsterdam</span>
                                   </p>
                                 </div>
                               </div>
                             </div>
                           </div>
                           <div className="content-stretch flex gap-[16px] items-center relative shrink-0 w-full" data-name="Row">
-                            <p className="font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[20px] relative shrink-0 text-[#475467] text-[14px] w-[144px]">Laaddatum</p>
+                            <p className="font-sans font-normal leading-[20px] relative shrink-0 text-[#475467] text-[14px] w-[144px]">Laaddatum</p>
                             <div className="content-stretch flex flex-[1_0_0] flex-col items-start min-h-px min-w-px relative" data-name="Data">
                               <div className="bg-white relative rounded-[6px] shrink-0 w-full" data-name="Label">
                                 <div className="flex flex-row items-center size-full">
                                   <div className="content-stretch flex items-center pl-[12px] pr-[6px] py-[8px] relative w-full">
-                                    <p className="flex-[1_0_0] font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[20px] min-h-px min-w-px relative text-[#101828] text-[14px]">Di 13 Jan 10:05</p>
+                                    <p className="flex-[1_0_0] font-sans font-bold leading-[20px] min-h-px min-w-px relative text-[#101828] text-[14px]">Di 13 Jan 10:05</p>
                                   </div>
                                 </div>
                               </div>
                             </div>
                           </div>
                           <div className="content-stretch flex gap-[16px] items-center relative shrink-0 w-full" data-name="Row">
-                            <p className="font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[20px] relative shrink-0 text-[#475467] text-[14px] w-[144px]">Loshaven</p>
+                            <p className="font-sans font-normal leading-[20px] relative shrink-0 text-[#475467] text-[14px] w-[144px]">Loshaven</p>
                             <div className="bg-white flex-[1_0_0] min-h-px min-w-px relative rounded-[6px]" data-name="Label">
                               <div className="flex flex-row items-center size-full">
                                 <div className="content-stretch flex items-center pl-[12px] pr-[6px] py-[8px] relative w-full">
-                                  <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[0] relative shrink-0 text-[#101828] text-[0px] text-[14px] w-[163.333px]">
+                                  <p className="font-sans font-bold leading-[0] relative shrink-0 text-[#101828] text-[0px] text-[14px] w-[163.333px]">
                                     <span className="leading-[20px]">Eemhaven</span>
                                     <span className="leading-[20px]">
                                       <br aria-hidden="true" />
                                     </span>
-                                    <span className="font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[20px] text-[#475467]">Rotterdam</span>
+                                    <span className="font-sans font-normal leading-[20px] text-[#475467]">Rotterdam</span>
                                   </p>
                                 </div>
                               </div>
                             </div>
                           </div>
                           <div className="content-stretch flex gap-[16px] items-center relative shrink-0 w-full" data-name="Row">
-                            <p className="font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[20px] relative shrink-0 text-[#475467] text-[14px] w-[144px]">Losdatum</p>
+                            <p className="font-sans font-normal leading-[20px] relative shrink-0 text-[#475467] text-[14px] w-[144px]">Losdatum</p>
                             <div className="content-stretch flex flex-[1_0_0] flex-col items-start min-h-px min-w-px relative" data-name="Data">
                               <div className="bg-white relative rounded-[6px] shrink-0 w-full" data-name="Label">
                                 <div className="flex flex-row items-center size-full">
                                   <div className="content-stretch flex items-center pl-[12px] pr-[6px] py-[8px] relative w-full">
-                                    <p className="flex-[1_0_0] font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[20px] min-h-px min-w-px relative text-[#101828] text-[14px]">Do 15 Jan 10:05</p>
+                                    <p className="flex-[1_0_0] font-sans font-bold leading-[20px] min-h-px min-w-px relative text-[#101828] text-[14px]">Do 15 Jan 10:05</p>
                                   </div>
                                 </div>
                               </div>
@@ -1402,13 +1397,13 @@ export default function MarktPijplijnEigenLadingDetailOnderhandelingen() {
                           </div>
                           <div className="content-stretch flex gap-[16px] items-start relative shrink-0 w-full" data-name="Row">
                             <div className="bg-white content-stretch flex items-center py-[8px] relative rounded-[6px] shrink-0 w-[144px]" data-name="Label">
-                              <p className="flex-[1_0_0] font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[20px] min-h-px min-w-px relative text-[#475467] text-[14px]">Relatie</p>
+                              <p className="flex-[1_0_0] font-sans font-normal leading-[20px] min-h-px min-w-px relative text-[#475467] text-[14px]">Relatie</p>
                             </div>
                             <div className="content-stretch flex flex-[1_0_0] flex-col items-start min-h-px min-w-px relative" data-name="Data">
                               <div className="bg-white relative rounded-[6px] shrink-0 w-full" data-name="Label">
                                 <div className="flex flex-col justify-center size-full">
                                   <div className="content-stretch flex flex-col items-start justify-center pl-[12px] pr-[6px] py-[8px] relative w-full">
-                                    <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[20px] relative shrink-0 text-[#101828] text-[14px] w-full">Agro Delta Groep</p>
+                                    <p className="font-sans font-bold leading-[20px] relative shrink-0 text-[#101828] text-[14px] w-full">Agro Delta Groep</p>
                                   </div>
                                 </div>
                               </div>
@@ -1416,19 +1411,19 @@ export default function MarktPijplijnEigenLadingDetailOnderhandelingen() {
                           </div>
                           <div className="content-stretch flex gap-[16px] items-start relative shrink-0 w-full" data-name="Row">
                             <div className="bg-white content-stretch flex items-center py-[8px] relative rounded-[6px] shrink-0 w-[144px]" data-name="Label">
-                              <p className="flex-[1_0_0] font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[20px] min-h-px min-w-px relative text-[#475467] text-[14px]">Contactgegevens</p>
+                              <p className="flex-[1_0_0] font-sans font-normal leading-[20px] min-h-px min-w-px relative text-[#475467] text-[14px]">Contactgegevens</p>
                             </div>
                             <div className="content-stretch flex flex-[1_0_0] flex-col items-start min-h-px min-w-px relative" data-name="Data">
                               <div className="bg-white relative rounded-[6px] shrink-0 w-full" data-name="Label">
                                 <div className="flex flex-col justify-center size-full">
                                   <div className="content-stretch flex flex-col items-start justify-center pl-[12px] pr-[6px] py-[8px] relative w-full">
-                                    <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[0] relative shrink-0 text-[#101828] text-[0px] text-[14px] whitespace-nowrap">
+                                    <p className="font-sans font-bold leading-[0] relative shrink-0 text-[#101828] text-[0px] text-[14px] whitespace-nowrap">
                                       <span className="leading-[20px]">
                                         Jesper den Oud
                                         <br aria-hidden="true" />
                                       </span>
-                                      <span className="font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[20px] text-[#145990]">jesper@adg.nl</span>
-                                      <span className="font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[20px]">
+                                      <span className="font-sans font-normal leading-[20px] text-[#145990]">jesper@adg.nl</span>
+                                      <span className="font-sans font-normal leading-[20px]">
                                         <br aria-hidden="true" />
                                         +31 (0)10 12 34 56 78
                                       </span>
@@ -1444,7 +1439,7 @@ export default function MarktPijplijnEigenLadingDetailOnderhandelingen() {
                             </div>
                           </div>
                           <div className="content-stretch flex gap-[16px] items-center relative shrink-0 w-full" data-name="Row">
-                            <p className="font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[20px] relative shrink-0 text-[#475467] text-[14px] w-[144px]">Eigenaar</p>
+                            <p className="font-sans font-normal leading-[20px] relative shrink-0 text-[#475467] text-[14px] w-[144px]">Eigenaar</p>
                             <div className="content-stretch flex flex-[1_0_0] flex-col items-start min-h-px min-w-px relative" data-name="Data">
                               <div className="bg-white relative rounded-[6px] shrink-0 w-full" data-name="Label">
                                 <div className="flex flex-row items-center size-full">
@@ -1453,19 +1448,19 @@ export default function MarktPijplijnEigenLadingDetailOnderhandelingen() {
                                       <img alt="" className="absolute inset-0 max-w-none object-cover pointer-events-none rounded-[9999px] size-full" src={imgMarktPijplijnEigenLadingDetailOnderhandelingen} />
                                       <div className="absolute border-[0.5px] border-[rgba(0,0,0,0.08)] border-solid inset-0 rounded-[9999px]" data-name="Contrast border" />
                                     </div>
-                                    <p className="flex-[1_0_0] font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[20px] min-h-px min-w-px relative text-[#101828] text-[14px]">Pelger de Jong</p>
+                                    <p className="flex-[1_0_0] font-sans font-bold leading-[20px] min-h-px min-w-px relative text-[#101828] text-[14px]">Pelger de Jong</p>
                                   </div>
                                 </div>
                               </div>
                             </div>
                           </div>
                           <div className="content-stretch flex gap-[16px] items-center relative shrink-0 w-full" data-name="Row">
-                            <p className="font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[20px] relative shrink-0 text-[#475467] text-[14px] w-[144px]">Deadline</p>
+                            <p className="font-sans font-normal leading-[20px] relative shrink-0 text-[#475467] text-[14px] w-[144px]">Deadline</p>
                             <div className="content-stretch flex flex-[1_0_0] flex-col items-start min-h-px min-w-px relative" data-name="Data">
                               <div className="bg-white relative rounded-[6px] shrink-0 w-full" data-name="Label">
                                 <div className="flex flex-row items-center size-full">
                                   <div className="content-stretch flex items-center pl-[12px] pr-[6px] py-[8px] relative w-full">
-                                    <div className="flex flex-col font-['Hanken_Grotesk:Bold',sans-serif] font-bold justify-center leading-[0] relative shrink-0 text-[#dc6803] text-[14px] whitespace-nowrap">
+                                    <div className="flex flex-col font-sans font-bold justify-center leading-[0] relative shrink-0 text-[#dc6803] text-[14px] whitespace-nowrap">
                                       <p className="leading-[20px]">Eergisteren, 9:00</p>
                                     </div>
                                   </div>

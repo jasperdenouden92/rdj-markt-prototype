@@ -25,7 +25,7 @@ function ColumnHeader({
   const arrow = sortActive ? (sortDirection === "asc" ? " ↑" : " ↓") : "";
   return (
     <p
-      className={`font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[18px] text-[12px] whitespace-nowrap ${
+      className={`font-sans font-bold leading-[18px] text-[12px] whitespace-nowrap ${
         sortActive ? "text-rdj-text-primary" : "text-rdj-text-secondary"
       } ${align === "right" ? "text-right" : "text-left"}`}
     >
@@ -222,17 +222,17 @@ function CellLeadingText({
       )}
       <div className="min-w-0 flex-1">
         <div className="flex items-center gap-[6px] min-w-0">
-          <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[20px] text-rdj-text-primary text-[14px] truncate">
+          <p className="font-sans font-bold leading-[20px] text-rdj-text-primary text-[14px] truncate">
             {text}
           </p>
           {badgeLabel && (
-            <span className="shrink-0 inline-flex items-center border border-rdj-border-secondary rounded-[4px] px-[4px] py-[0px] font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[16px] text-[11px] text-rdj-text-primary whitespace-nowrap">
+            <span className="shrink-0 inline-flex items-center border border-rdj-border-secondary rounded-[4px] px-[4px] py-[0px] font-sans font-bold leading-[16px] text-[11px] text-rdj-text-primary whitespace-nowrap">
               {badgeLabel}
             </span>
           )}
         </div>
         {subtext && (
-          <p className="font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[20px] text-rdj-text-secondary text-[14px] truncate">
+          <p className="font-sans font-normal leading-[20px] text-rdj-text-secondary text-[14px] truncate">
             {subtext}
           </p>
         )}
@@ -258,7 +258,7 @@ function CellText({ row, col }: { row: RowData; col: TextColumn }) {
   const text = row[col.key];
   const subtext = col.subtextKey ? row[col.subtextKey] : undefined;
   const alignCls = col.align === "right" ? "text-right" : "text-left";
-  const fontCls = "font-['Hanken_Grotesk:Regular',sans-serif] font-normal";
+  const fontCls = "font-sans font-normal";
 
   const icon = col.iconKey ? row[col.iconKey] : undefined;
   const featuredIcon = col.featuredIconKey ? row[col.featuredIconKey] : undefined;
@@ -292,7 +292,7 @@ function CellText({ row, col }: { row: RowData; col: TextColumn }) {
       )}
       {!avatarSrc && avatarInitials && (
         <div className="relative rounded-full shrink-0 size-[32px] bg-[#f2f4f7] flex items-center justify-center">
-          <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold text-[#344054] text-[12px]">
+          <p className="font-sans font-bold text-[#344054] text-[12px]">
             {avatarInitials}
           </p>
         </div>
@@ -313,7 +313,7 @@ function CellText({ row, col }: { row: RowData; col: TextColumn }) {
               </p>
             )}
             {subtext != null && String(subtext) !== "" && (
-              <p className="font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[20px] text-rdj-text-secondary text-[14px] truncate">
+              <p className="font-sans font-normal leading-[20px] text-rdj-text-secondary text-[14px] truncate">
                 {String(subtext)}
               </p>
             )}
@@ -332,7 +332,7 @@ function CellText({ row, col }: { row: RowData; col: TextColumn }) {
         </p>
       )}
       {subtext != null && String(subtext) !== "" && (
-        <p className="font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[20px] text-rdj-text-secondary text-[14px] truncate">
+        <p className="font-sans font-normal leading-[20px] text-rdj-text-secondary text-[14px] truncate">
           {String(subtext)}
         </p>
       )}
@@ -543,7 +543,7 @@ function CellProgress({ row, col }: { row: RowData; col: ProgressColumn }) {
           transform={`rotate(-90 ${size / 2} ${size / 2})`}
         />
       </svg>
-      <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[20px] text-rdj-text-primary text-[14px] whitespace-nowrap">
+      <p className="font-sans font-bold leading-[20px] text-rdj-text-primary text-[14px] whitespace-nowrap">
         {clamped}%
       </p>
     </div>
@@ -555,8 +555,8 @@ function CellDeadline({ row, col }: { row: RowData; col: DeadlineColumn }) {
   const expired = col.expiredKey ? !!row[col.expiredKey] : false;
   const alignCls = col.align === "right" ? "text-right" : "text-left";
   const fontCls = expired
-    ? "font-['Hanken_Grotesk:Bold',sans-serif] font-bold"
-    : "font-['Hanken_Grotesk:Regular',sans-serif] font-normal";
+    ? "font-sans font-bold"
+    : "font-sans font-normal";
   const colorCls = expired ? "text-rdj-text-warning" : "text-rdj-text-secondary";
 
   return (
@@ -708,7 +708,7 @@ export default function Table({
 
         {data.length === 0 && (
           <div className="flex items-center justify-center px-[24px] py-[48px]">
-            <p className="font-['Hanken_Grotesk:Regular',sans-serif] font-normal text-[14px] text-rdj-text-tertiary">
+            <p className="font-sans font-normal text-[14px] text-rdj-text-tertiary">
               Geen resultaten gevonden
             </p>
           </div>

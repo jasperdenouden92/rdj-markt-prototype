@@ -54,7 +54,7 @@ export default function SectionHeader({
   return (
     <div className="flex items-center justify-between mb-[16px]">
       {/* Title */}
-      <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[26px] text-rdj-text-primary text-[18px]">
+      <p className="font-sans font-bold leading-[26px] text-rdj-text-primary text-[18px]">
         {title}
       </p>
 
@@ -71,7 +71,7 @@ export default function SectionHeader({
                   onClick={() => setDropdownOpen(!dropdownOpen)}
                   className="content-stretch flex gap-[6px] items-center justify-center overflow-clip relative shrink-0 cursor-pointer"
                 >
-                  <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[20px] relative shrink-0 text-rdj-text-brand text-[14px] whitespace-nowrap">
+                  <p className="font-sans font-bold leading-[20px] relative shrink-0 text-rdj-text-brand text-[14px] whitespace-nowrap">
                     {displayLabel}
                   </p>
                   {/* Chevron down */}
@@ -102,9 +102,9 @@ export default function SectionHeader({
                           onFilterChange?.(option);
                           setDropdownOpen(false);
                         }}
-                        className={`w-full text-left px-[14px] py-[10px] font-['Hanken_Grotesk:Regular',sans-serif] font-normal text-[14px] leading-[20px] hover:bg-rdj-bg-primary-hover transition-colors ${
+                        className={`w-full text-left px-[14px] py-[10px] font-sans font-normal text-[14px] leading-[20px] hover:bg-rdj-bg-primary-hover transition-colors ${
                           option === filterValue
-                            ? "text-rdj-text-brand font-bold font-['Hanken_Grotesk:Bold',sans-serif]"
+                            ? "text-rdj-text-brand font-bold font-sans"
                             : "text-rdj-text-primary"
                         }`}
                       >

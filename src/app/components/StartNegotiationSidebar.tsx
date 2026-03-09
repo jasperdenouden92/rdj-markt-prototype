@@ -56,10 +56,10 @@ export default function StartNegotiationSidebar({
         <div className="relative shrink-0 w-full border-b border-[#eaecf0]">
           <div className="content-stretch flex gap-[16px] items-start pt-[24px] px-[24px] pb-[20px] relative w-full">
             <div className="content-stretch flex flex-[1_0_0] flex-col gap-[4px] items-start min-h-px min-w-px relative">
-              <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[26px] relative shrink-0 text-[#101828] text-[18px] w-full">
+              <p className="font-sans font-bold leading-[26px] relative shrink-0 text-[#101828] text-[18px] w-full">
                 Onderhandeling met {match.company}
               </p>
-              <p className="font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[20px] relative shrink-0 text-[#475467] text-[14px]">
+              <p className="font-sans font-normal leading-[20px] relative shrink-0 text-[#475467] text-[14px]">
                 Vaartuig: {match.name}
               </p>
             </div>
@@ -98,10 +98,10 @@ export default function StartNegotiationSidebar({
 
             {/* Text */}
             <div className="flex flex-col gap-[8px] items-center">
-              <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[28px] text-center text-[#101828] text-[18px]">
+              <p className="font-sans font-bold leading-[28px] text-center text-[#101828] text-[18px]">
                 Start een onderhandeling
               </p>
-              <p className="font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[24px] text-center text-[#475467] text-[14px]">
+              <p className="font-sans font-normal leading-[24px] text-center text-[#475467] text-[14px]">
                 Begin een onderhandeling met {match.company} voor het vaartuig {match.name}. Je kunt hier een bod doen.
               </p>
             </div>
@@ -113,7 +113,7 @@ export default function StartNegotiationSidebar({
             >
               <div className="flex flex-row items-center justify-center overflow-clip rounded-[inherit] size-full">
                 <div className="content-stretch flex items-center justify-center px-[18px] py-[10px] relative w-full">
-                  <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[20px] text-white text-[14px] whitespace-nowrap">
+                  <p className="font-sans font-bold leading-[20px] text-white text-[14px] whitespace-nowrap">
                     Start onderhandeling
                   </p>
                 </div>

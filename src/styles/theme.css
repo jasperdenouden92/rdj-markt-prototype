@@ -1,6 +1,9 @@
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
+  --font-sans: 'Hanken Grotesk', sans-serif;
+  --font-display: 'Codec Pro', 'Hanken Grotesk', sans-serif;
+  --font-inter: 'Inter', sans-serif;
   /* ── Standard tokens ── */
   --color-background: var(--background);
   --color-foreground: var(--foreground);
@@ -52,6 +55,10 @@
   --color-rdj-fg-active: var(--rdj-fg-active);
   --color-rdj-border-primary: var(--rdj-border-primary);
   --color-rdj-border-secondary: var(--rdj-border-secondary);
+}
+
+body {
+  font-family: 'Hanken Grotesk', sans-serif;
 }
 
 :root {

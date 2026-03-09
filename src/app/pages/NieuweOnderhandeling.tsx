@@ -54,7 +54,7 @@ function FormCard({ title, children }: { title: string; children: React.ReactNod
     <div className="bg-white relative rounded-[12px] w-full">
       <div aria-hidden="true" className="absolute border border-rdj-border-secondary border-solid inset-0 pointer-events-none rounded-[12px]" />
       <div className="p-[24px] flex flex-col gap-[20px]">
-        <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[28px] text-rdj-text-primary text-[18px]">
+        <p className="font-sans font-bold leading-[28px] text-rdj-text-primary text-[18px]">
           {title}
         </p>
         {children}
@@ -214,30 +214,30 @@ export default function NieuweOnderhandeling() {
                 onClick={() => navigate('/markt/bevrachting')}
                 className="flex items-center justify-center p-[4px] rounded-[6px] shrink-0 hover:bg-rdj-bg-primary-hover"
               >
-                <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[20px] text-rdj-text-secondary text-[14px] whitespace-nowrap">Markt</p>
+                <p className="font-sans font-bold leading-[20px] text-rdj-text-secondary text-[14px] whitespace-nowrap">Markt</p>
               </button>
               <BreadcrumbChevron />
               <button 
                 onClick={() => navigate(parentPath)}
                 className="flex items-center justify-center px-[8px] py-[4px] rounded-[6px] shrink-0 hover:bg-rdj-bg-primary-hover"
               >
-                <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[20px] text-rdj-text-secondary text-[14px] whitespace-nowrap">{parentLabel}</p>
+                <p className="font-sans font-bold leading-[20px] text-rdj-text-secondary text-[14px] whitespace-nowrap">{parentLabel}</p>
               </button>
               <BreadcrumbChevron />
               <button 
                 onClick={() => navigate(parentPath)}
                 className="flex items-center justify-center px-[8px] py-[4px] rounded-[6px] shrink-0 hover:bg-rdj-bg-primary-hover"
               >
-                <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[20px] text-rdj-text-secondary text-[14px] whitespace-nowrap">{id?.substring(0, 12)}</p>
+                <p className="font-sans font-bold leading-[20px] text-rdj-text-secondary text-[14px] whitespace-nowrap">{id?.substring(0, 12)}</p>
               </button>
               <BreadcrumbChevron />
               <div className="bg-rdj-bg-secondary flex items-center justify-center px-[8px] py-[4px] rounded-[6px] shrink-0">
-                <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[20px] text-rdj-text-primary text-[14px] whitespace-nowrap">Nieuwe onderhandeling</p>
+                <p className="font-sans font-bold leading-[20px] text-rdj-text-primary text-[14px] whitespace-nowrap">Nieuwe onderhandeling</p>
               </div>
             </div>
 
             {/* Title */}
-            <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[38px] text-rdj-text-primary text-[30px]">
+            <p className="font-sans font-bold leading-[38px] text-rdj-text-primary text-[30px]">
               Nieuwe onderhandeling toevoegen
             </p>
           </div>
@@ -249,7 +249,7 @@ export default function NieuweOnderhandeling() {
               {/* ── Card: Relatie ── */}
               <FormCard title="Relatie">
                 <div>
-                  <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[20px] text-rdj-text-primary text-[14px] mb-[6px]">
+                  <p className="font-sans font-bold leading-[20px] text-rdj-text-primary text-[14px] mb-[6px]">
                     Relatie *
                   </p>
                   <RelatieSearchInput
@@ -265,7 +265,7 @@ export default function NieuweOnderhandeling() {
                 {/* Contact dropdown - shown when relatie is selected */}
                 {selectedRelatie && (
                   <div>
-                    <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[20px] text-rdj-text-primary text-[14px] mb-[6px]">
+                    <p className="font-sans font-bold leading-[20px] text-rdj-text-primary text-[14px] mb-[6px]">
                       Contactpersoon
                     </p>
                     <div className="relative" ref={contactDropdownRef}>
@@ -276,7 +276,7 @@ export default function NieuweOnderhandeling() {
                           contactDropdownOpen ? 'border-rdj-fg-brand ring-1 ring-rdj-fg-brand' : 'border-rdj-border-primary'
                         }`}
                       >
-                        <p className={`font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[20px] text-[14px] ${
+                        <p className={`font-sans font-normal leading-[20px] text-[14px] ${
                           selectedContact ? 'text-rdj-text-primary' : 'text-rdj-text-tertiary'
                         }`}>
                           {contactsLoading
@@ -308,11 +308,11 @@ export default function NieuweOnderhandeling() {
                                 selectedContact?.id === contact.id ? 'bg-rdj-bg-brand' : ''
                               }`}
                             >
-                              <p className="font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[20px] text-rdj-text-primary text-[14px]">
+                              <p className="font-sans font-normal leading-[20px] text-rdj-text-primary text-[14px]">
                                 {contact.naam}
                               </p>
                               {contact.email && (
-                                <p className="font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[18px] text-rdj-text-secondary text-[12px]">
+                                <p className="font-sans font-normal leading-[18px] text-rdj-text-secondary text-[12px]">
                                   {contact.email}
                                 </p>
                               )}
@@ -329,7 +329,7 @@ export default function NieuweOnderhandeling() {
               <FormCard title="Bod">
                 {/* Type bod */}
                 <div>
-                  <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[20px] text-rdj-text-primary text-[14px] mb-[8px]">
+                  <p className="font-sans font-bold leading-[20px] text-rdj-text-primary text-[14px] mb-[8px]">
                     Type bod *
                   </p>
                   <div className="flex gap-[16px]">
@@ -370,20 +370,20 @@ export default function NieuweOnderhandeling() {
 
                 {/* Opmerking */}
                 <div>
-                  <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[20px] text-rdj-text-primary text-[14px] mb-[6px]">
+                  <p className="font-sans font-bold leading-[20px] text-rdj-text-primary text-[14px] mb-[6px]">
                     Opmerking *
                   </p>
                   <textarea
                     value={formData.remark}
                     onChange={(e) => setFormData({ ...formData, remark: e.target.value })}
-                    className="bg-white border border-rdj-border-primary rounded-[8px] w-full px-[14px] py-[10px] font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[24px] text-rdj-text-primary text-[16px] resize-none h-[120px] focus:outline-none focus:ring-1 focus:ring-rdj-fg-brand focus:border-rdj-fg-brand"
+                    className="bg-white border border-rdj-border-primary rounded-[8px] w-full px-[14px] py-[10px] font-sans font-normal leading-[24px] text-rdj-text-primary text-[16px] resize-none h-[120px] focus:outline-none focus:ring-1 focus:ring-rdj-fg-brand focus:border-rdj-fg-brand"
                     placeholder="Voeg een opmerking toe..."
                   />
                 </div>
 
                 {/* Tonnage */}
                 <div>
-                  <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[20px] text-rdj-text-primary text-[14px] mb-[6px]">
+                  <p className="font-sans font-bold leading-[20px] text-rdj-text-primary text-[14px] mb-[6px]">
                     Tonnage
                   </p>
                   <div className="flex gap-[12px] items-center">
@@ -391,7 +391,7 @@ export default function NieuweOnderhandeling() {
                       type="text"
                       value={formData.tonnage}
                       onChange={(e) => setFormData({ ...formData, tonnage: e.target.value })}
-                      className="bg-white border border-rdj-border-primary rounded-[8px] flex-1 px-[14px] py-[10px] font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[24px] text-rdj-text-primary text-[16px] focus:outline-none focus:ring-1 focus:ring-rdj-fg-brand focus:border-rdj-fg-brand"
+                      className="bg-white border border-rdj-border-primary rounded-[8px] flex-1 px-[14px] py-[10px] font-sans font-normal leading-[24px] text-rdj-text-primary text-[16px] focus:outline-none focus:ring-1 focus:ring-rdj-fg-brand focus:border-rdj-fg-brand"
                     />
                     <div className="flex items-center gap-[8px]">
                       <RadioButton
@@ -410,25 +410,25 @@ export default function NieuweOnderhandeling() {
 
                 {/* Vrachtprijs */}
                 <div>
-                  <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[20px] text-rdj-text-primary text-[14px] mb-[6px]">
+                  <p className="font-sans font-bold leading-[20px] text-rdj-text-primary text-[14px] mb-[6px]">
                     Vrachtprijs
                   </p>
                   <div className="flex gap-[12px] items-center">
                     <div className="bg-white border border-rdj-border-primary rounded-[8px] flex items-center overflow-hidden flex-1">
                       <div className="px-[14px] py-[10px] bg-rdj-bg-secondary border-r border-rdj-border-primary">
-                        <p className="font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[24px] text-rdj-text-primary text-[16px]">€</p>
+                        <p className="font-sans font-normal leading-[24px] text-rdj-text-primary text-[16px]">€</p>
                       </div>
                       <input
                         type="text"
                         value={formData.price}
                         onChange={(e) => setFormData({ ...formData, price: e.target.value })}
-                        className="flex-1 px-[14px] py-[10px] font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[24px] text-rdj-text-primary text-[16px] focus:outline-none"
+                        className="flex-1 px-[14px] py-[10px] font-sans font-normal leading-[24px] text-rdj-text-primary text-[16px] focus:outline-none"
                       />
                     </div>
                     <select
                       value={formData.priceUnit}
                       onChange={(e) => setFormData({ ...formData, priceUnit: e.target.value as any })}
-                      className="bg-white border border-rdj-border-primary rounded-[8px] px-[14px] py-[10px] font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[24px] text-rdj-text-primary text-[16px] focus:outline-none focus:ring-1 focus:ring-rdj-fg-brand focus:border-rdj-fg-brand"
+                      className="bg-white border border-rdj-border-primary rounded-[8px] px-[14px] py-[10px] font-sans font-normal leading-[24px] text-rdj-text-primary text-[16px] focus:outline-none focus:ring-1 focus:ring-rdj-fg-brand focus:border-rdj-fg-brand"
                     >
                       <option>Per ton</option>
                       <option>Per m³</option>
@@ -442,7 +442,7 @@ export default function NieuweOnderhandeling() {
               <FormCard title="Laden">
                 {/* Laadtijd */}
                 <div>
-                  <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[20px] text-rdj-text-primary text-[14px] mb-[6px]">
+                  <p className="font-sans font-bold leading-[20px] text-rdj-text-primary text-[14px] mb-[6px]">
                     Laadtijd
                   </p>
                   <div className="mb-[12px]">
@@ -458,7 +458,7 @@ export default function NieuweOnderhandeling() {
                         type="text"
                         value={formData.loadingDays}
                         onChange={(e) => setFormData({ ...formData, loadingDays: e.target.value })}
-                        className="bg-white border border-rdj-border-primary rounded-[8px] w-full px-[14px] py-[10px] font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[24px] text-rdj-text-primary text-[16px] focus:outline-none focus:ring-1 focus:ring-rdj-fg-brand focus:border-rdj-fg-brand"
+                        className="bg-white border border-rdj-border-primary rounded-[8px] w-full px-[14px] py-[10px] font-sans font-normal leading-[24px] text-rdj-text-primary text-[16px] focus:outline-none focus:ring-1 focus:ring-rdj-fg-brand focus:border-rdj-fg-brand"
                       />
                     </div>
                     <div className="flex gap-[8px]">
@@ -478,13 +478,13 @@ export default function NieuweOnderhandeling() {
 
                 {/* Liggeld laden */}
                 <div>
-                  <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[20px] text-rdj-text-primary text-[14px] mb-[6px]">
+                  <p className="font-sans font-bold leading-[20px] text-rdj-text-primary text-[14px] mb-[6px]">
                     Liggeld laden
                   </p>
                   <select
                     value={formData.loadingLiggeld}
                     onChange={(e) => setFormData({ ...formData, loadingLiggeld: e.target.value })}
-                    className="bg-white border border-rdj-border-primary rounded-[8px] w-full px-[14px] py-[10px] font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[24px] text-rdj-text-primary text-[16px] focus:outline-none focus:ring-1 focus:ring-rdj-fg-brand focus:border-rdj-fg-brand mb-[8px]"
+                    className="bg-white border border-rdj-border-primary rounded-[8px] w-full px-[14px] py-[10px] font-sans font-normal leading-[24px] text-rdj-text-primary text-[16px] focus:outline-none focus:ring-1 focus:ring-rdj-fg-brand focus:border-rdj-fg-brand mb-[8px]"
                   >
                     <option>Niet van toepassing</option>
                     <option>Nederlands Wettelijk</option>
@@ -501,7 +501,7 @@ export default function NieuweOnderhandeling() {
               <FormCard title="Lossen">
                 {/* Lostijd */}
                 <div>
-                  <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[20px] text-rdj-text-primary text-[14px] mb-[6px]">
+                  <p className="font-sans font-bold leading-[20px] text-rdj-text-primary text-[14px] mb-[6px]">
                     Lostijd
                   </p>
                   <div className="mb-[12px]">
@@ -517,7 +517,7 @@ export default function NieuweOnderhandeling() {
                         type="text"
                         value={formData.unloadingDays}
                         onChange={(e) => setFormData({ ...formData, unloadingDays: e.target.value })}
-                        className="bg-white border border-rdj-border-primary rounded-[8px] w-full px-[14px] py-[10px] font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[24px] text-rdj-text-primary text-[16px] focus:outline-none focus:ring-1 focus:ring-rdj-fg-brand focus:border-rdj-fg-brand"
+                        className="bg-white border border-rdj-border-primary rounded-[8px] w-full px-[14px] py-[10px] font-sans font-normal leading-[24px] text-rdj-text-primary text-[16px] focus:outline-none focus:ring-1 focus:ring-rdj-fg-brand focus:border-rdj-fg-brand"
                       />
                     </div>
                     <div className="flex gap-[8px]">
@@ -537,13 +537,13 @@ export default function NieuweOnderhandeling() {
 
                 {/* Liggeld lossen */}
                 <div>
-                  <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[20px] text-rdj-text-primary text-[14px] mb-[6px]">
+                  <p className="font-sans font-bold leading-[20px] text-rdj-text-primary text-[14px] mb-[6px]">
                     Liggeld lossen
                   </p>
                   <select
                     value={formData.unloadingLiggeld}
                     onChange={(e) => setFormData({ ...formData, unloadingLiggeld: e.target.value })}
-                    className="bg-white border border-rdj-border-primary rounded-[8px] w-full px-[14px] py-[10px] font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[24px] text-rdj-text-primary text-[16px] focus:outline-none focus:ring-1 focus:ring-rdj-fg-brand focus:border-rdj-fg-brand mb-[8px]"
+                    className="bg-white border border-rdj-border-primary rounded-[8px] w-full px-[14px] py-[10px] font-sans font-normal leading-[24px] text-rdj-text-primary text-[16px] focus:outline-none focus:ring-1 focus:ring-rdj-fg-brand focus:border-rdj-fg-brand mb-[8px]"
                   >
                     <option>Niet van toepassing</option>
                     <option>Nederlands Wettelijk</option>
@@ -585,7 +585,7 @@ export default function NieuweOnderhandeling() {
                   }`} />
                 </div>
               </div>
-              <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[20px] text-rdj-text-primary text-[14px]">
+              <p className="font-sans font-bold leading-[20px] text-rdj-text-primary text-[14px]">
                 Aanbidding per mail versturen
               </p>
             </label>

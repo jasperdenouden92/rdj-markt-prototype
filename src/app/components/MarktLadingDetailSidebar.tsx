@@ -34,7 +34,7 @@ export default function MarktLadingDetailSidebar({
     >
       {/* Header with vessel info — rendered above tabs content */}
       <div className="content-stretch flex flex-col gap-[4px] items-start justify-center relative shrink-0 w-full -mt-[8px] mb-[4px]">
-        <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[32px] text-rdj-text-primary text-[24px] w-full">
+        <p className="font-sans font-bold leading-[32px] text-rdj-text-primary text-[24px] w-full">
           {cargoData.vesselName} - {cargoData.vesselCompany}
         </p>
         <div className="bg-white content-stretch flex gap-[6px] items-center px-[8px] py-[2px] relative rounded-[4px] shrink-0">
@@ -52,7 +52,7 @@ export default function MarktLadingDetailSidebar({
               <circle cx="3" cy="3" fill="#2E90FA" r="3" />
             </svg>
           </div>
-          <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[20px] relative shrink-0 text-rdj-text-primary text-[14px] text-center whitespace-nowrap">
+          <p className="font-sans font-bold leading-[20px] relative shrink-0 text-rdj-text-primary text-[14px] text-center whitespace-nowrap">
             {cargoData.status}
           </p>
         </div>
@@ -60,16 +60,16 @@ export default function MarktLadingDetailSidebar({
 
       {/* Cargo summary */}
       <div className="content-stretch flex flex-col gap-[16px] items-start min-w-[320px] relative shrink-0 w-full -mt-[8px] mb-[4px]">
-        <p className="font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[24px] relative text-rdj-text-secondary text-[16px] w-full">
-          <span className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold">
+        <p className="font-sans font-normal leading-[24px] relative text-rdj-text-secondary text-[16px] w-full">
+          <span className="font-sans font-bold">
             {cargoData.cargo}
           </span>
           {" vanuit "}
-          <span className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold">
+          <span className="font-sans font-bold">
             {cargoData.from} ({cargoData.fromDate})
           </span>
           {" naar "}
-          <span className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold">
+          <span className="font-sans font-bold">
             {cargoData.to} ({cargoData.toDate})
           </span>
         </p>
@@ -105,7 +105,7 @@ export default function MarktLadingDetailSidebar({
 
       {activeTab === "condities" && (
         <DetailsSidebarSection>
-          <p className="font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[20px] text-rdj-text-secondary text-[14px] w-full">
+          <p className="font-sans font-normal leading-[20px] text-rdj-text-secondary text-[14px] w-full">
             Hier komen de condities zodra je deze hebt ingevuld.
           </p>
         </DetailsSidebarSection>

@@ -51,7 +51,7 @@ function PaginationDropdown({
           <div className="flex flex-row items-center overflow-clip rounded-[inherit] size-full">
             <div className="content-stretch flex gap-[8px] items-center px-[12px] py-[8px] relative w-full">
               <div className="content-stretch flex flex-[1_0_0] gap-[8px] items-center min-h-px min-w-px relative">
-                <p className="font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[20px] relative shrink-0 text-rdj-text-primary text-[14px] text-left whitespace-nowrap">
+                <p className="font-sans font-normal leading-[20px] relative shrink-0 text-rdj-text-primary text-[14px] text-left whitespace-nowrap">
                   {value}
                 </p>
               </div>
@@ -93,7 +93,7 @@ function PaginationDropdown({
                 onSelect(option);
                 setIsOpen(false);
               }}
-              className={`w-full text-left px-[12px] py-[8px] font-['Hanken_Grotesk:Regular',sans-serif] font-normal text-[14px] leading-[20px] hover:bg-rdj-bg-secondary transition-colors cursor-pointer whitespace-nowrap ${
+              className={`w-full text-left px-[12px] py-[8px] font-sans font-normal text-[14px] leading-[20px] hover:bg-rdj-bg-secondary transition-colors cursor-pointer whitespace-nowrap ${
                 option === value
                   ? "text-[#1567a4] bg-[#f0f7fc]"
                   : "text-rdj-text-primary"
@@ -131,7 +131,7 @@ export default function Pagination({
     <div className="content-stretch flex items-center justify-between px-[24px] py-[20px] relative w-full">
       {/* Left: rows per page */}
       <div className="content-stretch flex gap-[8px] items-center relative shrink-0">
-        <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[20px] relative shrink-0 text-[#344054] text-[14px] whitespace-nowrap">
+        <p className="font-sans font-bold leading-[20px] relative shrink-0 text-[#344054] text-[14px] whitespace-nowrap">
           Regels per pagina
         </p>
         <PaginationDropdown
@@ -148,7 +148,7 @@ export default function Pagination({
       {/* Right: navigation */}
       <div className="content-stretch flex gap-[12px] items-center relative shrink-0">
         {/* Item range text */}
-        <p className="font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[20px] relative shrink-0 text-[#344054] text-[14px] whitespace-nowrap">
+        <p className="font-sans font-normal leading-[20px] relative shrink-0 text-[#344054] text-[14px] whitespace-nowrap">
           {formatNumber(startItem)} tot {formatNumber(endItem)} van{" "}
           {formatNumber(totalItems)}
         </p>
@@ -187,7 +187,7 @@ export default function Pagination({
 
         {/* Page dropdown */}
         <div className="content-stretch flex gap-[8px] items-center relative shrink-0">
-          <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[20px] relative shrink-0 text-[#344054] text-[14px] whitespace-nowrap">
+          <p className="font-sans font-bold leading-[20px] relative shrink-0 text-[#344054] text-[14px] whitespace-nowrap">
             Pagina
           </p>
           <PaginationDropdown
@@ -198,7 +198,7 @@ export default function Pagination({
             onSelect={(val) => onPageChange(Number(val))}
             width="w-[64px]"
           />
-          <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[20px] relative shrink-0 text-[#344054] text-[14px] whitespace-nowrap">
+          <p className="font-sans font-bold leading-[20px] relative shrink-0 text-[#344054] text-[14px] whitespace-nowrap">
             van {totalPages}
           </p>
         </div>

@@ -1,6 +1,5 @@
 import svgPaths from "./svg-ndtqpd46zo";
-// import imgAvatar from "figma:asset/a2737d3b5b234fc04041650cb9f114889c6859da.png";
-const imgAvatar = "";
+import imgAvatar from "../assets/a2737d3b5b234fc04041650cb9f114889c6859da.png";
 
 function Group() {
   return (
@@ -57,7 +56,7 @@ function Item() {
           </div>
         </div>
       </div>
-      <p className="font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[18px] relative shrink-0 text-[#344054] text-[12px] whitespace-nowrap">Lading</p>
+      <p className="font-sans font-normal leading-[18px] relative shrink-0 text-[#344054] text-[12px] whitespace-nowrap">Lading</p>
     </div>
   );
 }
@@ -76,7 +75,7 @@ function Item1() {
           </div>
         </div>
       </div>
-      <p className="font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[18px] relative shrink-0 text-[#344054] text-[12px] whitespace-nowrap">Vloot</p>
+      <p className="font-sans font-normal leading-[18px] relative shrink-0 text-[#344054] text-[12px] whitespace-nowrap">Vloot</p>
     </div>
   );
 }
@@ -95,7 +94,7 @@ function Item2() {
           </div>
         </div>
       </div>
-      <p className="font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[18px] relative shrink-0 text-[#344054] text-[12px] whitespace-nowrap">Planning</p>
+      <p className="font-sans font-normal leading-[18px] relative shrink-0 text-[#344054] text-[12px] whitespace-nowrap">Planning</p>
     </div>
   );
 }
@@ -114,7 +113,7 @@ function Item3() {
           </div>
         </div>
       </div>
-      <p className="font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[18px] relative shrink-0 text-[#344054] text-[12px] whitespace-nowrap">Markt</p>
+      <p className="font-sans font-normal leading-[18px] relative shrink-0 text-[#344054] text-[12px] whitespace-nowrap">Markt</p>
     </div>
   );
 }
@@ -133,7 +132,7 @@ function Item4() {
           </div>
         </div>
       </div>
-      <p className="font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[18px] relative shrink-0 text-[#344054] text-[12px] whitespace-nowrap">Backoffice</p>
+      <p className="font-sans font-normal leading-[18px] relative shrink-0 text-[#344054] text-[12px] whitespace-nowrap">Backoffice</p>
     </div>
   );
 }
@@ -152,7 +151,7 @@ function Item5() {
           </div>
         </div>
       </div>
-      <p className="font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[18px] relative shrink-0 text-[#344054] text-[12px] whitespace-nowrap">Relaties</p>
+      <p className="font-sans font-normal leading-[18px] relative shrink-0 text-[#344054] text-[12px] whitespace-nowrap">Relaties</p>
     </div>
   );
 }
@@ -232,7 +231,7 @@ function Tabs() {
   return (
     <div className="content-stretch flex gap-[8px] items-center relative shrink-0" data-name="Tabs">
       <div className="content-stretch flex items-center justify-center p-[4px] relative rounded-[6px] shrink-0" data-name="_Breadcrumb button base">
-        <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[20px] relative shrink-0 text-[#475467] text-[14px] whitespace-nowrap">Markt</p>
+        <p className="font-sans font-bold leading-[20px] relative shrink-0 text-[#475467] text-[14px] whitespace-nowrap">Markt</p>
       </div>
       <div className="overflow-clip relative shrink-0 size-[16px]" data-name="chevron-right">
         <div className="absolute bottom-1/4 left-[37.5%] right-[37.5%] top-1/4" data-name="Icon">
@@ -244,7 +243,7 @@ function Tabs() {
         </div>
       </div>
       <div className="content-stretch flex items-center justify-center px-[8px] py-[4px] relative rounded-[6px] shrink-0" data-name="_Breadcrumb button base">
-        <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[20px] relative shrink-0 text-[#475467] text-[14px] whitespace-nowrap">Pijplijn</p>
+        <p className="font-sans font-bold leading-[20px] relative shrink-0 text-[#475467] text-[14px] whitespace-nowrap">Pijplijn</p>
       </div>
       <div className="overflow-clip relative shrink-0 size-[16px]" data-name="chevron-right">
         <div className="absolute bottom-1/4 left-[37.5%] right-[37.5%] top-1/4" data-name="Icon">
@@ -256,7 +255,7 @@ function Tabs() {
         </div>
       </div>
       <div className="content-stretch flex items-center justify-center px-[8px] py-[4px] relative rounded-[6px] shrink-0" data-name="_Breadcrumb button base">
-        <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[20px] relative shrink-0 text-[#475467] text-[14px] whitespace-nowrap">CRG164-01</p>
+        <p className="font-sans font-bold leading-[20px] relative shrink-0 text-[#475467] text-[14px] whitespace-nowrap">CRG164-01</p>
       </div>
       <div className="overflow-clip relative shrink-0 size-[16px]" data-name="chevron-right">
         <div className="absolute bottom-1/4 left-[37.5%] right-[37.5%] top-1/4" data-name="Icon">
@@ -268,7 +267,7 @@ function Tabs() {
         </div>
       </div>
       <div className="content-stretch flex items-center justify-center px-[8px] py-[4px] relative rounded-[4px] shrink-0" data-name="_Breadcrumb button base">
-        <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[20px] relative shrink-0 text-[#475467] text-[14px] whitespace-nowrap">Onderhandelingen</p>
+        <p className="font-sans font-bold leading-[20px] relative shrink-0 text-[#475467] text-[14px] whitespace-nowrap">Onderhandelingen</p>
       </div>
       <div className="overflow-clip relative shrink-0 size-[16px]" data-name="chevron-right">
         <div className="absolute bottom-1/4 left-[37.5%] right-[37.5%] top-1/4" data-name="Icon">
@@ -280,7 +279,7 @@ function Tabs() {
         </div>
       </div>
       <div className="bg-[#f9fafb] content-stretch flex items-center justify-center px-[8px] py-[4px] relative rounded-[6px] shrink-0" data-name="_Breadcrumb button base">
-        <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[20px] relative shrink-0 text-[#344054] text-[14px] whitespace-nowrap">Nieuwe onderhandeling</p>
+        <p className="font-sans font-bold leading-[20px] relative shrink-0 text-[#344054] text-[14px] whitespace-nowrap">Nieuwe onderhandeling</p>
       </div>
     </div>
   );
@@ -312,7 +311,7 @@ function PageHeader() {
 function TextAndSupportingText() {
   return (
     <div className="content-stretch flex flex-[1_0_0] flex-col gap-[4px] items-start min-h-px min-w-[320px] relative" data-name="Text and supporting text">
-      <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[38px] relative shrink-0 text-[#101828] text-[30px] w-full">Nieuwe onderhandeling toevoegen</p>
+      <p className="font-sans font-bold leading-[38px] relative shrink-0 text-[#101828] text-[30px] w-full">Nieuwe onderhandeling toevoegen</p>
     </div>
   );
 }
@@ -328,7 +327,7 @@ function Content4() {
 function Content5() {
   return (
     <div className="content-stretch flex flex-[1_0_0] gap-[8px] items-center min-h-px min-w-px relative" data-name="Content">
-      <p className="font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[20px] relative shrink-0 text-[#101828] text-[14px] text-left whitespace-nowrap">Alpha Barging Rotterdam B.V.</p>
+      <p className="font-sans font-normal leading-[20px] relative shrink-0 text-[#101828] text-[14px] text-left whitespace-nowrap">Alpha Barging Rotterdam B.V.</p>
     </div>
   );
 }
@@ -358,7 +357,7 @@ function Input() {
 function InputWithLabel() {
   return (
     <div className="content-stretch flex flex-col gap-[6px] items-start relative shrink-0 w-full" data-name="Input with label">
-      <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[20px] relative shrink-0 text-[#344054] text-[14px] text-left whitespace-nowrap">Relatie *</p>
+      <p className="font-sans font-bold leading-[20px] relative shrink-0 text-[#344054] text-[14px] text-left whitespace-nowrap">Relatie *</p>
       <Input />
     </div>
   );
@@ -367,7 +366,7 @@ function InputWithLabel() {
 function Content6() {
   return (
     <div className="content-stretch flex flex-[1_0_0] gap-[8px] items-center min-h-px min-w-px relative" data-name="Content">
-      <p className="font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[20px] relative shrink-0 text-[#101828] text-[14px] text-left whitespace-nowrap">Frits van Dam</p>
+      <p className="font-sans font-normal leading-[20px] relative shrink-0 text-[#101828] text-[14px] text-left whitespace-nowrap">Frits van Dam</p>
     </div>
   );
 }
@@ -397,7 +396,7 @@ function Input1() {
 function InputWithLabel1() {
   return (
     <div className="content-stretch flex flex-col gap-[6px] items-start relative shrink-0 w-full" data-name="Input with label">
-      <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[20px] relative shrink-0 text-[#344054] text-[14px] text-left whitespace-nowrap">Contactpersoon</p>
+      <p className="font-sans font-bold leading-[20px] relative shrink-0 text-[#344054] text-[14px] text-left whitespace-nowrap">Contactpersoon</p>
       <Input1 />
     </div>
   );
@@ -406,7 +405,7 @@ function InputWithLabel1() {
 function HeaderRow() {
   return (
     <div className="content-stretch flex gap-[24px] items-center relative shrink-0 w-full" data-name="Header row">
-      <p className="flex-[1_0_0] font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[26px] min-h-px min-w-px relative text-[#101828] text-[18px]">Bod</p>
+      <p className="flex-[1_0_0] font-sans font-bold leading-[26px] min-h-px min-w-px relative text-[#101828] text-[18px]">Bod</p>
     </div>
   );
 }
@@ -414,7 +413,7 @@ function HeaderRow() {
 function TextAndSubtext() {
   return (
     <div className="content-stretch flex gap-[4px] items-start relative shrink-0 w-[71px]" data-name="Text and subtext">
-      <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[20px] relative shrink-0 text-[#344054] text-[14px] whitespace-nowrap">Uitgaand</p>
+      <p className="font-sans font-bold leading-[20px] relative shrink-0 text-[#344054] text-[14px] whitespace-nowrap">Uitgaand</p>
     </div>
   );
 }
@@ -462,7 +461,7 @@ function CheckboxGroupItem() {
 function TextAndSubtext1() {
   return (
     <div className="content-stretch flex gap-[4px] items-start relative shrink-0 w-[71px]" data-name="Text and subtext">
-      <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[20px] relative shrink-0 text-[#344054] text-[14px] whitespace-nowrap">Inkomend</p>
+      <p className="font-sans font-bold leading-[20px] relative shrink-0 text-[#344054] text-[14px] whitespace-nowrap">Inkomend</p>
     </div>
   );
 }
@@ -519,7 +518,7 @@ function Choices() {
 function Row1() {
   return (
     <div className="content-stretch flex flex-[1_0_0] flex-col gap-[6px] items-start min-h-px min-w-px relative self-stretch" data-name="Row">
-      <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[20px] relative shrink-0 text-[#344054] text-[14px] whitespace-nowrap">Type bod *</p>
+      <p className="font-sans font-bold leading-[20px] relative shrink-0 text-[#344054] text-[14px] whitespace-nowrap">Type bod *</p>
       <Choices />
     </div>
   );
@@ -552,8 +551,8 @@ function Row() {
 function TitleAndSubtitle() {
   return (
     <div className="content-stretch flex flex-[1_0_0] flex-col items-start justify-center min-h-px min-w-px relative whitespace-nowrap" data-name="Title and subtitle">
-      <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[20px] relative shrink-0 text-[14px] text-black">Vliet</p>
-      <p className="font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[0] min-w-full overflow-hidden relative shrink-0 text-[#475467] text-[12px] text-ellipsis w-[min-content]">
+      <p className="font-sans font-bold leading-[20px] relative shrink-0 text-[14px] text-black">Vliet</p>
+      <p className="font-sans font-normal leading-[0] min-w-full overflow-hidden relative shrink-0 text-[#475467] text-[12px] text-ellipsis w-[min-content]">
         <span className="leading-[18px]">{`3.000 ton `}</span>
         <span className="leading-[18px]">{`· `}</span>
         <span className="leading-[18px]">Motorschip</span>
@@ -591,7 +590,7 @@ function Location() {
 function Text() {
   return (
     <div className="content-stretch flex items-center relative shrink-0" data-name="Text">
-      <p className="font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[18px] overflow-hidden relative shrink-0 text-[#101828] text-[12px] text-ellipsis whitespace-nowrap">Waalhaven</p>
+      <p className="font-sans font-normal leading-[18px] overflow-hidden relative shrink-0 text-[#101828] text-[12px] text-ellipsis whitespace-nowrap">Waalhaven</p>
     </div>
   );
 }
@@ -609,7 +608,7 @@ function Frame() {
   return (
     <div className="content-stretch flex items-start relative shrink-0 w-full">
       <Row3 />
-      <div className="flex flex-col font-['Hanken_Grotesk:Regular',sans-serif] font-normal justify-center leading-[0] relative shrink-0 text-[#667085] text-[12px] whitespace-nowrap">
+      <div className="flex flex-col font-sans font-normal justify-center leading-[0] relative shrink-0 text-[#667085] text-[12px] whitespace-nowrap">
         <p className="leading-[18px]">Sinds Ma 12 Jan</p>
       </div>
     </div>
@@ -644,7 +643,7 @@ function CardMarket() {
 function InputBoxGekozen() {
   return (
     <div className="content-stretch flex flex-[1_0_0] flex-col gap-[6px] items-start justify-center min-h-px min-w-px relative" data-name="Input box (gekozen)">
-      <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[20px] relative shrink-0 text-[#344054] text-[14px] whitespace-nowrap">Aan te bieden vaartuig</p>
+      <p className="font-sans font-bold leading-[20px] relative shrink-0 text-[#344054] text-[14px] whitespace-nowrap">Aan te bieden vaartuig</p>
       <CardMarket />
     </div>
   );
@@ -665,7 +664,7 @@ function Input2() {
     <div className="bg-white flex-[1_0_0] min-h-px min-w-px relative rounded-[6px] w-full" data-name="Input">
       <div className="overflow-clip rounded-[inherit] size-full">
         <div className="content-stretch flex items-start px-[14px] py-[12px] relative size-full">
-          <p className="flex-[1_0_0] font-['Hanken_Grotesk:Regular',sans-serif] font-normal h-full leading-[20px] min-h-px min-w-px relative text-[#101828] text-[14px] text-left">We hebben interesse in uw aanbod.</p>
+          <p className="flex-[1_0_0] font-sans font-normal h-full leading-[20px] min-h-px min-w-px relative text-[#101828] text-[14px] text-left">We hebben interesse in uw aanbod.</p>
         </div>
       </div>
       <div aria-hidden="true" className="absolute border border-[#d0d5dd] border-solid inset-0 pointer-events-none rounded-[6px] shadow-[0px_1px_2px_0px_rgba(16,24,40,0.05)]" />
@@ -676,7 +675,7 @@ function Input2() {
 function InputWithLabel2() {
   return (
     <div className="content-stretch flex flex-col gap-[6px] h-[154px] items-start relative shrink-0 w-full" data-name="Input with label">
-      <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[20px] relative shrink-0 text-[#344054] text-[14px] text-left whitespace-nowrap">Opmerking *</p>
+      <p className="font-sans font-bold leading-[20px] relative shrink-0 text-[#344054] text-[14px] text-left whitespace-nowrap">Opmerking *</p>
       <Input2 />
     </div>
   );
@@ -685,7 +684,7 @@ function InputWithLabel2() {
 function InputWithLabel3() {
   return (
     <div className="content-stretch flex flex-col items-start relative shrink-0" data-name="Input with label">
-      <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[20px] relative shrink-0 text-[#344054] text-[14px] whitespace-nowrap">Tonnage</p>
+      <p className="font-sans font-bold leading-[20px] relative shrink-0 text-[#344054] text-[14px] whitespace-nowrap">Tonnage</p>
     </div>
   );
 }
@@ -701,7 +700,7 @@ function InputDropdown2() {
 function Content9() {
   return (
     <div className="content-stretch flex flex-[1_0_0] items-center min-h-px min-w-px relative" data-name="Content">
-      <p className="flex-[1_0_0] font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[20px] min-h-px min-w-px overflow-hidden relative text-[#101828] text-[14px] text-ellipsis text-left whitespace-nowrap">3000</p>
+      <p className="flex-[1_0_0] font-sans font-normal leading-[20px] min-h-px min-w-px overflow-hidden relative text-[#101828] text-[14px] text-ellipsis text-left whitespace-nowrap">3000</p>
     </div>
   );
 }
@@ -744,7 +743,7 @@ function Input4() {
 function TextAndSupportingText3() {
   return (
     <div className="content-stretch flex flex-col items-start relative shrink-0" data-name="Text and supporting text">
-      <p className="font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[20px] relative shrink-0 text-[#344054] text-[14px] whitespace-nowrap">Ton</p>
+      <p className="font-sans font-normal leading-[20px] relative shrink-0 text-[#344054] text-[14px] whitespace-nowrap">Ton</p>
     </div>
   );
 }
@@ -762,7 +761,7 @@ function Input5() {
 function TextAndSupportingText4() {
   return (
     <div className="content-stretch flex flex-col items-start relative shrink-0" data-name="Text and supporting text">
-      <p className="font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[20px] relative shrink-0 text-[#344054] text-[14px] whitespace-nowrap">m³</p>
+      <p className="font-sans font-normal leading-[20px] relative shrink-0 text-[#344054] text-[14px] whitespace-nowrap">m³</p>
     </div>
   );
 }
@@ -805,7 +804,7 @@ function InputDropdown1() {
 function InputWithLabel5() {
   return (
     <div className="content-stretch flex flex-col items-start relative shrink-0" data-name="Input with label">
-      <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[20px] relative shrink-0 text-[#344054] text-[14px] whitespace-nowrap">Vrachtprijs</p>
+      <p className="font-sans font-bold leading-[20px] relative shrink-0 text-[#344054] text-[14px] whitespace-nowrap">Vrachtprijs</p>
     </div>
   );
 }
@@ -821,7 +820,7 @@ function InputDropdown4() {
 function AddOn() {
   return (
     <div className="content-stretch flex items-center pl-[14px] pr-[12px] py-[10px] relative rounded-bl-[8px] rounded-tl-[8px] shrink-0" data-name="Add-on">
-      <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[20px] relative shrink-0 text-[#475467] text-[14px] text-left whitespace-nowrap">€</p>
+      <p className="font-sans font-bold leading-[20px] relative shrink-0 text-[#475467] text-[14px] text-left whitespace-nowrap">€</p>
     </div>
   );
 }
@@ -831,7 +830,7 @@ function TextInput() {
     <div className="bg-white flex-[1_0_0] min-h-px min-w-px relative rounded-br-[6px] rounded-tr-[6px] self-stretch" data-name="Text input">
       <div className="flex flex-row items-center overflow-clip rounded-[inherit] size-full">
         <div className="content-stretch flex gap-[8px] items-center px-[14px] py-[10px] relative size-full">
-          <p className="flex-[1_0_0] font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[20px] min-h-px min-w-px overflow-hidden relative text-[#101828] text-[14px] text-ellipsis text-left whitespace-nowrap">5,00</p>
+          <p className="flex-[1_0_0] font-sans font-normal leading-[20px] min-h-px min-w-px overflow-hidden relative text-[#101828] text-[14px] text-ellipsis text-left whitespace-nowrap">5,00</p>
         </div>
       </div>
       <div aria-hidden="true" className="absolute border border-[#d0d5dd] border-solid inset-0 pointer-events-none rounded-br-[6px] rounded-tr-[6px]" />
@@ -874,7 +873,7 @@ function Input7() {
 function TextAndSupportingText5() {
   return (
     <div className="content-stretch flex flex-col items-start relative shrink-0" data-name="Text and supporting text">
-      <p className="font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[20px] relative shrink-0 text-[#344054] text-[14px] whitespace-nowrap">Per ton</p>
+      <p className="font-sans font-normal leading-[20px] relative shrink-0 text-[#344054] text-[14px] whitespace-nowrap">Per ton</p>
     </div>
   );
 }
@@ -892,7 +891,7 @@ function Input8() {
 function TextAndSupportingText6() {
   return (
     <div className="content-stretch flex flex-col items-start relative shrink-0" data-name="Text and supporting text">
-      <p className="font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[20px] relative shrink-0 text-[#344054] text-[14px] whitespace-nowrap">Per m³</p>
+      <p className="font-sans font-normal leading-[20px] relative shrink-0 text-[#344054] text-[14px] whitespace-nowrap">Per m³</p>
     </div>
   );
 }
@@ -910,7 +909,7 @@ function Input9() {
 function TextAndSupportingText7() {
   return (
     <div className="content-stretch flex flex-col items-start relative shrink-0" data-name="Text and supporting text">
-      <p className="font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[20px] relative shrink-0 text-[#344054] text-[14px] whitespace-nowrap">Blokvracht</p>
+      <p className="font-sans font-normal leading-[20px] relative shrink-0 text-[#344054] text-[14px] whitespace-nowrap">Blokvracht</p>
     </div>
   );
 }
@@ -957,7 +956,7 @@ function InputDropdown3() {
 function HeaderRow1() {
   return (
     <div className="content-stretch flex gap-[24px] items-center relative shrink-0 w-full" data-name="Header row">
-      <p className="flex-[1_0_0] font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[26px] min-h-px min-w-px relative text-[#101828] text-[18px]">Laden</p>
+      <p className="flex-[1_0_0] font-sans font-bold leading-[26px] min-h-px min-w-px relative text-[#101828] text-[18px]">Laden</p>
     </div>
   );
 }
@@ -965,7 +964,7 @@ function HeaderRow1() {
 function InputWithLabel7() {
   return (
     <div className="content-stretch flex flex-col items-start relative shrink-0" data-name="Input with label">
-      <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[20px] relative shrink-0 text-[#344054] text-[14px] whitespace-nowrap">Laadtijd</p>
+      <p className="font-sans font-bold leading-[20px] relative shrink-0 text-[#344054] text-[14px] whitespace-nowrap">Laadtijd</p>
     </div>
   );
 }
@@ -991,7 +990,7 @@ function Input10() {
 function TextAndSupportingText8() {
   return (
     <div className="content-stretch flex flex-col items-start relative shrink-0" data-name="Text and supporting text">
-      <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[20px] relative shrink-0 text-[#344054] text-[14px] whitespace-nowrap">Uren conform Nederlands Wettelijk</p>
+      <p className="font-sans font-bold leading-[20px] relative shrink-0 text-[#344054] text-[14px] whitespace-nowrap">Uren conform Nederlands Wettelijk</p>
     </div>
   );
 }
@@ -999,7 +998,7 @@ function TextAndSupportingText8() {
 function Content10() {
   return (
     <div className="content-stretch flex flex-[1_0_0] items-center min-h-px min-w-px relative" data-name="Content">
-      <p className="flex-[1_0_0] font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[20px] min-h-px min-w-px overflow-hidden relative text-[#101828] text-[14px] text-ellipsis text-left whitespace-nowrap">12</p>
+      <p className="flex-[1_0_0] font-sans font-normal leading-[20px] min-h-px min-w-px overflow-hidden relative text-[#101828] text-[14px] text-ellipsis text-left whitespace-nowrap">12</p>
     </div>
   );
 }
@@ -1042,7 +1041,7 @@ function Input12() {
 function TextAndSupportingText9() {
   return (
     <div className="content-stretch flex flex-col items-start relative shrink-0" data-name="Text and supporting text">
-      <p className="font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[20px] relative shrink-0 text-[#344054] text-[14px] whitespace-nowrap">Uren</p>
+      <p className="font-sans font-normal leading-[20px] relative shrink-0 text-[#344054] text-[14px] whitespace-nowrap">Uren</p>
     </div>
   );
 }
@@ -1060,7 +1059,7 @@ function Input13() {
 function TextAndSupportingText10() {
   return (
     <div className="content-stretch flex flex-col items-start relative shrink-0" data-name="Text and supporting text">
-      <p className="font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[20px] relative shrink-0 text-[#344054] text-[14px] whitespace-nowrap">Dagen</p>
+      <p className="font-sans font-normal leading-[20px] relative shrink-0 text-[#344054] text-[14px] whitespace-nowrap">Dagen</p>
     </div>
   );
 }
@@ -1115,7 +1114,7 @@ function InputDropdown5() {
 function Content11() {
   return (
     <div className="content-stretch flex flex-[1_0_0] gap-[8px] items-center min-h-px min-w-px relative" data-name="Content">
-      <p className="font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[20px] relative shrink-0 text-[#101828] text-[14px] text-left whitespace-nowrap">Nederlands Wettelijk</p>
+      <p className="font-sans font-normal leading-[20px] relative shrink-0 text-[#101828] text-[14px] text-left whitespace-nowrap">Nederlands Wettelijk</p>
     </div>
   );
 }
@@ -1145,7 +1144,7 @@ function Input14() {
 function InputWithLabel9() {
   return (
     <div className="content-stretch flex flex-col gap-[6px] items-start relative shrink-0 w-full" data-name="Input with label">
-      <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[20px] relative shrink-0 text-[#344054] text-[14px] text-left whitespace-nowrap">Liggeld laden</p>
+      <p className="font-sans font-bold leading-[20px] relative shrink-0 text-[#344054] text-[14px] text-left whitespace-nowrap">Liggeld laden</p>
       <Input14 />
     </div>
   );
@@ -1164,7 +1163,7 @@ function Input15() {
 function TextAndSupportingText11() {
   return (
     <div className="content-stretch flex flex-col items-start relative shrink-0" data-name="Text and supporting text">
-      <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[20px] relative shrink-0 text-[#344054] text-[14px] whitespace-nowrap">Duwbak gelijk aan motorschepen</p>
+      <p className="font-sans font-bold leading-[20px] relative shrink-0 text-[#344054] text-[14px] whitespace-nowrap">Duwbak gelijk aan motorschepen</p>
     </div>
   );
 }
@@ -1186,7 +1185,7 @@ function List4() {
 function HeaderRow2() {
   return (
     <div className="content-stretch flex gap-[24px] items-center relative shrink-0 w-full" data-name="Header row">
-      <p className="flex-[1_0_0] font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[26px] min-h-px min-w-px relative text-[#101828] text-[18px]">Lossen</p>
+      <p className="flex-[1_0_0] font-sans font-bold leading-[26px] min-h-px min-w-px relative text-[#101828] text-[18px]">Lossen</p>
     </div>
   );
 }
@@ -1194,7 +1193,7 @@ function HeaderRow2() {
 function InputWithLabel10() {
   return (
     <div className="content-stretch flex flex-col items-start relative shrink-0" data-name="Input with label">
-      <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[20px] relative shrink-0 text-[#344054] text-[14px] whitespace-nowrap">Lostijd</p>
+      <p className="font-sans font-bold leading-[20px] relative shrink-0 text-[#344054] text-[14px] whitespace-nowrap">Lostijd</p>
     </div>
   );
 }
@@ -1228,7 +1227,7 @@ function Input16() {
 function TextAndSupportingText12() {
   return (
     <div className="content-stretch flex flex-col items-start relative shrink-0" data-name="Text and supporting text">
-      <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[20px] relative shrink-0 text-[#344054] text-[14px] whitespace-nowrap">Uren conform Nederlands Wettelijk</p>
+      <p className="font-sans font-bold leading-[20px] relative shrink-0 text-[#344054] text-[14px] whitespace-nowrap">Uren conform Nederlands Wettelijk</p>
     </div>
   );
 }
@@ -1236,7 +1235,7 @@ function TextAndSupportingText12() {
 function Content12() {
   return (
     <div className="content-stretch flex flex-[1_0_0] items-center min-h-px min-w-px relative" data-name="Content">
-      <p className="flex-[1_0_0] font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[20px] min-h-px min-w-px overflow-hidden relative text-[#667085] text-[14px] text-ellipsis text-left whitespace-nowrap">8</p>
+      <p className="flex-[1_0_0] font-sans font-normal leading-[20px] min-h-px min-w-px overflow-hidden relative text-[#667085] text-[14px] text-ellipsis text-left whitespace-nowrap">8</p>
     </div>
   );
 }
@@ -1282,7 +1281,7 @@ function Input18() {
 function TextAndSupportingText13() {
   return (
     <div className="content-stretch flex flex-col items-start relative shrink-0" data-name="Text and supporting text">
-      <p className="font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[20px] relative shrink-0 text-[#344054] text-[14px] whitespace-nowrap">Uren</p>
+      <p className="font-sans font-normal leading-[20px] relative shrink-0 text-[#344054] text-[14px] whitespace-nowrap">Uren</p>
     </div>
   );
 }
@@ -1300,7 +1299,7 @@ function Input19() {
 function TextAndSupportingText14() {
   return (
     <div className="content-stretch flex flex-col items-start relative shrink-0" data-name="Text and supporting text">
-      <p className="font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[20px] relative shrink-0 text-[#344054] text-[14px] whitespace-nowrap">Dagen</p>
+      <p className="font-sans font-normal leading-[20px] relative shrink-0 text-[#344054] text-[14px] whitespace-nowrap">Dagen</p>
     </div>
   );
 }
@@ -1355,7 +1354,7 @@ function InputDropdown7() {
 function Content13() {
   return (
     <div className="content-stretch flex flex-[1_0_0] gap-[8px] items-center min-h-px min-w-px relative" data-name="Content">
-      <p className="font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[20px] relative shrink-0 text-[#101828] text-[14px] text-left whitespace-nowrap">Nederlands Wettelijk</p>
+      <p className="font-sans font-normal leading-[20px] relative shrink-0 text-[#101828] text-[14px] text-left whitespace-nowrap">Nederlands Wettelijk</p>
     </div>
   );
 }
@@ -1385,7 +1384,7 @@ function Input20() {
 function InputWithLabel12() {
   return (
     <div className="content-stretch flex flex-col gap-[6px] items-start relative shrink-0 w-full" data-name="Input with label">
-      <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[20px] relative shrink-0 text-[#344054] text-[14px] text-left whitespace-nowrap">Liggeld lossen</p>
+      <p className="font-sans font-bold leading-[20px] relative shrink-0 text-[#344054] text-[14px] text-left whitespace-nowrap">Liggeld lossen</p>
       <Input20 />
     </div>
   );
@@ -1404,7 +1403,7 @@ function Input21() {
 function TextAndSupportingText15() {
   return (
     <div className="content-stretch flex flex-col items-start relative shrink-0" data-name="Text and supporting text">
-      <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[20px] relative shrink-0 text-[#344054] text-[14px] whitespace-nowrap">Duwbak gelijk aan motorschepen</p>
+      <p className="font-sans font-bold leading-[20px] relative shrink-0 text-[#344054] text-[14px] whitespace-nowrap">Duwbak gelijk aan motorschepen</p>
     </div>
   );
 }
@@ -1426,14 +1425,14 @@ function List6() {
 function HeaderRow3() {
   return (
     <div className="content-stretch flex gap-[24px] items-center relative shrink-0 w-full" data-name="Header row">
-      <p className="flex-[1_0_0] font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[26px] min-h-px min-w-px relative text-[#101828] text-[18px]">Laagwatertoeslag</p>
+      <p className="flex-[1_0_0] font-sans font-bold leading-[26px] min-h-px min-w-px relative text-[#101828] text-[18px]">Laagwatertoeslag</p>
     </div>
   );
 }
 
 function Content14() {
   return (
-    <div className="content-stretch flex flex-[1_0_0] font-['Hanken_Grotesk:Regular',sans-serif] font-normal gap-[8px] items-center leading-[20px] min-h-px min-w-px relative text-[14px] text-left whitespace-nowrap" data-name="Content">
+    <div className="content-stretch flex flex-[1_0_0] font-sans font-normal gap-[8px] items-center leading-[20px] min-h-px min-w-px relative text-[14px] text-left whitespace-nowrap" data-name="Content">
       <p className="relative shrink-0 text-[#101828]">{`Basis IJsselkop - m Twentenkanaal `}</p>
       <p className="relative shrink-0 text-[#475467]">2,50m / 10% per dm</p>
     </div>
@@ -1465,7 +1464,7 @@ function Input22() {
 function InputWithLabel13() {
   return (
     <div className="content-stretch flex flex-col gap-[6px] items-start relative shrink-0 w-full" data-name="Input with label">
-      <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[20px] relative shrink-0 text-[#344054] text-[14px] text-left whitespace-nowrap">Toeslagregeling</p>
+      <p className="font-sans font-bold leading-[20px] relative shrink-0 text-[#344054] text-[14px] text-left whitespace-nowrap">Toeslagregeling</p>
       <Input22 />
     </div>
   );
@@ -1484,7 +1483,7 @@ function Input23() {
 function TextAndSupportingText16() {
   return (
     <div className="content-stretch flex flex-col items-start relative shrink-0" data-name="Text and supporting text">
-      <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[20px] relative shrink-0 text-[#344054] text-[14px] whitespace-nowrap">Vrij lichten, opslag en doortransport</p>
+      <p className="font-sans font-bold leading-[20px] relative shrink-0 text-[#344054] text-[14px] whitespace-nowrap">Vrij lichten, opslag en doortransport</p>
     </div>
   );
 }
@@ -1537,7 +1536,7 @@ function Input24() {
 function TextAndSupportingText17() {
   return (
     <div className="content-stretch flex flex-col items-start relative shrink-0" data-name="Text and supporting text">
-      <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[20px] relative shrink-0 text-[#344054] text-[14px] whitespace-nowrap">Vrije onderhandeling vanaf bepaalde waterstand</p>
+      <p className="font-sans font-bold leading-[20px] relative shrink-0 text-[#344054] text-[14px] whitespace-nowrap">Vrije onderhandeling vanaf bepaalde waterstand</p>
     </div>
   );
 }
@@ -1558,7 +1557,7 @@ function TextInput1() {
     <div className="bg-white flex-[1_0_0] min-h-px min-w-px relative rounded-bl-[6px] rounded-tl-[6px] self-stretch" data-name="Text input">
       <div className="flex flex-row items-center overflow-clip rounded-[inherit] size-full">
         <div className="content-stretch flex gap-[8px] items-center px-[14px] py-[10px] relative size-full">
-          <p className="flex-[1_0_0] font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[20px] min-h-px min-w-px overflow-hidden relative text-[#101828] text-[14px] text-ellipsis whitespace-nowrap">4,00</p>
+          <p className="flex-[1_0_0] font-sans font-normal leading-[20px] min-h-px min-w-px overflow-hidden relative text-[#101828] text-[14px] text-ellipsis whitespace-nowrap">4,00</p>
         </div>
       </div>
       <div aria-hidden="true" className="absolute border border-[#d0d5dd] border-solid inset-0 pointer-events-none rounded-bl-[6px] rounded-tl-[6px]" />
@@ -1569,7 +1568,7 @@ function TextInput1() {
 function AddOn1() {
   return (
     <div className="content-stretch flex items-center pl-[14px] pr-[12px] py-[10px] relative rounded-bl-[8px] rounded-tl-[8px] shrink-0" data-name="Add-on">
-      <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[20px] relative shrink-0 text-[#475467] text-[14px] whitespace-nowrap">m</p>
+      <p className="font-sans font-bold leading-[20px] relative shrink-0 text-[#475467] text-[14px] whitespace-nowrap">m</p>
     </div>
   );
 }
@@ -1612,7 +1611,7 @@ function Inputs7() {
 function InputWithLabel14() {
   return (
     <div className="content-stretch flex flex-col items-start relative shrink-0" data-name="Input with label">
-      <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[20px] relative shrink-0 text-[#344054] text-[14px] whitespace-nowrap">Toepassing</p>
+      <p className="font-sans font-bold leading-[20px] relative shrink-0 text-[#344054] text-[14px] whitespace-nowrap">Toepassing</p>
     </div>
   );
 }
@@ -1642,7 +1641,7 @@ function Input26() {
 function TextAndSupportingText18() {
   return (
     <div className="content-stretch flex flex-col items-start relative shrink-0" data-name="Text and supporting text">
-      <p className="font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[20px] relative shrink-0 text-[#344054] text-[14px] whitespace-nowrap">Op dag van belading</p>
+      <p className="font-sans font-normal leading-[20px] relative shrink-0 text-[#344054] text-[14px] whitespace-nowrap">Op dag van belading</p>
     </div>
   );
 }
@@ -1660,7 +1659,7 @@ function Input27() {
 function TextAndSupportingText19() {
   return (
     <div className="content-stretch flex flex-col items-start relative shrink-0" data-name="Text and supporting text">
-      <p className="font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[20px] relative shrink-0 text-[#344054] text-[14px] whitespace-nowrap">Op laagste waterstand tijdens reis</p>
+      <p className="font-sans font-normal leading-[20px] relative shrink-0 text-[#344054] text-[14px] whitespace-nowrap">Op laagste waterstand tijdens reis</p>
     </div>
   );
 }
@@ -1700,7 +1699,7 @@ function Row4() {
 function TextPadding() {
   return (
     <div className="content-stretch flex items-center justify-center px-[2px] relative shrink-0" data-name="Text padding">
-      <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[20px] relative shrink-0 text-[#145990] text-[14px] whitespace-nowrap">Overige condities</p>
+      <p className="font-sans font-bold leading-[20px] relative shrink-0 text-[#145990] text-[14px] whitespace-nowrap">Overige condities</p>
     </div>
   );
 }
@@ -1710,7 +1709,7 @@ function Form() {
     <div className="content-stretch flex flex-col gap-[32px] items-start relative shrink-0 w-full" data-name="Form">
       <div className="bg-white content-stretch flex flex-col gap-[24px] items-start p-[24px] relative rounded-[10px] shrink-0 w-[580px]" data-name="Relatie">
         <div aria-hidden="true" className="absolute border border-[#eaecf0] border-solid inset-0 pointer-events-none rounded-[10px] shadow-[0px_1px_2px_0px_rgba(16,24,40,0.05)]" />
-        <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[26px] relative shrink-0 text-[#101828] text-[18px] w-full">Relatie</p>
+        <p className="font-sans font-bold leading-[26px] relative shrink-0 text-[#101828] text-[18px] w-full">Relatie</p>
         <button className="content-stretch cursor-pointer flex flex-col gap-[8px] items-start relative shrink-0 w-full" data-name="Input dropdown">
           <InputWithLabel />
         </button>
@@ -1813,7 +1812,7 @@ function Button() {
 function TextAndSupportingText20() {
   return (
     <div className="content-stretch flex flex-col items-start relative shrink-0 w-[300px]" data-name="Text and supporting text">
-      <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[20px] relative shrink-0 text-[#344054] text-[14px] w-full">Aanbieding per mail versturen</p>
+      <p className="font-sans font-bold leading-[20px] relative shrink-0 text-[#344054] text-[14px] w-full">Aanbieding per mail versturen</p>
     </div>
   );
 }
@@ -1821,7 +1820,7 @@ function TextAndSupportingText20() {
 function TextPadding1() {
   return (
     <div className="content-stretch flex items-center justify-center px-[2px] relative shrink-0" data-name="Text padding">
-      <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[20px] relative shrink-0 text-[#344054] text-[14px] whitespace-nowrap">Annuleren</p>
+      <p className="font-sans font-bold leading-[20px] relative shrink-0 text-[#344054] text-[14px] whitespace-nowrap">Annuleren</p>
     </div>
   );
 }
@@ -1829,7 +1828,7 @@ function TextPadding1() {
 function TextPadding2() {
   return (
     <div className="content-stretch flex items-center justify-center px-[2px] relative shrink-0" data-name="Text padding">
-      <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[20px] relative shrink-0 text-[14px] text-white whitespace-nowrap">Toevoegen</p>
+      <p className="font-sans font-bold leading-[20px] relative shrink-0 text-[14px] text-white whitespace-nowrap">Toevoegen</p>
     </div>
   );
 }
@@ -1888,7 +1887,7 @@ function Frame4() {
 function Frame1() {
   return (
     <div className="content-stretch flex flex-col gap-[4px] items-start justify-center relative shrink-0 w-full">
-      <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[32px] min-w-full relative shrink-0 text-[#101828] text-[24px] w-[min-content]">m/v Merganser - Cargo Solutions Ltd.</p>
+      <p className="font-sans font-bold leading-[32px] min-w-full relative shrink-0 text-[#101828] text-[24px] w-[min-content]">m/v Merganser - Cargo Solutions Ltd.</p>
       <div className="bg-white content-stretch flex gap-[6px] items-center px-[8px] py-[2px] relative rounded-[4px] shrink-0" data-name="Badge">
         <div aria-hidden="true" className="absolute border border-[#d0d5dd] border-solid inset-0 pointer-events-none rounded-[4px]" />
         <div className="relative shrink-0 size-[8px]" data-name="_Dot">
@@ -1898,7 +1897,7 @@ function Frame1() {
             </svg>
           </div>
         </div>
-        <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[20px] relative shrink-0 text-[#344054] text-[14px] text-center whitespace-nowrap">Onderhandeling</p>
+        <p className="font-sans font-bold leading-[20px] relative shrink-0 text-[#344054] text-[14px] text-center whitespace-nowrap">Onderhandeling</p>
       </div>
     </div>
   );
@@ -1908,12 +1907,12 @@ function TextAndSupportingText21() {
   return (
     <div className="content-stretch flex flex-[1_0_0] flex-col gap-[16px] items-start min-h-px min-w-[320px] relative" data-name="Text and supporting text">
       <Frame1 />
-      <p className="font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[0] relative shrink-0 text-[#475467] text-[0px] text-[16px] w-full">
-        <span className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[24px]">2.000 ton Houtpellets</span>
+      <p className="font-sans font-normal leading-[0] relative shrink-0 text-[#475467] text-[0px] text-[16px] w-full">
+        <span className="font-sans font-bold leading-[24px]">2.000 ton Houtpellets</span>
         <span className="leading-[24px]">{` vanuit `}</span>
-        <span className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[24px]">Rotterdam (Do 15 Jan)</span>
+        <span className="font-sans font-bold leading-[24px]">Rotterdam (Do 15 Jan)</span>
         <span className="leading-[24px]">{` naar `}</span>
-        <span className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[24px]">Mannheim (Af te stemmen)</span>
+        <span className="font-sans font-bold leading-[24px]">Mannheim (Af te stemmen)</span>
       </p>
     </div>
   );
@@ -1951,14 +1950,14 @@ function Content17() {
         <div className="bg-[#f2f8fd] h-full relative rounded-[4px] shrink-0" data-name="Tab button base">
           <div className="flex flex-row items-center justify-center overflow-clip rounded-[inherit] size-full">
             <div className="content-stretch flex h-full items-center justify-center px-[12px] py-[8px] relative">
-              <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[20px] relative shrink-0 text-[#344054] text-[14px] whitespace-nowrap">Details</p>
+              <p className="font-sans font-bold leading-[20px] relative shrink-0 text-[#344054] text-[14px] whitespace-nowrap">Details</p>
             </div>
           </div>
         </div>
         <div className="h-full relative rounded-[4px] shrink-0" data-name="Tab button base">
           <div className="flex flex-row items-center justify-center overflow-clip rounded-[inherit] size-full">
             <div className="content-stretch flex h-full items-center justify-center px-[12px] py-[8px] relative">
-              <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[20px] relative shrink-0 text-[#667085] text-[14px] whitespace-nowrap">Condities</p>
+              <p className="font-sans font-bold leading-[20px] relative shrink-0 text-[#667085] text-[14px] whitespace-nowrap">Condities</p>
             </div>
           </div>
         </div>
@@ -1973,7 +1972,7 @@ function Data() {
       <div className="bg-white relative rounded-[6px] shrink-0 w-full" data-name="Label">
         <div className="flex flex-row items-center size-full">
           <div className="content-stretch flex items-center pl-[12px] pr-[6px] py-[8px] relative w-full">
-            <p className="flex-[1_0_0] font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[20px] min-h-px min-w-px relative text-[#667085] text-[14px]">Voeg toe</p>
+            <p className="flex-[1_0_0] font-sans font-normal leading-[20px] min-h-px min-w-px relative text-[#667085] text-[14px]">Voeg toe</p>
           </div>
         </div>
       </div>
@@ -1985,7 +1984,7 @@ function Row5() {
   return (
     <div className="content-stretch flex gap-[16px] items-start relative shrink-0 w-full" data-name="Row">
       <div className="bg-white content-stretch flex items-center py-[8px] relative rounded-[6px] shrink-0 w-[144px]" data-name="Label">
-        <p className="flex-[1_0_0] font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[20px] min-h-px min-w-px relative text-[#475467] text-[14px]">Tonnage</p>
+        <p className="flex-[1_0_0] font-sans font-normal leading-[20px] min-h-px min-w-px relative text-[#475467] text-[14px]">Tonnage</p>
       </div>
       <Data />
     </div>
@@ -1998,7 +1997,7 @@ function Data1() {
       <div className="bg-white relative rounded-[6px] shrink-0 w-full" data-name="Label">
         <div className="flex flex-row items-center size-full">
           <div className="content-stretch flex items-center pl-[12px] pr-[6px] py-[8px] relative w-full">
-            <p className="flex-[1_0_0] font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[20px] min-h-px min-w-px relative text-[#667085] text-[14px]">Voeg toe</p>
+            <p className="flex-[1_0_0] font-sans font-normal leading-[20px] min-h-px min-w-px relative text-[#667085] text-[14px]">Voeg toe</p>
           </div>
         </div>
       </div>
@@ -2010,7 +2009,7 @@ function Row6() {
   return (
     <div className="content-stretch flex gap-[16px] items-start relative shrink-0 w-full" data-name="Row">
       <div className="bg-white content-stretch flex items-center py-[8px] relative rounded-[6px] shrink-0 w-[144px]" data-name="Label">
-        <p className="flex-[1_0_0] font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[20px] min-h-px min-w-px relative text-[#475467] text-[14px]">Lading</p>
+        <p className="flex-[1_0_0] font-sans font-normal leading-[20px] min-h-px min-w-px relative text-[#475467] text-[14px]">Lading</p>
       </div>
       <Data1 />
     </div>
@@ -2023,7 +2022,7 @@ function Data2() {
       <div className="bg-white relative rounded-[6px] shrink-0 w-full" data-name="Label">
         <div className="flex flex-row items-center size-full">
           <div className="content-stretch flex items-center pl-[12px] pr-[6px] py-[8px] relative w-full">
-            <p className="flex-[1_0_0] font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[20px] min-h-px min-w-px relative text-[#667085] text-[14px]">Voeg toe</p>
+            <p className="flex-[1_0_0] font-sans font-normal leading-[20px] min-h-px min-w-px relative text-[#667085] text-[14px]">Voeg toe</p>
           </div>
         </div>
       </div>
@@ -2035,7 +2034,7 @@ function Row7() {
   return (
     <div className="content-stretch flex gap-[16px] items-start relative shrink-0 w-full" data-name="Row">
       <div className="bg-white content-stretch flex items-center py-[8px] relative rounded-[6px] shrink-0 w-[144px]" data-name="Label">
-        <p className="flex-[1_0_0] font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[20px] min-h-px min-w-px relative text-[#475467] text-[14px]">Subsoort</p>
+        <p className="flex-[1_0_0] font-sans font-normal leading-[20px] min-h-px min-w-px relative text-[#475467] text-[14px]">Subsoort</p>
       </div>
       <Data2 />
     </div>
@@ -2048,7 +2047,7 @@ function Data3() {
       <div className="bg-white relative rounded-[6px] shrink-0 w-full" data-name="Label">
         <div className="flex flex-row items-center size-full">
           <div className="content-stretch flex items-center pl-[12px] pr-[6px] py-[8px] relative w-full">
-            <p className="flex-[1_0_0] font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[20px] min-h-px min-w-px relative text-[#667085] text-[14px]">Voeg toe</p>
+            <p className="flex-[1_0_0] font-sans font-normal leading-[20px] min-h-px min-w-px relative text-[#667085] text-[14px]">Voeg toe</p>
           </div>
         </div>
       </div>
@@ -2060,7 +2059,7 @@ function Row8() {
   return (
     <div className="content-stretch flex gap-[16px] items-start relative shrink-0 w-full" data-name="Row">
       <div className="bg-white content-stretch flex items-center py-[8px] relative rounded-[6px] shrink-0 w-[144px]" data-name="Label">
-        <p className="flex-[1_0_0] font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[20px] min-h-px min-w-px relative text-[#475467] text-[14px]">Soortelijk gewicht</p>
+        <p className="flex-[1_0_0] font-sans font-normal leading-[20px] min-h-px min-w-px relative text-[#475467] text-[14px]">Soortelijk gewicht</p>
       </div>
       <Data3 />
     </div>
@@ -2073,7 +2072,7 @@ function Data4() {
       <div className="bg-white relative rounded-[6px] shrink-0 w-full" data-name="Label">
         <div className="flex flex-row items-center size-full">
           <div className="content-stretch flex items-center pl-[12px] pr-[6px] py-[8px] relative w-full">
-            <p className="flex-[1_0_0] font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[20px] min-h-px min-w-px relative text-[#667085] text-[14px]">Voeg toe</p>
+            <p className="flex-[1_0_0] font-sans font-normal leading-[20px] min-h-px min-w-px relative text-[#667085] text-[14px]">Voeg toe</p>
           </div>
         </div>
       </div>
@@ -2084,7 +2083,7 @@ function Data4() {
 function Row9() {
   return (
     <div className="content-stretch flex gap-[16px] items-center relative shrink-0 w-full" data-name="Row">
-      <p className="font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[20px] relative shrink-0 text-[#475467] text-[14px] w-[144px]">Inhoud</p>
+      <p className="font-sans font-normal leading-[20px] relative shrink-0 text-[#475467] text-[14px] w-[144px]">Inhoud</p>
       <Data4 />
     </div>
   );
@@ -2095,7 +2094,7 @@ function Label() {
     <div className="bg-white h-[36px] relative rounded-[6px] shrink-0 w-full" data-name="Label">
       <div className="flex flex-row items-center size-full">
         <div className="content-stretch flex items-center pl-[12px] pr-[6px] py-[8px] relative size-full">
-          <p className="flex-[1_0_0] font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[20px] min-h-px min-w-px relative text-[#667085] text-[14px]">Selecteer</p>
+          <p className="flex-[1_0_0] font-sans font-normal leading-[20px] min-h-px min-w-px relative text-[#667085] text-[14px]">Selecteer</p>
         </div>
       </div>
     </div>
@@ -2114,7 +2113,7 @@ function Row10() {
   return (
     <div className="content-stretch flex gap-[16px] items-start relative shrink-0 w-full" data-name="Row">
       <div className="bg-white content-stretch flex items-center py-[8px] relative rounded-[6px] shrink-0 w-[144px]" data-name="Label">
-        <p className="flex-[1_0_0] font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[20px] min-h-px min-w-px relative text-[#475467] text-[14px]">Bijzonderheden</p>
+        <p className="flex-[1_0_0] font-sans font-normal leading-[20px] min-h-px min-w-px relative text-[#475467] text-[14px]">Bijzonderheden</p>
       </div>
       <Data5 />
     </div>
@@ -2124,11 +2123,11 @@ function Row10() {
 function Row11() {
   return (
     <div className="content-stretch flex gap-[16px] items-center relative shrink-0 w-full" data-name="Row">
-      <p className="font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[20px] relative shrink-0 text-[#475467] text-[14px] w-[144px]">Laadhaven</p>
+      <p className="font-sans font-normal leading-[20px] relative shrink-0 text-[#475467] text-[14px] w-[144px]">Laadhaven</p>
       <div className="bg-white flex-[1_0_0] min-h-px min-w-px relative rounded-[6px]" data-name="Label">
         <div className="flex flex-row items-center size-full">
           <div className="content-stretch flex items-center pl-[12px] pr-[6px] py-[8px] relative w-full">
-            <p className="font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[20px] relative shrink-0 text-[#667085] text-[14px] w-[163.333px]">Selecteer</p>
+            <p className="font-sans font-normal leading-[20px] relative shrink-0 text-[#667085] text-[14px] w-[163.333px]">Selecteer</p>
           </div>
         </div>
       </div>
@@ -2142,7 +2141,7 @@ function Data6() {
       <div className="bg-white relative rounded-[6px] shrink-0 w-full" data-name="Label">
         <div className="flex flex-row items-center size-full">
           <div className="content-stretch flex items-center pl-[12px] pr-[6px] py-[8px] relative w-full">
-            <p className="flex-[1_0_0] font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[20px] min-h-px min-w-px relative text-[#667085] text-[14px]">Selecteer</p>
+            <p className="flex-[1_0_0] font-sans font-normal leading-[20px] min-h-px min-w-px relative text-[#667085] text-[14px]">Selecteer</p>
           </div>
         </div>
       </div>
@@ -2153,7 +2152,7 @@ function Data6() {
 function Row12() {
   return (
     <div className="content-stretch flex gap-[16px] items-center relative shrink-0 w-full" data-name="Row">
-      <p className="font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[20px] relative shrink-0 text-[#475467] text-[14px] w-[144px]">Laaddatum</p>
+      <p className="font-sans font-normal leading-[20px] relative shrink-0 text-[#475467] text-[14px] w-[144px]">Laaddatum</p>
       <Data6 />
     </div>
   );
@@ -2162,11 +2161,11 @@ function Row12() {
 function Row13() {
   return (
     <div className="content-stretch flex gap-[16px] items-center relative shrink-0 w-full" data-name="Row">
-      <p className="font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[20px] relative shrink-0 text-[#475467] text-[14px] w-[144px]">Loshaven</p>
+      <p className="font-sans font-normal leading-[20px] relative shrink-0 text-[#475467] text-[14px] w-[144px]">Loshaven</p>
       <div className="bg-white flex-[1_0_0] min-h-px min-w-px relative rounded-[6px]" data-name="Label">
         <div className="flex flex-row items-center size-full">
           <div className="content-stretch flex items-center pl-[12px] pr-[6px] py-[8px] relative w-full">
-            <p className="font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[20px] relative shrink-0 text-[#667085] text-[14px] w-[163.333px]">Selecteer</p>
+            <p className="font-sans font-normal leading-[20px] relative shrink-0 text-[#667085] text-[14px] w-[163.333px]">Selecteer</p>
           </div>
         </div>
       </div>
@@ -2180,7 +2179,7 @@ function Data7() {
       <div className="bg-white relative rounded-[6px] shrink-0 w-full" data-name="Label">
         <div className="flex flex-row items-center size-full">
           <div className="content-stretch flex items-center pl-[12px] pr-[6px] py-[8px] relative w-full">
-            <p className="flex-[1_0_0] font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[20px] min-h-px min-w-px relative text-[#667085] text-[14px]">Selecteer</p>
+            <p className="flex-[1_0_0] font-sans font-normal leading-[20px] min-h-px min-w-px relative text-[#667085] text-[14px]">Selecteer</p>
           </div>
         </div>
       </div>
@@ -2191,7 +2190,7 @@ function Data7() {
 function Row14() {
   return (
     <div className="content-stretch flex gap-[16px] items-center relative shrink-0 w-full" data-name="Row">
-      <p className="font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[20px] relative shrink-0 text-[#475467] text-[14px] w-[144px]">Losdatum</p>
+      <p className="font-sans font-normal leading-[20px] relative shrink-0 text-[#475467] text-[14px] w-[144px]">Losdatum</p>
       <Data7 />
     </div>
   );
@@ -2203,9 +2202,9 @@ function Label1() {
       <div className="flex flex-col justify-center size-full">
         <div className="content-stretch flex flex-col gap-[4px] items-start justify-center pl-[12px] pr-[6px] py-[8px] relative w-full">
           <div className="content-stretch flex gap-[6px] items-center justify-center overflow-clip relative shrink-0 w-full" data-name="Buttons/Button">
-            <p className="flex-[1_0_0] font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[20px] min-h-px min-w-px relative text-[#145990] text-[14px]">{`FW: 2150 to 2300 to Raps - 110 M Schip van Rotterdam (2) naar Mannheim - Bunge op 16-2-2026 `}</p>
+            <p className="flex-[1_0_0] font-sans font-bold leading-[20px] min-h-px min-w-px relative text-[#145990] text-[14px]">{`FW: 2150 to 2300 to Raps - 110 M Schip van Rotterdam (2) naar Mannheim - Bunge op 16-2-2026 `}</p>
           </div>
-          <p className="font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[20px] relative shrink-0 text-[#475467] text-[14px] w-[163.333px]">Do 12 Feb 15:59</p>
+          <p className="font-sans font-normal leading-[20px] relative shrink-0 text-[#475467] text-[14px] w-[163.333px]">Do 12 Feb 15:59</p>
         </div>
       </div>
     </div>
@@ -2224,7 +2223,7 @@ function Row15() {
   return (
     <div className="content-stretch flex gap-[16px] items-start relative shrink-0 w-full" data-name="Row">
       <div className="bg-white content-stretch flex items-center py-[8px] relative rounded-[6px] shrink-0 w-[144px]" data-name="Label">
-        <p className="flex-[1_0_0] font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[20px] min-h-px min-w-px relative text-[#475467] text-[14px]">Bron</p>
+        <p className="flex-[1_0_0] font-sans font-normal leading-[20px] min-h-px min-w-px relative text-[#475467] text-[14px]">Bron</p>
       </div>
       <Data8 />
     </div>
@@ -2237,7 +2236,7 @@ function Data9() {
       <div className="bg-white relative rounded-[6px] shrink-0 w-full" data-name="Label">
         <div className="flex flex-row items-center size-full">
           <div className="content-stretch flex items-center pl-[12px] pr-[6px] py-[8px] relative w-full">
-            <p className="flex-[1_0_0] font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[20px] min-h-px min-w-px relative text-[#667085] text-[14px]">Selecteer</p>
+            <p className="flex-[1_0_0] font-sans font-normal leading-[20px] min-h-px min-w-px relative text-[#667085] text-[14px]">Selecteer</p>
           </div>
         </div>
       </div>
@@ -2249,7 +2248,7 @@ function Row16() {
   return (
     <div className="content-stretch flex gap-[16px] items-start relative shrink-0 w-full" data-name="Row">
       <div className="bg-white content-stretch flex items-center py-[8px] relative rounded-[6px] shrink-0 w-[144px]" data-name="Label">
-        <p className="flex-[1_0_0] font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[20px] min-h-px min-w-px relative text-[#475467] text-[14px]">Relatie</p>
+        <p className="flex-[1_0_0] font-sans font-normal leading-[20px] min-h-px min-w-px relative text-[#475467] text-[14px]">Relatie</p>
       </div>
       <Data9 />
     </div>
@@ -2262,7 +2261,7 @@ function Data10() {
       <div className="bg-white relative rounded-[6px] shrink-0 w-full" data-name="Label">
         <div className="flex flex-row items-center size-full">
           <div className="content-stretch flex items-center pl-[12px] pr-[6px] py-[8px] relative w-full">
-            <p className="flex-[1_0_0] font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[20px] min-h-px min-w-px relative text-[#667085] text-[14px]">Voeg toe</p>
+            <p className="flex-[1_0_0] font-sans font-normal leading-[20px] min-h-px min-w-px relative text-[#667085] text-[14px]">Voeg toe</p>
           </div>
         </div>
       </div>
@@ -2274,7 +2273,7 @@ function Row17() {
   return (
     <div className="content-stretch flex gap-[16px] items-start relative shrink-0 w-full" data-name="Row">
       <div className="bg-white content-stretch flex items-center py-[8px] relative rounded-[6px] shrink-0 w-[144px]" data-name="Label">
-        <p className="flex-[1_0_0] font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[20px] min-h-px min-w-px relative text-[#475467] text-[14px]">Contactpersoon</p>
+        <p className="flex-[1_0_0] font-sans font-normal leading-[20px] min-h-px min-w-px relative text-[#475467] text-[14px]">Contactpersoon</p>
       </div>
       <Data10 />
     </div>
@@ -2304,7 +2303,7 @@ function Subsection() {
 function TextPadding3() {
   return (
     <div className="content-stretch flex items-center justify-center px-[2px] relative shrink-0" data-name="Text padding">
-      <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[20px] relative shrink-0 text-[#344054] text-[14px] whitespace-nowrap">Reset naar bron</p>
+      <p className="font-sans font-bold leading-[20px] relative shrink-0 text-[#344054] text-[14px] whitespace-nowrap">Reset naar bron</p>
     </div>
   );
 }
@@ -2332,7 +2331,7 @@ function Label2() {
             <img alt="" className="absolute inset-0 max-w-none object-cover pointer-events-none rounded-[9999px] size-full" src={imgAvatar} />
             <ContrastBorder />
           </div>
-          <p className="flex-[1_0_0] font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[20px] min-h-px min-w-px relative text-[#101828] text-[14px]">Pelger de Jong</p>
+          <p className="flex-[1_0_0] font-sans font-bold leading-[20px] min-h-px min-w-px relative text-[#101828] text-[14px]">Pelger de Jong</p>
         </div>
       </div>
     </div>
@@ -2350,7 +2349,7 @@ function Data11() {
 function Row18() {
   return (
     <div className="content-stretch flex gap-[16px] items-center relative shrink-0 w-full" data-name="Row">
-      <p className="font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[20px] relative shrink-0 text-[#475467] text-[14px] w-[144px]">Eigenaar</p>
+      <p className="font-sans font-normal leading-[20px] relative shrink-0 text-[#475467] text-[14px] w-[144px]">Eigenaar</p>
       <Data11 />
     </div>
   );
@@ -2513,7 +2512,7 @@ function Data12() {
 function Row19() {
   return (
     <div className="content-stretch flex gap-[16px] items-center relative shrink-0 w-full" data-name="Row">
-      <p className="font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[20px] relative shrink-0 text-[#475467] text-[14px] w-[144px]">Prioriteit</p>
+      <p className="font-sans font-normal leading-[20px] relative shrink-0 text-[#475467] text-[14px] w-[144px]">Prioriteit</p>
       <Data12 />
     </div>
   );
@@ -2523,7 +2522,7 @@ function Section() {
   return (
     <div className="content-stretch flex flex-col gap-[16px] items-center px-[24px] py-[16px] relative shrink-0 w-[400px]" data-name="Section">
       <div aria-hidden="true" className="absolute border-[#eaecf0] border-l border-solid inset-0 pointer-events-none" />
-      <p className="font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[20px] relative shrink-0 text-[#667085] text-[14px] w-full">Voeg een opmerking toe</p>
+      <p className="font-sans font-normal leading-[20px] relative shrink-0 text-[#667085] text-[14px] w-full">Voeg een opmerking toe</p>
       <Subsection />
       <div className="bg-white relative rounded-[6px] shrink-0 w-full" data-name="Buttons/Button">
         <div className="flex flex-row items-center justify-center overflow-clip rounded-[inherit] size-full">

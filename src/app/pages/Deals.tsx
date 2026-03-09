@@ -9,7 +9,7 @@ export default function Deals() {
         <PageHeader title="Deals" />
         <div className="flex-1 overflow-auto">
           <div className="p-[24px]">
-            <p className="font-['Hanken_Grotesk:Regular',sans-serif] font-normal text-[16px] text-rdj-text-secondary">
+            <p className="font-sans font-normal text-[16px] text-rdj-text-secondary">
               Overzicht van alle gesloten deals en contracten.
             </p>
           </div>

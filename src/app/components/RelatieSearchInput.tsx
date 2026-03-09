@@ -121,7 +121,7 @@ export default function RelatieSearchInput({
   return (
     <div className="relative" ref={wrapperRef}>
       {label && (
-        <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[20px] text-[#344054] text-[14px] mb-[6px]">
+        <p className="font-sans font-bold leading-[20px] text-[#344054] text-[14px] mb-[6px]">
           {label}{required && " *"}
         </p>
       )}
@@ -152,7 +152,7 @@ export default function RelatieSearchInput({
                 />
               </svg>
             </div>
-            <p className="font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[20px] text-[#101828] text-[14px]">
+            <p className="font-sans font-normal leading-[20px] text-[#101828] text-[14px]">
               {value.naam}
             </p>
           </div>
@@ -192,7 +192,7 @@ export default function RelatieSearchInput({
             onChange={handleInputChange}
             onFocus={handleInputFocus}
             placeholder={placeholder}
-            className="flex-1 font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[20px] text-[#101828] text-[14px] focus:outline-none placeholder:text-[#667085] bg-transparent"
+            className="flex-1 font-sans font-normal leading-[20px] text-[#101828] text-[14px] focus:outline-none placeholder:text-[#667085] bg-transparent"
           />
         </div>
       )}
@@ -202,7 +202,7 @@ export default function RelatieSearchInput({
         <div className="absolute z-50 top-full left-0 right-0 mt-[4px] bg-white border border-[#eaecf0] rounded-[8px] shadow-[0px_4px_6px_-2px_rgba(16,24,40,0.03),0px_12px_16px_-4px_rgba(16,24,40,0.08)] overflow-hidden">
           {/* Section header */}
           <div className="px-[12px] pt-[8px] pb-[4px]">
-            <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[18px] text-[#667085] text-[12px] uppercase tracking-[0.04em]">
+            <p className="font-sans font-bold leading-[18px] text-[#667085] text-[12px] uppercase tracking-[0.04em]">
               {sectionLabel}
             </p>
           </div>
@@ -211,13 +211,13 @@ export default function RelatieSearchInput({
           <div className="max-h-[240px] overflow-y-auto">
             {loading ? (
               <div className="px-[12px] py-[10px]">
-                <p className="font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[20px] text-[#667085] text-[14px]">
+                <p className="font-sans font-normal leading-[20px] text-[#667085] text-[14px]">
                   Zoeken...
                 </p>
               </div>
             ) : displayItems.length === 0 && isSearching ? (
               <div className="px-[12px] py-[10px]">
-                <p className="font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[20px] text-[#667085] text-[14px]">
+                <p className="font-sans font-normal leading-[20px] text-[#667085] text-[14px]">
                   Geen relaties gevonden
                 </p>
               </div>
@@ -240,7 +240,7 @@ export default function RelatieSearchInput({
                       />
                     </svg>
                   </div>
-                  <p className="font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[20px] text-[#344054] text-[14px]">
+                  <p className="font-sans font-normal leading-[20px] text-[#344054] text-[14px]">
                     {item.naam}
                   </p>
                 </button>
@@ -269,7 +269,7 @@ export default function RelatieSearchInput({
                   />
                 </svg>
               </div>
-              <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[20px] text-[#145990] text-[14px]">
+              <p className="font-sans font-bold leading-[20px] text-[#145990] text-[14px]">
                 Relatie toevoegen
               </p>
             </button>

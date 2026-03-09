@@ -84,6 +84,22 @@ function formatTonnage(t: number): string {
   return t >= 1000 ? `${(t / 1000).toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ".")}.000` : `${t}`;
 }
 
+function formatDate(d: string | null | undefined): string {
+  if (!d) return "Af te stemmen";
+  try {
+    const date = new Date(d);
+    if (isNaN(date.getTime())) return d;
+    const days = ["Zo", "Ma", "Di", "Wo", "Do", "Vr", "Za"];
+    const months = ["Jan", "Feb", "Mrt", "Apr", "Mei", "Jun", "Jul", "Aug", "Sep", "Okt", "Nov", "Dec"];
+    const timeStr = date.getHours() || date.getMinutes()
+      ? ` ${date.getHours().toString().padStart(2, "0")}:${date.getMinutes().toString().padStart(2, "0")}`
+      : "";
+    return `${days[date.getDay()]} ${date.getDate()} ${months[date.getMonth()]}${timeStr}`;
+  } catch {
+    return d;
+  }
+}
+
 // ── INBOX LADINGEN ──
 export interface InboxLadingRow {
   id: string;
@@ -146,11 +162,11 @@ export function useInboxLadingen() {
           relation: relatie?.naam || "",
           relationLink: contactPersoon?.naam || "",
           loadLocation: laadhaven?.naam || "",
-          loadDate: (item as any).laaddatum || "Af te stemmen",
+          loadDate: formatDate((item as any).laaddatum),
           unloadLocation: loshaven?.naam || "Af te stemmen",
-          unloadDate: (item as any).losdatum || "",
+          unloadDate: (item as any).losdatum ? formatDate((item as any).losdatum) : "",
           source: bron?.titel || "",
-          sourceDate: bron?.datum || "",
+          sourceDate: bron?.datum ? formatDate(bron.datum) : "",
           matches: 0, // No matches yet for inbox items
           owner: eigenaar?.naam || "",
           ownerInitials: eigenaar ? getInitials(eigenaar.naam) : undefined,
@@ -233,12 +249,12 @@ export function useInboxVaartuigen() {
           relationContact: contactPersoon?.naam || "",
           location: locatie?.naam || "",
           locationDetail: "",
-          availableFrom: item.beschikbaarVanaf || "-",
+          availableFrom: item.beschikbaarVanaf ? formatDate(item.beschikbaarVanaf) : "-",
           cargoTypes: bijzonderheden.length > 0 ? bijzonderheden : ["KS", "LR", "GMP"],
           tonnage: `${item.groottonnage.toLocaleString("nl-NL")} mt`,
           capacity: `${item.inhoud.toLocaleString("nl-NL")} m³`,
           source: bron?.titel || "",
-          sourceDate: bron?.datum || "",
+          sourceDate: bron?.datum ? formatDate(bron.datum) : "",
           matches: 0,
           owner: eigenaar?.naam || "",
           ownerInitials: eigenaar ? getInitials(eigenaar.naam) : undefined,
@@ -346,11 +362,10 @@ export function useBevrachtingData() {
           weight: cargoStr,
           from: laadhaven?.naam || "",
           to: loshaven?.naam || "",
-          fromDate: subpartij?.laaddatum || "Af te stemmen",
-          toDate: subpartij?.losdatum || "",
+          fromDate: formatDate(subpartij?.laaddatum),
+          toDate: subpartij?.losdatum ? formatDate(subpartij.losdatum) : "",
           matches: 0,
           bids: 0,
-          priceInfo: item.prijs ? `€${item.prijs.toFixed(2)} per ton · ${item.laadtijd || 0} uur laden · ${item.lostijd || 0} uur lossen` : undefined,
         };
       });
 
@@ -369,10 +384,10 @@ export function useBevrachtingData() {
           weight: `${item.groottonnage.toLocaleString("nl-NL")} ton`,
           from: locatie?.naam || "",
           to: "",
-          fromDate: item.beschikbaarVanaf ? `Sinds ${item.beschikbaarVanaf}` : "",
+          fromDate: item.beschikbaarVanaf ? `Sinds ${formatDate(item.beschikbaarVanaf)}` : "",
           toDate: "",
           location: locatie?.naam,
-          locationDate: item.beschikbaarVanaf ? `Sinds ${item.beschikbaarVanaf}` : "",
+          locationDate: item.beschikbaarVanaf ? `Sinds ${formatDate(item.beschikbaarVanaf)}` : "",
           matches: 0,
         };
       });
@@ -478,11 +493,11 @@ export function usePijplijnData() {
           relation: relatie?.naam || "",
           relationContact: contactPersoon?.naam,
           loadLocation: laadhaven?.naam || "",
-          loadDate: (item as any).laaddatum || "",
+          loadDate: formatDate((item as any).laaddatum),
           unloadLocation: loshaven?.naam || "",
-          unloadDate: (item as any).losdatum || "",
+          unloadDate: (item as any).losdatum ? formatDate((item as any).losdatum) : "",
           source: bron?.titel || "",
-          sourceDate: bron?.datum || "",
+          sourceDate: bron?.datum ? formatDate(bron.datum) : "",
           owner: eigenaar?.naam || "",
           ownerInitials: eigenaar ? getInitials(eigenaar.naam) : undefined,
           type: "markt",
@@ -521,12 +536,12 @@ export function usePijplijnData() {
           matches: 0,
           relation: relatie?.naam || "",
           loadLocation: laadhaven?.naam || "",
-          loadDate: subpartij?.laaddatum || "",
+          loadDate: formatDate(subpartij?.laaddatum),
           unloadLocation: loshaven?.naam || "",
-          unloadDate: subpartij?.losdatum || "",
+          unloadDate: subpartij?.losdatum ? formatDate(subpartij.losdatum) : "",
           source: "Rederij de Jong",
           sourceDate: "",
-          deadline: item.deadline,
+          deadline: item.deadline ? formatDate(item.deadline) : "",
           owner: eigenaar?.naam || "",
           ownerInitials: eigenaar ? getInitials(eigenaar.naam) : undefined,
           type: "eigen",

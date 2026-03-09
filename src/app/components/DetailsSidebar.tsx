@@ -40,7 +40,7 @@ export default function DetailsSidebar({
 }: DetailsSidebarProps) {
   return (
     <div
-      className={`h-full relative shrink-0 ${className || ""}`}
+      className={`self-stretch sticky top-0 relative shrink-0 ${className || ""}`}
       style={{ width }}
     >
       {/* Left border */}
@@ -72,7 +72,7 @@ export default function DetailsSidebar({
                       <div className="flex flex-row items-center justify-center overflow-clip rounded-[inherit] size-full">
                         <div className="content-stretch flex h-full items-center justify-center px-[12px] py-[8px] relative">
                           <p
-                            className={`font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[20px] relative shrink-0 text-[14px] whitespace-nowrap ${
+                            className={`font-sans font-bold leading-[20px] relative shrink-0 text-[14px] whitespace-nowrap ${
                               isActive
                                 ? "text-rdj-text-primary"
                                 : "text-rdj-text-tertiary"
@@ -116,12 +116,12 @@ export function DetailsSidebarSection({
   return (
     <div className="content-stretch flex flex-col gap-[16px] items-start relative shrink-0 w-full pb-[16px]">
       {title && (
-        <p className="font-['Hanken_Grotesk:Bold',sans-serif] font-bold leading-[20px] text-rdj-text-primary text-[14px] w-full">
+        <p className="font-sans font-bold leading-[20px] text-rdj-text-primary text-[14px] w-full">
           {title}
         </p>
       )}
       {description && (
-        <p className="font-['Hanken_Grotesk:Regular',sans-serif] font-normal leading-[20px] text-rdj-text-secondary text-[14px] w-full">
+        <p className="font-sans font-normal leading-[20px] text-rdj-text-secondary text-[14px] w-full">
           {description}
         </p>
       )}

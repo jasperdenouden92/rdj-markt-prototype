@@ -139,7 +139,7 @@ export default function Badge({
         </div>
       ) : null}
       <p
-        className={`font-['Hanken_Grotesk:Bold',sans-serif] font-bold ${s.text} whitespace-nowrap ${v.text}`}
+        className={`font-sans font-bold ${s.text} whitespace-nowrap ${v.text}`}
       >
         {label}
       </p>
