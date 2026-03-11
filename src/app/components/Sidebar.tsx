@@ -15,12 +15,15 @@ export default function Sidebar() {
   const location = useLocation();
 
   // Check if current page is a markt-related page
-  const isMarktPage = location.pathname === '/inbox' || 
-                      location.pathname === '/bevrachting' || 
+  const isMarktPage = location.pathname === '/inbox' ||
+                      location.pathname === '/bevrachting' ||
                       location.pathname.startsWith('/inbox/') ||
                       location.pathname.startsWith('/lading/') ||
                       location.pathname.startsWith('/vaartuig/') ||
                       location.pathname.startsWith('/markt/');
+
+  // Check if current page is a CRM/relaties page
+  const isRelatiesPage = location.pathname.startsWith('/crm/');
 
   const cancelClose = useCallback(() => {
     if (closeTimeoutRef.current) {
@@ -255,20 +258,20 @@ export default function Sidebar() {
                   </div>
                   
                   {/* Relaties */}
-                  <div className="content-stretch flex flex-col gap-[4px] items-center relative shrink-0" data-name="Item">
-                    <div className="content-stretch flex items-center justify-center overflow-clip p-[8px] relative rounded-[4px] shrink-0 size-[40px]" data-name="_Nav item button">
+                  <Link to="/crm/relaties" className="content-stretch flex flex-col gap-[4px] items-center relative shrink-0" data-name="Item">
+                    <div className={`content-stretch flex items-center justify-center overflow-clip p-[8px] relative rounded-[4px] shrink-0 size-[40px] ${isRelatiesPage ? 'bg-[#e3effb]' : ''}`} data-name="_Nav item button">
                       <div className="overflow-clip relative shrink-0 size-[24px]" data-name="users-01">
                         <div className="absolute inset-[12.5%_8.33%]" data-name="Icon">
                           <div className="absolute inset-[-5.56%_-5%]">
                             <svg className="block size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 22 20">
-                              <path d={svgPaths.p364ae300} id="Icon" stroke="var(--stroke-0, #667085)" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" />
+                              <path d={svgPaths.p364ae300} id="Icon" stroke={isRelatiesPage ? "#1567A4" : "#667085"} strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" />
                             </svg>
                           </div>
                         </div>
                       </div>
                     </div>
                     <p className="font-sans font-normal leading-[18px] relative shrink-0 text-[#344054] text-[12px] whitespace-nowrap">Relaties</p>
-                  </div>
+                  </Link>
                 </div>
               </div>
             </div>

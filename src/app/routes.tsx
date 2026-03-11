@@ -12,6 +12,8 @@ import NieuwBod from "./pages/NieuwBod";
 import NieuweOnderhandeling from "./pages/NieuweOnderhandeling";
 import Onderhandelingen from "./pages/Onderhandelingen";
 import DatabaseAdmin from "./pages/DatabaseAdmin";
+import Relaties from "./pages/Relaties";
+import RelatieDetail from "./pages/RelatieDetail";
 
 function RootLayout() {
   return <Outlet />;
@@ -167,6 +169,19 @@ export const router = createBrowserRouter([
       {
         path: "markt/database",
         Component: DatabaseAdmin,
+      },
+      // CRM
+      {
+        path: "crm",
+        element: <Navigate to="/crm/relaties" replace />,
+      },
+      {
+        path: "crm/relaties",
+        Component: Relaties,
+      },
+      {
+        path: "crm/relatie/:id",
+        Component: RelatieDetail,
       },
       {
         path: "*",

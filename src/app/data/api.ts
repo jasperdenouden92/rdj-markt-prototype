@@ -69,6 +69,19 @@ export interface Relatie {
   id: string;
   naam: string;
   contactPersoonIds: string[];
+  adres?: string;
+  postcode?: string;
+  plaats?: string;
+  land?: string;
+  telefoon?: string;
+  email?: string;
+  website?: string;
+  ladingGroepen?: string[];
+  eigenaarId?: string;
+  status?: 'actief' | 'inactief' | 'prospect';
+  contactFrequentie?: 'wekelijks' | 'maandelijks' | 'kwartaal' | 'geen';
+  laatsteContact?: string;
+  opmerkingen?: string;
 }
 
 export interface ContactPersoon {
@@ -77,6 +90,8 @@ export interface ContactPersoon {
   email: string;
   telefoon: string;
   relatieId: string;
+  functie?: string;
+  eigenaarId?: string;
 }
 
 export interface LadingSoort {
