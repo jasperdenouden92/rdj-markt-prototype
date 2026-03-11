@@ -84,7 +84,7 @@ export default function VesselCard({ vessel }: VesselCardProps) {
         )}
 
         {/* Matches Footer */}
-        {vessel.matches && vessel.matches > 0 && (
+        {vessel.matches != null && vessel.matches > 0 && (
           <div className="mt-[12px] pt-[12px] border-t border-rdj-border-secondary">
             <div className="flex items-center gap-[6px]">
               <p className="font-sans font-normal leading-[18px] text-rdj-text-tertiary text-[12px]">
