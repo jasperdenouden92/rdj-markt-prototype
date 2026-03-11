@@ -1,4 +1,42 @@
-import type { Contract } from "./api";
+import type { Contract, LadingSoort, LadingSubsoort, Bijzonderheid } from "./api";
+
+export let mockLadingSoorten: LadingSoort[] = [
+  { id: "ls-001", naam: "Graan", soortelijkGewicht: 0.75, subsoortIds: ["lss-001", "lss-002", "lss-003"] },
+  { id: "ls-002", naam: "Zand", soortelijkGewicht: 1.5, subsoortIds: ["lss-004", "lss-005"] },
+  { id: "ls-003", naam: "Houtpellets", soortelijkGewicht: 0.65, subsoortIds: ["lss-006", "lss-007"] },
+  { id: "ls-004", naam: "Staal", soortelijkGewicht: 7.8, subsoortIds: ["lss-008"] },
+  { id: "ls-005", naam: "Meststoffen", soortelijkGewicht: 1.1, subsoortIds: ["lss-009", "lss-010"] },
+  { id: "ls-006", naam: "Kolen", soortelijkGewicht: 1.3, subsoortIds: [] },
+  { id: "ls-007", naam: "Sojabonen", soortelijkGewicht: 0.72, subsoortIds: [] },
+  { id: "ls-008", naam: "Containers", soortelijkGewicht: 0, subsoortIds: [] },
+  { id: "ls-009", naam: "Grind", soortelijkGewicht: 1.6, subsoortIds: [] },
+  { id: "ls-010", naam: "Mais", soortelijkGewicht: 0.72, subsoortIds: [] },
+  { id: "ls-011", naam: "Ijzererts", soortelijkGewicht: 2.5, subsoortIds: [] },
+  { id: "ls-012", naam: "Cement", soortelijkGewicht: 1.5, subsoortIds: [] },
+];
+
+export let mockLadingSubsoorten: LadingSubsoort[] = [
+  { id: "lss-001", naam: "Tarwe", soortelijkGewicht: 0.77, ladingSoortId: "ls-001" },
+  { id: "lss-002", naam: "Gerst", soortelijkGewicht: 0.62, ladingSoortId: "ls-001" },
+  { id: "lss-003", naam: "Rogge", soortelijkGewicht: 0.72, ladingSoortId: "ls-001" },
+  { id: "lss-004", naam: "Metselzand", soortelijkGewicht: 1.5, ladingSoortId: "ls-002" },
+  { id: "lss-005", naam: "Ophoogzand", soortelijkGewicht: 1.6, ladingSoortId: "ls-002" },
+  { id: "lss-006", naam: "Naaldhoutpellets", soortelijkGewicht: 0.65, ladingSoortId: "ls-003" },
+  { id: "lss-007", naam: "Loofhoutpellets", soortelijkGewicht: 0.7, ladingSoortId: "ls-003" },
+  { id: "lss-008", naam: "Warmgewalst staal", soortelijkGewicht: 7.8, ladingSoortId: "ls-004" },
+  { id: "lss-009", naam: "Ureum", soortelijkGewicht: 0.75, ladingSoortId: "ls-005" },
+  { id: "lss-010", naam: "Kalkammonsalpeter", soortelijkGewicht: 1.1, ladingSoortId: "ls-005" },
+];
+
+export const mockBijzonderheden: Bijzonderheid[] = [
+  { id: "bh-001", naam: "LK" },
+  { id: "bh-002", naam: "GMP" },
+  { id: "bh-003", naam: "ADN" },
+  { id: "bh-004", naam: "ISPS" },
+  { id: "bh-005", naam: "Kraanbak" },
+  { id: "bh-006", naam: "Luikenbak" },
+  { id: "bh-007", naam: "Dubbelwandig" },
+];
 
 export const CONTRACT_SOORT_LABELS: Record<string, string> = {
   bevrachting: "Bevrachting",
@@ -37,6 +75,7 @@ export const mockContracten: Contract[] = [
     relatieId: "rel-001",
     contactPersoonId: "cp-001",
     eigenaarId: "usr-001",
+    ladingSoortId: "ls-001",
     type: "spot",
     soort: "bevrachting",
     status: "in_onderhandeling",
@@ -56,6 +95,7 @@ export const mockContracten: Contract[] = [
     relatieId: "rel-002",
     contactPersoonId: "cp-003",
     eigenaarId: "usr-002",
+    ladingSoortId: "ls-004",
     type: "contract",
     soort: "bevrachting",
     status: "gewonnen",
@@ -76,6 +116,7 @@ export const mockContracten: Contract[] = [
     relatieId: "rel-003",
     contactPersoonId: "cp-004",
     eigenaarId: "usr-001",
+    ladingSoortId: "ls-005",
     type: "contract",
     soort: "bevrachting",
     status: "in_onderhandeling",
@@ -96,6 +137,7 @@ export const mockContracten: Contract[] = [
     relatieId: "rel-004",
     contactPersoonId: "cp-007",
     eigenaarId: "usr-003",
+    ladingSoortId: "ls-002",
     type: "spot",
     soort: "bevrachting",
     status: "gewonnen",
@@ -135,6 +177,7 @@ export const mockContracten: Contract[] = [
     relatieId: "rel-010",
     contactPersoonId: "cp-014",
     eigenaarId: "usr-001",
+    ladingSoortId: "ls-007",
     type: "spot",
     soort: "inspectie_goederen",
     status: "aandacht_nodig",
@@ -188,6 +231,7 @@ export const mockContracten: Contract[] = [
     relatieId: "rel-008",
     contactPersoonId: "cp-013",
     eigenaarId: "usr-002",
+    ladingSoortId: "ls-006",
     type: "spot",
     soort: "bevrachting",
     status: "verloren",
@@ -224,6 +268,7 @@ export const mockContracten: Contract[] = [
     relatieId: "rel-006",
     contactPersoonId: "cp-010",
     eigenaarId: "usr-001",
+    ladingSoortId: "ls-002",
     type: "spot",
     soort: "bevrachting",
     status: "aandacht_nodig",

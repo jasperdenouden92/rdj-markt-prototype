@@ -9,8 +9,9 @@ import ActivityFeed from "../components/ActivityFeed";
 import RelatieDetailSidebar from "../components/RelatieDetailSidebar";
 import RelatieOverzichtTab from "../components/RelatieOverzichtTab";
 import RelatieFormDialog from "../components/RelatieFormDialog";
-import { mockRelaties, mockContactPersonen, mockRelatieLadingen, mockRelatieVaartuigen, VAARTUIG_STATUS_MAP } from "../data/mock-relatie-data";
+import { mockRelaties, mockContactPersonen, mockRelatieLadingen, mockRelatieVaartuigen, mockMailConversaties, VAARTUIG_STATUS_MAP } from "../data/mock-relatie-data";
 import { mockContracten, CONTRACT_STATUS_LABELS, CONTRACT_STATUS_VARIANT_MAP } from "../data/mock-contract-data";
+import MailConversaties from "../components/MailConversaties";
 import type { Relatie } from "../data/api";
 
 const statusVariantMap: Record<string, "success" | "grey" | "brand"> = {
@@ -48,7 +49,7 @@ const chevronSvg = (
 export default function RelatieDetail() {
   const { id } = useParams();
   const navigate = useNavigate();
-  const [activeTab, setActiveTab] = useState<"overzicht" | "ladingen" | "vaartuigen" | "spot" | "contracten" | "activiteit">("overzicht");
+  const [activeTab, setActiveTab] = useState<"overzicht" | "ladingen" | "vaartuigen" | "spot" | "contracten" | "mail" | "activiteit">("overzicht");
   const [showEditDialog, setShowEditDialog] = useState(false);
   const [relaties, setRelaties] = useState<Relatie[]>(mockRelaties);
 
@@ -71,6 +72,10 @@ export default function RelatieDetail() {
   );
   const relatieVaartuigen = useMemo(
     () => mockRelatieVaartuigen.filter((v) => v.relatieId === id),
+    [id]
+  );
+  const relatieMail = useMemo(
+    () => mockMailConversaties.filter((m) => m.relatieId === id),
     [id]
   );
 
@@ -142,6 +147,7 @@ export default function RelatieDetail() {
     { label: "Vaartuigen", path: "#vaartuigen", isActive: activeTab === "vaartuigen", badge: String(relatieVaartuigen.length) },
     { label: "Spot", path: "#spot", isActive: activeTab === "spot", badge: String(relatieSpot.length) },
     { label: "Contracten", path: "#contracten", isActive: activeTab === "contracten", badge: String(relatieContracten.length) },
+    { label: "Mail", path: "#mail", isActive: activeTab === "mail", badge: String(relatieMail.length) },
     { label: "Activiteit", path: "#activiteit", isActive: activeTab === "activiteit" },
   ];
 
@@ -316,42 +322,47 @@ export default function RelatieDetail() {
                             </p>
                           </div>
                         ) : (
-                          <div className="flex flex-col gap-[16px]">
-                            {relatieSpot.map((c) => (
-                              <div
-                                key={c.id}
-                                className="border border-rdj-border-secondary rounded-[8px] p-[16px] hover:bg-[#f9fafb] cursor-pointer transition-colors"
-                                onClick={() => navigate(`/crm/deal/${c.id}`)}
-                              >
-                                <div className="flex items-center justify-between mb-[8px]">
-                                  <div className="flex items-center gap-[8px]">
-                                    <p className="font-sans font-bold text-[14px] text-rdj-text-primary">{c.titel}</p>
-                                    <Badge
-                                      label={CONTRACT_STATUS_LABELS[c.status] || "—"}
-                                      variant={(CONTRACT_STATUS_VARIANT_MAP[c.status] || "grey") as "success" | "warning" | "error" | "brand" | "grey"}
-                                      dot
-                                    />
-                                  </div>
-                                  <p className="font-sans font-bold text-[14px] text-rdj-text-primary">
-                                    {c.waarde ? new Intl.NumberFormat("nl-NL", { style: "currency", currency: "EUR", maximumFractionDigits: 0 }).format(c.waarde) : "—"}
-                                  </p>
-                                </div>
-                                <p className="font-sans font-normal text-[13px] text-rdj-text-secondary">
-                                  {[c.laadhavenNaam, c.loshavenNaam].filter(Boolean).join(" → ")}
-                                  {c.tonnage ? ` · ${c.tonnage.toLocaleString("nl-NL")} ton` : ""}
-                                </p>
-                                {/* Markt link */}
-                                <div className="mt-[10px] pt-[10px] border-t border-rdj-border-secondary">
-                                  <Link
-                                    to="/markt/pijplijn"
-                                    onClick={(e) => e.stopPropagation()}
-                                    className="font-sans font-bold text-[12px] text-rdj-text-brand hover:underline"
+                          <div className="border border-rdj-border-secondary rounded-[8px] overflow-hidden">
+                            <table className="w-full">
+                              <thead>
+                                <tr className="border-b border-rdj-border-secondary bg-[#f9fafb]">
+                                  <th className="text-left px-[12px] py-[8px] font-sans font-bold text-[12px] text-rdj-text-secondary">Titel</th>
+                                  <th className="text-left px-[12px] py-[8px] font-sans font-bold text-[12px] text-rdj-text-secondary">Route</th>
+                                  <th className="text-left px-[12px] py-[8px] font-sans font-bold text-[12px] text-rdj-text-secondary">Tonnage</th>
+                                  <th className="text-left px-[12px] py-[8px] font-sans font-bold text-[12px] text-rdj-text-secondary">Status</th>
+                                  <th className="text-right px-[12px] py-[8px] font-sans font-bold text-[12px] text-rdj-text-secondary">Waarde</th>
+                                </tr>
+                              </thead>
+                              <tbody>
+                                {relatieSpot.map((c) => (
+                                  <tr
+                                    key={c.id}
+                                    className="border-b border-rdj-border-secondary last:border-b-0 hover:bg-[#f9fafb] cursor-pointer transition-colors"
+                                    onClick={() => navigate(`/crm/deal/${c.id}`)}
                                   >
-                                    Bekijk in Markt →
-                                  </Link>
-                                </div>
-                              </div>
-                            ))}
+                                    <td className="px-[12px] py-[10px]">
+                                      <p className="font-sans font-bold text-[14px] text-rdj-text-primary">{c.titel}</p>
+                                    </td>
+                                    <td className="px-[12px] py-[10px] font-sans font-normal text-[14px] text-rdj-text-primary">
+                                      {[c.laadhavenNaam, c.loshavenNaam].filter(Boolean).join(" → ") || "—"}
+                                    </td>
+                                    <td className="px-[12px] py-[10px] font-sans font-normal text-[14px] text-rdj-text-primary">
+                                      {c.tonnage ? `${c.tonnage.toLocaleString("nl-NL")} ton` : "—"}
+                                    </td>
+                                    <td className="px-[12px] py-[10px]">
+                                      <Badge
+                                        label={CONTRACT_STATUS_LABELS[c.status] || "—"}
+                                        variant={(CONTRACT_STATUS_VARIANT_MAP[c.status] || "grey") as "success" | "warning" | "error" | "brand" | "grey"}
+                                        dot
+                                      />
+                                    </td>
+                                    <td className="px-[12px] py-[10px] font-sans font-normal text-[14px] text-rdj-text-primary text-right">
+                                      {c.waarde ? new Intl.NumberFormat("nl-NL", { style: "currency", currency: "EUR", maximumFractionDigits: 0 }).format(c.waarde) : "—"}
+                                    </td>
+                                  </tr>
+                                ))}
+                              </tbody>
+                            </table>
                           </div>
                         )}
                       </div>
@@ -409,6 +420,10 @@ export default function RelatieDetail() {
                           </div>
                         )}
                       </div>
+                    )}
+
+                    {activeTab === "mail" && (
+                      <MailConversaties conversaties={relatieMail} />
                     )}
 
                     {activeTab === "activiteit" && (

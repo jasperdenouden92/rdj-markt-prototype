@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useRef, useEffect } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "./ui/dialog";
 import { Input } from "./ui/input";
 import { Label } from "./ui/label";
@@ -6,7 +6,7 @@ import { Textarea } from "./ui/textarea";
 import Button from "./Button";
 import type { Contract, ContractRoute, ContractType, ContractSoort, ContractStatus } from "../data/api";
 import { mockRelaties, mockContactPersonen, mockGebruikers } from "../data/mock-relatie-data";
-import { CONTRACT_SOORT_LABELS, CONTRACT_STATUS_LABELS, VERLOREN_REDENEN } from "../data/mock-contract-data";
+import { CONTRACT_SOORT_LABELS, CONTRACT_STATUS_LABELS, VERLOREN_REDENEN, mockLadingSoorten } from "../data/mock-contract-data";
 
 interface ContractFormDialogProps {
   contract?: Contract;
@@ -23,6 +23,16 @@ export default function ContractFormDialog({ contract, onSave, onClose }: Contra
   const [relatieId, setRelatieId] = useState(contract?.relatieId || "");
   const [contactPersoonId, setContactPersoonId] = useState(contract?.contactPersoonId || "");
   const [eigenaarId, setEigenaarId] = useState(contract?.eigenaarId || "");
+  const [ladingSoortId, setLadingSoortId] = useState(contract?.ladingSoortId || "");
+  const [ladingSoortSearch, setLadingSoortSearch] = useState(() => {
+    if (contract?.ladingSoortId) {
+      const found = mockLadingSoorten.find((ls) => ls.id === contract.ladingSoortId);
+      return found?.naam || "";
+    }
+    return "";
+  });
+  const [ladingSoortOpen, setLadingSoortOpen] = useState(false);
+  const ladingSoortRef = useRef<HTMLDivElement>(null);
   const [type, setType] = useState<ContractType>(contract?.type || "spot");
   const [soort, setSoort] = useState<ContractSoort>(contract?.soort || "bevrachting");
   const [status, setStatus] = useState<ContractStatus>(contract?.status || "aandacht_nodig");
@@ -47,6 +57,43 @@ export default function ContractFormDialog({ contract, onSave, onClose }: Contra
     () => mockContactPersonen.filter((cp) => cp.relatieId === relatieId),
     [relatieId]
   );
+
+  const filteredLadingSoorten = useMemo(() => {
+    const q = ladingSoortSearch.trim().toLowerCase();
+    if (!q) return mockLadingSoorten;
+    return mockLadingSoorten.filter((ls) => ls.naam.toLowerCase().includes(q));
+  }, [ladingSoortSearch]);
+
+  const showCreateOption = useMemo(() => {
+    const q = ladingSoortSearch.trim().toLowerCase();
+    if (!q) return false;
+    return !mockLadingSoorten.some((ls) => ls.naam.toLowerCase() === q);
+  }, [ladingSoortSearch]);
+
+  // Close dropdown on outside click
+  useEffect(() => {
+    function handleClickOutside(e: MouseEvent) {
+      if (ladingSoortRef.current && !ladingSoortRef.current.contains(e.target as Node)) {
+        setLadingSoortOpen(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  const selectLadingSoort = (id: string, naam: string) => {
+    setLadingSoortId(id);
+    setLadingSoortSearch(naam);
+    setLadingSoortOpen(false);
+  };
+
+  const createLadingSoort = () => {
+    const naam = ladingSoortSearch.trim();
+    if (!naam) return;
+    const newId = `ls-new-${Date.now()}`;
+    mockLadingSoorten.push({ id: newId, naam, soortelijkGewicht: 0, subsoortIds: [] });
+    selectLadingSoort(newId, naam);
+  };
 
   const addRoute = () => {
     setRoutes((prev) => [
@@ -74,6 +121,7 @@ export default function ContractFormDialog({ contract, onSave, onClose }: Contra
       relatieId: relatieId || undefined,
       contactPersoonId: contactPersoonId || undefined,
       eigenaarId: eigenaarId || undefined,
+      ladingSoortId: ladingSoortId || undefined,
       type,
       soort,
       status,
@@ -160,6 +208,59 @@ export default function ContractFormDialog({ contract, onSave, onClose }: Contra
                   <option key={cp.id} value={cp.id}>{cp.naam}{cp.functie ? ` — ${cp.functie}` : ""}</option>
                 ))}
               </select>
+            </div>
+          </div>
+
+          {/* Ladingsoort */}
+          <div className="flex flex-col gap-[6px]">
+            <Label htmlFor="ctr-ladingsoort" className="font-sans font-bold text-[14px] text-[#344054]">Ladingsoort</Label>
+            <div className="relative" ref={ladingSoortRef}>
+              <Input
+                id="ctr-ladingsoort"
+                value={ladingSoortSearch}
+                onChange={(e) => {
+                  setLadingSoortSearch(e.target.value);
+                  setLadingSoortId("");
+                  setLadingSoortOpen(true);
+                }}
+                onFocus={() => setLadingSoortOpen(true)}
+                placeholder="Zoek of typ een ladingsoort..."
+                autoComplete="off"
+              />
+              {ladingSoortId && (
+                <button
+                  type="button"
+                  onClick={() => { setLadingSoortId(""); setLadingSoortSearch(""); }}
+                  className="absolute right-[8px] top-1/2 -translate-y-1/2 p-[2px] text-rdj-text-tertiary hover:text-rdj-text-primary"
+                >
+                  <svg className="size-[14px]" fill="none" viewBox="0 0 16 16">
+                    <path d="M12 4L4 12M4 4L12 12" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" />
+                  </svg>
+                </button>
+              )}
+              {ladingSoortOpen && (filteredLadingSoorten.length > 0 || showCreateOption) && (
+                <div className="absolute z-50 top-full left-0 right-0 mt-[4px] bg-white border border-rdj-border-primary rounded-[6px] shadow-lg max-h-[200px] overflow-y-auto">
+                  {filteredLadingSoorten.map((ls) => (
+                    <button
+                      key={ls.id}
+                      type="button"
+                      onClick={() => selectLadingSoort(ls.id, ls.naam)}
+                      className={`w-full text-left px-[12px] py-[8px] font-sans text-[14px] hover:bg-[#f9fafb] transition-colors ${ls.id === ladingSoortId ? "bg-[#f0f7ff] text-rdj-text-brand font-bold" : "text-rdj-text-primary"}`}
+                    >
+                      {ls.naam}
+                    </button>
+                  ))}
+                  {showCreateOption && (
+                    <button
+                      type="button"
+                      onClick={createLadingSoort}
+                      className="w-full text-left px-[12px] py-[8px] font-sans text-[14px] text-rdj-text-brand font-bold hover:bg-[#f0f7ff] transition-colors border-t border-rdj-border-secondary"
+                    >
+                      + "{ladingSoortSearch.trim()}" toevoegen als nieuwe ladingsoort
+                    </button>
+                  )}
+                </div>
+              )}
             </div>
           </div>
 
@@ -285,27 +386,64 @@ export default function ContractFormDialog({ contract, onSave, onClose }: Contra
                 {routes.length === 0 && (
                   <p className="font-sans font-normal text-[13px] text-rdj-text-tertiary">Nog geen routes toegevoegd.</p>
                 )}
-                {routes.map((route) => (
-                  <div key={route.id} className="grid grid-cols-[1fr_1fr_auto] gap-[8px] items-end">
-                    <Input
-                      value={route.laadhavenNaam}
-                      onChange={(e) => updateRoute(route.id, "laadhavenNaam", e.target.value)}
-                      placeholder="Laadhaven"
-                    />
-                    <Input
-                      value={route.loshavenNaam}
-                      onChange={(e) => updateRoute(route.id, "loshavenNaam", e.target.value)}
-                      placeholder="Loshaven"
-                    />
-                    <button
-                      type="button"
-                      onClick={() => removeRoute(route.id)}
-                      className="p-[8px] text-rdj-text-tertiary hover:text-[#b42318] transition-colors"
-                    >
-                      <svg className="size-[16px]" fill="none" viewBox="0 0 16 16">
-                        <path d="M12 4L4 12M4 4L12 12" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" />
-                      </svg>
-                    </button>
+                {routes.map((route, idx) => (
+                  <div key={route.id} className="border border-rdj-border-secondary rounded-[8px] p-[12px] flex flex-col gap-[10px]">
+                    <div className="flex items-center justify-between">
+                      <p className="font-sans font-bold text-[13px] text-rdj-text-secondary">Route {idx + 1}</p>
+                      <button
+                        type="button"
+                        onClick={() => removeRoute(route.id)}
+                        className="p-[4px] text-rdj-text-tertiary hover:text-[#b42318] transition-colors"
+                      >
+                        <svg className="size-[16px]" fill="none" viewBox="0 0 16 16">
+                          <path d="M12 4L4 12M4 4L12 12" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" />
+                        </svg>
+                      </button>
+                    </div>
+                    <div className="flex items-end gap-[8px]">
+                      <div className="flex-1 flex flex-col gap-[4px]">
+                        <Label className="font-sans font-normal text-[12px] text-rdj-text-secondary">Laadhaven</Label>
+                        <Input
+                          value={route.laadhavenNaam}
+                          onChange={(e) => updateRoute(route.id, "laadhavenNaam", e.target.value)}
+                          placeholder="Bijv. Rotterdam"
+                        />
+                      </div>
+                      <div className="shrink-0 pb-[10px]">
+                        <svg className="size-[16px] text-rdj-text-tertiary" fill="none" viewBox="0 0 16 16">
+                          <path d="M3 8h10M10 5l3 3-3 3" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" />
+                        </svg>
+                      </div>
+                      <div className="flex-1 flex flex-col gap-[4px]">
+                        <Label className="font-sans font-normal text-[12px] text-rdj-text-secondary">Loshaven</Label>
+                        <Input
+                          value={route.loshavenNaam}
+                          onChange={(e) => updateRoute(route.id, "loshavenNaam", e.target.value)}
+                          placeholder="Bijv. Duisburg"
+                        />
+                      </div>
+                    </div>
+                    <div className="grid grid-cols-2 gap-[8px]">
+                      <div className="flex flex-col gap-[4px]">
+                        <Label className="font-sans font-normal text-[12px] text-rdj-text-secondary">Tonnage <span className="text-rdj-text-tertiary">(optioneel)</span></Label>
+                        <Input
+                          type="number"
+                          value={route.tonnage?.toString() || ""}
+                          onChange={(e) => updateRoute(route.id, "tonnage", e.target.value ? parseFloat(e.target.value) : "")}
+                          placeholder="0"
+                        />
+                      </div>
+                      <div className="flex flex-col gap-[4px]">
+                        <Label className="font-sans font-normal text-[12px] text-rdj-text-secondary">Vrachtprijs <span className="text-rdj-text-tertiary">(optioneel)</span></Label>
+                        <Input
+                          type="number"
+                          step="0.01"
+                          value={route.vrachtprijs?.toString() || ""}
+                          onChange={(e) => updateRoute(route.id, "vrachtprijs", e.target.value ? parseFloat(e.target.value) : "")}
+                          placeholder="€/ton"
+                        />
+                      </div>
+                    </div>
                   </div>
                 ))}
               </div>

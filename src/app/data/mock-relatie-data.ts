@@ -269,6 +269,9 @@ export const mockRelatieCounts: Record<string, { ladingen: number; vaartuigen: n
 export interface RelatieLading {
   id: string;
   relatieId: string;
+  contractId?: string;
+  ladingSoortId?: string;
+  subsoortId?: string;
   titel: string;
   laadhaven: string;
   loshaven: string;
@@ -278,22 +281,40 @@ export interface RelatieLading {
   status: "intake" | "werklijst" | "markt" | "gesloten";
   matches: number;
   onderhandelingen: number;
+  // Step 1 extra fields
+  contactPersoonId?: string;
+  soortelijkGewicht?: number;
+  bijzonderheidIds?: string[];
+  exType?: "zeeboot" | "opslag" | "vloot";
+  exNaam?: string;
+  controleOrganisatie?: string;
+  notitie?: string;
+  // Step 2 extra fields
+  laadterminal?: string;
+  aankomst?: string;
+  startLaden?: string;
+  enkeleBestemming?: boolean;
+  losterminal?: string;
+  lostermijn?: string;
+  startLossen?: string;
+  eindeLossen?: string;
+  regie?: "flex" | "duwvaart" | "binnenvaart";
 }
 
 export const mockRelatieLadingen: RelatieLading[] = [
-  { id: "rl-001", relatieId: "rel-001", titel: "Houtpellets Salzgitter", laadhaven: "Salzgitter Stichkanal", loshaven: "Hamburg Veddelkanal", tonnage: "2.000 ton", product: "Houtpellets (DSIT)", laaddatum: "2026-03-14", status: "markt", matches: 5, onderhandelingen: 2 },
-  { id: "rl-002", relatieId: "rel-001", titel: "Graan Rotterdam–Krefeld", laadhaven: "Rotterdam", loshaven: "Krefeld", tonnage: "3.500 ton", product: "Graan", laaddatum: "2026-03-18", status: "werklijst", matches: 3, onderhandelingen: 0 },
-  { id: "rl-003", relatieId: "rel-001", titel: "Meststoffen Amsterdam", laadhaven: "Amsterdam", loshaven: "Mannheim", tonnage: "4.000 ton", product: "Meststoffen", laaddatum: "2026-03-22", status: "intake", matches: 0, onderhandelingen: 0 },
-  { id: "rl-004", relatieId: "rel-002", titel: "Staal Dordrecht–Antwerpen", laadhaven: "Dordrecht", loshaven: "Antwerpen", tonnage: "3.000 ton", product: "Staal", laaddatum: "2026-03-15", status: "markt", matches: 4, onderhandelingen: 1 },
-  { id: "rl-005", relatieId: "rel-002", titel: "Staal Dordrecht–Gent", laadhaven: "Dordrecht", loshaven: "Gent", tonnage: "2.500 ton", product: "Staal", laaddatum: "2026-03-20", status: "werklijst", matches: 2, onderhandelingen: 0 },
-  { id: "rl-006", relatieId: "rel-003", titel: "Sojabonen Rotterdam", laadhaven: "Rotterdam Botlek", loshaven: "Basel", tonnage: "3.500 ton", product: "Sojabonen", laaddatum: "2026-03-16", status: "markt", matches: 6, onderhandelingen: 3 },
-  { id: "rl-007", relatieId: "rel-003", titel: "Graan Amsterdam–Strasbourg", laadhaven: "Amsterdam", loshaven: "Strasbourg", tonnage: "3.000 ton", product: "Graan", laaddatum: "2026-03-25", status: "intake", matches: 0, onderhandelingen: 0 },
-  { id: "rl-008", relatieId: "rel-004", titel: "Zand Barendrecht", laadhaven: "Barendrecht", loshaven: "Rotterdam Europoort", tonnage: "1.800 ton", product: "Zand", laaddatum: "2026-03-14", status: "gesloten", matches: 0, onderhandelingen: 0 },
-  { id: "rl-009", relatieId: "rel-005", titel: "Containers Rotterdam–Antwerpen", laadhaven: "Rotterdam", loshaven: "Antwerpen", tonnage: "2.000 ton", product: "Containers", laaddatum: "2026-03-19", status: "markt", matches: 3, onderhandelingen: 1 },
-  { id: "rl-010", relatieId: "rel-007", titel: "Grind Papendrecht", laadhaven: "Papendrecht", loshaven: "Rotterdam", tonnage: "3.000 ton", product: "Grind", laaddatum: "2026-03-17", status: "werklijst", matches: 2, onderhandelingen: 0 },
-  { id: "rl-011", relatieId: "rel-008", titel: "Kolen Maastricht–Luik", laadhaven: "Maastricht", loshaven: "Luik", tonnage: "2.200 ton", product: "Kolen", laaddatum: "2026-03-12", status: "gesloten", matches: 0, onderhandelingen: 0 },
-  { id: "rl-012", relatieId: "rel-010", titel: "Sojabonen inspectie Botlek", laadhaven: "Rotterdam Botlek", loshaven: "Rotterdam Botlek", tonnage: "5.000 ton", product: "Sojabonen", laaddatum: "2026-03-21", status: "intake", matches: 0, onderhandelingen: 0 },
-  { id: "rl-013", relatieId: "rel-012", titel: "Containers Rotterdam–Duisburg", laadhaven: "Rotterdam", loshaven: "Duisburg", tonnage: "2.000 ton", product: "Containers", laaddatum: "2026-03-23", status: "markt", matches: 4, onderhandelingen: 2 },
+  { id: "rl-001", relatieId: "rel-001", ladingSoortId: "ls-003", titel: "Houtpellets Salzgitter", laadhaven: "Salzgitter Stichkanal", loshaven: "Hamburg Veddelkanal", tonnage: "2.000 ton", product: "Houtpellets (DSIT)", laaddatum: "2026-03-14", status: "markt", matches: 5, onderhandelingen: 2 },
+  { id: "rl-002", relatieId: "rel-001", contractId: "ctr-001", ladingSoortId: "ls-001", titel: "Graan Rotterdam–Krefeld", laadhaven: "Rotterdam", loshaven: "Krefeld", tonnage: "3.500 ton", product: "Graan", laaddatum: "2026-03-18", status: "werklijst", matches: 3, onderhandelingen: 0 },
+  { id: "rl-003", relatieId: "rel-001", ladingSoortId: "ls-005", titel: "Meststoffen Amsterdam", laadhaven: "Amsterdam", loshaven: "Mannheim", tonnage: "4.000 ton", product: "Meststoffen", laaddatum: "2026-03-22", status: "intake", matches: 0, onderhandelingen: 0 },
+  { id: "rl-004", relatieId: "rel-002", contractId: "ctr-002", ladingSoortId: "ls-004", titel: "Staal Dordrecht–Antwerpen", laadhaven: "Dordrecht", loshaven: "Antwerpen", tonnage: "3.000 ton", product: "Staal", laaddatum: "2026-03-15", status: "markt", matches: 4, onderhandelingen: 1 },
+  { id: "rl-005", relatieId: "rel-002", ladingSoortId: "ls-004", titel: "Staal Dordrecht–Gent", laadhaven: "Dordrecht", loshaven: "Gent", tonnage: "2.500 ton", product: "Staal", laaddatum: "2026-03-20", status: "werklijst", matches: 2, onderhandelingen: 0 },
+  { id: "rl-006", relatieId: "rel-003", ladingSoortId: "ls-007", titel: "Sojabonen Rotterdam", laadhaven: "Rotterdam Botlek", loshaven: "Basel", tonnage: "3.500 ton", product: "Sojabonen", laaddatum: "2026-03-16", status: "markt", matches: 6, onderhandelingen: 3 },
+  { id: "rl-007", relatieId: "rel-003", ladingSoortId: "ls-001", titel: "Graan Amsterdam–Strasbourg", laadhaven: "Amsterdam", loshaven: "Strasbourg", tonnage: "3.000 ton", product: "Graan", laaddatum: "2026-03-25", status: "intake", matches: 0, onderhandelingen: 0 },
+  { id: "rl-008", relatieId: "rel-004", contractId: "ctr-004", ladingSoortId: "ls-002", titel: "Zand Barendrecht", laadhaven: "Barendrecht", loshaven: "Rotterdam Europoort", tonnage: "1.800 ton", product: "Zand", laaddatum: "2026-03-14", status: "gesloten", matches: 0, onderhandelingen: 0 },
+  { id: "rl-009", relatieId: "rel-005", ladingSoortId: "ls-008", titel: "Containers Rotterdam–Antwerpen", laadhaven: "Rotterdam", loshaven: "Antwerpen", tonnage: "2.000 ton", product: "Containers", laaddatum: "2026-03-19", status: "markt", matches: 3, onderhandelingen: 1 },
+  { id: "rl-010", relatieId: "rel-007", ladingSoortId: "ls-009", titel: "Grind Papendrecht", laadhaven: "Papendrecht", loshaven: "Rotterdam", tonnage: "3.000 ton", product: "Grind", laaddatum: "2026-03-17", status: "werklijst", matches: 2, onderhandelingen: 0 },
+  { id: "rl-011", relatieId: "rel-008", contractId: "ctr-009", ladingSoortId: "ls-006", titel: "Kolen Maastricht–Luik", laadhaven: "Maastricht", loshaven: "Luik", tonnage: "2.200 ton", product: "Kolen", laaddatum: "2026-03-12", status: "gesloten", matches: 0, onderhandelingen: 0 },
+  { id: "rl-012", relatieId: "rel-010", contractId: "ctr-006", ladingSoortId: "ls-007", titel: "Sojabonen inspectie Botlek", laadhaven: "Rotterdam Botlek", loshaven: "Rotterdam Botlek", tonnage: "5.000 ton", product: "Sojabonen", laaddatum: "2026-03-21", status: "intake", matches: 0, onderhandelingen: 0 },
+  { id: "rl-013", relatieId: "rel-012", ladingSoortId: "ls-008", titel: "Containers Rotterdam–Duisburg", laadhaven: "Rotterdam", loshaven: "Duisburg", tonnage: "2.000 ton", product: "Containers", laaddatum: "2026-03-23", status: "markt", matches: 4, onderhandelingen: 2 },
 ];
 
 /** Mock vaartuigen per relatie */
@@ -401,4 +422,109 @@ export const mockGebruikers = [
   { id: "usr-001", naam: "Erick Nieuwkoop", profielfoto: "" },
   { id: "usr-002", naam: "Khoa Nguyen", profielfoto: "" },
   { id: "usr-003", naam: "Michiel den Hond", profielfoto: "" },
+];
+
+/** Mail conversaties — gekoppeld via Outlook plugin aan relaties en/of deals */
+export interface MailConversatie {
+  id: string;
+  relatieId: string;
+  contractId?: string;
+  onderwerp: string;
+  van: { naam: string; email: string };
+  aan: { naam: string; email: string }[];
+  berichten: MailBericht[];
+  laatsteDatum: string;
+  gelezen: boolean;
+}
+
+export interface MailBericht {
+  id: string;
+  van: { naam: string; email: string };
+  datum: string;
+  inhoud: string;
+  bijlagen?: { naam: string; grootte: string }[];
+}
+
+export const mockMailConversaties: MailConversatie[] = [
+  {
+    id: "mail-001",
+    relatieId: "rel-001",
+    contractId: "ctr-001",
+    onderwerp: "Re: Offerte graan transport Rotterdam–Krefeld Q2",
+    van: { naam: "Jan de Vries", email: "j.devries@provaart.nl" },
+    aan: [{ naam: "Erick Nieuwkoop", email: "e.nieuwkoop@rdj.nl" }],
+    berichten: [
+      { id: "mb-001a", van: { naam: "Erick Nieuwkoop", email: "e.nieuwkoop@rdj.nl" }, datum: "2026-03-10T09:15:00", inhoud: "Beste Jan,\n\nHierbij onze offerte voor het graan transport Rotterdam–Krefeld voor Q2. We kunnen 3.500 ton per reis doen tegen het eerder besproken tarief.\n\nLaat me weten of de voorwaarden akkoord zijn.\n\nMet vriendelijke groet,\nErick" },
+      { id: "mb-001b", van: { naam: "Jan de Vries", email: "j.devries@provaart.nl" }, datum: "2026-03-10T14:32:00", inhoud: "Hoi Erick,\n\nBedankt voor de offerte. Het tarief is akkoord, maar we willen graag de laadtijd verlengen van 12 naar 24 uur i.v.m. de kraanbeschikbaarheid bij terminal 3.\n\nKun je dat aanpassen?\n\nGroet,\nJan" },
+      { id: "mb-001c", van: { naam: "Erick Nieuwkoop", email: "e.nieuwkoop@rdj.nl" }, datum: "2026-03-11T08:45:00", inhoud: "Jan,\n\n24 uur laadtijd is geen probleem. Ik pas de offerte aan en stuur een herziene versie.\n\nGr. Erick" },
+    ],
+    laatsteDatum: "2026-03-11T08:45:00",
+    gelezen: true,
+  },
+  {
+    id: "mail-002",
+    relatieId: "rel-001",
+    onderwerp: "Planning houtpellets Salzgitter – maart",
+    van: { naam: "Lisa Aelbrechtse", email: "l.aelbrechtse@provaart.nl" },
+    aan: [{ naam: "Khoa Nguyen", email: "k.nguyen@rdj.nl" }],
+    berichten: [
+      { id: "mb-002a", van: { naam: "Lisa Aelbrechtse", email: "l.aelbrechtse@provaart.nl" }, datum: "2026-03-08T11:20:00", inhoud: "Beste Khoa,\n\nKunnen jullie de houtpellets partij van 2.000 ton naar Salzgitter inplannen voor week 12? De terminal heeft aangegeven dat ze vanaf dinsdag beschikbaar zijn.\n\nGroet,\nLisa", bijlagen: [{ naam: "Terminal_beschikbaarheid_mrt.pdf", grootte: "245 KB" }] },
+      { id: "mb-002b", van: { naam: "Khoa Nguyen", email: "k.nguyen@rdj.nl" }, datum: "2026-03-08T15:05:00", inhoud: "Hoi Lisa,\n\nWeek 12 kan, we hebben de Emily beschikbaar die dan net in de buurt is. Ik plan het in en stuur je een bevestiging.\n\nMvg,\nKhoa" },
+    ],
+    laatsteDatum: "2026-03-08T15:05:00",
+    gelezen: true,
+  },
+  {
+    id: "mail-003",
+    relatieId: "rel-001",
+    onderwerp: "Factuur #2026-0847 – betaling ontvangen",
+    van: { naam: "Administratie Provaart", email: "admin@provaart.nl" },
+    aan: [{ naam: "Erick Nieuwkoop", email: "e.nieuwkoop@rdj.nl" }],
+    berichten: [
+      { id: "mb-003a", van: { naam: "Administratie Provaart", email: "admin@provaart.nl" }, datum: "2026-03-07T09:00:00", inhoud: "Geachte heer Nieuwkoop,\n\nHierbij bevestigen wij de ontvangst van de betaling voor factuur #2026-0847 (€ 45.500,00).\n\nMet vriendelijke groet,\nAdministratie Provaart Logistics BV" },
+    ],
+    laatsteDatum: "2026-03-07T09:00:00",
+    gelezen: false,
+  },
+  {
+    id: "mail-004",
+    relatieId: "rel-002",
+    contractId: "ctr-002",
+    onderwerp: "Re: Staal transport Dordrecht–Antwerpen – laadschema",
+    van: { naam: "Pieter Jansen", email: "p.jansen@janlow.nl" },
+    aan: [{ naam: "Erick Nieuwkoop", email: "e.nieuwkoop@rdj.nl" }],
+    berichten: [
+      { id: "mb-004a", van: { naam: "Erick Nieuwkoop", email: "e.nieuwkoop@rdj.nl" }, datum: "2026-03-09T10:00:00", inhoud: "Pieter,\n\nHierbij het laadschema voor de staalpartij volgende week. We laden op dinsdag en woensdag, elke dag 1.500 ton.\n\nGraag jullie bevestiging.\n\nGr. Erick", bijlagen: [{ naam: "Laadschema_staal_wk12.xlsx", grootte: "89 KB" }] },
+      { id: "mb-004b", van: { naam: "Pieter Jansen", email: "p.jansen@janlow.nl" }, datum: "2026-03-09T16:45:00", inhoud: "Erick,\n\nSchema is akkoord. Onze kraanmachinist is beide dagen beschikbaar. Wel graag uiterlijk 07:00 aanmelden bij de poort.\n\nPieter" },
+    ],
+    laatsteDatum: "2026-03-09T16:45:00",
+    gelezen: true,
+  },
+  {
+    id: "mail-005",
+    relatieId: "rel-003",
+    onderwerp: "Nieuwe mogelijkheid: sojabonen Basel – Q2",
+    van: { naam: "Sophie van Dam", email: "s.vandam@cargill.com" },
+    aan: [{ naam: "Michiel den Hond", email: "m.denhond@rdj.nl" }],
+    berichten: [
+      { id: "mb-005a", van: { naam: "Sophie van Dam", email: "s.vandam@cargill.com" }, datum: "2026-03-06T13:30:00", inhoud: "Beste Michiel,\n\nWe hebben voor Q2 een extra partij sojabonen van 3.500 ton die naar Basel moet. Kunnen jullie hiervoor een offerte uitbrengen?\n\nGraag inclusief de optie voor inspectie onderweg.\n\nMvg,\nSophie" },
+      { id: "mb-005b", van: { naam: "Michiel den Hond", email: "m.denhond@rdj.nl" }, datum: "2026-03-07T09:15:00", inhoud: "Sophie,\n\nDank voor de aanvraag. Ik werk een offerte uit en heb die uiterlijk vrijdag bij je. De inspectie-optie nemen we mee.\n\nGr. Michiel" },
+      { id: "mb-005c", van: { naam: "Sophie van Dam", email: "s.vandam@cargill.com" }, datum: "2026-03-07T10:02:00", inhoud: "Prima, ik kijk ernaar uit.\n\nSophie" },
+    ],
+    laatsteDatum: "2026-03-07T10:02:00",
+    gelezen: false,
+  },
+  {
+    id: "mail-006",
+    relatieId: "rel-002",
+    onderwerp: "Beschadiging lading staal – melding",
+    van: { naam: "Pieter Jansen", email: "p.jansen@janlow.nl" },
+    aan: [{ naam: "Erick Nieuwkoop", email: "e.nieuwkoop@rdj.nl" }, { naam: "Khoa Nguyen", email: "k.nguyen@rdj.nl" }],
+    berichten: [
+      { id: "mb-006a", van: { naam: "Pieter Jansen", email: "p.jansen@janlow.nl" }, datum: "2026-03-05T08:10:00", inhoud: "Erick, Khoa,\n\nBij het lossen in Antwerpen is geconstateerd dat een deel van de staalplaten lichte waterschade heeft. Het gaat om ca. 200 ton van de 3.000 ton partij.\n\nKunnen jullie dit melden bij de verzekeraar? Foto's bijgevoegd.\n\nPieter", bijlagen: [{ naam: "Schade_foto_1.jpg", grootte: "2.4 MB" }, { naam: "Schade_foto_2.jpg", grootte: "1.8 MB" }, { naam: "Schade_rapport.pdf", grootte: "520 KB" }] },
+      { id: "mb-006b", van: { naam: "Erick Nieuwkoop", email: "e.nieuwkoop@rdj.nl" }, datum: "2026-03-05T09:30:00", inhoud: "Pieter,\n\nVervelend om te horen. We nemen het direct op met de verzekeraar. Khoa gaat het rapport doornemen en komt bij je terug.\n\nErick" },
+    ],
+    laatsteDatum: "2026-03-05T09:30:00",
+    gelezen: true,
+  },
 ];

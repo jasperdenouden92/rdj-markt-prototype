@@ -7,8 +7,9 @@ import Badge from "../components/Badge";
 import Button from "../components/Button";
 import ActivityFeed from "../components/ActivityFeed";
 import ContractFormDialog from "../components/ContractFormDialog";
-import { mockRelaties, mockContactPersonen, mockGebruikers } from "../data/mock-relatie-data";
-import { mockContracten, CONTRACT_SOORT_LABELS, CONTRACT_STATUS_LABELS, CONTRACT_STATUS_VARIANT_MAP } from "../data/mock-contract-data";
+import { mockRelaties, mockContactPersonen, mockGebruikers, mockMailConversaties } from "../data/mock-relatie-data";
+import { mockContracten, mockLadingSoorten, CONTRACT_SOORT_LABELS, CONTRACT_STATUS_LABELS, CONTRACT_STATUS_VARIANT_MAP } from "../data/mock-contract-data";
+import MailConversaties from "../components/MailConversaties";
 import type { Contract } from "../data/api";
 
 function formatDate(dateStr?: string): string {
@@ -39,7 +40,7 @@ const chevronSvg = (
 
 export default function ContractDetail() {
   const { id } = useParams();
-  const [activeTab, setActiveTab] = useState<"overzicht" | "activiteit">("overzicht");
+  const [activeTab, setActiveTab] = useState<"overzicht" | "mail" | "activiteit">("overzicht");
   const [showEditDialog, setShowEditDialog] = useState(false);
   const [contracten, setContracten] = useState<Contract[]>(mockContracten);
 
@@ -47,6 +48,8 @@ export default function ContractDetail() {
   const relatie = useMemo(() => contract ? mockRelaties.find((r) => r.id === contract.relatieId) : undefined, [contract]);
   const contactPersoon = useMemo(() => contract?.contactPersoonId ? mockContactPersonen.find((cp) => cp.id === contract.contactPersoonId) : undefined, [contract]);
   const eigenaar = useMemo(() => contract?.eigenaarId ? mockGebruikers.find((g) => g.id === contract.eigenaarId) : undefined, [contract]);
+  const ladingSoort = useMemo(() => contract?.ladingSoortId ? mockLadingSoorten.find((ls) => ls.id === contract.ladingSoortId) : undefined, [contract]);
+  const dealMail = useMemo(() => mockMailConversaties.filter((m) => m.contractId === id), [id]);
 
   if (!contract) {
     return (
@@ -114,6 +117,7 @@ export default function ContractDetail() {
 
   const tabs: PageTab[] = [
     { label: "Overzicht", path: "#overzicht", isActive: activeTab === "overzicht" },
+    { label: "Mail", path: "#mail", isActive: activeTab === "mail", badge: dealMail.length > 0 ? String(dealMail.length) : undefined },
     { label: "Activiteit", path: "#activiteit", isActive: activeTab === "activiteit" },
   ];
 
@@ -162,39 +166,76 @@ export default function ContractDetail() {
                           </div>
                         )}
 
-                        {/* Route/condities */}
+                        {/* Lading & route card */}
                         {contract.type === "spot" && (
                           <div>
-                            <p className="font-sans font-bold text-[16px] leading-[24px] text-rdj-text-primary mb-[12px]">Route & condities</p>
-                            <div className="border border-rdj-border-secondary rounded-[8px] overflow-hidden">
-                              <table className="w-full">
-                                <tbody>
-                                  <tr className="border-b border-rdj-border-secondary">
-                                    <td className="px-[12px] py-[10px] font-sans font-bold text-[13px] text-rdj-text-secondary w-[160px]">Laadhaven</td>
-                                    <td className="px-[12px] py-[10px] font-sans font-normal text-[14px] text-rdj-text-primary">{contract.laadhavenNaam || "—"}</td>
-                                  </tr>
-                                  <tr className="border-b border-rdj-border-secondary">
-                                    <td className="px-[12px] py-[10px] font-sans font-bold text-[13px] text-rdj-text-secondary">Loshaven</td>
-                                    <td className="px-[12px] py-[10px] font-sans font-normal text-[14px] text-rdj-text-primary">{contract.loshavenNaam || "—"}</td>
-                                  </tr>
-                                  <tr className="border-b border-rdj-border-secondary">
-                                    <td className="px-[12px] py-[10px] font-sans font-bold text-[13px] text-rdj-text-secondary">Tonnage</td>
-                                    <td className="px-[12px] py-[10px] font-sans font-normal text-[14px] text-rdj-text-primary">{contract.tonnage ? `${contract.tonnage.toLocaleString("nl-NL")} ton` : "—"}</td>
-                                  </tr>
-                                  <tr className="border-b border-rdj-border-secondary">
-                                    <td className="px-[12px] py-[10px] font-sans font-bold text-[13px] text-rdj-text-secondary">Vrachtprijs</td>
-                                    <td className="px-[12px] py-[10px] font-sans font-normal text-[14px] text-rdj-text-primary">{contract.vrachtprijs ? `€ ${contract.vrachtprijs.toFixed(2)}/ton` : "—"}</td>
-                                  </tr>
-                                  <tr className="border-b border-rdj-border-secondary last:border-b-0">
-                                    <td className="px-[12px] py-[10px] font-sans font-bold text-[13px] text-rdj-text-secondary">Laaddatum</td>
-                                    <td className="px-[12px] py-[10px] font-sans font-normal text-[14px] text-rdj-text-primary">{formatDate(contract.laaddatum)}</td>
-                                  </tr>
-                                  <tr>
-                                    <td className="px-[12px] py-[10px] font-sans font-bold text-[13px] text-rdj-text-secondary">Losdatum</td>
-                                    <td className="px-[12px] py-[10px] font-sans font-normal text-[14px] text-rdj-text-primary">{formatDate(contract.losdatum)}</td>
-                                  </tr>
-                                </tbody>
-                              </table>
+                            <p className="font-sans font-bold text-[16px] leading-[24px] text-rdj-text-primary mb-[12px]">Lading & route</p>
+                            <div className="border border-rdj-border-secondary rounded-[8px] p-[16px]">
+                              {/* Titel + ladingsoort */}
+                              <p className="font-sans font-bold leading-[20px] text-rdj-text-primary text-[14px] mb-[2px]">
+                                {contract.titel}
+                              </p>
+                              {ladingSoort && (
+                                <p className="font-sans font-normal leading-[18px] text-rdj-text-secondary text-[12px] mb-[12px]">
+                                  {ladingSoort.naam}
+                                </p>
+                              )}
+                              {!ladingSoort && <div className="mb-[12px]" />}
+
+                              {/* Route met locatie dots */}
+                              <div className="space-y-[6px] mb-[10px]">
+                                <div className="flex items-center gap-[6px]">
+                                  <div className="shrink-0 w-[14px] flex items-center justify-center">
+                                    <div className="w-[6px] h-[6px] rounded-full border-[1.5px] border-[#667085]" />
+                                  </div>
+                                  <p className="font-sans font-normal leading-[18px] text-[#344054] text-[13px] flex-1 min-w-0">
+                                    {contract.laadhavenNaam || "—"}
+                                  </p>
+                                  <p className="font-sans font-normal leading-[18px] text-rdj-text-tertiary text-[12px] shrink-0">
+                                    {formatDate(contract.laaddatum)}
+                                  </p>
+                                </div>
+                                <div className="flex items-center gap-[6px]">
+                                  <div className="shrink-0 w-[14px] flex items-center justify-center">
+                                    <div className="w-[6px] h-[6px] rounded-full bg-[#667085]" />
+                                  </div>
+                                  <p className="font-sans font-normal leading-[18px] text-[#344054] text-[13px] flex-1 min-w-0">
+                                    {contract.loshavenNaam || "—"}
+                                  </p>
+                                  <p className="font-sans font-normal leading-[18px] text-rdj-text-tertiary text-[12px] shrink-0">
+                                    {formatDate(contract.losdatum)}
+                                  </p>
+                                </div>
+                              </div>
+
+                              {/* Tonnage */}
+                              {contract.tonnage && (
+                                <div className="flex items-center gap-[6px] mb-[2px]">
+                                  <div className="shrink-0 w-[14px] flex items-center justify-center">
+                                    <svg className="size-[12px]" fill="none" viewBox="0 0 12 12">
+                                      <path d="M6 1.5V3M3.75 4.5H8.25M2.625 10.5H9.375C9.75 10.5 10.125 10.125 10.125 9.75L8.625 4.5H3.375L1.875 9.75C1.875 10.125 2.25 10.5 2.625 10.5Z" stroke="#667085" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1" />
+                                    </svg>
+                                  </div>
+                                  <p className="font-sans font-normal leading-[18px] text-[#344054] text-[13px]">
+                                    {contract.tonnage.toLocaleString("nl-NL")} ton
+                                  </p>
+                                </div>
+                              )}
+
+                              {/* Vrachtprijs */}
+                              {contract.vrachtprijs && (
+                                <div className="flex items-center gap-[6px]">
+                                  <div className="shrink-0 w-[14px] flex items-center justify-center">
+                                    <svg className="size-[12px]" fill="none" viewBox="0 0 12 12">
+                                      <path d="M6 1V11M8.5 3H4.75C4.28587 3 3.84075 3.18437 3.51256 3.51256C3.18437 3.84075 3 4.28587 3 4.75C3 5.21413 3.18437 5.65925 3.51256 5.98744C3.84075 6.31563 4.28587 6.5 4.75 6.5H7.25C7.71413 6.5 8.15925 6.68437 8.48744 7.01256C8.81563 7.34075 9 7.78587 9 8.25C9 8.71413 8.81563 9.15925 8.48744 9.48744C8.15925 9.81563 7.71413 10 7.25 10H3" stroke="#667085" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1" />
+                                    </svg>
+                                  </div>
+                                  <p className="font-sans font-normal leading-[18px] text-[#344054] text-[13px]">
+                                    € {contract.vrachtprijs.toFixed(2)}/ton
+                                  </p>
+                                </div>
+                              )}
+
                             </div>
                           </div>
                         )}
@@ -260,6 +301,10 @@ export default function ContractDetail() {
                       </div>
                     )}
 
+                    {activeTab === "mail" && (
+                      <MailConversaties conversaties={dealMail} />
+                    )}
+
                     {activeTab === "activiteit" && (
                       <div className="w-full px-[24px]">
                         <ActivityFeed />
@@ -273,104 +318,97 @@ export default function ContractDetail() {
 
           {/* Sidebar */}
           <div className="w-[320px] shrink-0 border-l border-rdj-border-secondary bg-white">
-            <div className="p-[24px] flex flex-col gap-[24px]">
-              <div>
-                <p className="font-sans font-bold text-[16px] leading-[24px] text-rdj-text-primary mb-[16px]">Details</p>
-                <div className="flex flex-col gap-[12px]">
-                  <div>
-                    <p className="font-sans font-normal text-[12px] text-rdj-text-secondary uppercase tracking-[0.04em]">Eigenaar</p>
-                    {eigenaar ? (
-                      <div className="flex items-center gap-[8px] mt-[4px]">
-                        <div className="shrink-0 size-[28px] rounded-full bg-[#f2f4f7] flex items-center justify-center">
-                          <span className="font-sans font-bold text-[10px] text-rdj-text-secondary">{getInitials(eigenaar.naam)}</span>
-                        </div>
-                        <p className="font-sans font-bold text-[14px] text-rdj-text-primary">{eigenaar.naam}</p>
-                      </div>
-                    ) : (
-                      <p className="font-sans font-bold text-[14px] text-rdj-text-primary mt-[2px]">—</p>
-                    )}
-                  </div>
-                  <div>
-                    <p className="font-sans font-normal text-[12px] text-rdj-text-secondary uppercase tracking-[0.04em]">Deadline</p>
-                    {(() => {
-                      const deadline = contract.type === "spot" ? contract.laaddatum : contract.startDatum;
-                      const expired = isExpired(deadline);
-                      return (
-                        <p className={`font-sans font-bold text-[14px] mt-[2px] ${expired ? "text-[#F04438]" : "text-rdj-text-primary"}`}>
-                          {formatDate(deadline)}
-                        </p>
-                      );
-                    })()}
-                  </div>
-                  <div>
-                    <p className="font-sans font-normal text-[12px] text-rdj-text-secondary uppercase tracking-[0.04em]">Aangemaakt</p>
-                    <p className="font-sans font-bold text-[14px] text-rdj-text-primary mt-[2px]">{formatDate(contract.aanmaakDatum)}</p>
-                  </div>
-                  <div>
-                    <p className="font-sans font-normal text-[12px] text-rdj-text-secondary uppercase tracking-[0.04em]">Laatste update</p>
-                    <p className="font-sans font-bold text-[14px] text-rdj-text-primary mt-[2px]">{formatDate(contract.laatsteUpdate)}</p>
-                  </div>
-                  <div>
-                    <p className="font-sans font-normal text-[12px] text-rdj-text-secondary uppercase tracking-[0.04em]">Type</p>
-                    <p className="font-sans font-bold text-[14px] text-rdj-text-primary mt-[2px]">{contract.type === "contract" ? "Contract" : "Spot"}</p>
-                  </div>
-                  <div>
-                    <p className="font-sans font-normal text-[12px] text-rdj-text-secondary uppercase tracking-[0.04em]">Soort</p>
-                    <p className="font-sans font-bold text-[14px] text-rdj-text-primary mt-[2px]">{CONTRACT_SOORT_LABELS[contract.soort] || "—"}</p>
-                  </div>
-                  <div>
-                    <p className="font-sans font-normal text-[12px] text-rdj-text-secondary uppercase tracking-[0.04em]">Waarde</p>
-                    <p className="font-sans font-bold text-[14px] text-rdj-text-primary mt-[2px]">{formatCurrency(contract.waarde)}</p>
-                  </div>
-                  {contract.type === "contract" && (
-                    <>
-                      <div>
-                        <p className="font-sans font-normal text-[12px] text-rdj-text-secondary uppercase tracking-[0.04em]">Startdatum</p>
-                        <p className="font-sans font-bold text-[14px] text-rdj-text-primary mt-[2px]">{formatDate(contract.startDatum)}</p>
-                      </div>
-                      <div>
-                        <p className="font-sans font-normal text-[12px] text-rdj-text-secondary uppercase tracking-[0.04em]">Einddatum</p>
-                        <p className="font-sans font-bold text-[14px] text-rdj-text-primary mt-[2px]">{formatDate(contract.eindDatum)}</p>
-                      </div>
-                    </>
-                  )}
+            <div className="p-[24px] flex flex-col">
+              {/* Details rows — label left, value right but left-aligned */}
+              <div className="flex flex-col gap-[16px]">
+                <div className="flex items-baseline gap-[16px]">
+                  <p className="font-sans font-normal text-[14px] text-rdj-text-secondary w-[120px] shrink-0">Type</p>
+                  <p className="font-sans font-bold text-[14px] text-rdj-text-primary">{contract.type === "contract" ? "Contract" : "Spot"}</p>
                 </div>
-              </div>
-
-              <div className="h-px w-full bg-rdj-border-secondary" />
-
-              <div>
-                <p className="font-sans font-bold text-[16px] leading-[24px] text-rdj-text-primary mb-[16px]">Relatie</p>
-                <div className="flex flex-col gap-[12px]">
+                <div className="flex items-baseline gap-[16px]">
+                  <p className="font-sans font-normal text-[14px] text-rdj-text-secondary w-[120px] shrink-0">Soort</p>
+                  <p className="font-sans font-bold text-[14px] text-rdj-text-primary">{CONTRACT_SOORT_LABELS[contract.soort] || "—"}</p>
+                </div>
+                <div className="flex items-baseline gap-[16px]">
+                  <p className="font-sans font-normal text-[14px] text-rdj-text-secondary w-[120px] shrink-0">Waarde</p>
+                  <p className="font-sans font-bold text-[14px] text-rdj-text-primary">{formatCurrency(contract.waarde)}</p>
+                </div>
+                {contract.type === "contract" && (
+                  <>
+                    <div className="flex items-baseline gap-[16px]">
+                      <p className="font-sans font-normal text-[14px] text-rdj-text-secondary w-[120px] shrink-0">Startdatum</p>
+                      <p className="font-sans font-bold text-[14px] text-rdj-text-primary">{formatDate(contract.startDatum)}</p>
+                    </div>
+                    <div className="flex items-baseline gap-[16px]">
+                      <p className="font-sans font-normal text-[14px] text-rdj-text-secondary w-[120px] shrink-0">Einddatum</p>
+                      <p className="font-sans font-bold text-[14px] text-rdj-text-primary">{formatDate(contract.eindDatum)}</p>
+                    </div>
+                  </>
+                )}
+                <div className="flex items-baseline gap-[16px]">
+                  <p className="font-sans font-normal text-[14px] text-rdj-text-secondary w-[120px] shrink-0">Aangemaakt</p>
+                  <p className="font-sans font-bold text-[14px] text-rdj-text-primary">{formatDate(contract.aanmaakDatum)}</p>
+                </div>
+                <div className="flex items-baseline gap-[16px]">
+                  <p className="font-sans font-normal text-[14px] text-rdj-text-secondary w-[120px] shrink-0">Laatste update</p>
+                  <p className="font-sans font-bold text-[14px] text-rdj-text-primary">{formatDate(contract.laatsteUpdate)}</p>
+                </div>
+                <div className="flex items-start gap-[16px]">
+                  <p className="font-sans font-normal text-[14px] text-rdj-text-secondary w-[120px] shrink-0 pt-[2px]">Relatie</p>
                   <div>
-                    <p className="font-sans font-normal text-[12px] text-rdj-text-secondary uppercase tracking-[0.04em]">Bedrijf</p>
                     {relatie ? (
-                      <Link to={`/crm/relatie/${relatie.id}`} className="font-sans font-bold text-[14px] text-rdj-text-brand hover:underline mt-[2px] block">
+                      <Link to={`/crm/relatie/${relatie.id}`} className="font-sans font-bold text-[14px] text-rdj-text-brand hover:underline">
                         {relatie.naam}
                       </Link>
                     ) : (
-                      <p className="font-sans font-bold text-[14px] text-rdj-text-primary mt-[2px]">—</p>
+                      <p className="font-sans font-bold text-[14px] text-rdj-text-primary">—</p>
                     )}
                   </div>
-                  {contactPersoon && (
-                    <>
-                      <div>
-                        <p className="font-sans font-normal text-[12px] text-rdj-text-secondary uppercase tracking-[0.04em]">Contactpersoon</p>
-                        <p className="font-sans font-bold text-[14px] text-rdj-text-primary mt-[2px]">{contactPersoon.naam}</p>
-                        {contactPersoon.functie && (
-                          <p className="font-sans font-normal text-[13px] text-rdj-text-secondary">{contactPersoon.functie}</p>
-                        )}
+                </div>
+                <div className="flex items-start gap-[16px]">
+                  <p className="font-sans font-normal text-[14px] text-rdj-text-secondary w-[120px] shrink-0 pt-[2px]">Contactpersoon</p>
+                  <div>
+                    {contactPersoon ? (
+                      <>
+                        <p className="font-sans font-bold text-[14px] text-rdj-text-primary">{contactPersoon.naam}</p>
+                        <p className="font-sans font-normal text-[13px] text-rdj-text-brand">{contactPersoon.email}</p>
+                        <p className="font-sans font-normal text-[13px] text-rdj-text-secondary">{contactPersoon.telefoon}</p>
+                      </>
+                    ) : (
+                      <p className="font-sans font-bold text-[14px] text-rdj-text-primary">—</p>
+                    )}
+                  </div>
+                </div>
+              </div>
+
+              {/* Divider + Eigenaar & Deadline */}
+              <div className="h-px w-full bg-rdj-border-secondary mt-[24px] mb-[20px]" />
+
+              <div className="flex flex-col gap-[16px]">
+                <div className="flex items-center gap-[16px]">
+                  <p className="font-sans font-normal text-[14px] text-rdj-text-secondary w-[120px] shrink-0">Eigenaar</p>
+                  {eigenaar ? (
+                    <div className="flex items-center gap-[8px]">
+                      <div className="shrink-0 size-[28px] rounded-full bg-[#f2f4f7] flex items-center justify-center">
+                        <span className="font-sans font-bold text-[10px] text-rdj-text-secondary">{getInitials(eigenaar.naam)}</span>
                       </div>
-                      <div>
-                        <p className="font-sans font-normal text-[12px] text-rdj-text-secondary uppercase tracking-[0.04em]">E-mail</p>
-                        <p className="font-sans font-normal text-[14px] text-rdj-text-brand mt-[2px]">{contactPersoon.email}</p>
-                      </div>
-                      <div>
-                        <p className="font-sans font-normal text-[12px] text-rdj-text-secondary uppercase tracking-[0.04em]">Telefoon</p>
-                        <p className="font-sans font-normal text-[14px] text-rdj-text-primary mt-[2px]">{contactPersoon.telefoon}</p>
-                      </div>
-                    </>
+                      <p className="font-sans font-bold text-[14px] text-rdj-text-primary">{eigenaar.naam}</p>
+                    </div>
+                  ) : (
+                    <p className="font-sans font-bold text-[14px] text-rdj-text-primary">—</p>
                   )}
+                </div>
+                <div className="flex items-baseline gap-[16px]">
+                  <p className="font-sans font-normal text-[14px] text-rdj-text-secondary w-[120px] shrink-0">Deadline</p>
+                  {(() => {
+                    const deadline = contract.type === "spot" ? contract.laaddatum : contract.startDatum;
+                    const expired = isExpired(deadline);
+                    return (
+                      <p className={`font-sans font-bold text-[14px] ${expired ? "text-[#F04438]" : "text-rdj-text-primary"}`}>
+                        {formatDate(deadline)}
+                      </p>
+                    );
+                  })()}
                 </div>
               </div>
             </div>

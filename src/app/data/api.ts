@@ -287,6 +287,8 @@ export interface Contract {
   status: ContractStatus;
   verlorenReden?: string;
   waarde?: number;
+  // Ladingsoort (type lading)
+  ladingSoortId?: string;
   // Spot
   laadhavenNaam?: string;
   loshavenNaam?: string;
