@@ -445,7 +445,7 @@ export interface MailBericht {
   bijlagen?: { naam: string; grootte: string }[];
 }
 
-export const mockMailConversaties: MailConversatie[] = [
+export let mockMailConversaties: MailConversatie[] = [
   {
     id: "mail-001",
     relatieId: "rel-001",
@@ -526,5 +526,54 @@ export const mockMailConversaties: MailConversatie[] = [
     ],
     laatsteDatum: "2026-03-05T09:30:00",
     gelezen: true,
+  },
+];
+
+export interface Gespreksverslag {
+  id: string;
+  relatieId: string;
+  contactPersoonId: string;
+  gebruikerId: string;
+  datum: string;
+  inhoud: string;
+  aanmaakDatum: string;
+}
+
+export let mockGespreksverslagen: Gespreksverslag[] = [
+  {
+    id: "gv-001",
+    relatieId: "rel-001",
+    contactPersoonId: "cp-001",
+    gebruikerId: "usr-001",
+    datum: "2026-03-10T14:00:00",
+    inhoud: "Besproken: uitbreiding samenwerking Q2. Jan geeft aan dat ze meer capaciteit nodig hebben voor de graan-route naar Duitsland. Wij gaan een voorstel uitwerken voor structureel 2 afvaarten per week. Jan belt vrijdag terug.",
+    aanmaakDatum: "2026-03-10T15:30:00",
+  },
+  {
+    id: "gv-002",
+    relatieId: "rel-001",
+    contactPersoonId: "cp-002",
+    gebruikerId: "usr-002",
+    datum: "2026-03-07T10:30:00",
+    inhoud: "Kort gebeld over de houtpellets planning. Maria vraagt of we de Emily eerder beschikbaar kunnen krijgen. Ze heeft haast i.v.m. terminal-slot in Salzgitter. Ik heb aangegeven dat we dit checken.",
+    aanmaakDatum: "2026-03-07T10:45:00",
+  },
+  {
+    id: "gv-003",
+    relatieId: "rel-002",
+    contactPersoonId: "cp-003",
+    gebruikerId: "usr-001",
+    datum: "2026-03-05T16:00:00",
+    inhoud: "Pieter belt over de beschadigde staalpartij. Hij wil duidelijkheid over de verzekeringsafhandeling. Ik heb hem gerustgesteld dat Khoa het oppakt. Pieter wil uiterlijk volgende week een update.",
+    aanmaakDatum: "2026-03-05T16:20:00",
+  },
+  {
+    id: "gv-004",
+    relatieId: "rel-003",
+    contactPersoonId: "cp-004",
+    gebruikerId: "usr-003",
+    datum: "2026-03-06T11:00:00",
+    inhoud: "Sophie belt over nieuwe sojabonen partij naar Basel, 3.500 ton Q2. Ze wil offerte inclusief inspectie-optie. Ik werk het uit en heb het vrijdag klaar.",
+    aanmaakDatum: "2026-03-06T11:15:00",
   },
 ];

@@ -1,8 +1,11 @@
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
+import type { Contract } from "../data/api";
 import type { MailConversatie, MailBericht } from "../data/mock-relatie-data";
 
 interface MailConversatiesProps {
   conversaties: MailConversatie[];
+  deals?: Contract[];
+  onLinkDeal?: (mailId: string, dealId: string | undefined) => void;
 }
 
 function formatDatum(dateStr: string): string {
@@ -37,7 +40,15 @@ const paperclipIcon = (
   </svg>
 );
 
-export default function MailConversaties({ conversaties }: MailConversatiesProps) {
+const linkIcon = (
+  <svg className="size-[14px]" fill="none" viewBox="0 0 16 16">
+    <path d="M6.5 9.5L9.5 6.5" stroke="currentColor" strokeLinecap="round" strokeWidth="1.5" />
+    <path d="M9 11L7.5 12.5C6.39543 13.6046 4.60457 13.6046 3.5 12.5C2.39543 11.3954 2.39543 9.60457 3.5 8.5L5 7" stroke="currentColor" strokeLinecap="round" strokeWidth="1.5" />
+    <path d="M7 5L8.5 3.5C9.60457 2.39543 11.3954 2.39543 12.5 3.5C13.6046 4.60457 13.6046 6.39543 12.5 7.5L11 9" stroke="currentColor" strokeLinecap="round" strokeWidth="1.5" />
+  </svg>
+);
+
+export default function MailConversaties({ conversaties, deals, onLinkDeal }: MailConversatiesProps) {
   const [expandedId, setExpandedId] = useState<string | null>(null);
   const [expandedBerichtId, setExpandedBerichtId] = useState<string | null>(null);
 
@@ -68,10 +79,11 @@ export default function MailConversaties({ conversaties }: MailConversatiesProps
           const isExpanded = expandedId === conv.id;
           const laatsteBericht = conv.berichten[conv.berichten.length - 1];
           const heeftBijlagen = conv.berichten.some((b) => b.bijlagen && b.bijlagen.length > 0);
+          const linkedDeal = deals?.find((d) => d.id === conv.contractId);
 
           return (
             <div key={conv.id} className="border border-rdj-border-secondary rounded-[8px] overflow-hidden mb-[8px]">
-              {/* Conversatie header — klik om open/dicht te doen */}
+              {/* Conversatie header */}
               <button
                 onClick={() => setExpandedId(isExpanded ? null : conv.id)}
                 className={`w-full text-left px-[16px] py-[12px] flex items-start gap-[12px] hover:bg-[#f9fafb] transition-colors ${!conv.gelezen ? "bg-[#f0f7ff]" : "bg-white"}`}
@@ -98,9 +110,17 @@ export default function MailConversaties({ conversaties }: MailConversatiesProps
                   <p className={`font-sans text-[14px] leading-[20px] truncate ${!conv.gelezen ? "font-bold text-rdj-text-primary" : "font-normal text-rdj-text-primary"}`}>
                     {conv.onderwerp}
                   </p>
-                  <p className="font-sans font-normal text-[13px] leading-[18px] text-rdj-text-secondary truncate mt-[2px]">
-                    {truncate(laatsteBericht.inhoud, 100)}
-                  </p>
+                  <div className="flex items-center gap-[6px] mt-[2px]">
+                    <p className="font-sans font-normal text-[13px] leading-[18px] text-rdj-text-secondary truncate">
+                      {truncate(laatsteBericht.inhoud, 100)}
+                    </p>
+                  </div>
+                  {linkedDeal && (
+                    <div className="flex items-center gap-[4px] mt-[4px]">
+                      <span className="text-rdj-text-tertiary">{linkIcon}</span>
+                      <span className="font-sans font-normal text-[12px] text-rdj-text-brand">{linkedDeal.titel}</span>
+                    </div>
+                  )}
                 </div>
 
                 <div className="shrink-0 flex flex-col items-end gap-[4px]">
@@ -113,9 +133,18 @@ export default function MailConversaties({ conversaties }: MailConversatiesProps
                 </div>
               </button>
 
-              {/* Expanded: alle berichten */}
+              {/* Expanded: berichten + deal koppeling */}
               {isExpanded && (
                 <div className="border-t border-rdj-border-secondary bg-[#fafbfc]">
+                  {/* Deal koppeling bar */}
+                  {deals && deals.length > 0 && onLinkDeal && (
+                    <DealLinkBar
+                      conv={conv}
+                      deals={deals}
+                      linkedDeal={linkedDeal}
+                      onLinkDeal={onLinkDeal}
+                    />
+                  )}
                   {conv.berichten.map((bericht, idx) => (
                     <BerichtItem
                       key={bericht.id}
@@ -131,6 +160,114 @@ export default function MailConversaties({ conversaties }: MailConversatiesProps
           );
         })}
       </div>
+    </div>
+  );
+}
+
+function DealLinkBar({
+  conv,
+  deals,
+  linkedDeal,
+  onLinkDeal,
+}: {
+  conv: MailConversatie;
+  deals: Contract[];
+  linkedDeal: Contract | undefined;
+  onLinkDeal: (mailId: string, dealId: string | undefined) => void;
+}) {
+  const [showPicker, setShowPicker] = useState(false);
+  const pickerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!showPicker) return;
+    function handleClick(e: MouseEvent) {
+      if (pickerRef.current && !pickerRef.current.contains(e.target as Node)) {
+        setShowPicker(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClick);
+    return () => document.removeEventListener("mousedown", handleClick);
+  }, [showPicker]);
+
+  return (
+    <div className="px-[16px] py-[8px] border-b border-rdj-border-secondary flex items-center gap-[8px] bg-white">
+      <span className="text-rdj-text-tertiary">{linkIcon}</span>
+      {linkedDeal ? (
+        <div className="flex items-center gap-[6px] flex-1 min-w-0">
+          <span className="font-sans font-normal text-[13px] text-rdj-text-secondary">Gekoppeld aan</span>
+          <span className="font-sans font-bold text-[13px] text-rdj-text-brand truncate">{linkedDeal.titel}</span>
+          <button
+            onClick={() => onLinkDeal(conv.id, undefined)}
+            className="shrink-0 ml-auto font-sans font-normal text-[12px] text-rdj-text-tertiary hover:text-[#b42318] transition-colors"
+          >
+            Ontkoppelen
+          </button>
+          <div className="relative" ref={pickerRef}>
+            <button
+              onClick={() => setShowPicker(!showPicker)}
+              className="shrink-0 font-sans font-normal text-[12px] text-rdj-text-tertiary hover:text-rdj-text-brand transition-colors"
+            >
+              Wijzigen
+            </button>
+            {showPicker && (
+              <DealDropdown
+                deals={deals}
+                currentDealId={linkedDeal.id}
+                onSelect={(dealId) => { onLinkDeal(conv.id, dealId); setShowPicker(false); }}
+              />
+            )}
+          </div>
+        </div>
+      ) : (
+        <div className="flex items-center gap-[6px] flex-1 min-w-0 relative" ref={pickerRef}>
+          <button
+            onClick={() => setShowPicker(!showPicker)}
+            className="font-sans font-bold text-[13px] text-rdj-text-brand hover:underline"
+          >
+            Koppel aan deal
+          </button>
+          {showPicker && (
+            <DealDropdown
+              deals={deals}
+              onSelect={(dealId) => { onLinkDeal(conv.id, dealId); setShowPicker(false); }}
+            />
+          )}
+        </div>
+      )}
+    </div>
+  );
+}
+
+function DealDropdown({
+  deals,
+  currentDealId,
+  onSelect,
+}: {
+  deals: Contract[];
+  currentDealId?: string;
+  onSelect: (dealId: string) => void;
+}) {
+  return (
+    <div className="absolute top-full left-0 mt-[4px] z-50 bg-white border border-rdj-border-secondary rounded-[8px] shadow-lg py-[4px] min-w-[240px] max-h-[200px] overflow-y-auto">
+      {deals.filter((d) => d.id !== currentDealId).map((deal) => (
+        <button
+          key={deal.id}
+          onClick={() => onSelect(deal.id)}
+          className="w-full text-left px-[12px] py-[8px] hover:bg-[#f9fafb] transition-colors flex items-center gap-[8px]"
+        >
+          <span className={`shrink-0 size-[6px] rounded-full ${
+            deal.status === "gewonnen" ? "bg-[#17b26a]" :
+            deal.status === "in_onderhandeling" ? "bg-[#1567a4]" :
+            deal.status === "aandacht_nodig" ? "bg-[#dc6803]" :
+            "bg-[#98a2b3]"
+          }`} />
+          <span className="font-sans font-normal text-[13px] text-rdj-text-primary truncate">{deal.titel}</span>
+          <span className="font-sans font-normal text-[11px] text-rdj-text-tertiary shrink-0 ml-auto">{deal.type === "spot" ? "Spot" : "Contract"}</span>
+        </button>
+      ))}
+      {deals.filter((d) => d.id !== currentDealId).length === 0 && (
+        <p className="px-[12px] py-[8px] font-sans font-normal text-[13px] text-rdj-text-tertiary">Geen andere deals beschikbaar</p>
+      )}
     </div>
   );
 }

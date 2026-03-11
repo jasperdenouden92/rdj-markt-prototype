@@ -1,17 +1,16 @@
 import type { Relatie, ContactPersoon, Contract } from "../data/api";
 import { mockContracten } from "../data/mock-contract-data";
-import { mockRelatieLadingen, mockRelatieVaartuigen, mockMailConversaties } from "../data/mock-relatie-data";
-import type { RelatieLading, MailConversatie } from "../data/mock-relatie-data";
+import { mockRelatieLadingen, mockRelatieVaartuigen, mockMailConversaties, mockGespreksverslagen } from "../data/mock-relatie-data";
+import type { RelatieLading, MailConversatie, Gespreksverslag } from "../data/mock-relatie-data";
 import type { RelatieVaartuig } from "../data/mock-relatie-data";
 
 interface RelatieOverzichtTabProps {
   relatie: Relatie;
   contactPersonen: ContactPersoon[];
-  onTabChange: (tab: "overzicht" | "ladingen" | "vaartuigen" | "spot" | "contracten" | "mail" | "activiteit") => void;
 }
 
 interface SummaryItem {
-  icon: "warning" | "ship" | "mail" | "contract" | "info";
+  icon: "warning" | "ship" | "mail" | "contract" | "info" | "gesprek";
   text: string;
 }
 
@@ -30,6 +29,7 @@ function generateAiSummary(
     relatieContracten: Contract[];
     relatieVaartuigen: RelatieVaartuig[];
     relatieMail: MailConversatie[];
+    relatieGesprekken: Gespreksverslag[];
     contactPersonen: ContactPersoon[];
   }
 ): SummaryItem[] {
@@ -70,11 +70,49 @@ function generateAiSummary(
     items.push({ icon: "mail", text: `In laatste mail gaf ${naam} aan: "${inhoud}"` });
   }
 
+  // Laatste gesprek — samengevat in eigen woorden
+  if (ctx.relatieGesprekken.length > 0) {
+    const sorted = [...ctx.relatieGesprekken].sort((a, b) => new Date(b.datum).getTime() - new Date(a.datum).getTime());
+    const laatste = sorted[0];
+    const cp = ctx.contactPersonen.find((c) => c.id === laatste.contactPersoonId);
+    const naam = cp?.naam.split(" ")[0] || "contactpersoon";
+    const dagen = dagenGeleden(laatste.datum);
+    const datumLabel = dagen === 0 ? "vandaag" : dagen === 1 ? "gisteren" : `${dagen}d geleden`;
+    const samenvatting = summarizeGesprek(laatste.inhoud, naam);
+    items.push({ icon: "gesprek", text: `Gesprek met ${naam} (${datumLabel}): ${samenvatting}` });
+  }
+
   if (items.length === 0) {
     items.push({ icon: "info", text: "Geen openstaande zaken" });
   }
 
   return items;
+}
+
+function summarizeGesprek(text: string, naam: string): string {
+  const clean = text.replace(/\n/g, " ").replace(/\s+/g, " ").trim();
+  // Extract key actions: look for patterns like "wij gaan", "ik heb", "hij/zij wil", etc.
+  const actionPatterns = [
+    /(?:wij|we) gaan ([^.]+)/i,
+    /(?:hij|zij|ze) (?:wil|vraagt|zoekt|heeft|geeft aan) ([^.]+)/i,
+    /(?:ik heb|ik ga) ([^.]+)/i,
+    /(?:belt|bellen) (?:over|voor) ([^.]+)/i,
+  ];
+  const actions: string[] = [];
+  for (const pattern of actionPatterns) {
+    const match = clean.match(pattern);
+    if (match) actions.push(match[0].toLowerCase());
+  }
+  if (actions.length > 0) {
+    // Take first meaningful action, capitalize first letter
+    const action = actions[0];
+    return action.charAt(0).toUpperCase() + action.slice(1);
+  }
+  // Fallback: first meaningful sentence chunk
+  const stripped = clean.replace(/^besproken:\s*/i, "");
+  const sentence = stripped.match(/^.{15,90}[.!?]/);
+  if (sentence) return sentence[0];
+  return stripped.length > 80 ? stripped.slice(0, 80) + "..." : stripped;
 }
 
 function extractInsight(text: string): string {
@@ -89,12 +127,13 @@ function extractInsight(text: string): string {
   return stripped.length > 80 ? stripped.slice(0, 80) + "..." : stripped;
 }
 
-export default function RelatieOverzichtTab({ relatie, contactPersonen, onTabChange }: RelatieOverzichtTabProps) {
+export default function RelatieOverzichtTab({ relatie, contactPersonen }: RelatieOverzichtTabProps) {
   const relatieSpot = mockContracten.filter((c) => c.relatieId === relatie.id && c.type === "spot");
   const relatieContracten = mockContracten.filter((c) => c.relatieId === relatie.id && c.type === "contract");
   const relatieLadingen = mockRelatieLadingen.filter((l) => l.relatieId === relatie.id);
   const relatieVaartuigen = mockRelatieVaartuigen.filter((v) => v.relatieId === relatie.id);
   const relatieMail = mockMailConversaties.filter((m) => m.relatieId === relatie.id);
+  const relatieGesprekken = mockGespreksverslagen.filter((g) => g.relatieId === relatie.id);
 
   const activeLadingen = relatieLadingen.filter((l) => l.status !== "gesloten").length;
   const activeSpot = relatieSpot.filter((c) => c.status !== "verloren" && c.status !== "gewonnen").length;
@@ -113,7 +152,7 @@ export default function RelatieOverzichtTab({ relatie, contactPersonen, onTabCha
           <p className="font-sans font-bold text-[16px] leading-[24px] text-rdj-text-primary">AI Samenvatting</p>
         </div>
         <div className="bg-[#f8fafc] border border-[#e2e8f0] rounded-[8px] p-[16px] flex flex-col gap-[8px]">
-          {generateAiSummary(relatie, { activeLadingen, activeSpot, activeContracten, relatieLadingen, relatieSpot, relatieContracten, relatieVaartuigen, relatieMail, contactPersonen }).map((item, i) => (
+          {generateAiSummary(relatie, { activeLadingen, activeSpot, activeContracten, relatieLadingen, relatieSpot, relatieContracten, relatieVaartuigen, relatieMail, relatieGesprekken, contactPersonen }).map((item, i) => (
             <div key={i} className="flex items-start gap-[8px]">
               <span className="shrink-0 mt-[3px]">
                 {item.icon === "warning" ? (
@@ -122,6 +161,8 @@ export default function RelatieOverzichtTab({ relatie, contactPersonen, onTabCha
                   <svg className="size-[14px] text-[#1567a4]" fill="none" viewBox="0 0 16 16"><rect x="2" y="3.5" width="12" height="9" rx="1.5" stroke="currentColor" strokeWidth="1.5" /><path d="M2.5 4.5L8 8.5L13.5 4.5" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" /></svg>
                 ) : item.icon === "ship" ? (
                   <svg className="size-[14px] text-[#1567a4]" fill="none" viewBox="0 0 16 16"><path d="M3 10L4.5 6H11.5L13 10" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" /><path d="M8 3.5V6M6 6V5H10V6" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" /><path d="M2 12.5C3.5 11.5 5.5 11.5 8 12.5C10.5 11.5 12.5 11.5 14 12.5" stroke="currentColor" strokeLinecap="round" strokeWidth="1.5" /></svg>
+                ) : item.icon === "gesprek" ? (
+                  <svg className="size-[14px] text-[#667085]" fill="none" viewBox="0 0 16 16"><path d="M2 3.5C2 2.67 2.67 2 3.5 2H12.5C13.33 2 14 2.67 14 3.5V9.5C14 10.33 13.33 11 12.5 11H5L2 14V3.5Z" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" /></svg>
                 ) : item.icon === "contract" ? (
                   <svg className="size-[14px] text-[#667085]" fill="none" viewBox="0 0 16 16"><rect x="3.5" y="2" width="9" height="12" rx="1.5" stroke="currentColor" strokeWidth="1.5" /><path d="M6 5.5H10M6 8H10M6 10.5H8" stroke="currentColor" strokeLinecap="round" strokeWidth="1.5" /></svg>
                 ) : (
@@ -192,33 +233,6 @@ export default function RelatieOverzichtTab({ relatie, contactPersonen, onTabCha
         )}
       </div>
 
-      {/* Snelkoppelingen naar tabs */}
-      <div>
-        <p className="font-sans font-bold text-[16px] leading-[24px] text-rdj-text-primary mb-[12px]">Overzicht</p>
-        <div className="grid grid-cols-2 gap-[12px]">
-          {[
-            { label: "Ladingen", count: relatieLadingen.length, tab: "ladingen" as const },
-            { label: "Vaartuigen", count: relatieVaartuigen.length, tab: "vaartuigen" as const },
-            { label: "Spot deals", count: relatieSpot.length, tab: "spot" as const },
-            { label: "Contracten", count: relatieContracten.length, tab: "contracten" as const },
-            { label: "Mail", count: relatieMail.length, tab: "mail" as const },
-          ].map((item) => (
-            <button
-              key={item.tab}
-              onClick={() => onTabChange(item.tab)}
-              className="flex items-center justify-between border border-rdj-border-secondary rounded-[8px] p-[12px] hover:bg-[#f9fafb] transition-colors text-left group"
-            >
-              <div>
-                <p className="font-sans font-bold text-[14px] text-rdj-text-primary group-hover:text-rdj-text-brand">{item.label}</p>
-                <p className="font-sans font-normal text-[13px] text-rdj-text-secondary">{item.count} item{item.count !== 1 ? "s" : ""}</p>
-              </div>
-              <svg className="size-[16px] text-rdj-text-tertiary group-hover:text-rdj-text-brand shrink-0" fill="none" viewBox="0 0 16 16">
-                <path d="M6 12L10 8L6 4" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" />
-              </svg>
-            </button>
-          ))}
-        </div>
-      </div>
     </div>
   );
 }

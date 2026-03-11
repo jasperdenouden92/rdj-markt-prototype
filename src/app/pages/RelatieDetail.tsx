@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useCallback } from "react";
 import { useParams, Link, useNavigate } from "react-router";
 import Sidebar from "../components/Sidebar";
 import PageHeader from "../components/PageHeader";
@@ -9,9 +9,11 @@ import ActivityFeed from "../components/ActivityFeed";
 import RelatieDetailSidebar from "../components/RelatieDetailSidebar";
 import RelatieOverzichtTab from "../components/RelatieOverzichtTab";
 import RelatieFormDialog from "../components/RelatieFormDialog";
-import { mockRelaties, mockContactPersonen, mockRelatieLadingen, mockRelatieVaartuigen, mockMailConversaties, VAARTUIG_STATUS_MAP } from "../data/mock-relatie-data";
+import { mockRelaties, mockContactPersonen, mockRelatieLadingen, mockRelatieVaartuigen, mockMailConversaties, mockGespreksverslagen, VAARTUIG_STATUS_MAP } from "../data/mock-relatie-data";
+import type { Gespreksverslag } from "../data/mock-relatie-data";
 import { mockContracten, CONTRACT_STATUS_LABELS, CONTRACT_STATUS_VARIANT_MAP } from "../data/mock-contract-data";
 import MailConversaties from "../components/MailConversaties";
+import Gespreksverslagen from "../components/Gespreksverslagen";
 import type { Relatie } from "../data/api";
 
 const statusVariantMap: Record<string, "success" | "grey" | "brand"> = {
@@ -49,7 +51,7 @@ const chevronSvg = (
 export default function RelatieDetail() {
   const { id } = useParams();
   const navigate = useNavigate();
-  const [activeTab, setActiveTab] = useState<"overzicht" | "ladingen" | "vaartuigen" | "spot" | "contracten" | "mail" | "activiteit">("overzicht");
+  const [activeTab, setActiveTab] = useState<"overzicht" | "ladingen" | "vaartuigen" | "spot" | "contracten" | "mail" | "gesprekken" | "activiteit">("overzicht");
   const [showEditDialog, setShowEditDialog] = useState(false);
   const [relaties, setRelaties] = useState<Relatie[]>(mockRelaties);
 
@@ -74,10 +76,36 @@ export default function RelatieDetail() {
     () => mockRelatieVaartuigen.filter((v) => v.relatieId === id),
     [id]
   );
+  const [mailConversaties, setMailConversaties] = useState(mockMailConversaties);
   const relatieMail = useMemo(
-    () => mockMailConversaties.filter((m) => m.relatieId === id),
+    () => mailConversaties.filter((m) => m.relatieId === id),
+    [mailConversaties, id]
+  );
+  const relatieDeals = useMemo(
+    () => mockContracten.filter((c) => c.relatieId === id),
     [id]
   );
+  const handleLinkDeal = useCallback((mailId: string, dealId: string | undefined) => {
+    setMailConversaties((prev) => {
+      const updated = prev.map((m) => m.id === mailId ? { ...m, contractId: dealId } : m);
+      // Also update the mock source so other pages see the change
+      mockMailConversaties.splice(0, mockMailConversaties.length, ...updated);
+      return updated;
+    });
+  }, []);
+
+  const [verslagen, setVerslagen] = useState(
+    () => mockGespreksverslagen.filter((v) => v.relatieId === id)
+  );
+  const handleAddVerslag = useCallback((data: Omit<Gespreksverslag, "id" | "aanmaakDatum">) => {
+    const newVerslag: Gespreksverslag = {
+      ...data,
+      id: `gv-${Date.now()}`,
+      aanmaakDatum: new Date().toISOString(),
+    };
+    mockGespreksverslagen.push(newVerslag);
+    setVerslagen((prev) => [...prev, newVerslag]);
+  }, []);
 
   if (!relatie) {
     return (
@@ -145,9 +173,10 @@ export default function RelatieDetail() {
     { label: "Overzicht", path: "#overzicht", isActive: activeTab === "overzicht" },
     { label: "Ladingen", path: "#ladingen", isActive: activeTab === "ladingen", badge: String(relatieLadingen.length) },
     { label: "Vaartuigen", path: "#vaartuigen", isActive: activeTab === "vaartuigen", badge: String(relatieVaartuigen.length) },
+    { label: "Mail", path: "#mail", isActive: activeTab === "mail", badge: String(relatieMail.length) },
+    { label: "Gesprekken", path: "#gesprekken", isActive: activeTab === "gesprekken", badge: String(verslagen.length) },
     { label: "Spot", path: "#spot", isActive: activeTab === "spot", badge: String(relatieSpot.length) },
     { label: "Contracten", path: "#contracten", isActive: activeTab === "contracten", badge: String(relatieContracten.length) },
-    { label: "Mail", path: "#mail", isActive: activeTab === "mail", badge: String(relatieMail.length) },
     { label: "Activiteit", path: "#activiteit", isActive: activeTab === "activiteit" },
   ];
 
@@ -194,7 +223,6 @@ export default function RelatieDetail() {
                       <RelatieOverzichtTab
                         relatie={relatie}
                         contactPersonen={contactPersonen}
-                        onTabChange={setActiveTab}
                       />
                     )}
 
@@ -423,7 +451,11 @@ export default function RelatieDetail() {
                     )}
 
                     {activeTab === "mail" && (
-                      <MailConversaties conversaties={relatieMail} />
+                      <MailConversaties conversaties={relatieMail} deals={relatieDeals} onLinkDeal={handleLinkDeal} />
+                    )}
+
+                    {activeTab === "gesprekken" && (
+                      <Gespreksverslagen verslagen={verslagen} contactPersonen={contactPersonen} onAdd={handleAddVerslag} />
                     )}
 
                     {activeTab === "activiteit" && (
