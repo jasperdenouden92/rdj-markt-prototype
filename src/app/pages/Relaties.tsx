@@ -9,7 +9,9 @@ import FilterDropdown from "../components/FilterDropdown";
 import Button from "../components/Button";
 import Badge from "../components/Badge";
 import RelatieFormDialog from "../components/RelatieFormDialog";
-import { mockRelaties, mockContactPersonen, mockGebruikers, LADINGGROEP_SUGGESTIES, SOORT_RELATIE_OPTIES, mockRelatieCounts } from "../data/mock-relatie-data";
+import GespreksverslagQuickDialog from "../components/GespreksverslagQuickDialog";
+import { mockRelaties, mockContactPersonen, mockGebruikers, LADINGGROEP_SUGGESTIES, SOORT_RELATIE_OPTIES, mockRelatieCounts, mockGespreksverslagen } from "../data/mock-relatie-data";
+import type { Gespreksverslag } from "../data/mock-relatie-data";
 import { mockTaken } from "../data/mock-taken-data";
 import type { Relatie } from "../data/api";
 
@@ -53,6 +55,7 @@ export default function Relaties() {
   const [rowsPerPage, setRowsPerPage] = useState(25);
   const [hoveredRow, setHoveredRow] = useState<string | null>(null);
   const [showCreateDialog, setShowCreateDialog] = useState(false);
+  const [verslagRelatieId, setVerslagRelatieId] = useState<string | null>(null);
   const [relaties, setRelaties] = useState<Relatie[]>(mockRelaties);
 
   const soortRelatieOptions = useMemo(
@@ -162,6 +165,44 @@ export default function Relaties() {
       type: "deadline",
       expiredKey: "contactExpired",
       width: "w-[140px]",
+    },
+    {
+      key: "verslagAction",
+      header: "",
+      type: "custom" as const,
+      width: "w-[48px]",
+      render: (row: RowData) => (
+        <div className="flex items-center justify-center opacity-0 group-hover/row:opacity-100 transition-opacity">
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              setVerslagRelatieId(row.id);
+            }}
+            className="size-[32px] rounded-full flex items-center justify-center bg-[#1567a4] hover:bg-[#125a8f] transition-colors text-white shadow-sm"
+            title="Gespreksverslag toevoegen"
+          >
+            <svg className="size-[18px]" fill="none" viewBox="0 0 20 20">
+              {/* Speech bubble */}
+              <path
+                d="M4 4C3.44772 4 3 4.44772 3 5V13C3 13.5523 3.44772 14 4 14H6V16.5L9.5 14H16C16.5523 14 17 13.5523 17 13V5C17 4.44772 16.5523 4 16 4H4Z"
+                stroke="currentColor"
+                strokeWidth="1.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                fill="none"
+              />
+              {/* Plus inside bubble */}
+              <path
+                d="M10 7V11M8 9H12"
+                stroke="currentColor"
+                strokeWidth="1.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            </svg>
+          </button>
+        </div>
+      ),
     },
   ];
 
@@ -295,6 +336,27 @@ export default function Relaties() {
           onClose={() => setShowCreateDialog(false)}
         />
       )}
+
+      {verslagRelatieId && (() => {
+        const relatie = relaties.find((r) => r.id === verslagRelatieId);
+        const cpList = mockContactPersonen.filter((cp) => relatie?.contactPersoonIds?.includes(cp.id));
+        return (
+          <GespreksverslagQuickDialog
+            relatieId={verslagRelatieId}
+            relatieNaam={relatie?.naam || ""}
+            contactPersonen={cpList}
+            onSave={(verslag) => {
+              const newVerslag: Gespreksverslag = {
+                ...verslag,
+                id: `gv-${Date.now()}`,
+                aanmaakDatum: new Date().toISOString(),
+              };
+              mockGespreksverslagen.push(newVerslag);
+            }}
+            onClose={() => setVerslagRelatieId(null)}
+          />
+        );
+      })()}
     </div>
   );
 }
