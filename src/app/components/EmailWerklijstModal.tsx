@@ -16,6 +16,13 @@ const STANDAARD_BEVRACHTERS = [
   "contact@vaartuigen.nl",
 ];
 
+// Mock data for standaard opdrachtgevers
+const STANDAARD_OPDRACHTGEVERS = [
+  "planning@bouwbedrijf.nl",
+  "logistiek@grondwerk.nl",
+  "info@waterbouw.nl",
+];
+
 export default function EmailWerklijstModal({ onClose, onSend }: EmailWerklijstModalProps) {
   const [status, setStatus] = useState<'werklijst-en-markt' | 'alleen-werklijst'>('werklijst-en-markt');
   const [content, setContent] = useState<'lading-en-vaartuigen' | 'alleen-lading' | 'alleen-vaartuigen'>('alleen-vaartuigen');
@@ -37,9 +44,18 @@ Zie bijgevoegd beschikbare vaartuigen van dinsdag 27 januari. Mocht u passende l
   };
 
   const addStandaardBevrachters = () => {
-    // Add all standaard bevrachters that aren't already in the list
     const newRecipients = [...recipients];
     STANDAARD_BEVRACHTERS.forEach(email => {
+      if (!newRecipients.includes(email)) {
+        newRecipients.push(email);
+      }
+    });
+    setRecipients(newRecipients);
+  };
+
+  const addStandaardOpdrachtgevers = () => {
+    const newRecipients = [...recipients];
+    STANDAARD_OPDRACHTGEVERS.forEach(email => {
       if (!newRecipients.includes(email)) {
         newRecipients.push(email);
       }
@@ -137,18 +153,32 @@ Zie bijgevoegd beschikbare vaartuigen van dinsdag 27 januari. Mocht u passende l
                 <div className="content-stretch flex flex-[1_0_0] flex-col items-start min-h-px min-w-px relative">
                   <p className="font-sans font-bold leading-[20px] relative shrink-0 text-[#344054] text-[14px] whitespace-nowrap">Ontvangers</p>
                 </div>
-                <button className="content-stretch flex gap-[6px] items-center justify-center overflow-clip relative shrink-0" onClick={addStandaardBevrachters}>
-                  <div className="overflow-clip relative shrink-0 size-[20px]">
-                    <div className="absolute inset-[20.83%]">
-                      <div className="absolute inset-[-7.14%]">
-                        <svg className="block size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 13.3333 13.3333">
-                          <path d={svgPaths.p1b67fa00} stroke="#145990" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.66667" />
-                        </svg>
+                <div className="content-stretch flex gap-[12px] items-center shrink-0">
+                  <button className="content-stretch flex gap-[6px] items-center justify-center overflow-clip relative shrink-0" onClick={addStandaardBevrachters}>
+                    <div className="overflow-clip relative shrink-0 size-[20px]">
+                      <div className="absolute inset-[20.83%]">
+                        <div className="absolute inset-[-7.14%]">
+                          <svg className="block size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 13.3333 13.3333">
+                            <path d={svgPaths.p1b67fa00} stroke="#145990" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.66667" />
+                          </svg>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                  <p className="font-sans font-bold leading-[20px] relative shrink-0 text-[#145990] text-[14px] whitespace-nowrap">Standaard bevrachters</p>
-                </button>
+                    <p className="font-sans font-bold leading-[20px] relative shrink-0 text-[#145990] text-[14px] whitespace-nowrap">Standaard bevrachters</p>
+                  </button>
+                  <button className="content-stretch flex gap-[6px] items-center justify-center overflow-clip relative shrink-0" onClick={addStandaardOpdrachtgevers}>
+                    <div className="overflow-clip relative shrink-0 size-[20px]">
+                      <div className="absolute inset-[20.83%]">
+                        <div className="absolute inset-[-7.14%]">
+                          <svg className="block size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 13.3333 13.3333">
+                            <path d={svgPaths.p1b67fa00} stroke="#145990" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.66667" />
+                          </svg>
+                        </div>
+                      </div>
+                    </div>
+                    <p className="font-sans font-bold leading-[20px] relative shrink-0 text-[#145990] text-[14px] whitespace-nowrap">Standaard opdrachtgevers</p>
+                  </button>
+                </div>
               </div>
               <div className="content-stretch flex flex-col items-start relative shrink-0 w-full">
                 {recipients.length > 0 ? (
