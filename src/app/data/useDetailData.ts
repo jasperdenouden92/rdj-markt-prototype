@@ -860,8 +860,8 @@ export function useBevrachtingLadingSummary(id: string | undefined) {
         const resolved: BevrachtingLadingSummary = {
           title,
           subtitle: `${formatTonnage(item.tonnage)} ton ${soortLabel} vanuit ${laadhaven?.naam || "—"} (${subpartij?.laaddatum ? formatDate(subpartij.laaddatum) : "Af te stemmen"}) naar ${loshaven?.naam || "—"} (${subpartij?.losdatum ? formatDate(subpartij.losdatum) : "Af te stemmen"})`,
-          status: status === "markt" ? "In de markt" : status === "werklijst" ? "Werklijst" : status === "intake" ? "Intake" : "Gesloten",
-          statusVariant: status === "markt" ? "success" : status === "werklijst" ? "warning" : status === "intake" ? "brand" : "grey",
+          status: status === "pijplijn" ? "Pijplijn" : status === "inbox" ? "Inbox" : status === "markt" ? "In de markt" : status === "werklijst" ? "Werklijst" : status === "intake" ? "Intake" : "Gesloten",
+          statusVariant: status === "pijplijn" ? "brand" : status === "inbox" ? "grey" : status === "markt" ? "success" : status === "werklijst" ? "warning" : status === "intake" ? "brand" : "grey",
           breadcrumbLabel: title.substring(0, 20),
         };
 
@@ -925,8 +925,8 @@ export function useBevrachtingVaartuigSummary(id: string | undefined) {
         const resolved: BevrachtingVaartuigSummary = {
           title: item.naam,
           subtitle: `Motorschip · ${item.groottonnage.toLocaleString("nl-NL")} ton · ${locatie?.naam || "—"} (${item.beschikbaarVanaf ? formatDate(item.beschikbaarVanaf) : "Af te stemmen"})`,
-          status: status === "markt" ? "In de markt" : status === "werklijst" ? "Werklijst" : status === "intake" ? "Intake" : "Gesloten",
-          statusVariant: status === "markt" ? "success" : status === "werklijst" ? "warning" : status === "intake" ? "brand" : "grey",
+          status: status === "pijplijn" ? "Pijplijn" : status === "inbox" ? "Inbox" : status === "markt" ? "In de markt" : status === "werklijst" ? "Werklijst" : status === "intake" ? "Intake" : "Gesloten",
+          statusVariant: status === "pijplijn" ? "brand" : status === "inbox" ? "grey" : status === "markt" ? "success" : status === "werklijst" ? "warning" : status === "intake" ? "brand" : "grey",
           breadcrumbLabel: item.naam,
         };
 
