@@ -9,7 +9,7 @@ import FilterDropdown from "../components/FilterDropdown";
 import Button from "../components/Button";
 import Badge from "../components/Badge";
 import RelatieFormDialog from "../components/RelatieFormDialog";
-import { mockRelaties, mockContactPersonen, mockGebruikers, LADINGGROEP_SUGGESTIES, mockRelatieCounts } from "../data/mock-relatie-data";
+import { mockRelaties, mockContactPersonen, mockGebruikers, LADINGGROEP_SUGGESTIES, SOORT_RELATIE_OPTIES, mockRelatieCounts } from "../data/mock-relatie-data";
 import { mockTaken } from "../data/mock-taken-data";
 import type { Relatie } from "../data/api";
 
@@ -47,6 +47,7 @@ export default function Relaties() {
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState<string[]>([]);
   const [ladingGroepFilter, setLadingGroepFilter] = useState<string[]>([]);
+  const [soortRelatieFilter, setSoortRelatieFilter] = useState<string[]>([]);
   const [eigenaarFilter, setEigenaarFilter] = useState<string[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(25);
@@ -54,6 +55,10 @@ export default function Relaties() {
   const [showCreateDialog, setShowCreateDialog] = useState(false);
   const [relaties, setRelaties] = useState<Relatie[]>(mockRelaties);
 
+  const soortRelatieOptions = useMemo(
+    () => ["Alle soorten", ...SOORT_RELATIE_OPTIES.map((o) => o.label)],
+    []
+  );
   const eigenaarOptions = useMemo(
     () => ["Alle eigenaren", ...mockGebruikers.map((g) => g.naam)],
     []
@@ -67,6 +72,10 @@ export default function Relaties() {
     return relaties.filter((r) => {
       if (search && !r.naam.toLowerCase().includes(search.toLowerCase())) return false;
       if (statusFilter.length > 0 && r.status && !statusFilter.map((s) => s.toLowerCase()).includes(r.status)) return false;
+      if (soortRelatieFilter.length > 0) {
+        const labels = (r.soortRelatie || []).map((v) => SOORT_RELATIE_OPTIES.find((o) => o.value === v)?.label).filter(Boolean) as string[];
+        if (!labels.some((l) => soortRelatieFilter.includes(l))) return false;
+      }
       if (ladingGroepFilter.length > 0 && !(r.ladingGroepen || []).some((g) => ladingGroepFilter.includes(g))) return false;
       if (eigenaarFilter.length > 0) {
         const eigenaar = mockGebruikers.find((g) => g.id === r.eigenaarId);
@@ -74,7 +83,7 @@ export default function Relaties() {
       }
       return true;
     });
-  }, [relaties, search, statusFilter, ladingGroepFilter, eigenaarFilter]);
+  }, [relaties, search, statusFilter, soortRelatieFilter, ladingGroepFilter, eigenaarFilter]);
 
   const paged = useMemo(() => {
     const start = (currentPage - 1) * rowsPerPage;
@@ -96,6 +105,12 @@ export default function Relaties() {
       variantKey: "statusVariant",
       defaultVariant: "grey",
       width: "w-[120px]",
+    },
+    {
+      key: "soortRelatieLabel",
+      header: "Soort relatie",
+      type: "text",
+      width: "w-[200px]",
     },
     {
       key: "ladingGroepen",
@@ -161,6 +176,7 @@ export default function Relaties() {
       plaatsLabel: [r.plaats, r.land].filter(Boolean).join(", ") || "—",
       statusLabel: r.status ? r.status.charAt(0).toUpperCase() + r.status.slice(1) : "—",
       statusVariant: statusVariantMap[r.status || ""] || "grey",
+      soortRelatieLabel: (r.soortRelatie || []).map((v) => SOORT_RELATIE_OPTIES.find((o) => o.value === v)?.label).filter(Boolean).join(", ") || "—",
       ladingGroepen: r.ladingGroepen || [],
       contactCount: String(contactCount),
       ladingenCount: String(counts.ladingen),
@@ -213,6 +229,13 @@ export default function Relaties() {
                   allLabel="Alle statussen"
                   selectedValues={statusFilter}
                   onMultiSelect={(v) => { setStatusFilter(v); setCurrentPage(1); }}
+                />
+                <FilterDropdown
+                  label="Soort relatie"
+                  options={soortRelatieOptions}
+                  allLabel="Alle soorten"
+                  selectedValues={soortRelatieFilter}
+                  onMultiSelect={(v) => { setSoortRelatieFilter(v); setCurrentPage(1); }}
                 />
                 <FilterDropdown
                   label="Ladinggroep"

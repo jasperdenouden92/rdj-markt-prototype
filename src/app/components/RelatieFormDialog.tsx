@@ -4,8 +4,9 @@ import { Input } from "./ui/input";
 import { Label } from "./ui/label";
 import { Textarea } from "./ui/textarea";
 import Button from "./Button";
-import type { Relatie } from "../data/api";
-import { LADINGGROEP_SUGGESTIES, mockGebruikers } from "../data/mock-relatie-data";
+import Checkbox from "./Checkbox";
+import type { Relatie, SoortRelatie } from "../data/api";
+import { LADINGGROEP_SUGGESTIES, SOORT_RELATIE_OPTIES, mockGebruikers } from "../data/mock-relatie-data";
 
 interface RelatieFormDialogProps {
   relatie?: Relatie;
@@ -27,6 +28,7 @@ export default function RelatieFormDialog({ relatie, onSave, onClose }: RelatieF
   const [status, setStatus] = useState<Relatie["status"]>(relatie?.status || "actief");
   const [eigenaarId, setEigenaarId] = useState(relatie?.eigenaarId || "");
   const [contactFrequentie, setContactFrequentie] = useState<Relatie["contactFrequentie"]>(relatie?.contactFrequentie || "geen");
+  const [soortRelatie, setSoortRelatie] = useState<SoortRelatie[]>(relatie?.soortRelatie || []);
   const [ladingGroepen, setLadingGroepen] = useState<string[]>(relatie?.ladingGroepen || []);
   const [ladingGroepInput, setLadingGroepInput] = useState("");
   const [opmerkingen, setOpmerkingen] = useState(relatie?.opmerkingen || "");
@@ -47,6 +49,7 @@ export default function RelatieFormDialog({ relatie, onSave, onClose }: RelatieF
       status,
       eigenaarId: eigenaarId || undefined,
       contactFrequentie,
+      soortRelatie: soortRelatie.length > 0 ? soortRelatie : undefined,
       ladingGroepen: ladingGroepen.length > 0 ? ladingGroepen : undefined,
       opmerkingen: opmerkingen.trim() || undefined,
     });
@@ -136,6 +139,27 @@ export default function RelatieFormDialog({ relatie, onSave, onClose }: RelatieF
           <div className="flex flex-col gap-[6px]">
             <Label htmlFor="rel-website" className="font-sans font-bold text-[14px] text-[#344054]">Website</Label>
             <Input id="rel-website" value={website} onChange={(e) => setWebsite(e.target.value)} placeholder="www.bedrijf.nl" />
+          </div>
+
+          {/* Soort relatie */}
+          <div className="flex flex-col gap-[6px]">
+            <Label className="font-sans font-bold text-[14px] text-[#344054]">Soort relatie</Label>
+            <div className="flex flex-col gap-[8px]">
+              {SOORT_RELATIE_OPTIES.map((optie) => (
+                <Checkbox
+                  key={optie.value}
+                  checked={soortRelatie.includes(optie.value)}
+                  onChange={(checked) => {
+                    if (checked) {
+                      setSoortRelatie((prev) => [...prev, optie.value]);
+                    } else {
+                      setSoortRelatie((prev) => prev.filter((v) => v !== optie.value));
+                    }
+                  }}
+                  label={optie.label}
+                />
+              ))}
+            </div>
           </div>
 
           {/* Ladinggroepen */}
