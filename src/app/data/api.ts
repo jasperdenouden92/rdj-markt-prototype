@@ -65,6 +65,8 @@ export type EntityType =
 
 // ── Data interfaces ──
 
+export type SoortRelatie = 'lading-eigenaar' | 'bevrachter' | 'scheepseigenaar' | 'controleorganisatie' | 'terminal';
+
 export interface Relatie {
   id: string;
   naam: string;
@@ -77,6 +79,7 @@ export interface Relatie {
   email?: string;
   website?: string;
   ladingGroepen?: string[];
+  soortRelatie?: SoortRelatie[];
   eigenaarId?: string;
   status?: 'actief' | 'inactief' | 'prospect';
   contactFrequentie?: 'wekelijks' | 'maandelijks' | 'kwartaal' | 'geen';
