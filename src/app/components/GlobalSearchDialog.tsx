@@ -8,8 +8,8 @@ import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuChe
 import { mockRelaties, mockRelatieLadingen, mockRelatieVaartuigen } from "../data/mock-relatie-data";
 import type { RelatieLading, RelatieVaartuig } from "../data/mock-relatie-data";
 import type { Relatie } from "../data/api";
-import { mockVessels } from "../data/mock-data";
-import type { Vessel } from "../data/mock-data";
+import { mockVlootData } from "../data/mock-vloot-data";
+import type { VlootVaartuig } from "../data/mock-vloot-data";
 
 type SearchResultType = "partij" | "subpartij" | "vaartuig" | "relatie";
 
@@ -82,20 +82,20 @@ function buildSearchResults(): SearchResult[] {
 
   // Vloot vaartuigen (skip duplicates already in CRM by name)
   const crmVesselNames = new Set(mockRelatieVaartuigen.map((v) => v.naam.toLowerCase()));
-  mockVessels.forEach((v: Vessel) => {
-    if (crmVesselNames.has(v.title.toLowerCase())) return;
+  mockVlootData.forEach((v: VlootVaartuig) => {
+    if (crmVesselNames.has(v.naam.toLowerCase())) return;
     results.push({
       id: v.id,
       type: "vaartuig",
-      title: v.title,
-      subtitle: `${v.vesselType} · ${v.weight}`,
-      path: `/markt/bevrachting/vaartuig/${v.id}`,
+      title: v.naam,
+      subtitle: `${v.type} · ${v.grootteklasse}`,
+      path: `/vloot/${v.id}`,
       meta: {
-        type: v.vesselType,
-        capaciteit: v.weight,
-        locatie: v.location || v.from,
-        beschikbaar: v.locationDate || v.fromDate,
-        status: STATUS_LABELS[v.status] || v.status,
+        type: v.type,
+        capaciteit: v.grootteklasse,
+        locatie: v.huidigeLocatie,
+        beschikbaar: v.volgendeReisDate || "",
+        status: v.status,
         relatie: "Rederij de Jong",
         bron: "Vloot",
       },
@@ -190,7 +190,8 @@ export default function GlobalSearchDialog({ open, onOpenChange }: GlobalSearchD
       );
     }
 
-    return results;
+    const typeOrder: Record<SearchResultType, number> = { relatie: 0, partij: 1, vaartuig: 2, subpartij: 3 };
+    return results.sort((a, b) => typeOrder[a.type] - typeOrder[b.type]);
   }, [allResults, query, activeFilters]);
 
   const displayResults = isSearching ? filteredResults : recentSearches;
@@ -384,7 +385,7 @@ export default function GlobalSearchDialog({ open, onOpenChange }: GlobalSearchD
           {/* Content area: results + preview */}
           <div className="flex border-t border-rdj-border-secondary" style={{ height: "420px" }}>
             {/* Results list */}
-            <div ref={listRef} className="flex-1 overflow-y-auto min-w-0">
+            <div ref={listRef} className="flex-1 overflow-y-auto min-w-0 p-[6px]">
               {displayResults.length === 0 ? (
                 <div className="flex flex-col items-center justify-center h-full gap-[8px]">
                   {isSearching ? (
@@ -398,11 +399,11 @@ export default function GlobalSearchDialog({ open, onOpenChange }: GlobalSearchD
                 </div>
               ) : (
                 <div className="py-[4px]">
-                  {!isSearching && (
-                    <p className="px-[16px] py-[6px] font-sans text-[11px] font-medium text-rdj-text-tertiary uppercase tracking-wider">
-                      Recent
-                    </p>
-                  )}
+                  <p className="px-[16px] py-[6px] font-sans text-[11px] font-medium text-rdj-text-tertiary">
+                    {isSearching
+                      ? `${displayResults.length} zoekresultaten`
+                      : "Recent"}
+                  </p>
                   {displayResults.map((result, index) => {
                     const config = TYPE_CONFIG[result.type];
                     const Icon = config.icon;
@@ -411,7 +412,7 @@ export default function GlobalSearchDialog({ open, onOpenChange }: GlobalSearchD
                       <div
                         key={`${result.type}-${result.id}`}
                         data-search-item
-                        className={`flex items-center gap-[10px] px-[16px] py-[8px] cursor-pointer transition-colors ${
+                        className={`flex items-center gap-[10px] px-[16px] py-[8px] cursor-pointer transition-colors rounded-[4px] ${
                           isSelected ? "bg-rdj-bg-secondary" : "hover:bg-rdj-bg-primary-hover"
                         }`}
                         onClick={() => handleSelect(result)}
@@ -453,7 +454,7 @@ export default function GlobalSearchDialog({ open, onOpenChange }: GlobalSearchD
             </div>
 
             {/* Preview panel */}
-            <div className="w-[340px] shrink-0 border-l border-rdj-border-secondary bg-rdj-bg-secondary overflow-y-auto p-[12px]">
+            <div className="w-[400px] shrink-0 overflow-y-auto p-[48px]">
               {selectedResult ? (
                 <div className="bg-white rounded-[8px] border border-rdj-border-secondary shadow-[0px_1px_3px_0px_rgba(16,24,40,0.1),0px_1px_2px_0px_rgba(16,24,40,0.06)]">
                   <div className="p-[16px]">
