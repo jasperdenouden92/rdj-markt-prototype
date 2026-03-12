@@ -297,8 +297,10 @@ export interface RelatieLading {
   loshaven: string;
   tonnage: string;
   product: string;
-  laaddatum: string;
-  status: "intake" | "werklijst" | "markt" | "gesloten";
+  laaddatum?: string;
+  losdatum?: string;
+  status: "inbox" | "pijplijn" | "intake" | "werklijst" | "markt" | "gesloten";
+  prioriteit?: number;
   matches: number;
   onderhandelingen: number;
   // Step 1 extra fields
@@ -322,19 +324,26 @@ export interface RelatieLading {
 }
 
 export const mockRelatieLadingen: RelatieLading[] = [
-  { id: "rl-001", relatieId: "rel-001", ladingSoortId: "ls-003", titel: "Houtpellets Salzgitter", laadhaven: "Salzgitter Stichkanal", loshaven: "Hamburg Veddelkanal", tonnage: "2.000 ton", product: "Houtpellets (DSIT)", laaddatum: "2026-03-14", status: "markt", matches: 5, onderhandelingen: 2 },
-  { id: "rl-002", relatieId: "rel-001", contractId: "ctr-001", ladingSoortId: "ls-001", titel: "Graan Rotterdam–Krefeld", laadhaven: "Rotterdam", loshaven: "Krefeld", tonnage: "3.500 ton", product: "Graan", laaddatum: "2026-03-18", status: "werklijst", matches: 3, onderhandelingen: 0 },
+  // Bevrachting (aanbieden): intake, werklijst, markt
+  { id: "rl-001", relatieId: "rel-001", ladingSoortId: "ls-003", titel: "Houtpellets Salzgitter", exNaam: "m/v Abis Dover", laadhaven: "Salzgitter Stichkanal", loshaven: "Hamburg Veddelkanal", tonnage: "2.000 ton", product: "Houtpellets (DSIT)", laaddatum: "2026-03-14", losdatum: "2026-03-17", status: "markt", matches: 5, onderhandelingen: 2 },
+  { id: "rl-002", relatieId: "rel-001", contractId: "ctr-001", ladingSoortId: "ls-001", titel: "Graan Rotterdam–Krefeld", exNaam: "m/v A2B Future", laadhaven: "Rotterdam", loshaven: "Krefeld", tonnage: "3.500 ton", product: "Graan", laaddatum: "2026-03-18", losdatum: "2026-03-21", status: "werklijst", matches: 3, onderhandelingen: 0 },
   { id: "rl-003", relatieId: "rel-001", ladingSoortId: "ls-005", titel: "Meststoffen Amsterdam", laadhaven: "Amsterdam", loshaven: "Mannheim", tonnage: "4.000 ton", product: "Meststoffen", laaddatum: "2026-03-22", status: "intake", matches: 0, onderhandelingen: 0 },
-  { id: "rl-004", relatieId: "rel-002", contractId: "ctr-002", ladingSoortId: "ls-004", titel: "Staal Dordrecht–Antwerpen", laadhaven: "Dordrecht", loshaven: "Antwerpen", tonnage: "3.000 ton", product: "Staal", laaddatum: "2026-03-15", status: "markt", matches: 4, onderhandelingen: 1 },
-  { id: "rl-005", relatieId: "rel-002", ladingSoortId: "ls-004", titel: "Staal Dordrecht–Gent", laadhaven: "Dordrecht", loshaven: "Gent", tonnage: "2.500 ton", product: "Staal", laaddatum: "2026-03-20", status: "werklijst", matches: 2, onderhandelingen: 0 },
-  { id: "rl-006", relatieId: "rel-003", ladingSoortId: "ls-007", titel: "Sojabonen Rotterdam", laadhaven: "Rotterdam Botlek", loshaven: "Basel", tonnage: "3.500 ton", product: "Sojabonen", laaddatum: "2026-03-16", status: "markt", matches: 6, onderhandelingen: 3 },
-  { id: "rl-007", relatieId: "rel-003", ladingSoortId: "ls-001", titel: "Graan Amsterdam–Strasbourg", laadhaven: "Amsterdam", loshaven: "Strasbourg", tonnage: "3.000 ton", product: "Graan", laaddatum: "2026-03-25", status: "intake", matches: 0, onderhandelingen: 0 },
-  { id: "rl-008", relatieId: "rel-004", contractId: "ctr-004", ladingSoortId: "ls-002", titel: "Zand Barendrecht", laadhaven: "Barendrecht", loshaven: "Rotterdam Europoort", tonnage: "1.800 ton", product: "Zand", laaddatum: "2026-03-14", status: "gesloten", matches: 0, onderhandelingen: 0 },
-  { id: "rl-009", relatieId: "rel-005", ladingSoortId: "ls-008", titel: "Containers Rotterdam–Antwerpen", laadhaven: "Rotterdam", loshaven: "Antwerpen", tonnage: "2.000 ton", product: "Containers", laaddatum: "2026-03-19", status: "markt", matches: 3, onderhandelingen: 1 },
-  { id: "rl-010", relatieId: "rel-007", ladingSoortId: "ls-009", titel: "Grind Papendrecht", laadhaven: "Papendrecht", loshaven: "Rotterdam", tonnage: "3.000 ton", product: "Grind", laaddatum: "2026-03-17", status: "werklijst", matches: 2, onderhandelingen: 0 },
-  { id: "rl-011", relatieId: "rel-008", contractId: "ctr-009", ladingSoortId: "ls-006", titel: "Kolen Maastricht–Luik", laadhaven: "Maastricht", loshaven: "Luik", tonnage: "2.200 ton", product: "Kolen", laaddatum: "2026-03-12", status: "gesloten", matches: 0, onderhandelingen: 0 },
+  { id: "rl-004", relatieId: "rel-002", contractId: "ctr-002", ladingSoortId: "ls-004", titel: "Staal Dordrecht–Antwerpen", exNaam: "m/v Maran Future", laadhaven: "Dordrecht", loshaven: "Antwerpen", tonnage: "3.000 ton", product: "Staal", laaddatum: "2026-03-15", losdatum: "2026-03-17", status: "markt", matches: 4, onderhandelingen: 1 },
+  { id: "rl-005", relatieId: "rel-002", ladingSoortId: "ls-004", titel: "Staal Dordrecht–Gent", exNaam: "m/v Merganser", laadhaven: "Dordrecht", loshaven: "Gent", tonnage: "2.500 ton", product: "Staal", laaddatum: "2026-03-20", status: "werklijst", matches: 2, onderhandelingen: 0 },
+  { id: "rl-006", relatieId: "rel-003", ladingSoortId: "ls-007", titel: "Sojabonen Rotterdam", exNaam: "m/v Abis Dover", laadhaven: "Rotterdam Botlek", loshaven: "Basel", tonnage: "3.500 ton", product: "Sojabonen", laaddatum: "2026-03-16", losdatum: "2026-03-22", status: "markt", matches: 6, onderhandelingen: 3 },
+  { id: "rl-007", relatieId: "rel-003", ladingSoortId: "ls-001", titel: "Graan Amsterdam–Strasbourg", laadhaven: "Amsterdam", loshaven: "Strasbourg", tonnage: "3.000 ton", product: "Graan", status: "intake", matches: 0, onderhandelingen: 0 },
+  { id: "rl-008", relatieId: "rel-004", contractId: "ctr-004", ladingSoortId: "ls-002", titel: "Zand Barendrecht", laadhaven: "Barendrecht", loshaven: "Rotterdam Europoort", tonnage: "1.800 ton", product: "Zand", laaddatum: "2026-03-14", losdatum: "2026-03-14", status: "gesloten", matches: 0, onderhandelingen: 0 },
+  { id: "rl-009", relatieId: "rel-005", ladingSoortId: "ls-008", titel: "Containers Rotterdam–Antwerpen", exNaam: "m/v A2B Future", laadhaven: "Rotterdam", loshaven: "Antwerpen", tonnage: "2.000 ton", product: "Containers", laaddatum: "2026-03-19", losdatum: "2026-03-20", status: "markt", matches: 3, onderhandelingen: 1 },
+  { id: "rl-010", relatieId: "rel-007", ladingSoortId: "ls-009", titel: "Grind Papendrecht", exNaam: "m/v Maran Future", laadhaven: "Papendrecht", loshaven: "Rotterdam", tonnage: "3.000 ton", product: "Grind", laaddatum: "2026-03-17", status: "werklijst", matches: 2, onderhandelingen: 0 },
+  { id: "rl-011", relatieId: "rel-008", contractId: "ctr-009", ladingSoortId: "ls-006", titel: "Kolen Maastricht–Luik", laadhaven: "Maastricht", loshaven: "Luik", tonnage: "2.200 ton", product: "Kolen", laaddatum: "2026-03-12", losdatum: "2026-03-13", status: "gesloten", matches: 0, onderhandelingen: 0 },
   { id: "rl-012", relatieId: "rel-010", contractId: "ctr-006", ladingSoortId: "ls-007", titel: "Sojabonen inspectie Botlek", laadhaven: "Rotterdam Botlek", loshaven: "Rotterdam Botlek", tonnage: "5.000 ton", product: "Sojabonen", laaddatum: "2026-03-21", status: "intake", matches: 0, onderhandelingen: 0 },
-  { id: "rl-013", relatieId: "rel-012", ladingSoortId: "ls-008", titel: "Containers Rotterdam–Duisburg", laadhaven: "Rotterdam", loshaven: "Duisburg", tonnage: "2.000 ton", product: "Containers", laaddatum: "2026-03-23", status: "markt", matches: 4, onderhandelingen: 2 },
+  { id: "rl-013", relatieId: "rel-012", ladingSoortId: "ls-008", titel: "Containers Rotterdam–Duisburg", exNaam: "m/v Merganser", laadhaven: "Rotterdam", loshaven: "Duisburg", tonnage: "2.000 ton", product: "Containers", laaddatum: "2026-03-23", losdatum: "2026-03-25", status: "markt", matches: 4, onderhandelingen: 2 },
+  // Ladinguitvraag (bekende ladingen per relatie): inbox, pijplijn
+  { id: "rl-101", relatieId: "rel-001", ladingSoortId: "ls-003", titel: "Houtpellets retour", laadhaven: "Hamburg Veddelkanal", loshaven: "Salzgitter Stichkanal", tonnage: "1.500 ton", product: "Houtpellets", laaddatum: "2026-03-20", losdatum: "2026-03-22", status: "pijplijn", prioriteit: 4, matches: 0, onderhandelingen: 0 },
+  { id: "rl-102", relatieId: "rel-001", ladingSoortId: "ls-001", titel: "Graan Krefeld–Rotterdam", laadhaven: "Krefeld", loshaven: "Rotterdam", tonnage: "2.000 ton", product: "Graan", status: "inbox", prioriteit: 2, matches: 0, onderhandelingen: 0 },
+  { id: "rl-103", relatieId: "rel-002", ladingSoortId: "ls-004", titel: "Staal Antwerpen–Dordrecht", laadhaven: "Antwerpen", loshaven: "Dordrecht", tonnage: "3.000 ton", product: "Staal", laaddatum: "2026-03-18", status: "pijplijn", prioriteit: 5, matches: 0, onderhandelingen: 0 },
+  { id: "rl-104", relatieId: "rel-002", ladingSoortId: "ls-002", titel: "Zand Gent–Rotterdam", laadhaven: "Gent", loshaven: "Rotterdam", tonnage: "2.500 ton", product: "Zand", status: "inbox", prioriteit: 0, matches: 0, onderhandelingen: 0 },
+  { id: "rl-105", relatieId: "rel-003", ladingSoortId: "ls-007", titel: "Sojabonen Basel–Botlek", laadhaven: "Basel", loshaven: "Rotterdam Botlek", tonnage: "4.000 ton", product: "Sojabonen", laaddatum: "2026-03-24", losdatum: "2026-03-28", status: "pijplijn", prioriteit: 3, matches: 0, onderhandelingen: 0 },
 ];
 
 /** Mock vaartuigen per relatie */
@@ -346,32 +355,35 @@ export interface RelatieVaartuig {
   capaciteit: string;
   locatie: string;
   beschikbaarVanaf: string;
-  status: "beschikbaar" | "onderweg" | "beladen" | "in_onderhoud";
+  status: "inbox" | "pijplijn" | "intake" | "werklijst" | "markt" | "gesloten";
+  prioriteit?: number;
   matches: number;
   onderhandelingen: number;
 }
 
 const VAARTUIG_STATUS_MAP: Record<string, string> = {
-  beschikbaar: "Beschikbaar",
-  onderweg: "Onderweg",
-  beladen: "Beladen",
-  in_onderhoud: "In onderhoud",
+  inbox: "Inbox",
+  pijplijn: "Pijplijn",
+  intake: "Intake",
+  werklijst: "Werklijst",
+  markt: "Markt",
+  gesloten: "Gesloten",
 };
 
 export { VAARTUIG_STATUS_MAP };
 
 export const mockRelatieVaartuigen: RelatieVaartuig[] = [
-  { id: "rv-001", relatieId: "rel-001", naam: "Emily", type: "Motorschip", capaciteit: "3.000 ton", locatie: "Waalhaven", beschikbaarVanaf: "2026-03-12", status: "beschikbaar", matches: 4, onderhandelingen: 1 },
-  { id: "rv-002", relatieId: "rel-001", naam: "Agaat", type: "Motorschip", capaciteit: "2.500 ton", locatie: "Krefeld", beschikbaarVanaf: "2026-03-19", status: "onderweg", matches: 2, onderhandelingen: 0 },
-  { id: "rv-003", relatieId: "rel-002", naam: "S.S. Anna", type: "Motorschip", capaciteit: "2.500 ton", locatie: "Bremerhaven", beschikbaarVanaf: "2026-03-14", status: "beschikbaar", matches: 3, onderhandelingen: 1 },
-  { id: "rv-004", relatieId: "rel-003", naam: "Bregje", type: "Motorschip", capaciteit: "3.000 ton", locatie: "Rotterdam Botlek", beschikbaarVanaf: "2026-03-16", status: "beladen", matches: 5, onderhandelingen: 2 },
-  { id: "rv-005", relatieId: "rel-003", naam: "Hercules", type: "Motorschip", capaciteit: "3.000 ton", locatie: "Basel", beschikbaarVanaf: "2026-03-22", status: "onderweg", matches: 1, onderhandelingen: 0 },
-  { id: "rv-006", relatieId: "rel-004", naam: "Antonia V", type: "Motorschip", capaciteit: "4.200 ton", locatie: "Barendrecht", beschikbaarVanaf: "2026-03-14", status: "beschikbaar", matches: 3, onderhandelingen: 0 },
-  { id: "rv-007", relatieId: "rel-005", naam: "Duwbak Alfa-1", type: "Duwbak", capaciteit: "2.000 ton", locatie: "Rotterdam", beschikbaarVanaf: "2026-04-01", status: "in_onderhoud", matches: 0, onderhandelingen: 0 },
-  { id: "rv-008", relatieId: "rel-005", naam: "Duwbak Alfa-2", type: "Duwbak", capaciteit: "2.000 ton", locatie: "Moerdijk", beschikbaarVanaf: "2026-03-15", status: "beschikbaar", matches: 2, onderhandelingen: 1 },
-  { id: "rv-009", relatieId: "rel-007", naam: "Merganser", type: "Motorschip", capaciteit: "2.000 ton", locatie: "Papendrecht", beschikbaarVanaf: "2026-03-18", status: "beladen", matches: 3, onderhandelingen: 1 },
-  { id: "rv-010", relatieId: "rel-010", naam: "Amber", type: "Motorschip", capaciteit: "4.500 ton", locatie: "Rotterdam Botlek", beschikbaarVanaf: "2026-03-20", status: "beschikbaar", matches: 4, onderhandelingen: 0 },
-  { id: "rv-011", relatieId: "rel-012", naam: "Rhein Trader", type: "Motorschip", capaciteit: "2.800 ton", locatie: "Duisburg", beschikbaarVanaf: "2026-03-24", status: "onderweg", matches: 2, onderhandelingen: 1 },
+  { id: "rv-001", relatieId: "rel-001", naam: "Emily", type: "Motorschip", capaciteit: "3.000 ton", locatie: "Waalhaven", beschikbaarVanaf: "2026-03-12", status: "markt", matches: 4, onderhandelingen: 1 },
+  { id: "rv-002", relatieId: "rel-001", naam: "Agaat", type: "Motorschip", capaciteit: "2.500 ton", locatie: "Krefeld", beschikbaarVanaf: "2026-03-19", status: "werklijst", matches: 2, onderhandelingen: 0 },
+  { id: "rv-003", relatieId: "rel-002", naam: "S.S. Anna", type: "Motorschip", capaciteit: "2.500 ton", locatie: "Bremerhaven", beschikbaarVanaf: "2026-03-14", status: "markt", matches: 3, onderhandelingen: 1 },
+  { id: "rv-004", relatieId: "rel-003", naam: "Bregje", type: "Motorschip", capaciteit: "3.000 ton", locatie: "Rotterdam Botlek", beschikbaarVanaf: "2026-03-16", status: "markt", matches: 5, onderhandelingen: 2 },
+  { id: "rv-005", relatieId: "rel-003", naam: "Hercules", type: "Motorschip", capaciteit: "3.000 ton", locatie: "Basel", beschikbaarVanaf: "2026-03-22", status: "intake", matches: 1, onderhandelingen: 0 },
+  { id: "rv-006", relatieId: "rel-004", naam: "Antonia V", type: "Motorschip", capaciteit: "4.200 ton", locatie: "Barendrecht", beschikbaarVanaf: "2026-03-14", status: "werklijst", matches: 3, onderhandelingen: 0 },
+  { id: "rv-007", relatieId: "rel-005", naam: "Duwbak Alfa-1", type: "Duwbak", capaciteit: "2.000 ton", locatie: "Rotterdam", beschikbaarVanaf: "2026-04-01", status: "gesloten", matches: 0, onderhandelingen: 0 },
+  { id: "rv-008", relatieId: "rel-005", naam: "Duwbak Alfa-2", type: "Duwbak", capaciteit: "2.000 ton", locatie: "Moerdijk", beschikbaarVanaf: "2026-03-15", status: "markt", matches: 2, onderhandelingen: 1 },
+  { id: "rv-009", relatieId: "rel-007", naam: "Merganser", type: "Motorschip", capaciteit: "2.000 ton", locatie: "Papendrecht", beschikbaarVanaf: "2026-03-18", status: "intake", matches: 3, onderhandelingen: 1 },
+  { id: "rv-010", relatieId: "rel-010", naam: "Amber", type: "Motorschip", capaciteit: "4.500 ton", locatie: "Rotterdam Botlek", beschikbaarVanaf: "2026-03-20", status: "markt", matches: 4, onderhandelingen: 0 },
+  { id: "rv-011", relatieId: "rel-012", naam: "Rhein Trader", type: "Motorschip", capaciteit: "2.800 ton", locatie: "Duisburg", beschikbaarVanaf: "2026-03-24", status: "werklijst", matches: 2, onderhandelingen: 1 },
 ];
 
 /** Mock lading matches (vaartuigen die passen bij een lading) */
