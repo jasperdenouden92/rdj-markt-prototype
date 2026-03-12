@@ -1,13 +1,17 @@
 import { useState, useEffect, useCallback, useRef, useMemo } from "react";
 import { useNavigate } from "react-router";
-import { Search, SlidersHorizontal, Package, Users, Ship, ArrowUp, ArrowDown, CornerDownLeft, Clock } from "lucide-react";
+import { Search, SlidersHorizontal, ChevronDown, Package, Layers, Users, Ship, ArrowUp, ArrowDown, CornerDownLeft, Clock, ExternalLink, Phone } from "lucide-react";
 import { Dialog, DialogOverlay, DialogPortal } from "./ui/dialog";
 import * as DialogPrimitive from "@radix-ui/react-dialog";
+import Button from "./Button";
+import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuCheckboxItem } from "./ui/dropdown-menu";
 import { mockRelaties, mockRelatieLadingen, mockRelatieVaartuigen } from "../data/mock-relatie-data";
 import type { RelatieLading, RelatieVaartuig } from "../data/mock-relatie-data";
 import type { Relatie } from "../data/api";
+import { mockVessels } from "../data/mock-data";
+import type { Vessel } from "../data/mock-data";
 
-type SearchResultType = "lading" | "vaartuig" | "relatie";
+type SearchResultType = "partij" | "subpartij" | "vaartuig" | "relatie";
 
 interface SearchResult {
   id: string;
@@ -39,7 +43,7 @@ function buildSearchResults(): SearchResult[] {
     const relatie = mockRelaties.find((r) => r.id === l.relatieId);
     results.push({
       id: l.id,
-      type: "lading",
+      type: "partij",
       title: l.titel,
       subtitle: `${l.product} · ${l.tonnage}`,
       path: `/lading/${l.id}`,
@@ -55,6 +59,7 @@ function buildSearchResults(): SearchResult[] {
     });
   });
 
+  // CRM vaartuigen
   mockRelatieVaartuigen.forEach((v: RelatieVaartuig) => {
     const relatie = mockRelaties.find((r) => r.id === v.relatieId);
     results.push({
@@ -70,6 +75,29 @@ function buildSearchResults(): SearchResult[] {
         beschikbaar: v.beschikbaarVanaf,
         status: STATUS_LABELS[v.status] || v.status,
         relatie: relatie?.naam || "",
+        bron: "CRM",
+      },
+    });
+  });
+
+  // Vloot vaartuigen (skip duplicates already in CRM by name)
+  const crmVesselNames = new Set(mockRelatieVaartuigen.map((v) => v.naam.toLowerCase()));
+  mockVessels.forEach((v: Vessel) => {
+    if (crmVesselNames.has(v.title.toLowerCase())) return;
+    results.push({
+      id: v.id,
+      type: "vaartuig",
+      title: v.title,
+      subtitle: `${v.vesselType} · ${v.weight}`,
+      path: `/markt/bevrachting/vaartuig/${v.id}`,
+      meta: {
+        type: v.vesselType,
+        capaciteit: v.weight,
+        locatie: v.location || v.from,
+        beschikbaar: v.locationDate || v.fromDate,
+        status: STATUS_LABELS[v.status] || v.status,
+        relatie: "Rederij de Jong",
+        bron: "Vloot",
       },
     });
   });
@@ -95,12 +123,13 @@ function buildSearchResults(): SearchResult[] {
 }
 
 const TYPE_CONFIG: Record<SearchResultType, { label: string; icon: typeof Package; color: string }> = {
-  lading: { label: "Lading", icon: Package, color: "#1567A4" },
+  partij: { label: "Partij", icon: Package, color: "#1567A4" },
+  subpartij: { label: "Subpartij", icon: Layers, color: "#2E90FA" },
   vaartuig: { label: "Vaartuig", icon: Ship, color: "#667085" },
   relatie: { label: "Relatie", icon: Users, color: "#7A5AF8" },
 };
 
-const ALL_TYPES: SearchResultType[] = ["lading", "vaartuig", "relatie"];
+const ALL_TYPES: SearchResultType[] = ["partij", "subpartij", "vaartuig", "relatie"];
 
 // Persist recent searches in localStorage
 const RECENT_KEY = "rdj-recent-searches";
@@ -109,7 +138,10 @@ const MAX_RECENT = 8;
 function getRecentSearches(): SearchResult[] {
   try {
     const raw = localStorage.getItem(RECENT_KEY);
-    return raw ? JSON.parse(raw) : [];
+    if (!raw) return [];
+    const parsed: SearchResult[] = JSON.parse(raw);
+    // Filter out stale entries with types that no longer exist
+    return parsed.filter((r) => r.type in TYPE_CONFIG);
   } catch {
     return [];
   }
@@ -132,6 +164,7 @@ export default function GlobalSearchDialog({ open, onOpenChange }: GlobalSearchD
   const [showFilters, setShowFilters] = useState(false);
   const [activeFilters, setActiveFilters] = useState<Set<SearchResultType>>(new Set());
   const [recentSearches, setRecentSearches] = useState<SearchResult[]>([]);
+  const [focusedActionIndex, setFocusedActionIndex] = useState(0);
   const inputRef = useRef<HTMLInputElement>(null);
   const listRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
@@ -163,11 +196,14 @@ export default function GlobalSearchDialog({ open, onOpenChange }: GlobalSearchD
   const displayResults = isSearching ? filteredResults : recentSearches;
   const selectedResult = displayResults[selectedIndex] || null;
 
+
+
   // Reset state when opening
   useEffect(() => {
     if (open) {
       setQuery("");
       setSelectedIndex(0);
+      setFocusedActionIndex(0);
       setShowFilters(false);
       setActiveFilters(new Set());
       setRecentSearches(getRecentSearches());
@@ -201,6 +237,22 @@ export default function GlobalSearchDialog({ open, onOpenChange }: GlobalSearchD
     [navigate, onOpenChange]
   );
 
+  // Actions available for the selected result
+  const actions = useMemo(() => {
+    if (!selectedResult) return [];
+    const list: { id: string; icon: typeof ExternalLink; action: () => void }[] = [];
+    list.push({ id: "open", icon: ExternalLink, action: () => handleSelect(selectedResult) });
+    if (selectedResult.type === "relatie") {
+      list.push({ id: "phone", icon: Phone, action: () => {} });
+    }
+    return list;
+  }, [selectedResult, handleSelect]);
+
+  // Reset focused action when selected result changes
+  useEffect(() => {
+    setFocusedActionIndex(0);
+  }, [selectedIndex]);
+
   const handleKeyDown = useCallback(
     (e: React.KeyboardEvent) => {
       switch (e.key) {
@@ -212,9 +264,25 @@ export default function GlobalSearchDialog({ open, onOpenChange }: GlobalSearchD
           e.preventDefault();
           setSelectedIndex((i) => Math.max(i - 1, 0));
           break;
+        case "ArrowRight":
+          e.preventDefault();
+          if (actions.length > 1) {
+            setFocusedActionIndex((i) => Math.min(i + 1, actions.length - 1));
+          }
+          break;
+        case "ArrowLeft":
+          e.preventDefault();
+          if (actions.length > 1) {
+            setFocusedActionIndex((i) => Math.max(i - 1, 0));
+          }
+          break;
         case "Enter":
           e.preventDefault();
-          if (selectedResult) handleSelect(selectedResult);
+          if (actions[focusedActionIndex]) {
+            actions[focusedActionIndex].action();
+          } else if (selectedResult) {
+            handleSelect(selectedResult);
+          }
           break;
         case "Escape":
           e.preventDefault();
@@ -222,7 +290,7 @@ export default function GlobalSearchDialog({ open, onOpenChange }: GlobalSearchD
           break;
       }
     },
-    [displayResults.length, selectedResult, handleSelect, onOpenChange]
+    [displayResults.length, selectedResult, handleSelect, onOpenChange, actions, focusedActionIndex]
   );
 
   const toggleFilter = (type: SearchResultType) => {
@@ -255,7 +323,7 @@ export default function GlobalSearchDialog({ open, onOpenChange }: GlobalSearchD
       <DialogPortal>
         <DialogOverlay className="bg-black/40" />
         <DialogPrimitive.Content
-          className="fixed top-[12%] left-[50%] z-50 translate-x-[-50%] w-full max-w-[760px] bg-white rounded-[12px] shadow-[0px_24px_48px_-12px_rgba(16,24,40,0.18)] overflow-hidden outline-none data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 duration-200"
+          className="fixed top-[12%] left-[50%] z-50 translate-x-[-50%] w-full max-w-[860px] bg-white rounded-[12px] shadow-[0px_24px_48px_-12px_rgba(16,24,40,0.18)] overflow-hidden outline-none data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 duration-200"
           onKeyDown={handleKeyDown}
         >
           {/* Search input */}
@@ -271,39 +339,45 @@ export default function GlobalSearchDialog({ open, onOpenChange }: GlobalSearchD
               placeholder="Zoek naar alles..."
               className="flex-1 font-sans text-[14px] text-rdj-text-primary placeholder:text-rdj-text-tertiary outline-none bg-transparent"
             />
-            <button
+            <Button
+              variant={showFilters || activeFilters.size > 0 ? "primary" : "secondary"}
+              size="sm"
+              icon={<SlidersHorizontal />}
               onClick={() => setShowFilters(!showFilters)}
-              className={`shrink-0 p-[6px] rounded-[4px] transition-colors ${
-                showFilters || activeFilters.size > 0
-                  ? "bg-rdj-bg-brand text-rdj-text-brand"
-                  : "text-rdj-fg-secondary hover:bg-rdj-bg-secondary-hover"
-              }`}
-            >
-              <SlidersHorizontal className="size-[16px]" strokeWidth={2} />
-            </button>
+            />
           </div>
 
           {/* Filters */}
           {showFilters && (
             <div className="flex items-center gap-[6px] px-[16px] pb-[12px]">
-              {ALL_TYPES.map((type) => {
-                const config = TYPE_CONFIG[type];
-                const isActive = activeFilters.has(type);
-                return (
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
                   <button
-                    key={type}
-                    onClick={() => toggleFilter(type)}
-                    className={`flex items-center gap-[6px] px-[10px] py-[4px] rounded-[6px] font-sans text-[12px] font-medium transition-colors border ${
-                      isActive
-                        ? "bg-rdj-bg-brand border-[#1567A4]/20 text-rdj-text-brand"
-                        : "border-rdj-border-secondary text-rdj-text-secondary hover:bg-rdj-bg-secondary"
+                    className={`flex items-center gap-[4px] shrink-0 font-sans text-[13px] font-medium cursor-pointer transition-colors ${
+                      activeFilters.size > 0 ? "text-rdj-text-brand" : "text-rdj-text-tertiary hover:text-rdj-text-secondary"
                     }`}
                   >
-                    <config.icon className="size-[12px]" strokeWidth={2} />
-                    {config.label}
+                    Type{activeFilters.size > 0 && ` (${activeFilters.size})`}
+                    <ChevronDown className="size-[14px]" strokeWidth={2} />
                   </button>
-                );
-              })}
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="start" className="min-w-[160px]">
+                  {ALL_TYPES.map((type) => {
+                    const config = TYPE_CONFIG[type];
+                    const Icon = config.icon;
+                    return (
+                      <DropdownMenuCheckboxItem
+                        key={type}
+                        checked={activeFilters.has(type)}
+                        onCheckedChange={() => toggleFilter(type)}
+                      >
+                        <Icon className="size-[14px]" stroke={config.color} strokeWidth={2} />
+                        {config.label}
+                      </DropdownMenuCheckboxItem>
+                    );
+                  })}
+                </DropdownMenuContent>
+              </DropdownMenu>
             </div>
           )}
 
@@ -379,54 +453,115 @@ export default function GlobalSearchDialog({ open, onOpenChange }: GlobalSearchD
             </div>
 
             {/* Preview panel */}
-            <div className="w-[280px] shrink-0 border-l border-rdj-border-secondary bg-rdj-bg-secondary overflow-y-auto">
+            <div className="w-[340px] shrink-0 border-l border-rdj-border-secondary bg-rdj-bg-secondary overflow-y-auto p-[12px]">
               {selectedResult ? (
-                <div className="p-[20px]">
-                  <div className="flex items-center gap-[8px] mb-[16px]">
-                    {(() => {
-                      const config = TYPE_CONFIG[selectedResult.type];
-                      const Icon = config.icon;
-                      return (
-                        <>
-                          <div
-                            className="shrink-0 flex items-center justify-center size-[32px] rounded-[8px]"
-                            style={{ backgroundColor: `${config.color}15` }}
-                          >
-                            <Icon className="size-[16px]" stroke={config.color} strokeWidth={2} />
+                <div className="bg-white rounded-[8px] border border-rdj-border-secondary shadow-[0px_1px_3px_0px_rgba(16,24,40,0.1),0px_1px_2px_0px_rgba(16,24,40,0.06)]">
+                  <div className="p-[16px]">
+                    {/* Actions top-right */}
+                    <div className="flex items-start justify-between mb-[4px]">
+                      <h3 className="font-sans text-[15px] font-bold text-rdj-text-primary leading-[22px]">
+                        {selectedResult.title}
+                      </h3>
+                      <div className="flex items-center gap-[4px] shrink-0 ml-[8px]">
+                        {actions.map((act, i) => (
+                          <Button
+                            key={act.id}
+                            variant="secondary"
+                            size="sm"
+                            icon={<act.icon />}
+                            onClick={act.action}
+                            className={i === focusedActionIndex ? "ring-2 ring-[#1567A4] ring-offset-1" : ""}
+                          />
+                        ))}
+                      </div>
+                    </div>
+
+                    <p className="font-sans text-[13px] text-rdj-text-secondary leading-[18px] mb-[16px]">
+                      {selectedResult.subtitle}
+                    </p>
+
+                    {/* Type-specific card content */}
+                    {selectedResult.type === "vaartuig" && selectedResult.meta && (
+                      <div className="flex flex-col gap-[8px]">
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center gap-[6px]">
+                            <span className="size-[8px] rounded-full bg-[#17B26A] shrink-0" />
+                            <span className="font-sans text-[13px] text-rdj-text-primary">{selectedResult.meta.locatie}</span>
                           </div>
-                          <span
-                            className="font-sans text-[11px] font-medium px-[6px] py-[2px] rounded-[4px]"
-                            style={{
-                              backgroundColor: `${config.color}10`,
-                              color: config.color,
+                          {selectedResult.meta.beschikbaar && (
+                            <span className="font-sans text-[13px] text-rdj-text-secondary">{selectedResult.meta.beschikbaar}</span>
+                          )}
+                        </div>
+                        {selectedResult.meta.relatie && (
+                          <button
+                            className="font-sans text-[13px] text-rdj-text-brand hover:underline text-left cursor-pointer"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              const rel = mockRelaties.find((r) => r.naam === selectedResult.meta!.relatie);
+                              if (rel) {
+                                onOpenChange(false);
+                                navigate(`/crm/relatie/${rel.id}`);
+                              }
                             }}
                           >
-                            {config.label}
-                          </span>
-                        </>
-                      );
-                    })()}
-                  </div>
-                  <h3 className="font-sans text-[14px] font-semibold text-rdj-text-primary leading-[20px] mb-[4px]">
-                    {selectedResult.title}
-                  </h3>
-                  <p className="font-sans text-[12px] text-rdj-text-tertiary leading-[16px] mb-[16px]">
-                    {selectedResult.subtitle}
-                  </p>
-                  {selectedResult.meta && (
-                    <div className="flex flex-col gap-[10px]">
-                      {Object.entries(selectedResult.meta).map(([key, value]) =>
-                        value ? (
-                          <div key={key}>
-                            <p className="font-sans text-[11px] font-medium text-rdj-text-tertiary uppercase tracking-wider mb-[2px]">
-                              {key}
-                            </p>
-                            <p className="font-sans text-[13px] text-rdj-text-primary leading-[18px]">{value}</p>
+                            {selectedResult.meta.relatie}
+                          </button>
+                        )}
+                      </div>
+                    )}
+
+                    {selectedResult.type === "partij" && selectedResult.meta && (
+                      <div className="flex flex-col gap-[8px]">
+                        <div className="flex items-center justify-between">
+                          <span className="font-sans text-[12px] text-rdj-text-tertiary">Route</span>
+                          <span className="font-sans text-[13px] text-rdj-text-primary">{selectedResult.meta.laadhaven} → {selectedResult.meta.loshaven}</span>
+                        </div>
+                        <div className="flex items-center justify-between">
+                          <span className="font-sans text-[12px] text-rdj-text-tertiary">Laaddatum</span>
+                          <span className="font-sans text-[13px] text-rdj-text-primary">{selectedResult.meta.laaddatum}</span>
+                        </div>
+                        <div className="flex items-center justify-between">
+                          <span className="font-sans text-[12px] text-rdj-text-tertiary">Status</span>
+                          <span className="font-sans text-[13px] text-rdj-text-primary">{selectedResult.meta.status}</span>
+                        </div>
+                        {selectedResult.meta.relatie && (
+                          <div className="flex items-center justify-between">
+                            <span className="font-sans text-[12px] text-rdj-text-tertiary">Relatie</span>
+                            <span className="font-sans text-[13px] text-rdj-text-primary">{selectedResult.meta.relatie}</span>
                           </div>
-                        ) : null
-                      )}
-                    </div>
-                  )}
+                        )}
+                      </div>
+                    )}
+
+                    {selectedResult.type === "relatie" && selectedResult.meta && (
+                      <div className="flex flex-col gap-[8px]">
+                        {selectedResult.meta.plaats && (
+                          <div className="flex items-center justify-between">
+                            <span className="font-sans text-[12px] text-rdj-text-tertiary">Locatie</span>
+                            <span className="font-sans text-[13px] text-rdj-text-primary">{selectedResult.meta.plaats}</span>
+                          </div>
+                        )}
+                        {selectedResult.meta.soort && (
+                          <div className="flex items-center justify-between">
+                            <span className="font-sans text-[12px] text-rdj-text-tertiary">Soort</span>
+                            <span className="font-sans text-[13px] text-rdj-text-primary">{selectedResult.meta.soort}</span>
+                          </div>
+                        )}
+                        {selectedResult.meta.status && (
+                          <div className="flex items-center justify-between">
+                            <span className="font-sans text-[12px] text-rdj-text-tertiary">Status</span>
+                            <span className="font-sans text-[13px] text-rdj-text-primary">{selectedResult.meta.status}</span>
+                          </div>
+                        )}
+                        {selectedResult.meta.telefoon && (
+                          <div className="flex items-center justify-between">
+                            <span className="font-sans text-[12px] text-rdj-text-tertiary">Telefoon</span>
+                            <span className="font-sans text-[13px] text-rdj-text-primary">{selectedResult.meta.telefoon}</span>
+                          </div>
+                        )}
+                      </div>
+                    )}
+                  </div>
                 </div>
               ) : (
                 <div className="flex items-center justify-center h-full">
