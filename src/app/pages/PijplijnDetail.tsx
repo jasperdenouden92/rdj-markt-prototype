@@ -19,7 +19,9 @@ import imgAvatar2 from "../../assets/e7809035038b3816de2a1d67c5de86ebeed325d0.pn
 import imgAvatar3 from "../../assets/bf485cb6f98c12534c69bc81459ce34f2e24e4a8.png";
 import Button from "../components/Button";
 import { Send, MailOpen, Check, X } from "lucide-react";
+import ConversationDialog from "../components/ConversationDialog";
 import { usePijplijnLadingSummary, usePijplijnVaartuigSummary } from "../data/useDetailData";
+import { mockRelaties } from "../data/mock-relatie-data";
 
 /* ── Status variant map ── */
 const statusVariantMap: Record<string, string> = {
@@ -90,6 +92,7 @@ export default function PijplijnDetail() {
   const [selectedNegotiationId, setSelectedNegotiationId] = useState<string | null>(null);
   const [negotiationFilter, setNegotiationFilter] = useState('Actieve onderhandelingen');
   const [hoveredRow, setHoveredRow] = useState<string | null>(null);
+  const [conversationDialog, setConversationDialog] = useState<{ relatieId: string; relatieName: string } | null>(null);
 
   /* Pagination */
   const [negPage, setNegPage] = useState(1);
@@ -196,7 +199,7 @@ export default function PijplijnDetail() {
   );
 
   const ladingMatchColumns: Column[] = [
-    { key: 'name', header: 'Vaartuig', type: 'leading-text', subtextKey: 'type', badgeKey: 'eigenBadge', actionLabel: '+ Onderhandeling' },
+    { key: 'name', header: 'Vaartuig', type: 'leading-text', subtextKey: 'type', badgeKey: 'eigenBadge', actionLabel: 'Onderhandeling' },
     { key: 'company', header: 'Relatie', type: 'text', subtextKey: 'contactPersoon', textColor: 'text-rdj-text-brand', width: 'w-[180px]' },
     { key: 'location', header: 'Locatie', type: 'text', subtextKey: 'locationDate', width: 'w-[200px]' },
     { key: 'capacity', header: 'Groottonnage', type: 'text', align: 'right', width: 'w-[120px]' },
@@ -224,7 +227,7 @@ export default function PijplijnDetail() {
   }));
 
   const vaartuigMatchColumns: Column[] = [
-    { key: 'lading', header: 'Lading', type: 'leading-text', badgeKey: 'eigenBadge', actionLabel: '+ Onderhandeling' },
+    { key: 'lading', header: 'Lading', type: 'leading-text', badgeKey: 'eigenBadge', actionLabel: 'Onderhandeling' },
     { key: 'company', header: 'Relatie', type: 'text', subtextKey: 'contactPersoon', textColor: 'text-rdj-text-brand', width: 'w-[180px]' },
     { key: 'laden', header: 'Laden', type: 'text', subtextKey: 'ladenDatum', width: 'w-[180px]' },
     { key: 'lossen', header: 'Lossen', type: 'text', subtextKey: 'lossenDatum', width: 'w-[180px]' },
@@ -420,7 +423,13 @@ export default function PijplijnDetail() {
                   data={matchData}
                   hoveredRowId={hoveredRow}
                   onRowHover={setHoveredRow}
-                  onRowClick={() => {}}
+                  onRowClick={(row) => {
+                    const relatie = mockRelaties.find(r => r.naam === row.company);
+                    setConversationDialog({
+                      relatieId: relatie?.id || "rel-001",
+                      relatieName: (row.company as string) || "Onbekend",
+                    });
+                  }}
                 />
               </>
             )}
@@ -442,6 +451,17 @@ export default function PijplijnDetail() {
           />
         )}
       </div>
+
+      {/* Conversation dialog */}
+      {conversationDialog && (
+        <ConversationDialog
+          relatieId={conversationDialog.relatieId}
+          relatieName={conversationDialog.relatieName}
+          preSelectedItemId={id}
+          preSelectedItemType={isVaartuig ? "vaartuig" : "lading"}
+          onClose={() => setConversationDialog(null)}
+        />
+      )}
     </div>
   );
 }

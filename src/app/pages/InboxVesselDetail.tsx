@@ -8,8 +8,10 @@ import Table from "../components/Table";
 import type { Column, RowData } from "../components/Table";
 import Button from "../components/Button";
 import VaartuigMarktSidebar from "../components/VaartuigMarktSidebar";
+import ConversationDialog from "../components/ConversationDialog";
 import ActivityFeed from "../components/ActivityFeed";
 import { useInboxVaartuigSummary } from "../data/useDetailData";
+import { mockRelaties } from "../data/mock-relatie-data";
 
 /* ── Match percentage donut ── */
 function MatchDonut({ percentage, color }: { percentage: number; color: string }) {
@@ -44,6 +46,7 @@ export default function InboxVesselDetail() {
   const { id } = useParams();
   const navigate = useNavigate();
   const { data: summary, loading: summaryLoading } = useInboxVaartuigSummary(id);
+  const [conversationDialog, setConversationDialog] = useState<{ relatieId: string; relatieName: string } | null>(null);
 
   const handleArchive = () => {
     toast.success("Vaartuig gearchiveerd", { description: "Het vaartuig is verwijderd uit de inbox.", duration: 3000 });
@@ -52,7 +55,7 @@ export default function InboxVesselDetail() {
 
   // Table columns for cargo matches (ladingen die passen bij dit vaartuig)
   const matchColumns: Column[] = [
-    { key: "lading", header: "Lading", type: "leading-text", subtextKey: "ladingSubtext" },
+    { key: "lading", header: "Lading", type: "leading-text", subtextKey: "ladingSubtext", actionLabel: "Onderhandeling" },
     { key: "relatie", header: "Relatie", type: "text", subtextKey: "relatieContact", textColor: "text-rdj-text-brand", width: "w-[180px]" },
     { key: "laden", header: "Laden", type: "text", subtextKey: "ladenDatum", width: "w-[140px]" },
     { key: "lossen", header: "Lossen", type: "text", subtextKey: "lossenDatum", width: "w-[140px]" },
@@ -129,7 +132,17 @@ export default function InboxVesselDetail() {
                 <div className="w-full px-[24px]">
                   <SectionHeader title="Matches" />
                   <div className="border-t border-rdj-border-secondary">
-                    <Table columns={matchColumns} data={matchRows} onRowClick={() => {}} />
+                    <Table
+                      columns={matchColumns}
+                      data={matchRows}
+                      onRowClick={(row) => {
+                        const relatie = mockRelaties.find(r => r.naam === row.relatie);
+                        setConversationDialog({
+                          relatieId: relatie?.id || "rel-001",
+                          relatieName: (row.relatie as string) || "Onbekend",
+                        });
+                      }}
+                    />
                   </div>
                 </div>
 
@@ -146,6 +159,17 @@ export default function InboxVesselDetail() {
           <VaartuigMarktSidebar id={id!} />
         </div>
       </div>
+
+      {/* Conversation dialog */}
+      {conversationDialog && (
+        <ConversationDialog
+          relatieId={conversationDialog.relatieId}
+          relatieName={conversationDialog.relatieName}
+          preSelectedItemId={id}
+          preSelectedItemType="vaartuig"
+          onClose={() => setConversationDialog(null)}
+        />
+      )}
     </>
   );
 }

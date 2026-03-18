@@ -9,8 +9,10 @@ import type { Column, RowData } from "../components/Table";
 import Button from "../components/Button";
 import LadingMarktSidebar from "../components/LadingMarktSidebar";
 import StartNegotiationSidebar from "../components/StartNegotiationSidebar";
+import ConversationDialog from "../components/ConversationDialog";
 import ActivityFeed from "../components/ActivityFeed";
 import { useInboxLadingSummary } from "../data/useDetailData";
+import { mockRelaties } from "../data/mock-relatie-data";
 
 /* ── Match percentage donut ── */
 function MatchDonut({ percentage, color }: { percentage: number; color: string }) {
@@ -46,6 +48,7 @@ export default function InboxCargoDetail() {
   const navigate = useNavigate();
   const [selectedMatch, setSelectedMatch] = useState<any>(null);
   const [offeredMatches, setOfferedMatches] = useState<Set<string>>(new Set());
+  const [conversationDialog, setConversationDialog] = useState<{ relatieId: string; relatieName: string } | null>(null);
   const { data: summary, loading: summaryLoading } = useInboxLadingSummary(id);
 
   useEffect(() => {
@@ -55,7 +58,7 @@ export default function InboxCargoDetail() {
 
   // Table columns for vessel matches
   const matchColumns: Column[] = [
-    { key: "name", header: "Naam", type: "leading-text", subtextKey: "subtype", badgeKey: "statusBadge" },
+    { key: "name", header: "Naam", type: "leading-text", subtextKey: "subtype", badgeKey: "statusBadge", actionLabel: "Onderhandeling" },
     { key: "company", header: "Relatie", type: "text", subtextKey: "contact", textColor: "text-rdj-text-brand", width: "w-[180px]" },
     { key: "location", header: "Locatie", type: "text", subtextKey: "locationDate", width: "w-[200px]" },
     { key: "capacity", header: "Groottonnage", type: "text", width: "w-[140px]" },
@@ -149,7 +152,17 @@ export default function InboxCargoDetail() {
                 <div className="w-full px-[24px]">
                   <SectionHeader title="Matches" />
                   <div className="border-t border-rdj-border-secondary">
-                    <Table columns={matchColumns} data={matchRows} onRowClick={handleMatchClick} />
+                    <Table
+                      columns={matchColumns}
+                      data={matchRows}
+                      onRowClick={(row) => {
+                        const relatie = mockRelaties.find(r => r.naam === row.company);
+                        setConversationDialog({
+                          relatieId: relatie?.id || "rel-001",
+                          relatieName: (row.company as string) || "Onbekend",
+                        });
+                      }}
+                    />
                   </div>
                 </div>
 
@@ -172,6 +185,17 @@ export default function InboxCargoDetail() {
         <div className="fixed inset-0 z-50 flex items-center justify-end bg-black/20">
           <StartNegotiationSidebar match={selectedMatch} onClose={() => setSelectedMatch(null)} offeredMatches={offeredMatches} setOfferedMatches={setOfferedMatches} />
         </div>
+      )}
+
+      {/* Conversation dialog */}
+      {conversationDialog && (
+        <ConversationDialog
+          relatieId={conversationDialog.relatieId}
+          relatieName={conversationDialog.relatieName}
+          preSelectedItemId={id}
+          preSelectedItemType="lading"
+          onClose={() => setConversationDialog(null)}
+        />
       )}
     </>
   );

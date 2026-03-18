@@ -80,7 +80,7 @@ export default function LadingDetailPanel({ id, onClose }: LadingDetailPanelProp
   ];
 
   const matchColumns: Column[] = [
-    { key: 'name', header: 'Vaartuig', type: 'leading-text', subtextKey: 'type', badgeKey: 'eigenBadge', actionLabel: '+ Onderhandeling' },
+    { key: 'name', header: 'Vaartuig', type: 'leading-text', subtextKey: 'type', badgeKey: 'eigenBadge', actionLabel: 'Onderhandeling' },
     { key: 'company', header: 'Relatie', type: 'text', subtextKey: 'contactPersoon', textColor: 'text-rdj-text-brand', width: 'w-[160px]' },
     { key: 'location', header: 'Locatie', type: 'text', subtextKey: 'locationDate', width: 'w-[160px]' },
     { key: 'distance', header: 'Groottonnage', type: 'text', align: 'right', width: 'w-[100px]' },
