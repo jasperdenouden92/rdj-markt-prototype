@@ -1,5 +1,5 @@
-import { Link } from "react-router";
 import { useDrag } from "react-dnd";
+import { useDetailPanel } from "./DetailPanelContext";
 import imgAvatar from "../../assets/a2737d3b5b234fc04041650cb9f114889c6859da.png";
 import { Vessel } from "../data/mock-data";
 
@@ -8,6 +8,7 @@ interface VesselCardProps {
 }
 
 export default function VesselCard({ vessel }: VesselCardProps) {
+  const { openDetail } = useDetailPanel();
   const [{ isDragging }, drag] = useDrag({
     type: 'VESSEL',
     item: { id: vessel.id },
@@ -17,8 +18,8 @@ export default function VesselCard({ vessel }: VesselCardProps) {
   });
 
   return (
-    <Link to={`/markt/bevrachting/vaartuig/${vessel.id}`}>
-      <div 
+    <div onClick={() => openDetail('vaartuig', vessel.id)}>
+      <div
         ref={drag}
         className={`bg-rdj-bg-primary border border-rdj-border-secondary rounded-[8px] p-[16px] hover:shadow-md transition-shadow cursor-pointer ${isDragging ? 'opacity-50' : ''}`}
       >
@@ -97,6 +98,6 @@ export default function VesselCard({ vessel }: VesselCardProps) {
           </div>
         )}
       </div>
-    </Link>
+    </div>
   );
 }
