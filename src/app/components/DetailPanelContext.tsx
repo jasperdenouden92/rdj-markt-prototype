@@ -1,4 +1,5 @@
-import { createContext, useContext, useState, useCallback, type ReactNode } from "react";
+import { createContext, useContext, useState, useCallback, useEffect, type ReactNode } from "react";
+import { useLocation } from "react-router";
 import LadingDetailPanel from "./LadingDetailPanel";
 import VaartuigDetailPanel from "./VaartuigDetailPanel";
 
@@ -23,6 +24,12 @@ export function useDetailPanel() {
 
 export function DetailPanelProvider({ children }: { children: ReactNode }) {
   const [activeDetail, setActiveDetail] = useState<DetailPanelState | null>(null);
+  const { pathname } = useLocation();
+
+  // Close panel when navigating to a different page
+  useEffect(() => {
+    setActiveDetail(null);
+  }, [pathname]);
 
   const openDetail = useCallback((type: "lading" | "vaartuig", id: string) => {
     setActiveDetail({ type, id });
