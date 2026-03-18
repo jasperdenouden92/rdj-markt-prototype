@@ -113,7 +113,7 @@ const mockInboxData: InboxItem[] = [
 
 export default function Inbox() {
   const navigate = useNavigate();
-  const { openDetail } = useDetailPanel();
+  const { openDetail, activeDetail } = useDetailPanel();
   const [selectedItems, setSelectedItems] = useState<string[]>([]);
   const { data: apiItems, loading, error, refetch } = useInboxLadingen();
   const [localItems, setLocalItems] = useState<InboxItem[] | null>(null);
@@ -390,6 +390,7 @@ export default function Inbox() {
               columns={columns}
               data={tableData}
               onRowClick={(row) => openDetail('lading', row.id)}
+              activeRowId={activeDetail?.type === 'lading' ? activeDetail.id : null}
               selectable
               selectedIds={selectedItems}
               onSelectAll={handleSelectAll}

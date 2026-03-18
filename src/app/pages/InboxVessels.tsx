@@ -202,7 +202,7 @@ const mockVesselData: VesselItem[] = [
 
 export default function InboxVessels() {
   const navigate = useNavigate();
-  const { openDetail } = useDetailPanel();
+  const { openDetail, activeDetail } = useDetailPanel();
   const { data: apiVessels, loading, error, refetch } = useInboxVaartuigen();
   const [localItems, setLocalItems] = useState<VesselItem[] | null>(null);
   const vesselItems: VesselItem[] = localItems ?? apiVessels.map(a => ({
@@ -424,6 +424,7 @@ export default function InboxVessels() {
               columns={columns}
               data={tableData}
               onRowClick={(row) => openDetail('vaartuig', row.id)}
+              activeRowId={activeDetail?.type === 'vaartuig' ? activeDetail.id : null}
               selectable
               selectedIds={selectedItems}
               onSelectAll={handleSelectAll}

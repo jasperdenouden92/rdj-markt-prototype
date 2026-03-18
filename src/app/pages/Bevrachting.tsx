@@ -46,7 +46,7 @@ export default function Bevrachting() {
   const [viewMode, setViewMode] = useState<'kanban' | 'table'>('kanban');
   const [selectedItems, setSelectedItems] = useState<string[]>([]);
   const [hoveredRow, setHoveredRow] = useState<string | null>(null);
-  const { openDetail } = useDetailPanel();
+  const { openDetail, activeDetail } = useDetailPanel();
   const [currentPage, setCurrentPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(50);
   
@@ -397,6 +397,7 @@ export default function Bevrachting() {
               columns={activeTab === 'ladingen' ? tableColumns : vesselTableColumns}
               data={activeTab === 'ladingen' ? tableData : vesselTableData}
               onRowClick={(row) => openDetail(activeTab === 'ladingen' ? 'lading' : 'vaartuig', row.id)}
+              activeRowId={activeDetail?.id ?? null}
               hoveredRowId={hoveredRow}
               onRowHover={setHoveredRow}
             />
