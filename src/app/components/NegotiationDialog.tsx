@@ -171,7 +171,7 @@ export default function NegotiationDialog({
   }, [onClose]);
 
   const handleNewBid = () => {
-    navigate(`/markt/pijplijn/${id}/nieuwbod`, {
+    navigate(`/markt/onderhandelingen/${id}/nieuwbod`, {
       state: { negotiationId },
     });
   };

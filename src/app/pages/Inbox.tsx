@@ -418,7 +418,7 @@ export default function Inbox() {
         
         <div className={`flex-1 ${viewMode === 'map' ? 'flex flex-col overflow-hidden' : 'overflow-auto'} pt-[24px]`}>
           <PageHeader
-            title="Inbox"
+            title="Markt aanbod"
             actions={
               <button 
                 onClick={() => { setItemType('lading'); setShowAddModal(true); }}

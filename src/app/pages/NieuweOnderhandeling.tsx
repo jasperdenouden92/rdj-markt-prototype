@@ -192,11 +192,9 @@ export default function NieuweOnderhandeling() {
   const fromInbox = location.state?.fromInbox;
   const parentPath = fromInbox
     ? `/markt/inbox/${isVaartuig ? 'vaartuig' : 'lading'}/${id}`
-    : location.pathname.includes('/pijplijn/')
-      ? `/markt/pijplijn/${isVaartuig ? 'vaartuig/' : ''}${id}`
-      : `/markt/bevrachting/${isVaartuig ? 'vaartuig' : 'lading'}/${id}`;
+    : `/markt/bevrachting/${isVaartuig ? 'vaartuig' : 'lading'}/${id}`;
 
-  const parentLabel = fromInbox ? 'Inbox' : location.pathname.includes('/pijplijn/') ? 'Pijplijn' : 'Bevrachting';
+  const parentLabel = fromInbox ? 'Markt aanbod' : 'Eigen aanbod';
 
   return (
     <div className="flex min-h-screen bg-white">

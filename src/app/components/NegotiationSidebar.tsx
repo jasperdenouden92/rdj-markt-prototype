@@ -123,7 +123,7 @@ export default function NegotiationSidebar({ onClose }: NegotiationSidebarProps)
   const [isSentToPlanning, setIsSentToPlanning] = useState(false);
 
   const handleNewBid = () => {
-    navigate(`/markt/pijplijn/${id}/nieuwbod`, {
+    navigate(`/markt/onderhandelingen/${id}/nieuwbod`, {
       state: { negotiationId: '1' }
     });
   };

@@ -87,7 +87,7 @@ export default function LadingDetail() {
               </div>
             </div>
             <Link to="/markt/bevrachting" className="content-stretch flex items-center justify-center px-[8px] py-[4px] relative rounded-[6px] shrink-0 hover:bg-rdj-bg-primary-hover">
-              <p className="font-sans font-bold leading-[20px] relative shrink-0 text-[#475467] text-[14px] whitespace-nowrap">Bevrachting</p>
+              <p className="font-sans font-bold leading-[20px] relative shrink-0 text-[#475467] text-[14px] whitespace-nowrap">Eigen aanbod</p>
             </Link>
             <div className="overflow-clip relative shrink-0 size-[16px]">
               <div className="absolute bottom-1/4 left-[37.5%] right-[37.5%] top-1/4">

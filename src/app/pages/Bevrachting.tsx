@@ -247,7 +247,7 @@ export default function Bevrachting() {
         <div className="flex-1 overflow-auto pt-[24px]">
           {/* Header Section */}
           <PageHeader
-            title="Bevrachting"
+            title="Eigen aanbod"
             titleMeta={
               <p className="font-sans font-normal leading-[0] overflow-hidden relative shrink-0 text-[#344054] text-[12px] text-ellipsis whitespace-nowrap">
                 <span className="leading-[18px]">{`Laatste werklijst gemaild `}</span>
