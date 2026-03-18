@@ -113,6 +113,8 @@ export interface InboxLadingRow {
   source: string;
   sourceDate: string;
   matches: number;
+  matchType: 'eigen' | 'interessant' | 'none';
+  onderhandelingen: number;
   owner: string;
   ownerInitials?: string;
   priority: number;
@@ -167,7 +169,9 @@ export function useInboxLadingen() {
           unloadDate: (item as any).losdatum ? formatDate((item as any).losdatum) : "",
           source: bron?.titel || "",
           sourceDate: bron?.datum ? formatDate(bron.datum) : "",
-          matches: 0, // No matches yet for inbox items
+          matches: (item as any).matches ?? 0,
+          matchType: (item as any).matchType ?? 'none',
+          onderhandelingen: (item as any).onderhandelingen ?? 0,
           owner: eigenaar?.naam || "",
           ownerInitials: eigenaar ? getInitials(eigenaar.naam) : undefined,
           priority: item.prioriteit,
@@ -208,6 +212,8 @@ export interface InboxVaartuigRow {
   source: string;
   sourceDate: string;
   matches: number;
+  matchType: 'eigen' | 'interessant' | 'none';
+  onderhandelingen: number;
   owner: string;
   ownerInitials?: string;
   priority: number;
@@ -255,7 +261,9 @@ export function useInboxVaartuigen() {
           capacity: `${item.inhoud.toLocaleString("nl-NL")} m³`,
           source: bron?.titel || "",
           sourceDate: bron?.datum ? formatDate(bron.datum) : "",
-          matches: 0,
+          matches: (item as any).matches ?? 0,
+          matchType: (item as any).matchType ?? 'none',
+          onderhandelingen: (item as any).onderhandelingen ?? 0,
           owner: eigenaar?.naam || "",
           ownerInitials: eigenaar ? getInitials(eigenaar.naam) : undefined,
           priority: item.prioriteit,
