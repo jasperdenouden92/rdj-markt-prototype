@@ -103,7 +103,7 @@ export default function CrmVaartuigDetail() {
   );
 
   const matchColumns: Column[] = [
-    { key: "cargo", header: "Lading", type: "leading-text", badgeKey: "eigenBadge", actionLabel: "+ Onderhandeling" },
+    { key: "cargo", header: "Lading", type: "leading-text", badgeKey: "eigenBadge", actionLabel: "Onderhandeling" },
     { key: "company", header: "Relatie", type: "text", subtextKey: "contactPersoon", textColor: "text-rdj-text-brand", width: "w-[180px]" },
     { key: "laadHaven", header: "Laden", type: "text", subtextKey: "laadDatum", width: "w-[180px]" },
     { key: "losHaven", header: "Lossen", type: "text", subtextKey: "losDatum", width: "w-[180px]" },

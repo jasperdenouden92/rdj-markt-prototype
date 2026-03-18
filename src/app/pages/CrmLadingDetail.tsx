@@ -103,7 +103,7 @@ export default function CrmLadingDetail() {
   );
 
   const matchColumns: Column[] = [
-    { key: "name", header: "Vaartuig", type: "leading-text", subtextKey: "type", badgeKey: "eigenBadge", actionLabel: "+ Onderhandeling" },
+    { key: "name", header: "Vaartuig", type: "leading-text", subtextKey: "type", badgeKey: "eigenBadge", actionLabel: "Onderhandeling" },
     { key: "company", header: "Relatie", type: "text", subtextKey: "contactPersoon", textColor: "text-rdj-text-brand", width: "w-[180px]" },
     { key: "location", header: "Locatie", type: "text", subtextKey: "locationDate", width: "w-[200px]" },
     { key: "distance", header: "Groottonnage", type: "text", align: "right", width: "w-[120px]" },

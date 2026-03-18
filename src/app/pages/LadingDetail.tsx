@@ -12,8 +12,10 @@ import Button from "../components/Button";
 import ActivityFeed from "../components/ActivityFeed";
 import LadingEigenSidebar from "../components/LadingEigenSidebar";
 import NegotiationDialog from "../components/NegotiationDialog";
+import ConversationDialog from "../components/ConversationDialog";
 import { useBevrachtingLadingSummary } from "../data/useDetailData";
 import { mockMatches, mockNegotiations } from "../data/mock-data";
+import { mockRelaties } from "../data/mock-relatie-data";
 import svgPaths from "../../imports/svg-62fj7rjvas";
 import imgAvatar from "../../assets/a2737d3b5b234fc04041650cb9f114889c6859da.png";
 import imgAvatar1 from "../../assets/3627de284acb374a4d9313b3c2dbaeeb87a48224.png";
@@ -55,6 +57,7 @@ export default function LadingDetail() {
   const [activeTab, setActiveTab] = useState<'matches' | 'onderhandelingen' | 'activiteit'>('matches');
   const [hoveredRow, setHoveredRow] = useState<string | null>(null);
   const [selectedNegotiationId, setSelectedNegotiationId] = useState<string | null>(null);
+  const [conversationDialog, setConversationDialog] = useState<{ relatieId: string; relatieName: string } | null>(null);
 
   /* Pagination state per tab */
   const [matchPage, setMatchPage] = useState(1);
@@ -128,7 +131,7 @@ export default function LadingDetail() {
 
   /* ── Matches table ── */
   const matchColumns: Column[] = [
-    { key: 'name', header: 'Vaartuig', type: 'leading-text', subtextKey: 'type', badgeKey: 'eigenBadge', actionLabel: '+ Onderhandeling' },
+    { key: 'name', header: 'Vaartuig', type: 'leading-text', subtextKey: 'type', badgeKey: 'eigenBadge', actionLabel: 'Onderhandeling' },
     { key: 'company', header: 'Relatie', type: 'text', subtextKey: 'contactPersoon', textColor: 'text-rdj-text-brand', width: 'w-[180px]' },
     { key: 'location', header: 'Locatie', type: 'text', subtextKey: 'locationDate', width: 'w-[200px]' },
     { key: 'distance', header: 'Groottonnage', type: 'text', align: 'right', width: 'w-[120px]' },
@@ -253,7 +256,13 @@ export default function LadingDetail() {
                           data={matchTableData}
                           hoveredRowId={hoveredRow}
                           onRowHover={setHoveredRow}
-                          onRowClick={() => {}}
+                          onRowClick={(row) => {
+                            const relatie = mockRelaties.find(r => r.naam === row.company);
+                            setConversationDialog({
+                              relatieId: relatie?.id || "rel-001",
+                              relatieName: (row.company as string) || "Onbekend",
+                            });
+                          }}
                         />
                       </>
                     )}
@@ -298,6 +307,17 @@ export default function LadingDetail() {
         <NegotiationDialog
           negotiationId={selectedNegotiationId}
           onClose={() => setSelectedNegotiationId(null)}
+        />
+      )}
+
+      {/* Conversation dialog */}
+      {conversationDialog && (
+        <ConversationDialog
+          relatieId={conversationDialog.relatieId}
+          relatieName={conversationDialog.relatieName}
+          preSelectedItemId={id}
+          preSelectedItemType="lading"
+          onClose={() => setConversationDialog(null)}
         />
       )}
     </div>

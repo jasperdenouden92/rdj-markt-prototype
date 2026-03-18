@@ -13,7 +13,9 @@ import ActivityFeed from "../components/ActivityFeed";
 import VaartuigEigenSidebar from "../components/VaartuigEigenSidebar";
 import VaartuigMarktSidebar from "../components/VaartuigMarktSidebar";
 import NegotiationDialog from "../components/NegotiationDialog";
+import ConversationDialog from "../components/ConversationDialog";
 import { useBevrachtingVaartuigSummary } from "../data/useDetailData";
+import { mockRelaties } from "../data/mock-relatie-data";
 import svgPaths from "../../imports/svg-62fj7rjvas";
 import imgAvatar from "../../assets/a2737d3b5b234fc04041650cb9f114889c6859da.png";
 import imgAvatar1 from "../../assets/3627de284acb374a4d9313b3c2dbaeeb87a48224.png";
@@ -69,6 +71,7 @@ export default function VaartuigDetail() {
   const [activeTab, setActiveTab] = useState<'matches' | 'onderhandelingen' | 'activiteit'>('matches');
   const [hoveredRow, setHoveredRow] = useState<string | null>(null);
   const [selectedNegotiationId, setSelectedNegotiationId] = useState<string | null>(null);
+  const [conversationDialog, setConversationDialog] = useState<{ relatieId: string; relatieName: string } | null>(null);
 
   /* Pagination state per tab */
   const [matchPage, setMatchPage] = useState(1);
@@ -142,7 +145,7 @@ export default function VaartuigDetail() {
 
   /* ── Matches table columns ── */
   const matchColumns: Column[] = [
-    { key: 'cargo', header: 'Lading', type: 'leading-text', badgeKey: 'eigenBadge', actionLabel: '+ Onderhandeling' },
+    { key: 'cargo', header: 'Lading', type: 'leading-text', badgeKey: 'eigenBadge', actionLabel: 'Onderhandeling' },
     { key: 'company', header: 'Relatie', type: 'text', subtextKey: 'contactPersoon', textColor: 'text-rdj-text-brand', width: 'w-[180px]' },
     { key: 'laadHaven', header: 'Laden', type: 'text', subtextKey: 'laadDatum', width: 'w-[180px]' },
     { key: 'losHaven', header: 'Lossen', type: 'text', subtextKey: 'losDatum', width: 'w-[180px]' },
@@ -262,7 +265,13 @@ export default function VaartuigDetail() {
                           data={matchTableData}
                           hoveredRowId={hoveredRow}
                           onRowHover={setHoveredRow}
-                          onRowClick={() => {}}
+                          onRowClick={(row) => {
+                            const relatie = mockRelaties.find(r => r.naam === row.company);
+                            setConversationDialog({
+                              relatieId: relatie?.id || "rel-001",
+                              relatieName: (row.company as string) || "Onbekend",
+                            });
+                          }}
                         />
                       </>
                     )}
@@ -310,6 +319,17 @@ export default function VaartuigDetail() {
         <NegotiationDialog
           negotiationId={selectedNegotiationId}
           onClose={() => setSelectedNegotiationId(null)}
+        />
+      )}
+
+      {/* Conversation dialog */}
+      {conversationDialog && (
+        <ConversationDialog
+          relatieId={conversationDialog.relatieId}
+          relatieName={conversationDialog.relatieName}
+          preSelectedItemId={id}
+          preSelectedItemType="vaartuig"
+          onClose={() => setConversationDialog(null)}
         />
       )}
     </div>

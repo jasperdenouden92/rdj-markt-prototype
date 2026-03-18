@@ -80,7 +80,7 @@ export default function LadingDetailPanel({ id, onClose }: LadingDetailPanelProp
   ];
 
   const matchColumns: Column[] = [
-    { key: 'name', header: 'Vaartuig', type: 'leading-text', subtextKey: 'type', badgeKey: 'eigenBadge', actionLabel: '+ Onderhandeling' },
+    { key: 'name', header: 'Vaartuig', type: 'leading-text', subtextKey: 'type', badgeKey: 'eigenBadge', actionLabel: 'Onderhandeling' },
     { key: 'company', header: 'Relatie', type: 'text', subtextKey: 'contactPersoon', textColor: 'text-rdj-text-brand', width: 'w-[160px]' },
     { key: 'location', header: 'Locatie', type: 'text', subtextKey: 'locationDate', width: 'w-[160px]' },
     { key: 'distance', header: 'Groottonnage', type: 'text', align: 'right', width: 'w-[100px]' },
@@ -167,16 +167,16 @@ export default function LadingDetailPanel({ id, onClose }: LadingDetailPanelProp
         onClose={onClose}
         sidebar={<LadingEigenSidebarContent id={id} />}
       >
-        <div className="flex flex-col px-[24px] py-[16px]">
+        <div className="flex flex-col py-[16px]">
           {/* Status badge */}
           {titleBadge && (
-            <div className="mb-[16px]">
+            <div className="mb-[16px] px-[24px]">
               {titleBadge}
             </div>
           )}
 
           {/* Tabs */}
-          <div className="flex gap-[4px] border-b border-rdj-border-secondary mb-[16px]">
+          <div className="flex gap-[4px] border-b border-rdj-border-secondary mb-[16px] px-[24px]">
             {tabs.map((tab) => (
               <button
                 key={tab.path}
@@ -251,7 +251,7 @@ export default function LadingDetailPanel({ id, onClose }: LadingDetailPanelProp
           )}
 
           {activeTab === 'activiteit' && (
-            <div className="w-full">
+            <div className="w-full px-[24px]">
               <ActivityFeed />
             </div>
           )}

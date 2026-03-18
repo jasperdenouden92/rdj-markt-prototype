@@ -262,6 +262,7 @@ function CellLeadingText({
             variant="secondary"
             size="sm"
             label={actionLabel}
+            leadingIcon={<svg fill="none" viewBox="0 0 12 12"><path d="M6 1V11M1 6H11" stroke="currentColor" strokeWidth="1.67" strokeLinecap="round" strokeLinejoin="round" /></svg>}
             onClick={(e) => {
               e.stopPropagation();
               onAction();
