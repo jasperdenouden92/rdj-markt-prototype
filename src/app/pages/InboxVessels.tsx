@@ -427,7 +427,7 @@ export default function InboxVessels() {
         
         <div className={`flex-1 ${viewMode === 'map' ? 'flex flex-col overflow-hidden' : 'overflow-auto'} pt-[24px]`}>
           <PageHeader
-            title="Inbox"
+            title="Markt aanbod"
             actions={
               <button className="bg-[#1567a4] relative rounded-[6px] shrink-0 hover:opacity-90">
                 <div className="content-stretch flex gap-[4px] items-center justify-center overflow-clip px-[14px] py-[10px] relative rounded-[inherit]">

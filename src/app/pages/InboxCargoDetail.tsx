@@ -115,7 +115,7 @@ export default function InboxCargoDetail() {
               </button>
               <BreadcrumbChevron />
               <button onClick={() => navigate("/markt/inbox/ladingen")} className="flex items-center justify-center px-[8px] py-[4px] rounded-[6px] shrink-0 hover:bg-rdj-bg-primary-hover">
-                <p className="font-sans font-bold leading-[20px] text-rdj-text-secondary text-[14px] whitespace-nowrap">Inbox</p>
+                <p className="font-sans font-bold leading-[20px] text-rdj-text-secondary text-[14px] whitespace-nowrap">Markt aanbod</p>
               </button>
               <BreadcrumbChevron />
               <div className="bg-rdj-bg-secondary flex items-center justify-center px-[8px] py-[4px] rounded-[6px] shrink-0">

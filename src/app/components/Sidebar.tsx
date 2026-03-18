@@ -180,9 +180,8 @@ export default function Sidebar() {
   }, [showMarktMenu, scheduleClose]);
 
   const marktMenuItems = [
-    { label: "Inbox", path: "/markt/inbox/ladingen" },
-    { label: "Bevrachting", path: "/markt/bevrachting/ladingen" },
-    { label: "Pijplijn", path: "/markt/pijplijn/ladingen" },
+    { label: "Markt aanbod", path: "/markt/inbox/ladingen" },
+    { label: "Eigen aanbod", path: "/markt/bevrachting/ladingen" },
     { label: "Onderhandelingen", path: "/markt/onderhandelingen/ladingen" },
   ];
 

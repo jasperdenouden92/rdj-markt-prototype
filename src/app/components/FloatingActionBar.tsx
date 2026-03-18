@@ -17,7 +17,7 @@ interface FloatingActionBarProps {
   onSelectAll: () => void;
   /** Called when "Archiveren" is clicked */
   onArchive: () => void;
-  /** Called when "Naar pijplijn sturen" is clicked */
+  /** Called when "Naar onderhandeling sturen" is clicked */
   onMoveToPipeline: () => void;
 }
 
@@ -61,7 +61,7 @@ export default function FloatingActionBar({
               <Button
                 variant="primary"
                 size="sm"
-                label="Naar pijplijn sturen"
+                label="Naar onderhandeling sturen"
                 onClick={(e) => { e.stopPropagation(); onMoveToPipeline(); }}
               />
             </div>

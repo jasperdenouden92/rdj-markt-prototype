@@ -6,10 +6,8 @@ import InboxCargoDetail from "./pages/InboxCargoDetail";
 import InboxVesselDetail from "./pages/InboxVesselDetail";
 import LadingDetail from "./pages/LadingDetail";
 import VaartuigDetail from "./pages/VaartuigDetail";
-import Pijplijn from "./pages/Pijplijn";
-import PijplijnDetail from "./pages/PijplijnDetail";
-import NieuwBod from "./pages/NieuwBod";
 import NieuweOnderhandeling from "./pages/NieuweOnderhandeling";
+import NieuwBod from "./pages/NieuwBod";
 import Onderhandelingen from "./pages/Onderhandelingen";
 import DatabaseAdmin from "./pages/DatabaseAdmin";
 import Relaties from "./pages/Relaties";
@@ -96,58 +94,6 @@ export const router = createBrowserRouter([
         path: "markt/inbox/lading/:id/nieuweonderhandeling",
         Component: NieuweOnderhandeling,
       },
-      // Pijplijn
-      {
-        path: "markt/pijplijn",
-        element: <Navigate to="/markt/pijplijn/ladingen" replace />,
-      },
-      {
-        path: "markt/pijplijn/ladingen",
-        Component: Pijplijn,
-      },
-      {
-        path: "markt/pijplijn/vaartuigen",
-        Component: Pijplijn,
-      },
-      // Pijplijn detail pages (both eigen and markt items)
-      {
-        path: "markt/pijplijn/lading/:id",
-        Component: PijplijnDetail,
-      },
-      {
-        path: "markt/pijplijn/vaartuig/:id",
-        Component: PijplijnDetail,
-      },
-      // Legacy route — redirects or handles old /markt/pijplijn/:id
-      {
-        path: "markt/pijplijn/:id",
-        Component: PijplijnDetail,
-      },
-      // Nieuw bod / nieuwe onderhandeling within pijplijn
-      {
-        path: "markt/pijplijn/lading/:id/nieuwbod",
-        Component: NieuwBod,
-      },
-      {
-        path: "markt/pijplijn/vaartuig/:id/nieuwbod",
-        Component: NieuwBod,
-      },
-      {
-        path: "markt/pijplijn/:id/nieuwbod",
-        Component: NieuwBod,
-      },
-      {
-        path: "markt/pijplijn/lading/:id/nieuweonderhandeling",
-        Component: NieuweOnderhandeling,
-      },
-      {
-        path: "markt/pijplijn/vaartuig/:id/nieuweonderhandeling",
-        Component: NieuweOnderhandeling,
-      },
-      {
-        path: "markt/pijplijn/:id/nieuweonderhandeling",
-        Component: NieuweOnderhandeling,
-      },
       // Bevrachting subpages
       {
         path: "markt/bevrachting/lading/:id/nieuweonderhandeling",
@@ -156,6 +102,11 @@ export const router = createBrowserRouter([
       {
         path: "markt/bevrachting/vaartuig/:id/nieuweonderhandeling",
         Component: NieuweOnderhandeling,
+      },
+      // Nieuw bod (previously under pijplijn)
+      {
+        path: "markt/onderhandelingen/:id/nieuwbod",
+        Component: NieuwBod,
       },
       // Onderhandelingen
       {
