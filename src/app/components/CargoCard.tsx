@@ -8,7 +8,8 @@ interface CargoCardProps {
 }
 
 export default function CargoCard({ cargo }: CargoCardProps) {
-  const { openDetail } = useDetailPanel();
+  const { openDetail, activeDetail } = useDetailPanel();
+  const isActive = activeDetail?.type === 'lading' && activeDetail.id === cargo.id;
   const [{ isDragging }, drag] = useDrag({
     type: 'CARGO',
     item: { id: cargo.id },
@@ -21,7 +22,7 @@ export default function CargoCard({ cargo }: CargoCardProps) {
     <div onClick={() => openDetail('lading', cargo.id)}>
       <div
         ref={drag}
-        className={`bg-rdj-bg-primary border border-rdj-border-secondary rounded-[8px] p-[16px] hover:shadow-md transition-shadow cursor-pointer ${isDragging ? 'opacity-50' : ''}`}
+        className={`bg-rdj-bg-primary border rounded-[8px] p-[16px] hover:shadow-md transition-shadow cursor-pointer ${isDragging ? 'opacity-50' : ''} ${isActive ? 'ring-2 ring-rdj-fg-brand border-rdj-fg-brand' : 'border-rdj-border-secondary'}`}
       >
         {/* Header: Title + Avatar */}
         <div className="flex items-start justify-between gap-[8px] mb-[12px]">

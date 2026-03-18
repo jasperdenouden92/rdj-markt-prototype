@@ -20,7 +20,7 @@ function formatDate(dateStr?: string): string {
 
 export default function Ladingen() {
   const navigate = useNavigate();
-  const { openDetail } = useDetailPanel();
+  const { openDetail, activeDetail } = useDetailPanel();
   const [search, setSearch] = useState("");
   const [relatieFilter, setRelatieFilter] = useState<string[]>([]);
   const [ladingSoortFilter, setLadingSoortFilter] = useState<string[]>([]);
@@ -201,6 +201,7 @@ export default function Ladingen() {
           data={tableData}
           hoveredRowId={hoveredRow}
           onRowHover={setHoveredRow}
+          activeRowId={activeDetail?.type === 'lading' ? activeDetail.id : null}
           onRowClick={(row) => {
             openDetail('lading', row.id);
           }}

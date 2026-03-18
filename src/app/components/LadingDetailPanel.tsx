@@ -11,7 +11,7 @@ import ActivityFeed from "./ActivityFeed";
 import NegotiationDialog from "./NegotiationDialog";
 import { DetailsSidebarSection } from "./DetailsSidebar";
 import DetailRow from "./DetailRow";
-import { useBevrachtingLadingSummary, useLadingEigenDetail } from "../data/useDetailData";
+import { useBevrachtingLadingSummary, useLadingEigenDetail, useLadingMarktDetail } from "../data/useDetailData";
 import { mockMatches, mockNegotiations } from "../data/mock-data";
 import svgPaths from "../../imports/svg-62fj7rjvas";
 import imgAvatar from "../../assets/a2737d3b5b234fc04041650cb9f114889c6859da.png";
@@ -262,8 +262,14 @@ export default function LadingDetailPanel({ id, onClose }: LadingDetailPanelProp
 /* ── Inline sidebar content ── */
 
 function LadingEigenSidebarContent({ id }: { id: string }) {
-  const { data, loading, error } = useLadingEigenDetail(id);
+  const eigenResult = useLadingEigenDetail(id);
+  const marktResult = useLadingMarktDetail(id);
   const [activeTab, setActiveTab] = useState<string>("details");
+
+  const loading = eigenResult.loading || marktResult.loading;
+  const data = eigenResult.data;
+  const marktData = marktResult.data;
+  const isMarkt = !data && !!marktData;
 
   if (loading) {
     return (
@@ -273,10 +279,10 @@ function LadingEigenSidebarContent({ id }: { id: string }) {
     );
   }
 
-  if (error || !data) {
+  if (!data && !marktData) {
     return (
       <div className="flex items-center justify-center py-[40px] w-full">
-        <p className="font-sans font-normal leading-[20px] text-rdj-text-tertiary text-[14px]">{error || "Geen data gevonden"}</p>
+        <p className="font-sans font-normal leading-[20px] text-rdj-text-tertiary text-[14px]">{eigenResult.error || "Geen data gevonden"}</p>
       </div>
     );
   }
@@ -304,7 +310,7 @@ function LadingEigenSidebarContent({ id }: { id: string }) {
         })}
       </div>
 
-      {activeTab === "details" && (
+      {activeTab === "details" && !isMarkt && data && (
         <>
           <DetailsSidebarSection>
             <DetailRow label="Partij" type="linked" value={data.partij} />
@@ -331,7 +337,31 @@ function LadingEigenSidebarContent({ id }: { id: string }) {
         </>
       )}
 
-      {activeTab === "condities" && (
+      {activeTab === "details" && isMarkt && marktData && (
+        <>
+          <DetailsSidebarSection>
+            <DetailRow label="Tonnage" value={marktData.tonnage} editable />
+            <DetailRow label="Lading" value={marktData.lading} editable />
+            <DetailRow label="Subsoort" value={marktData.subsoort} editable />
+            <DetailRow label="Soortelijk gewicht" value={marktData.soortelijkGewicht} editable />
+            <DetailRow label="Inhoud" value={marktData.inhoud} editable />
+            <DetailRow label="Bijzonderheden" type="badges" badges={marktData.bijzonderheden} editable />
+            <DetailRow label="Laadhaven" value={marktData.laadhaven} editable />
+            <DetailRow label="Laaddatum" value={marktData.laaddatum} editable />
+            <DetailRow label="Loshaven" value={marktData.loshaven} editable />
+            <DetailRow label="Losdatum" value={marktData.losdatum} editable />
+            <DetailRow label="Bron" value={marktData.bron} />
+            <DetailRow label="Relatie" type="linked" value={marktData.relatie} />
+            <DetailRow label="Contactpersoon" value={marktData.contactpersoon} />
+          </DetailsSidebarSection>
+          <div className="w-full h-px bg-rdj-border-secondary shrink-0" />
+          <DetailsSidebarSection>
+            <DetailRow label="Eigenaar" type="user" value={marktData.eigenaar} avatarInitials={marktData.eigenaarInitials} />
+          </DetailsSidebarSection>
+        </>
+      )}
+
+      {activeTab === "condities" && !isMarkt && data && (
         <>
           <DetailsSidebarSection title="Eigen">
             <DetailRow label="Prijs" value={data.eigenPrijs} editable />
@@ -348,6 +378,16 @@ function LadingEigenSidebarContent({ id }: { id: string }) {
             <DetailRow label="Liggeld lossen" value={data.marktLiggeldLossen} />
           </DetailsSidebarSection>
         </>
+      )}
+
+      {activeTab === "condities" && isMarkt && marktData && (
+        <DetailsSidebarSection>
+          <DetailRow label="Prijs" value={marktData.prijs} editable />
+          <DetailRow label="Laadtijd" value={marktData.laadtijd} editable />
+          <DetailRow label="Liggeld laden" value={marktData.liggeldLaden} editable />
+          <DetailRow label="Lostijd" value={marktData.lostijd} editable />
+          <DetailRow label="Liggeld lossen" value={marktData.liggeldLossen} editable />
+        </DetailsSidebarSection>
       )}
     </div>
   );

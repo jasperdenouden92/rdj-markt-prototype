@@ -67,7 +67,6 @@ interface VaartuigDetailPanelProps {
 }
 
 export default function VaartuigDetailPanel({ id, onClose }: VaartuigDetailPanelProps) {
-  const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState<'matches' | 'onderhandelingen' | 'activiteit'>('matches');
   const [hoveredRow, setHoveredRow] = useState<string | null>(null);
   const [selectedNegotiationId, setSelectedNegotiationId] = useState<string | null>(null);
