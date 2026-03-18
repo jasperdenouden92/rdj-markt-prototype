@@ -355,7 +355,7 @@ export function useBevrachtingData() {
 
         return {
           id: item.id,
-          title: ex ? (ex.type === "Warehouse" ? ex.naam : `m/v ${ex.naam}`) : subpartij?.naam || item.id,
+          title: ex ? (ex.type === "opslag" ? ex.naam : `m/v ${ex.naam}`) : subpartij?.naam || item.id,
           exType: ex?.type,
           code: subpartij?.naam || "",
           company: relatie?.naam,
