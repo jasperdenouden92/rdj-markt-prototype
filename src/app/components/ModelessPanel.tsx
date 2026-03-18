@@ -22,7 +22,7 @@ export default function ModelessPanel({
   sidebar,
 }: ModelessPanelProps) {
   return (
-    <div className="fixed inset-y-0 right-0 z-40 flex flex-col bg-white w-full max-w-[1200px] shadow-[0px_20px_24px_-4px_rgba(16,24,40,0.08),0px_8px_8px_-4px_rgba(16,24,40,0.03)]">
+    <div className="fixed inset-y-0 right-0 z-30 flex flex-col bg-white w-full max-w-[1200px] shadow-[0px_20px_24px_-4px_rgba(16,24,40,0.08),0px_8px_8px_-4px_rgba(16,24,40,0.03)]">
       {/* Header */}
       <div className="border-b border-rdj-border-secondary px-[24px] py-[16px] shrink-0">
         <div className="flex items-start justify-between">
