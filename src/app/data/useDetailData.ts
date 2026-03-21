@@ -313,9 +313,9 @@ export function useLadingMarktDetail(id: string | undefined) {
           rawInkoopLiggeldLossen: item.liggeldLossen,
           rawZoekcriteriaPrijs: eigenLading?.prijs ?? null,
           rawZoekcriteriaLaadtijd: eigenLading?.laadtijd ?? null,
-          rawZoekcriteriaLiggeldLaden: eigenLading?.liggeldLaden ?? 0,
+          rawZoekcriteriaLiggeldLaden: eigenLading?.liggeldLaden ?? null,
           rawZoekcriteriaLostijd: eigenLading?.lostijd ?? null,
-          rawZoekcriteriaLiggeldLossen: eigenLading?.liggeldLossen ?? 0,
+          rawZoekcriteriaLiggeldLossen: eigenLading?.liggeldLossen ?? null,
         };
 
         if (mountedRef.current) setData(resolved);
@@ -422,9 +422,9 @@ export function useLadingEigenDetail(id: string | undefined) {
           rawEigenLiggeldLossen: item.liggeldLossen,
           rawMarktPrijs: marktLading?.prijs ?? null,
           rawMarktLaadtijd: marktLading?.laadtijd ?? null,
-          rawMarktLiggeldLaden: marktLading?.liggeldLaden ?? 0,
+          rawMarktLiggeldLaden: marktLading?.liggeldLaden ?? null,
           rawMarktLostijd: marktLading?.lostijd ?? null,
-          rawMarktLiggeldLossen: marktLading?.liggeldLossen ?? 0,
+          rawMarktLiggeldLossen: marktLading?.liggeldLossen ?? null,
         };
 
         if (mountedRef.current) setData(resolved);

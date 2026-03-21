@@ -199,20 +199,30 @@ export default function DetailRow({
 /* ── Value renderers ── */
 
 function SubtextWithTooltip({ subtext, subtextColor, subtextTooltip }: { subtext: string; subtextColor?: string; subtextTooltip?: string }) {
-  const el = (
-    <p
-      className="font-sans font-normal leading-[20px] text-rdj-text-secondary text-[14px]"
-      style={subtextColor ? { color: subtextColor } : undefined}
-    >
-      {subtext}
-    </p>
-  );
-  if (!subtextTooltip) return el;
+  if (!subtextTooltip) {
+    return (
+      <p
+        className="font-sans font-normal leading-[20px] text-rdj-text-secondary text-[14px]"
+        style={subtextColor ? { color: subtextColor } : undefined}
+      >
+        {subtext}
+      </p>
+    );
+  }
   return (
-    <Tooltip>
-      <TooltipTrigger asChild>{el}</TooltipTrigger>
-      <TooltipContent side="bottom" align="center">{subtextTooltip}</TooltipContent>
-    </Tooltip>
+    <p className="font-sans font-normal leading-[20px] text-rdj-text-secondary text-[14px]">
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <span
+            className="cursor-default"
+            style={subtextColor ? { color: subtextColor } : undefined}
+          >
+            {subtext}
+          </span>
+        </TooltipTrigger>
+        <TooltipContent side="bottom" align="center">{subtextTooltip}</TooltipContent>
+      </Tooltip>
+    </p>
   );
 }
 

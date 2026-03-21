@@ -302,20 +302,30 @@ function CellText({ row, col }: { row: RowData; col: TextColumn }) {
   const subtextTooltip = col.subtextTooltipKey ? (row[col.subtextTooltipKey] as string | undefined) : undefined;
 
   const subtextEl = subtext != null && String(subtext) !== "" ? (() => {
-    const p = (
-      <p
-        className="font-sans font-normal leading-[20px] text-rdj-text-secondary text-[14px] truncate"
-        style={subtextColor ? { color: subtextColor } : undefined}
-      >
-        {String(subtext)}
-      </p>
-    );
-    if (!subtextTooltip) return p;
+    if (!subtextTooltip) {
+      return (
+        <p
+          className="font-sans font-normal leading-[20px] text-rdj-text-secondary text-[14px] truncate"
+          style={subtextColor ? { color: subtextColor } : undefined}
+        >
+          {String(subtext)}
+        </p>
+      );
+    }
     return (
-      <Tooltip>
-        <TooltipTrigger asChild>{p}</TooltipTrigger>
-        <TooltipContent side="bottom" align="center">{subtextTooltip}</TooltipContent>
-      </Tooltip>
+      <p className="font-sans font-normal leading-[20px] text-rdj-text-secondary text-[14px] truncate">
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <span
+              className="cursor-default"
+              style={subtextColor ? { color: subtextColor } : undefined}
+            >
+              {String(subtext)}
+            </span>
+          </TooltipTrigger>
+          <TooltipContent side="bottom" align="center">{subtextTooltip}</TooltipContent>
+        </Tooltip>
+      </p>
     );
   })() : null;
 
