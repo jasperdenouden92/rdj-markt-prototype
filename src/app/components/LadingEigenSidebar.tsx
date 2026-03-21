@@ -6,16 +6,63 @@ import { useLadingEigenDetail } from "../data/useDetailData";
 
 /**
  * LadingEigenSidebar — detail sidebar for an eigen-lading.
- * Flow: Laadplanning → Bevrachting → Pijplijn
- *
- * Details tab: partij, subpartij, tonnage, ex, lading, subsoort,
- * soortelijk gewicht, inhoud, bijzonderheden, laad/loshaven + datum,
- * relatie, contactpersoon.
- * Separated by divider: eigenaar, deadline.
- *
- * Condities tab: shows BOTH eigen AND markt values side-by-side
- * for prijs, laadtijd, liggeld laden, lostijd, liggeld lossen.
+ * Condities tab: Verkoop + Zoekcriteria with inline editing (local state only).
  */
+
+function calcPctDiff(
+  markt: number | null | undefined,
+  eigen: number | null | undefined,
+): { text: string; color: string } | undefined {
+  if (markt == null || eigen == null || eigen === 0) return undefined;
+  const pct = ((markt - eigen) / Math.abs(eigen)) * 100;
+  const rounded = Math.round(pct);
+  if (rounded === 0) return undefined;
+  const sign = rounded > 0 ? "+" : "";
+  return {
+    text: `${sign}${rounded}%`,
+    color: rounded > 0 ? "#F79009" : "",
+  };
+}
+
+function fmtPrice(n: number | null): string {
+  if (n == null) return "—";
+  return `€${n.toFixed(2).replace(".", ",")} per ton`;
+}
+
+function fmtHours(n: number | null): string {
+  if (n == null) return "—";
+  return `${n} uur`;
+}
+
+function fmtCurrency(n: number | null): string {
+  if (n == null || n === 0) return "—";
+  return `€${n.toFixed(2).replace(".", ",")} per uur`;
+}
+
+function rawStr(n: number | null): string {
+  if (n == null) return "";
+  return String(n).replace(".", ",");
+}
+
+function parseNum(s: string): number | null {
+  const n = parseFloat(s.replace(",", "."));
+  return isNaN(n) ? null : n;
+}
+
+type ConditiesField = "prijs" | "laadtijd" | "liggeldLaden" | "lostijd" | "liggeldLossen";
+
+interface Overrides {
+  eigenPrijs?: number | null;
+  eigenLaadtijd?: number | null;
+  eigenLiggeldLaden?: number | null;
+  eigenLostijd?: number | null;
+  eigenLiggeldLossen?: number | null;
+  marktPrijs?: number | null;
+  marktLaadtijd?: number | null;
+  marktLiggeldLaden?: number | null;
+  marktLostijd?: number | null;
+  marktLiggeldLossen?: number | null;
+}
 
 interface LadingEigenSidebarProps {
   id: string;
@@ -26,6 +73,27 @@ export default function LadingEigenSidebar({ id, onEdit }: LadingEigenSidebarPro
   const navigate = useNavigate();
   const { data, loading, error } = useLadingEigenDetail(id);
   const [activeTab, setActiveTab] = useState<string>("details");
+  const [overrides, setOverrides] = useState<Overrides>({});
+
+  const getVal = (section: "eigen" | "markt", field: ConditiesField): number | null => {
+    const key = `${section}${field.charAt(0).toUpperCase()}${field.slice(1)}` as keyof Overrides;
+    if (key in overrides) return overrides[key] ?? null;
+    if (!data) return null;
+    const rawKey = `raw${section.charAt(0).toUpperCase()}${section.slice(1)}${field.charAt(0).toUpperCase()}${field.slice(1)}` as keyof typeof data;
+    return (data[rawKey] as number | null) ?? null;
+  };
+
+  const saveField = (section: "eigen" | "markt", field: ConditiesField, input: string) => {
+    const num = parseNum(input);
+    const key = `${section}${field.charAt(0).toUpperCase()}${field.slice(1)}` as keyof Overrides;
+    setOverrides(prev => ({ ...prev, [key]: num }));
+  };
+
+  const fmt = (field: ConditiesField, n: number | null): string => {
+    if (field === "prijs") return fmtPrice(n);
+    if (field === "laadtijd" || field === "lostijd") return fmtHours(n);
+    return fmtCurrency(n);
+  };
 
   if (loading) {
     return (
@@ -106,22 +174,38 @@ export default function LadingEigenSidebar({ id, onEdit }: LadingEigenSidebarPro
 
       {activeTab === "condities" && (
         <>
-          {/* Eigen condities */}
-          <DetailsSidebarSection title="Eigen">
-            <DetailRow label="Prijs" value={data.eigenPrijs} editable onEdit={() => onEdit?.("eigenPrijs")} />
-            <DetailRow label="Laadtijd" value={data.eigenLaadtijd} editable onEdit={() => onEdit?.("eigenLaadtijd")} />
-            <DetailRow label="Liggeld laden" value={data.eigenLiggeldLaden} editable onEdit={() => onEdit?.("eigenLiggeldLaden")} />
-            <DetailRow label="Lostijd" value={data.eigenLostijd} editable onEdit={() => onEdit?.("eigenLostijd")} />
-            <DetailRow label="Liggeld lossen" value={data.eigenLiggeldLossen} editable onEdit={() => onEdit?.("eigenLiggeldLossen")} />
+          {/* Verkoop condities */}
+          <DetailsSidebarSection title="Verkoop">
+            {(["prijs", "laadtijd", "liggeldLaden", "lostijd", "liggeldLossen"] as ConditiesField[]).map(field => (
+              <DetailRow
+                key={field}
+                label={field === "prijs" ? "Prijs" : field === "laadtijd" ? "Laadtijd" : field === "liggeldLaden" ? "Liggeld laden" : field === "lostijd" ? "Lostijd" : "Liggeld lossen"}
+                value={fmt(field, getVal("eigen", field))}
+                editValue={rawStr(getVal("eigen", field))}
+                editable
+                onSave={(v) => saveField("eigen", field, v)}
+              />
+            ))}
           </DetailsSidebarSection>
 
-          {/* Markt condities */}
-          <DetailsSidebarSection title="Markt">
-            <DetailRow label="Prijs" value={data.marktPrijs} />
-            <DetailRow label="Laadtijd" value={data.marktLaadtijd} />
-            <DetailRow label="Liggeld laden" value={data.marktLiggeldLaden} />
-            <DetailRow label="Lostijd" value={data.marktLostijd} />
-            <DetailRow label="Liggeld lossen" value={data.marktLiggeldLossen} />
+          {/* Zoekcriteria condities */}
+          <DetailsSidebarSection title="Zoekcriteria">
+            {(["prijs", "laadtijd", "liggeldLaden", "lostijd", "liggeldLossen"] as ConditiesField[]).map(field => {
+              const diff = calcPctDiff(getVal("markt", field), getVal("eigen", field));
+              return (
+                <DetailRow
+                  key={field}
+                  label={field === "prijs" ? "Prijs" : field === "laadtijd" ? "Laadtijd" : field === "liggeldLaden" ? "Liggeld laden" : field === "lostijd" ? "Lostijd" : "Liggeld lossen"}
+                  value={fmt(field, getVal("markt", field))}
+                  editValue={rawStr(getVal("markt", field))}
+                  subtext={diff?.text}
+                  subtextColor={diff?.color}
+                  subtextTooltip={diff ? "Vergeleken met verkoop" : undefined}
+                  editable
+                  onSave={(v) => saveField("markt", field, v)}
+                />
+              );
+            })}
           </DetailsSidebarSection>
         </>
       )}

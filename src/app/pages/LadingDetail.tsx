@@ -169,7 +169,7 @@ export default function LadingDetail() {
   /* ── Negotiations table ── */
   const negColumns: Column[] = [
     { key: 'company', header: 'Relatie', type: 'leading-text', actionLabel: 'Openen' },
-    { key: 'freightPrice', header: 'Vrachtprijs', type: 'text', subtextKey: 'freightPriceDiff', align: 'right', width: 'w-[160px]' },
+    { key: 'freightPrice', header: 'Vrachtprijs', type: 'text', subtextKey: 'freightPriceDiff', subtextColorKey: 'freightPriceDiffColor', subtextTooltipKey: 'freightPriceDiffTooltip', align: 'right', width: 'w-[160px]' },
     { key: 'tonnage', header: 'Tonnage', type: 'text', align: 'right', width: 'w-[120px]' },
     { key: 'deadline', header: 'Deadline', type: 'deadline', expiredKey: 'deadlineExpired', editable: true, width: 'w-[160px]' },
     { key: 'status', header: 'Status', type: 'status', variantKey: 'statusVariant', iconKey: 'statusIcon', typeKey: 'statusType', width: 'w-[160px]' },
@@ -181,6 +181,8 @@ export default function LadingDetail() {
     company: neg.company,
     freightPrice: neg.freightPrice || '—',
     freightPriceDiff: neg.freightPriceDiff || '',
+    freightPriceDiffColor: neg.freightPriceDiff?.startsWith('+') ? '#F79009' : undefined,
+    freightPriceDiffTooltip: neg.freightPriceDiff && neg.freightPriceDiff !== '' && neg.freightPriceDiff !== '0,0%' && neg.freightPriceDiff !== '+0,0%' ? 'Vergeleken met verkoop' : undefined,
     tonnage: neg.tonnage,
     deadline: neg.deadline,
     deadlineExpired: neg.deadlineExpired,

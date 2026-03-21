@@ -6,14 +6,71 @@ import { useLadingMarktDetail } from "../data/useDetailData";
 
 /**
  * LadingMarktSidebar — detail sidebar for a markt-lading.
- * Flow: Inbox → Pijplijn
- *
- * Details tab: tonnage, lading, subsoort, soortelijk gewicht, inhoud,
- * bijzonderheden, laad/loshaven + datum, bron, relatie, contactpersoon.
- * Separated by divider: eigenaar, prioriteit.
- *
- * Condities tab: prijs, laadtijd, liggeld laden, lostijd, liggeld lossen.
+ * Condities tab: Inkoop + Zoekcriteria with inline editing (local state only).
  */
+
+function calcPctDiff(
+  zoek: number | null | undefined,
+  inkoop: number | null | undefined,
+): { text: string; color: string } | undefined {
+  if (zoek == null || inkoop == null || inkoop === 0) return undefined;
+  const pct = ((zoek - inkoop) / Math.abs(inkoop)) * 100;
+  const rounded = Math.round(pct);
+  if (rounded === 0) return undefined;
+  const sign = rounded > 0 ? "+" : "";
+  return {
+    text: `${sign}${rounded}%`,
+    color: rounded < 0 ? "#F79009" : "",
+  };
+}
+
+function fmtPrice(n: number | null): string {
+  if (n == null) return "—";
+  return `€${n.toFixed(2).replace(".", ",")} per ton`;
+}
+
+function fmtHours(n: number | null): string {
+  if (n == null) return "—";
+  return `${n} uur`;
+}
+
+function fmtCurrency(n: number | null): string {
+  if (n == null || n === 0) return "—";
+  return `€${n.toFixed(2).replace(".", ",")} per uur`;
+}
+
+function rawStr(n: number | null): string {
+  if (n == null) return "";
+  return String(n).replace(".", ",");
+}
+
+function parseNum(s: string): number | null {
+  const n = parseFloat(s.replace(",", "."));
+  return isNaN(n) ? null : n;
+}
+
+type ConditiesField = "prijs" | "laadtijd" | "liggeldLaden" | "lostijd" | "liggeldLossen";
+
+interface Overrides {
+  inkoopPrijs?: number | null;
+  inkoopLaadtijd?: number | null;
+  inkoopLiggeldLaden?: number | null;
+  inkoopLostijd?: number | null;
+  inkoopLiggeldLossen?: number | null;
+  zoekcriteriaPrijs?: number | null;
+  zoekcriteriaLaadtijd?: number | null;
+  zoekcriteriaLiggeldLaden?: number | null;
+  zoekcriteriaLostijd?: number | null;
+  zoekcriteriaLiggeldLossen?: number | null;
+}
+
+const fieldLabels: Record<ConditiesField, string> = {
+  prijs: "Prijs",
+  laadtijd: "Laadtijd",
+  liggeldLaden: "Liggeld laden",
+  lostijd: "Lostijd",
+  liggeldLossen: "Liggeld lossen",
+};
 
 interface LadingMarktSidebarProps {
   id: string;
@@ -24,6 +81,33 @@ export default function LadingMarktSidebar({ id, onEdit }: LadingMarktSidebarPro
   const navigate = useNavigate();
   const { data, loading, error } = useLadingMarktDetail(id);
   const [activeTab, setActiveTab] = useState<string>("details");
+  const [overrides, setOverrides] = useState<Overrides>({});
+
+  const getVal = (section: "inkoop" | "zoekcriteria", field: ConditiesField): number | null => {
+    const key = `${section}${field.charAt(0).toUpperCase()}${field.slice(1)}` as keyof Overrides;
+    if (key in overrides) return overrides[key] ?? null;
+    if (!data) return null;
+    const rawKey = `raw${section.charAt(0).toUpperCase()}${section.slice(1)}${field.charAt(0).toUpperCase()}${field.slice(1)}` as keyof typeof data;
+    const val = (data[rawKey] as number | null) ?? null;
+    // Fallback: prefill zoekcriteria with inkoop when no data available
+    if (val == null && section === "zoekcriteria") {
+      const inkoopKey = `rawInkoop${field.charAt(0).toUpperCase()}${field.slice(1)}` as keyof typeof data;
+      return (data[inkoopKey] as number | null) ?? null;
+    }
+    return val;
+  };
+
+  const saveField = (section: "inkoop" | "zoekcriteria", field: ConditiesField, input: string) => {
+    const num = parseNum(input);
+    const key = `${section}${field.charAt(0).toUpperCase()}${field.slice(1)}` as keyof Overrides;
+    setOverrides(prev => ({ ...prev, [key]: num }));
+  };
+
+  const fmt = (field: ConditiesField, n: number | null): string => {
+    if (field === "prijs") return fmtPrice(n);
+    if (field === "laadtijd" || field === "lostijd") return fmtHours(n);
+    return fmtCurrency(n);
+  };
 
   if (loading) {
     return (
@@ -100,7 +184,7 @@ export default function LadingMarktSidebar({ id, onEdit }: LadingMarktSidebarPro
             <DetailRow
               label="Prioriteit"
               value={
-                stars.map((filled, i) => filled ? "★" : "☆").join("")
+                stars.map((filled) => filled ? "★" : "☆").join("")
               }
               editable
               onEdit={() => onEdit?.("prioriteit")}
@@ -110,13 +194,41 @@ export default function LadingMarktSidebar({ id, onEdit }: LadingMarktSidebarPro
       )}
 
       {activeTab === "condities" && (
-        <DetailsSidebarSection>
-          <DetailRow label="Prijs" value={data.prijs} editable onEdit={() => onEdit?.("prijs")} />
-          <DetailRow label="Laadtijd" value={data.laadtijd} editable onEdit={() => onEdit?.("laadtijd")} />
-          <DetailRow label="Liggeld laden" value={data.liggeldLaden} editable onEdit={() => onEdit?.("liggeldLaden")} />
-          <DetailRow label="Lostijd" value={data.lostijd} editable onEdit={() => onEdit?.("lostijd")} />
-          <DetailRow label="Liggeld lossen" value={data.liggeldLossen} editable onEdit={() => onEdit?.("liggeldLossen")} />
-        </DetailsSidebarSection>
+        <>
+          {/* Inkoop condities */}
+          <DetailsSidebarSection title="Inkoop">
+            {(["prijs", "laadtijd", "liggeldLaden", "lostijd", "liggeldLossen"] as ConditiesField[]).map(field => (
+              <DetailRow
+                key={field}
+                label={fieldLabels[field]}
+                value={fmt(field, getVal("inkoop", field))}
+                editValue={rawStr(getVal("inkoop", field))}
+                editable
+                onSave={(v) => saveField("inkoop", field, v)}
+              />
+            ))}
+          </DetailsSidebarSection>
+
+          {/* Zoekcriteria condities */}
+          <DetailsSidebarSection title="Zoekcriteria">
+            {(["prijs", "laadtijd", "liggeldLaden", "lostijd", "liggeldLossen"] as ConditiesField[]).map(field => {
+              const diff = calcPctDiff(getVal("zoekcriteria", field), getVal("inkoop", field));
+              return (
+                <DetailRow
+                  key={field}
+                  label={fieldLabels[field]}
+                  value={fmt(field, getVal("zoekcriteria", field))}
+                  editValue={rawStr(getVal("zoekcriteria", field))}
+                  subtext={diff?.text}
+                  subtextColor={diff?.color}
+                  subtextTooltip={diff ? "Vergeleken met inkoop" : undefined}
+                  editable
+                  onSave={(v) => saveField("zoekcriteria", field, v)}
+                />
+              );
+            })}
+          </DetailsSidebarSection>
+        </>
       )}
     </DetailsSidebar>
   );
