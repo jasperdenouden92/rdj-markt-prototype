@@ -5,6 +5,7 @@ import Checkbox from "./Checkbox";
 import FeaturedIcon from "./FeaturedIcon";
 import Badge, { type BadgeVariant } from "./Badge";
 import Button from "./Button";
+import { Tooltip, TooltipTrigger, TooltipContent } from "./ui/tooltip";
 
 /* ─────────────────────────────────────────────
    Column header
@@ -91,6 +92,10 @@ export interface TextColumn extends BaseColumn {
   textColor?: string;
   /** Row key that holds a click handler for this cell (e.g. navigate to relation) */
   onClickKey?: string;
+  /** Row key for subtext color (inline style override, e.g. "#F79009") */
+  subtextColorKey?: string;
+  /** Row key for subtext tooltip text */
+  subtextTooltipKey?: string;
 }
 
 export interface RatingColumn extends BaseColumn {
@@ -293,6 +298,26 @@ function CellText({ row, col }: { row: RowData; col: TextColumn }) {
   const avatarInitials =
     col.avatarInitialsKey ? row[col.avatarInitialsKey] : undefined;
   const textColor = col.textColor ?? "text-rdj-text-primary";
+  const subtextColor = col.subtextColorKey ? (row[col.subtextColorKey] as string | undefined) : undefined;
+  const subtextTooltip = col.subtextTooltipKey ? (row[col.subtextTooltipKey] as string | undefined) : undefined;
+
+  const subtextEl = subtext != null && String(subtext) !== "" ? (() => {
+    const p = (
+      <p
+        className="font-sans font-normal leading-[20px] text-rdj-text-secondary text-[14px] truncate"
+        style={subtextColor ? { color: subtextColor } : undefined}
+      >
+        {String(subtext)}
+      </p>
+    );
+    if (!subtextTooltip) return p;
+    return (
+      <Tooltip>
+        <TooltipTrigger asChild>{p}</TooltipTrigger>
+        <TooltipContent side="bottom" align="center">{subtextTooltip}</TooltipContent>
+      </Tooltip>
+    );
+  })() : null;
 
   const hasLeading = icon || featuredIcon || avatarSrc || avatarInitials;
   const hasText = (text != null && String(text) !== "") || (subtext != null && String(subtext) !== "");
@@ -345,11 +370,7 @@ function CellText({ row, col }: { row: RowData; col: TextColumn }) {
                 </p>
               )
             )}
-            {subtext != null && String(subtext) !== "" && (
-              <p className="font-sans font-normal leading-[20px] text-rdj-text-secondary text-[14px] truncate">
-                {String(subtext)}
-              </p>
-            )}
+            {subtextEl}
           </div>
         )}
       </div>
@@ -376,11 +397,7 @@ function CellText({ row, col }: { row: RowData; col: TextColumn }) {
   return (
     <div className={alignCls}>
       {textEl}
-      {subtext != null && String(subtext) !== "" && (
-        <p className="font-sans font-normal leading-[20px] text-rdj-text-secondary text-[14px] truncate">
-          {String(subtext)}
-        </p>
-      )}
+      {subtextEl}
     </div>
   );
 }

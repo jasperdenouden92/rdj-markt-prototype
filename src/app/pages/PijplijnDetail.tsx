@@ -134,7 +134,7 @@ export default function PijplijnDetail() {
   /* ── Onderhandelingen table ── */
   const negColumnsLading: Column[] = [
     { key: 'company', header: 'Relatie', type: 'leading-text', actionLabel: 'Openen' },
-    { key: 'vrachtprijs', header: 'Vrachtprijs', type: 'text', subtextKey: 'priceDiff', align: 'right', width: 'w-[160px]' },
+    { key: 'vrachtprijs', header: 'Vrachtprijs', type: 'text', subtextKey: 'priceDiff', subtextColorKey: 'priceDiffColor', subtextTooltipKey: 'priceDiffTooltip', align: 'right', width: 'w-[160px]' },
     { key: 'tonnage', header: 'Tonnage', type: 'text', align: 'right', width: 'w-[120px]' },
     { key: 'deadline', header: 'Deadline', type: 'deadline', expiredKey: 'deadlineExpired', editable: true, width: 'w-[160px]' },
     { key: 'status', header: 'Status', type: 'status', variantKey: 'statusVariant', iconKey: 'statusIcon', typeKey: 'statusType', width: 'w-[160px]' },
@@ -178,6 +178,10 @@ export default function PijplijnDetail() {
         company: neg.company,
         vrachtprijs: neg.vrachtprijs,
         priceDiff: neg.priceDiff,
+        priceDiffColor: detectedType === 'markt'
+          ? (neg.priceDiff?.startsWith('-') ? '#F79009' : undefined)
+          : (neg.priceDiff?.startsWith('+') ? '#F79009' : undefined),
+        priceDiffTooltip: neg.priceDiff && neg.priceDiff !== '' ? (detectedType === 'markt' ? 'Vergeleken met inkoop' : 'Vergeleken met verkoop') : undefined,
         tonnage: neg.tonnage,
         deadline: neg.deadline,
         deadlineExpired: neg.deadlineExpired,

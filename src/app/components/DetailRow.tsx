@@ -1,5 +1,6 @@
-import { type ReactNode } from "react";
+import { useState, useRef, useEffect, type ReactNode } from "react";
 import StarRating from "./StarRating";
+import { Tooltip, TooltipTrigger, TooltipContent } from "./ui/tooltip";
 
 /**
  * DetailRow — a label + value row for detail sidebars.
@@ -52,6 +53,18 @@ export interface DetailRowProps {
 
   /** Rating change handler (type = rating) */
   onRate?: (value: number) => void;
+
+  /** Callback when an inline edit is saved. If provided, clicking an editable field opens an inline input. */
+  onSave?: (value: string) => void;
+
+  /** Value shown in the input when editing (e.g. raw number "12" instead of formatted "12 uur") */
+  editValue?: string;
+
+  /** Optional color override for the subtext */
+  subtextColor?: string;
+
+  /** Optional tooltip shown on hover of the subtext */
+  subtextTooltip?: string;
 }
 
 export default function DetailRow({
@@ -68,12 +81,52 @@ export default function DetailRow({
   onEdit,
   rating,
   onRate,
+  onSave,
+  editValue: editValueProp,
+  subtextColor,
+  subtextTooltip,
 }: DetailRowProps) {
+  const [editing, setEditing] = useState(false);
+  const [editValue, setEditValue] = useState("");
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    if (editing && inputRef.current) {
+      inputRef.current.focus();
+      inputRef.current.select();
+    }
+  }, [editing]);
+
+  const handleStartEdit = () => {
+    if (onSave) {
+      setEditValue(editValueProp ?? value ?? "");
+      setEditing(true);
+    } else {
+      onEdit?.();
+    }
+  };
+
+  const handleCommit = () => {
+    setEditing(false);
+    if (editValue !== (value || "")) {
+      onSave?.(editValue);
+    }
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      handleCommit();
+    } else if (e.key === "Escape") {
+      setEditing(false);
+    }
+  };
+
   const valueContent = (
     <>
-      {type === "default" && <DefaultValue value={value} subtext={subtext} />}
+      {type === "default" && <DefaultValue value={value} subtext={subtext} subtextColor={subtextColor} subtextTooltip={subtextTooltip} />}
       {type === "linked" && (
-        <LinkedValue value={value} subtext={subtext} onClick={onClick} />
+        <LinkedValue value={value} subtext={subtext} subtextColor={subtextColor} subtextTooltip={subtextTooltip} onClick={onClick} />
       )}
       {type === "badges" && <BadgesValue badges={badges} />}
       {type === "user" && (
@@ -103,16 +156,30 @@ export default function DetailRow({
       </div>
 
       {/* Value */}
-      {editable ? (
+      {editable && editing ? (
+        <div className="content-stretch flex flex-[1_0_0] flex-col items-start min-h-px min-w-px relative">
+          <div className="rounded-[6px] w-full border border-rdj-border-brand bg-white">
+            <input
+              ref={inputRef}
+              type="text"
+              value={editValue}
+              onChange={(e) => setEditValue(e.target.value)}
+              onBlur={handleCommit}
+              onKeyDown={handleKeyDown}
+              className="w-full px-[12px] py-[7px] font-sans font-bold leading-[20px] text-rdj-text-primary text-[14px] bg-transparent outline-none rounded-[6px]"
+            />
+          </div>
+        </div>
+      ) : editable ? (
         <div
           className="content-stretch flex flex-[1_0_0] flex-col items-start min-h-px min-w-px relative cursor-pointer"
-          onClick={onEdit}
+          onClick={handleStartEdit}
           role="button"
           tabIndex={0}
           onKeyDown={(e) => {
             if (e.key === "Enter" || e.key === " ") {
               e.preventDefault();
-              onEdit?.();
+              handleStartEdit();
             }
           }}
         >
@@ -131,12 +198,34 @@ export default function DetailRow({
 
 /* ── Value renderers ── */
 
+function SubtextWithTooltip({ subtext, subtextColor, subtextTooltip }: { subtext: string; subtextColor?: string; subtextTooltip?: string }) {
+  const el = (
+    <p
+      className="font-sans font-normal leading-[20px] text-rdj-text-secondary text-[14px]"
+      style={subtextColor ? { color: subtextColor } : undefined}
+    >
+      {subtext}
+    </p>
+  );
+  if (!subtextTooltip) return el;
+  return (
+    <Tooltip>
+      <TooltipTrigger asChild>{el}</TooltipTrigger>
+      <TooltipContent side="bottom" align="center">{subtextTooltip}</TooltipContent>
+    </Tooltip>
+  );
+}
+
 function DefaultValue({
   value,
   subtext,
+  subtextColor,
+  subtextTooltip,
 }: {
   value?: string;
   subtext?: string;
+  subtextColor?: string;
+  subtextTooltip?: string;
 }) {
   return (
     <div className="bg-white relative rounded-[6px] shrink-0 w-full">
@@ -146,9 +235,7 @@ function DefaultValue({
             {value || "—"}
           </p>
           {subtext && (
-            <p className="font-sans font-normal leading-[20px] text-rdj-text-secondary text-[14px]">
-              {subtext}
-            </p>
+            <SubtextWithTooltip subtext={subtext} subtextColor={subtextColor} subtextTooltip={subtextTooltip} />
           )}
         </div>
       </div>
@@ -159,10 +246,14 @@ function DefaultValue({
 function LinkedValue({
   value,
   subtext,
+  subtextColor,
+  subtextTooltip,
   onClick,
 }: {
   value?: string;
   subtext?: string;
+  subtextColor?: string;
+  subtextTooltip?: string;
   onClick?: () => void;
 }) {
   return (
@@ -177,9 +268,7 @@ function LinkedValue({
         </p>
       </button>
       {subtext && (
-        <p className="font-sans font-normal leading-[20px] text-rdj-text-secondary text-[14px]">
-          {subtext}
-        </p>
+        <SubtextWithTooltip subtext={subtext} subtextColor={subtextColor} subtextTooltip={subtextTooltip} />
       )}
     </div>
   );

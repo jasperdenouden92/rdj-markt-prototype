@@ -539,6 +539,8 @@ export default function Onderhandelingen() {
       type: "text",
       width: "w-[140px]",
       subtextKey: "vrachtprijsDiff",
+      subtextColorKey: "vrachtprijsDiffColor",
+      subtextTooltipKey: "vrachtprijsDiffTooltip",
       align: "right",
     },
     {
@@ -676,6 +678,10 @@ export default function Onderhandelingen() {
     vaartuig: item.vaartuig,
     vrachtprijs: item.vrachtprijs,
     vrachtprijsDiff: item.vrachtprijsDiff,
+    vrachtprijsDiffColor: item.bron === "eigen"
+      ? (item.vrachtprijsDiff?.startsWith("+") ? "#F79009" : undefined)
+      : (item.vrachtprijsDiff?.startsWith("-") ? "#F79009" : undefined),
+    vrachtprijsDiffTooltip: item.vrachtprijsDiff && item.vrachtprijsDiff !== "" ? (item.bron === "eigen" ? "Vergeleken met verkoop" : "Vergeleken met inkoop") : undefined,
     relatie: item.relatie,
     laden: item.laadHaven,
     ladenDate: item.laadDatum,
