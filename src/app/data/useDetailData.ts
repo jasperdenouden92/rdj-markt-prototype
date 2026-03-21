@@ -102,12 +102,29 @@ export interface ResolvedLadingMarkt {
   eigenaar: string;
   eigenaarInitials: string;
   prioriteit: number;
-  // Condities
-  prijs: string;
-  laadtijd: string;
-  liggeldLaden: string;
-  lostijd: string;
-  liggeldLossen: string;
+  // Condities inkoop
+  inkoopPrijs: string;
+  inkoopLaadtijd: string;
+  inkoopLiggeldLaden: string;
+  inkoopLostijd: string;
+  inkoopLiggeldLossen: string;
+  // Condities zoekcriteria (from related lading_eigen if any)
+  zoekcriteriaPrijs: string;
+  zoekcriteriaLaadtijd: string;
+  zoekcriteriaLiggeldLaden: string;
+  zoekcriteriaLostijd: string;
+  zoekcriteriaLiggeldLossen: string;
+  // Raw numeric values for percentage diff
+  rawInkoopPrijs: number | null;
+  rawInkoopLaadtijd: number | null;
+  rawInkoopLiggeldLaden: number;
+  rawInkoopLostijd: number | null;
+  rawInkoopLiggeldLossen: number;
+  rawZoekcriteriaPrijs: number | null;
+  rawZoekcriteriaLaadtijd: number | null;
+  rawZoekcriteriaLiggeldLaden: number;
+  rawZoekcriteriaLostijd: number | null;
+  rawZoekcriteriaLiggeldLossen: number;
 }
 
 export interface ResolvedLadingEigen {
@@ -146,6 +163,17 @@ export interface ResolvedLadingEigen {
   marktLiggeldLaden: string;
   marktLostijd: string;
   marktLiggeldLossen: string;
+  // Raw numeric values for percentage diff calculation
+  rawEigenPrijs: number | null;
+  rawEigenLaadtijd: number | null;
+  rawEigenLiggeldLaden: number;
+  rawEigenLostijd: number | null;
+  rawEigenLiggeldLossen: number;
+  rawMarktPrijs: number | null;
+  rawMarktLaadtijd: number | null;
+  rawMarktLiggeldLaden: number;
+  rawMarktLostijd: number | null;
+  rawMarktLiggeldLossen: number;
 }
 
 export interface ResolvedVaartuigMarkt {
@@ -236,6 +264,16 @@ export function useLadingMarktDetail(id: string | undefined) {
           .filter(Boolean)
           .map(b => b!.naam);
 
+        // Try to find a related eigen lading for zoekcriteria
+        let eigenLading: LadingEigen | null = null;
+        try {
+          const allEigen = await api.list<LadingEigen>("lading_eigen");
+          eigenLading = allEigen.find(el => {
+            const p = maps.partijen.get(el.partijId);
+            return p?.ladingSoortId === item.ladingSoortId && el.relatieId === item.relatieId;
+          }) || null;
+        } catch { /* no eigen data available */ }
+
         const resolved: ResolvedLadingMarkt = {
           raw: item,
           tonnage: `${fmt(item.tonnage)} t`,
@@ -258,11 +296,26 @@ export function useLadingMarktDetail(id: string | undefined) {
           eigenaar: eigenaar?.naam || "—",
           eigenaarInitials: eigenaar ? getInitials(eigenaar.naam) : "",
           prioriteit: item.prioriteit,
-          prijs: fmtPrice(item.prijs),
-          laadtijd: fmtHours(item.laadtijd),
-          liggeldLaden: fmtCurrency(item.liggeldLaden),
-          lostijd: fmtHours(item.lostijd),
-          liggeldLossen: fmtCurrency(item.liggeldLossen),
+          inkoopPrijs: fmtPrice(item.prijs),
+          inkoopLaadtijd: fmtHours(item.laadtijd),
+          inkoopLiggeldLaden: fmtCurrency(item.liggeldLaden),
+          inkoopLostijd: fmtHours(item.lostijd),
+          inkoopLiggeldLossen: fmtCurrency(item.liggeldLossen),
+          zoekcriteriaPrijs: eigenLading ? fmtPrice(eigenLading.prijs) : "—",
+          zoekcriteriaLaadtijd: eigenLading ? fmtHours(eigenLading.laadtijd) : "—",
+          zoekcriteriaLiggeldLaden: eigenLading ? fmtCurrency(eigenLading.liggeldLaden) : "—",
+          zoekcriteriaLostijd: eigenLading ? fmtHours(eigenLading.lostijd) : "—",
+          zoekcriteriaLiggeldLossen: eigenLading ? fmtCurrency(eigenLading.liggeldLossen) : "—",
+          rawInkoopPrijs: item.prijs,
+          rawInkoopLaadtijd: item.laadtijd,
+          rawInkoopLiggeldLaden: item.liggeldLaden,
+          rawInkoopLostijd: item.lostijd,
+          rawInkoopLiggeldLossen: item.liggeldLossen,
+          rawZoekcriteriaPrijs: eigenLading?.prijs ?? null,
+          rawZoekcriteriaLaadtijd: eigenLading?.laadtijd ?? null,
+          rawZoekcriteriaLiggeldLaden: eigenLading?.liggeldLaden ?? null,
+          rawZoekcriteriaLostijd: eigenLading?.lostijd ?? null,
+          rawZoekcriteriaLiggeldLossen: eigenLading?.liggeldLossen ?? null,
         };
 
         if (mountedRef.current) setData(resolved);
@@ -285,6 +338,8 @@ export function useLadingEigenDetail(id: string | undefined) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const mountedRef = useRef(true);
+  const [refreshKey, setRefreshKey] = useState(0);
+  const refetch = () => setRefreshKey(k => k + 1);
 
   useEffect(() => {
     mountedRef.current = true;
@@ -360,6 +415,16 @@ export function useLadingEigenDetail(id: string | undefined) {
           marktLiggeldLaden: marktLading ? fmtCurrency(marktLading.liggeldLaden) : "—",
           marktLostijd: marktLading ? fmtHours(marktLading.lostijd) : "—",
           marktLiggeldLossen: marktLading ? fmtCurrency(marktLading.liggeldLossen) : "—",
+          rawEigenPrijs: item.prijs,
+          rawEigenLaadtijd: item.laadtijd,
+          rawEigenLiggeldLaden: item.liggeldLaden,
+          rawEigenLostijd: item.lostijd,
+          rawEigenLiggeldLossen: item.liggeldLossen,
+          rawMarktPrijs: marktLading?.prijs ?? null,
+          rawMarktLaadtijd: marktLading?.laadtijd ?? null,
+          rawMarktLiggeldLaden: marktLading?.liggeldLaden ?? null,
+          rawMarktLostijd: marktLading?.lostijd ?? null,
+          rawMarktLiggeldLossen: marktLading?.liggeldLossen ?? null,
         };
 
         if (mountedRef.current) setData(resolved);
@@ -372,9 +437,9 @@ export function useLadingEigenDetail(id: string | undefined) {
     })();
 
     return () => { mountedRef.current = false; };
-  }, [id]);
+  }, [id, refreshKey]);
 
-  return { data, loading, error };
+  return { data, loading, error, refetch };
 }
 
 export function useVaartuigMarktDetail(id: string | undefined) {
