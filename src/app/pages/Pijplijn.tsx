@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { useNavigate, useLocation } from "react-router";
 import Sidebar from "../components/Sidebar";
 import PageHeader from "../components/PageHeader";
@@ -7,6 +7,7 @@ import FilterDropdown from "../components/FilterDropdown";
 import Pagination from "../components/Pagination";
 import Table from "../components/Table";
 import type { Column } from "../components/Table";
+import useTableSort from "../components/useTableSort";
 import svgPaths from "../../imports/svg-q07ncv0e2v";
 import imgAvatar from "../../assets/a2737d3b5b234fc04041650cb9f114889c6859da.png";
 import { usePijplijnData, usePijplijnVaartuigen, type PijplijnItem, type PijplijnVaartuigItem } from "../data/useMarktData";
@@ -148,6 +149,9 @@ export default function Pijplijn() {
     ownerInitials: item.eigenaarInitials,
   }));
 
+  const { sortedColumns: sortedLadingenColumns, sortedData: sortedLadingenData } = useTableSort(ladingenColumns, ladingenRows);
+  const { sortedColumns: sortedVaartuigenColumns, sortedData: sortedVaartuigenData } = useTableSort(vaartuigenColumns, vaartuigenRows);
+
   return (
     <div className="flex min-h-screen bg-rdj-bg-primary">
       <Sidebar />
@@ -210,8 +214,8 @@ export default function Pijplijn() {
 
           {activeTab === 'ladingen' && (
             <Table
-              columns={ladingenColumns}
-              data={ladingenRows}
+              columns={sortedLadingenColumns}
+              data={sortedLadingenData}
               onRowClick={(row) => {
                 navigate(`/markt/pijplijn/lading/${row.id}`);
               }}
@@ -220,8 +224,8 @@ export default function Pijplijn() {
 
           {activeTab === 'vaartuigen' && (
             <Table
-              columns={vaartuigenColumns}
-              data={vaartuigenRows}
+              columns={sortedVaartuigenColumns}
+              data={sortedVaartuigenData}
               onRowClick={(row) => {
                 navigate(`/markt/pijplijn/vaartuig/${row.id}`);
               }}

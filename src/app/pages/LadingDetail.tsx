@@ -59,7 +59,7 @@ export default function LadingDetail() {
   const [hoveredRow, setHoveredRow] = useState<string | null>(null);
   const [selectedNegotiation, setSelectedNegotiation] = useState<{ id: string; status: string; bron: string } | null>(null);
   const setActiveTab = (tab: typeof activeTab) => { setActiveTabRaw(tab); setSelectedNegotiation(null); };
-  const [conversationDialog, setConversationDialog] = useState<{ relatieId: string; relatieName: string } | null>(null);
+  const [conversationDialog, setConversationDialog] = useState<{ relatieId: string; relatieName: string; matchName?: string } | null>(null);
   const [matchFilter, setMatchFilter] = useState("Alles");
   const [negFilter, setNegFilter] = useState("Actief");
   const [activityFilter, setActivityFilter] = useState("Alle activiteit");
@@ -293,6 +293,7 @@ export default function LadingDetail() {
                             setConversationDialog({
                               relatieId: relatie?.id || "rel-001",
                               relatieName: (row.company as string) || "Onbekend",
+                              matchName: row.name as string,
                             });
                           }}
                         />
@@ -369,8 +370,10 @@ export default function LadingDetail() {
         <ConversationDialog
           relatieId={conversationDialog.relatieId}
           relatieName={conversationDialog.relatieName}
-          preSelectedItemId={id}
-          preSelectedItemType="lading"
+          preSelectedMatchName={conversationDialog.matchName}
+          preSelectedOriginId={conversationDialog.matchName ? id : undefined}
+          preSelectedItemId={conversationDialog.matchName ? undefined : id}
+          preSelectedItemType={conversationDialog.matchName ? undefined : "lading"}
           onClose={() => setConversationDialog(null)}
         />
       )}

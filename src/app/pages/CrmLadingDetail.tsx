@@ -42,7 +42,7 @@ export default function CrmLadingDetail() {
   const [matchFilter, setMatchFilter] = useState("Alles");
   const [negFilter, setNegFilter] = useState("Actief");
   const [activityFilter, setActivityFilter] = useState("Alle activiteit");
-  const [conversationDialog, setConversationDialog] = useState<{ relatieId: string; relatieName: string } | null>(null);
+  const [conversationDialog, setConversationDialog] = useState<{ relatieId: string; relatieName: string; matchName?: string } | null>(null);
 
   const lading = useMemo(() => mockRelatieLadingen.find((l) => l.id === id), [id]);
   const relatie = useMemo(() => mockRelaties.find((r) => r.id === (relatieId || lading?.relatieId)), [relatieId, lading]);
@@ -196,6 +196,7 @@ export default function CrmLadingDetail() {
                             setConversationDialog({
                               relatieId: rel?.id || relatie?.id || "",
                               relatieName: (row.company as string) || relatie?.naam || "",
+                              matchName: row.name as string,
                             });
                           }}
                         />
@@ -297,8 +298,10 @@ export default function CrmLadingDetail() {
         <ConversationDialog
           relatieId={conversationDialog.relatieId}
           relatieName={conversationDialog.relatieName}
-          preSelectedItemId={id}
-          preSelectedItemType="lading"
+          preSelectedMatchName={conversationDialog.matchName}
+          preSelectedOriginId={conversationDialog.matchName ? id : undefined}
+          preSelectedItemId={conversationDialog.matchName ? undefined : id}
+          preSelectedItemType={conversationDialog.matchName ? undefined : "lading"}
           onClose={() => setConversationDialog(null)}
         />
       )}

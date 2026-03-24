@@ -18,22 +18,49 @@ interface ColumnHeaderProps {
   align?: "left" | "right";
 }
 
+function SortArrow({ direction }: { direction: "asc" | "desc" }) {
+  return (
+    <svg
+      className={`shrink-0 size-[12px] transition-transform ${direction === "asc" ? "rotate-180" : ""}`}
+      viewBox="0 0 12 12"
+      fill="none"
+    >
+      <path
+        d="M6 2.5L6 9.5M6 9.5L9 6.5M6 9.5L3 6.5"
+        stroke="currentColor"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
+
 function ColumnHeader({
   label,
   sortActive = false,
   sortDirection = "asc",
   align = "left",
 }: ColumnHeaderProps) {
-  const arrow = sortActive ? (sortDirection === "asc" ? " ↑" : " ↓") : "";
   return (
-    <p
-      className={`font-sans font-bold leading-[18px] text-[12px] whitespace-nowrap ${
-        sortActive ? "text-rdj-text-primary" : "text-rdj-text-secondary"
-      } ${align === "right" ? "text-right" : "text-left"}`}
+    <div
+      className={`flex items-center gap-[4px] ${
+        align === "right" ? "justify-end" : "justify-start"
+      }`}
     >
-      {label}
-      {arrow}
-    </p>
+      <p
+        className={`font-sans font-bold leading-[18px] text-[12px] whitespace-nowrap ${
+          sortActive ? "text-rdj-text-primary" : "text-rdj-text-secondary"
+        }`}
+      >
+        {label}
+      </p>
+      {sortActive && (
+        <span className="text-rdj-text-primary">
+          <SortArrow direction={sortDirection} />
+        </span>
+      )}
+    </div>
   );
 }
 
@@ -74,6 +101,8 @@ export interface LeadingTextColumn extends BaseColumn {
   actionLabel?: string;
   /** Row key for a completed-action label (e.g. "Aangeboden"). When set, shows a check + label instead of the action button. */
   actionCompletedKey?: string;
+  /** Optional max-width class, e.g. "max-w-[480px]" */
+  maxWidth?: string;
 }
 
 export interface TextColumn extends BaseColumn {
@@ -677,7 +706,7 @@ export default function Table({
           {columns.map((col) => {
             const isLeading = col.type === "leading-text";
             const widthCls = isLeading
-              ? "flex-1 min-w-[400px]"
+              ? `flex-1 min-w-[400px]${(col as LeadingTextColumn).maxWidth ? ` ${(col as LeadingTextColumn).maxWidth}` : ''}`
               : `${col.width ?? "w-[120px]"} shrink-0`;
             // When a leading-text column has a dotKey, offset the header
             // to align with the text content (past the dot + gap space)
@@ -730,7 +759,7 @@ export default function Table({
             {columns.map((col) => {
               const isLeading = col.type === "leading-text";
               const widthCls = isLeading
-                ? "flex-1 min-w-[400px]"
+                ? `flex-1 min-w-[400px]${(col as LeadingTextColumn).maxWidth ? ` ${(col as LeadingTextColumn).maxWidth}` : ''}`
                 : `${col.width ?? "w-[120px]"} shrink-0`;
 
               const actionHandler = onRowAction ?? onRowClick;

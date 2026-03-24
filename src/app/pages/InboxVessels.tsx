@@ -10,6 +10,7 @@ import FilterDropdown from "../components/FilterDropdown";
 import Pagination from "../components/Pagination";
 import Table from "../components/Table";
 import type { Column } from "../components/Table";
+import useTableSort from "../components/useTableSort";
 import { useInboxVaartuigen, updateVaartuigMarktPriority } from "../data/useMarktData";
 import { mockRelaties } from "../data/mock-relatie-data";
 import * as apiClient from "../data/api";
@@ -349,7 +350,7 @@ export default function InboxVessels() {
   };
 
   const columns: Column[] = [
-    { key: 'name', header: 'Naam', type: 'leading-text', subtextKey: 'type', dotKey: 'isNew', sortActive: true, sortDirection: 'desc' },
+    { key: 'name', header: 'Naam', type: 'leading-text', subtextKey: 'type', dotKey: 'isNew' },
     { key: 'relation', header: 'Relatie', type: 'text', width: 'w-[180px]', textColor: 'text-rdj-text-brand', subtextKey: 'relationContact', onClickKey: 'onRelatieClick' },
     { key: 'location', header: 'Locatie', type: 'text', width: 'w-[140px]', editable: true },
     { key: 'availableFromDate', header: 'Beschikbaar vanaf', type: 'text', width: 'w-[140px]', subtextKey: 'availableFromTime', editable: true },
@@ -431,6 +432,11 @@ export default function InboxVessels() {
     };
   });
 
+  const { sortedColumns, sortedData } = useTableSort(columns, tableData, {
+    initialSortKey: "name",
+    initialDirection: "desc",
+  });
+
   return (
     <>
       <Toaster position="top-right" richColors />
@@ -499,8 +505,8 @@ export default function InboxVessels() {
             />
 
             <Table
-              columns={columns}
-              data={tableData}
+              columns={sortedColumns}
+              data={sortedData}
               onRowClick={(row) => navigate(`/markt/inbox/vaartuig/${row.id}`)}
               hoveredRowId={hoveredRow}
               onRowHover={setHoveredRow}

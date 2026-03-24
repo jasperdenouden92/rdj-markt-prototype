@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useMemo } from "react";
 import { useNavigate, useLocation } from "react-router";
 import { Send, MailOpen, Check, X } from "lucide-react";
 import Sidebar from "../components/Sidebar";
@@ -8,6 +8,7 @@ import FilterDropdown from "../components/FilterDropdown";
 import Pagination from "../components/Pagination";
 import Table from "../components/Table";
 import type { Column } from "../components/Table";
+import useTableSort from "../components/useTableSort";
 import Button from "../components/Button";
 import OnderhandelingSidepanel from "../components/OnderhandelingSidepanel";
 import svgPaths from "../../imports/svg-q07ncv0e2v";
@@ -730,6 +731,9 @@ export default function Onderhandelingen() {
     bron: item.bron,
   }));
 
+  const { sortedColumns: sortedLadingenColumns, sortedData: sortedLadingenData } = useTableSort(ladingenColumns, ladingenRows);
+  const { sortedColumns: sortedVaartuigenColumns, sortedData: sortedVaartuigenData } = useTableSort(vaartuigenColumns, vaartuigenRows);
+
   return (
     <div className="flex min-h-screen bg-rdj-bg-primary">
       <Sidebar />
@@ -891,8 +895,8 @@ export default function Onderhandelingen() {
 
           {activeTab === "ladingen" && (
             <Table
-              columns={ladingenColumns}
-              data={ladingenRows}
+              columns={sortedLadingenColumns}
+              data={sortedLadingenData}
               hoveredRowId={hoveredRow}
               activeRowId={selectedNegotiation?.id ?? null}
               onRowHover={setHoveredRow}
@@ -904,8 +908,8 @@ export default function Onderhandelingen() {
 
           {activeTab === "vaartuigen" && (
             <Table
-              columns={vaartuigenColumns}
-              data={vaartuigenRows}
+              columns={sortedVaartuigenColumns}
+              data={sortedVaartuigenData}
               hoveredRowId={hoveredRow}
               activeRowId={selectedNegotiation?.id ?? null}
               onRowHover={setHoveredRow}

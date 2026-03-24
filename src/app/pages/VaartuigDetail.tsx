@@ -26,10 +26,10 @@ import imgAvatar4 from "../../assets/9e45f45f537bea4bf653bc0307471e5ff5545f63.pn
 
 /* ── Mock vessel matches (ladingen die passen bij dit vaartuig) ── */
 const vesselMatches = [
-  { id: 'VM001', cargo: 'Houtpellets Salzgitter', company: 'Provaart Logistics BV', contactPersoon: 'Jan de Vries', laadHaven: 'Salzgitter Stichkanal', laadDatum: 'Vr 14 Mrt 10:00', losHaven: 'Hamburg Veddelkanal', losDatum: 'Di 18 Mrt 14:00', matchPercentage: 92, isEigen: false, source: 'Automatische feed', sourceDate: 'Do 6 Mrt 12:44' },
-  { id: 'VM002', cargo: 'Staal Dordrecht–Antwerpen', company: 'Janlow B.V.', contactPersoon: 'Pieter Jansen', laadHaven: 'Dordrecht', laadDatum: 'Za 15 Mrt 06:00', losHaven: 'Antwerpen', losDatum: 'Ma 17 Mrt 14:00', matchPercentage: 85, isEigen: false, source: 'Automatische feed', sourceDate: 'Do 6 Mrt 15:45' },
-  { id: 'VM003', cargo: 'Sojabonen Rotterdam', company: 'Cargill N.V.', contactPersoon: 'Sophie van Dam', laadHaven: 'Rotterdam Botlek', laadDatum: 'Zo 16 Mrt 08:00', losHaven: 'Basel', losDatum: 'Do 20 Mrt', matchPercentage: 78, isEigen: false, source: 'Automatische feed', sourceDate: 'Do 6 Mrt 10:30' },
-  { id: 'VM004', cargo: 'Graan Rotterdam–Krefeld', company: 'Provaart Logistics BV', contactPersoon: 'Maria Bakker', laadHaven: 'Rotterdam', laadDatum: 'Di 18 Mrt 08:00', losHaven: 'Krefeld', losDatum: 'Vr 21 Mrt', matchPercentage: 65, isEigen: false, source: 'Automatische feed', sourceDate: 'Vr 7 Mrt 09:15' },
+  { id: 'VM001', cargo: '3.000 ton Houtpellets (DSIT)', exNaam: 'Houtpellets Salzgitter', company: 'Provaart Logistics BV', contactPersoon: 'Jan de Vries', laadHaven: 'Salzgitter Stichkanal', laadDatum: 'Vr 14 Mrt 10:00', losHaven: 'Hamburg Veddelkanal', losDatum: 'Di 18 Mrt 14:00', matchPercentage: 92, isEigen: true, source: 'Automatische feed', sourceDate: 'Do 6 Mrt 12:44' },
+  { id: 'VM002', cargo: '3.000 ton Staal', company: 'Janlow B.V.', contactPersoon: 'Pieter Jansen', laadHaven: 'Dordrecht', laadDatum: 'Za 15 Mrt 06:00', losHaven: 'Antwerpen', losDatum: 'Ma 17 Mrt 14:00', matchPercentage: 85, isEigen: false, source: 'Automatische feed', sourceDate: 'Do 6 Mrt 15:45' },
+  { id: 'VM003', cargo: '3.500 ton Sojabonen', company: 'Cargill N.V.', contactPersoon: 'Sophie van Dam', laadHaven: 'Rotterdam Botlek', laadDatum: 'Zo 16 Mrt 08:00', losHaven: 'Basel', losDatum: 'Do 20 Mrt', matchPercentage: 78, isEigen: false, source: 'Automatische feed', sourceDate: 'Do 6 Mrt 10:30' },
+  { id: 'VM004', cargo: '3.000 ton Graan', company: 'Provaart Logistics BV', contactPersoon: 'Maria Bakker', laadHaven: 'Rotterdam', laadDatum: 'Di 18 Mrt 08:00', losHaven: 'Krefeld', losDatum: 'Vr 21 Mrt', matchPercentage: 65, isEigen: false, source: 'Automatische feed', sourceDate: 'Vr 7 Mrt 09:15' },
 ];
 
 /* ── Mock onderhandelingen ── */
@@ -150,7 +150,8 @@ export default function VaartuigDetail() {
 
   /* ── Matches table columns ── */
   const matchColumns: Column[] = [
-    { key: 'cargo', header: 'Lading', type: 'leading-text', badgeKey: 'eigenBadge', actionLabel: 'Onderhandeling', actionCompletedKey: 'actionCompletedLabel' },
+    { key: 'cargoTitle', header: 'Lading', type: 'leading-text', subtextKey: 'cargoSubtitle', maxWidth: 'max-w-[480px]', badgeKey: 'eigenBadge', actionLabel: 'Onderhandeling', actionCompletedKey: 'actionCompletedLabel' },
+    { key: 'tonnage', header: 'Tonnage', type: 'text', width: 'w-[120px]', align: 'right' },
     { key: 'company', header: 'Relatie', type: 'text', subtextKey: 'contactPersoon', textColor: 'text-rdj-text-brand', width: 'w-[180px]', onClickKey: 'onRelatieClick' },
     { key: 'laadHaven', header: 'Laden', type: 'text', subtextKey: 'laadDatum', width: 'w-[180px]' },
     { key: 'losHaven', header: 'Lossen', type: 'text', subtextKey: 'losDatum', width: 'w-[180px]' },
@@ -167,9 +168,15 @@ export default function VaartuigDetail() {
 
   const activeNegStatuses = ["Via werklijst", "Bod verstuurd", "Bod ontvangen"];
 
-  const matchTableData: RowData[] = vesselMatches.map((m, idx) => ({
+  const matchTableData: RowData[] = vesselMatches.map((m, idx) => {
+    const tonnageMatch = m.cargo.match(/^([\d.,\s\-]+ton)\s+(.+)$/);
+    const tonnage = tonnageMatch ? tonnageMatch[1].trim() : '';
+    const ladingSoort = tonnageMatch ? tonnageMatch[2] : m.cargo;
+    return {
     id: m.id,
-    cargo: m.cargo,
+    cargoTitle: m.isEigen ? m.exNaam ?? ladingSoort : ladingSoort,
+    cargoSubtitle: m.isEigen ? `${tonnage} ${ladingSoort}`.trim() : tonnage,
+    tonnage,
     eigenBadge: m.isEigen ? undefined : 'Markt',
     matchStatus: idx < 2 ? 'aangeboden' : 'openstaand',
     company: m.company,
@@ -184,7 +191,7 @@ export default function VaartuigDetail() {
     sourceIcon: sourceIcon,
     sourceIconVariant: 'grey',
     matchPercentage: m.matchPercentage,
-  }));
+  }; });
 
   /* ── Onderhandelingen table columns ── */
   const negColumns: Column[] = [
@@ -303,7 +310,7 @@ export default function VaartuigDetail() {
                             setConversationDialog({
                               relatieId: relatie?.id || "rel-001",
                               relatieName: (row.company as string) || "Onbekend",
-                              matchName: row.cargo as string,
+                              matchName: row.cargoTitle as string,
                             });
                           }}
                         />
@@ -384,7 +391,9 @@ export default function VaartuigDetail() {
           relatieId={conversationDialog.relatieId}
           relatieName={conversationDialog.relatieName}
           preSelectedMatchName={conversationDialog.matchName}
-          preSelectedOriginId={id}
+          preSelectedOriginId={conversationDialog.matchName ? id : undefined}
+          preSelectedItemId={conversationDialog.matchName ? undefined : id}
+          preSelectedItemType={conversationDialog.matchName ? undefined : "vaartuig"}
           onClose={() => setConversationDialog(null)}
         />
       )}

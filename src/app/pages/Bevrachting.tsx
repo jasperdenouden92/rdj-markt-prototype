@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { useNavigate, useLocation } from "react-router";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
@@ -12,6 +12,7 @@ import FilterDropdown from "../components/FilterDropdown";
 import SegmentedButtonGroup from "../components/SegmentedButtonGroup";
 import Table from "../components/Table";
 import type { Column } from "../components/Table";
+import useTableSort from "../components/useTableSort";
 import Pagination from "../components/Pagination";
 import { mockCargos, mockVessels, Cargo, Vessel } from "../data/mock-data";
 import { splitColors } from "../utils/splitColors";
@@ -334,6 +335,9 @@ export default function Bevrachting() {
     };
   });
 
+  const { sortedColumns: sortedCargoColumns, sortedData: sortedCargoData } = useTableSort(tableColumns, tableData);
+  const { sortedColumns: sortedVesselColumns, sortedData: sortedVesselData } = useTableSort(vesselTableColumns, vesselTableData);
+
   // Load from API when data arrives, fallback to mock data if API returns empty
   useEffect(() => {
     if (apiLoading || apiLoaded) return;
@@ -499,8 +503,8 @@ export default function Bevrachting() {
               onRowsPerPageChange={setRowsPerPage}
             />
             <Table
-              columns={activeTab === 'ladingen' ? tableColumns : vesselTableColumns}
-              data={activeTab === 'ladingen' ? tableData : vesselTableData}
+              columns={activeTab === 'ladingen' ? sortedCargoColumns : sortedVesselColumns}
+              data={activeTab === 'ladingen' ? sortedCargoData : sortedVesselData}
               onRowClick={(row) => navigate(`/markt/bevrachting/${activeTab === 'ladingen' ? 'lading' : 'vaartuig'}/${row.id}`)}
               hoveredRowId={hoveredRow}
               onRowHover={setHoveredRow}

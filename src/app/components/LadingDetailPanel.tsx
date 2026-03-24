@@ -1,10 +1,11 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { Send, MailOpen, Check, X } from "lucide-react";
 import ModelessPanel from "./ModelessPanel";
 import type { PageTab } from "./PageHeader";
 import Badge from "./Badge";
 import Table from "./Table";
 import type { Column, RowData } from "./Table";
+import useTableSort from "./useTableSort";
 import Pagination from "./Pagination";
 import Button from "./Button";
 import ActivityFeed from "./ActivityFeed";
@@ -60,7 +61,7 @@ export default function LadingDetailPanel({ id, onClose }: LadingDetailPanelProp
   const [activeTab, setActiveTab] = useState<'matches' | 'onderhandelingen' | 'activiteit'>('matches');
   const [hoveredRow, setHoveredRow] = useState<string | null>(null);
   const [selectedNegotiationId, setSelectedNegotiationId] = useState<string | null>(null);
-  const [conversationDialog, setConversationDialog] = useState<{ relatieId: string; relatieName: string } | null>(null);
+  const [conversationDialog, setConversationDialog] = useState<{ relatieId: string; relatieName: string; matchName?: string } | null>(null);
 
   const [matchPage, setMatchPage] = useState(1);
   const [matchRowsPerPage, setMatchRowsPerPage] = useState(50);
@@ -139,6 +140,9 @@ export default function LadingDetailPanel({ id, onClose }: LadingDetailPanelProp
     contactDate: neg.contact.date,
     contactAvatar: avatars[idx % avatars.length],
   }));
+
+  const { sortedColumns: sortedMatchColumns, sortedData: sortedMatchData } = useTableSort(matchColumns, matchTableData);
+  const { sortedColumns: sortedNegColumns, sortedData: sortedNegData } = useTableSort(negColumns, negTableData);
 
   const actions = (
     <>
@@ -219,15 +223,16 @@ export default function LadingDetailPanel({ id, onClose }: LadingDetailPanelProp
                 onRowsPerPageChange={setMatchRowsPerPage}
               />
               <Table
-                columns={matchColumns}
-                data={matchTableData}
+                columns={sortedMatchColumns}
+                data={sortedMatchData}
                 hoveredRowId={hoveredRow}
                 onRowHover={setHoveredRow}
-                onRowClick={(row) => {
+                onRowAction={(row) => {
                   const relatie = mockRelaties.find(r => r.naam === row.company);
                   setConversationDialog({
                     relatieId: relatie?.id || "rel-001",
                     relatieName: (row.company as string) || "Onbekend",
+                    matchName: row.name as string,
                   });
                 }}
               />
@@ -244,8 +249,8 @@ export default function LadingDetailPanel({ id, onClose }: LadingDetailPanelProp
                 onRowsPerPageChange={setNegRowsPerPage}
               />
               <Table
-                columns={negColumns}
-                data={negTableData}
+                columns={sortedNegColumns}
+                data={sortedNegData}
                 hoveredRowId={hoveredRow}
                 onRowHover={setHoveredRow}
                 onRowClick={(row) => setSelectedNegotiationId(row.id)}
@@ -274,8 +279,10 @@ export default function LadingDetailPanel({ id, onClose }: LadingDetailPanelProp
         <ConversationDialog
           relatieId={conversationDialog.relatieId}
           relatieName={conversationDialog.relatieName}
-          preSelectedItemId={id}
-          preSelectedItemType="lading"
+          preSelectedMatchName={conversationDialog.matchName}
+          preSelectedOriginId={conversationDialog.matchName ? id : undefined}
+          preSelectedItemId={conversationDialog.matchName ? undefined : id}
+          preSelectedItemType={conversationDialog.matchName ? undefined : "lading"}
           onClose={() => setConversationDialog(null)}
         />
       )}
