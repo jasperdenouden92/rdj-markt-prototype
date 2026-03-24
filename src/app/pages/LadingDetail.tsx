@@ -135,7 +135,7 @@ export default function LadingDetail() {
 
   /* ── Matches table ── */
   const matchColumns: Column[] = [
-    { key: 'name', header: 'Vaartuig', type: 'leading-text', subtextKey: 'type', badgeKey: 'eigenBadge', actionLabel: 'Onderhandeling' },
+    { key: 'name', header: 'Vaartuig', type: 'leading-text', subtextKey: 'type', badgeKey: 'eigenBadge', actionLabel: 'Onderhandeling', actionCompletedKey: 'actionCompletedLabel' },
     { key: 'company', header: 'Relatie', type: 'text', subtextKey: 'contactPersoon', textColor: 'text-rdj-text-brand', width: 'w-[180px]', onClickKey: 'onRelatieClick' },
     { key: 'location', header: 'Locatie', type: 'text', subtextKey: 'locationDate', width: 'w-[200px]' },
     { key: 'distance', header: 'Groottonnage', type: 'text', align: 'right', width: 'w-[120px]' },
@@ -151,11 +151,14 @@ export default function LadingDetail() {
     </svg>
   );
 
-  const matchTableData: RowData[] = mockMatches.map((match) => ({
+  const activeNegStatuses = ["Via werklijst", "Bod verstuurd", "Bod ontvangen"];
+
+  const matchTableData: RowData[] = mockMatches.map((match, idx) => ({
     id: match.id,
     name: match.name,
     type: match.type,
     eigenBadge: match.isEigen ? undefined : 'Markt',
+    matchStatus: idx < 2 ? 'aangeboden' : 'openstaand',
     company: match.company,
     contactPersoon: match.contactPersoon || match.companyLocation,
     onRelatieClick: () => { const rel = mockRelaties.find(r => r.naam === match.company); if (rel) navigate(`/crm/relatie/${rel.id}`); },
@@ -198,6 +201,20 @@ export default function LadingDetail() {
     contactDate: neg.contact.date,
     contactAvatar: avatars[idx % avatars.length],
   }));
+
+  const filteredMatchData = matchFilter === "Alles"
+    ? matchTableData.map((row) => row.matchStatus === 'aangeboden'
+        ? { ...row, _muted: true, actionCompletedLabel: 'Aangeboden' }
+        : row)
+    : matchTableData.filter((row) => row.matchStatus === matchFilter.toLowerCase());
+
+  const filteredNegData = negFilter === "Alles"
+    ? negTableData
+    : negFilter === "Actief"
+      ? negTableData.filter((row) => activeNegStatuses.includes(row.status as string))
+      : negFilter === "Goedgekeurd"
+        ? negTableData.filter((row) => row.status === "Goedgekeurd")
+        : negTableData.filter((row) => row.status === "Afgewezen" || row.status === "Afgekeurd");
 
   /* ── Actions ── */
   const actions = (
@@ -260,17 +277,17 @@ export default function LadingDetail() {
                         />
                         <Pagination
                           currentPage={matchPage}
-                          totalItems={mockMatches.length}
+                          totalItems={filteredMatchData.length}
                           rowsPerPage={matchRowsPerPage}
                           onPageChange={setMatchPage}
                           onRowsPerPageChange={setMatchRowsPerPage}
                         />
                         <Table
                           columns={matchColumns}
-                          data={matchTableData}
+                          data={filteredMatchData}
                           hoveredRowId={hoveredRow}
                           onRowHover={setHoveredRow}
-                          onRowClick={(row) => {
+                          onRowAction={(row) => {
                             const relatie = mockRelaties.find(r => r.naam === row.company);
                             setConversationDialog({
                               relatieId: relatie?.id || "rel-001",
@@ -294,14 +311,14 @@ export default function LadingDetail() {
                         />
                         <Pagination
                           currentPage={negPage}
-                          totalItems={mockNegotiations.length}
+                          totalItems={filteredNegData.length}
                           rowsPerPage={negRowsPerPage}
                           onPageChange={setNegPage}
                           onRowsPerPageChange={setNegRowsPerPage}
                         />
                         <Table
                           columns={negColumns}
-                          data={negTableData}
+                          data={filteredNegData}
                           hoveredRowId={hoveredRow}
                           onRowHover={setHoveredRow}
                           onRowClick={(row) => setSelectedNegotiationId(row.id)}
@@ -319,7 +336,7 @@ export default function LadingDetail() {
                           onFilterChange={setActivityFilter}
                         />
                         <div className="w-full px-[24px]">
-                          <ActivityFeed />
+                          <ActivityFeed filter={activityFilter === "Jouw activiteit" ? "mine" : "all"} />
                         </div>
                       </>
                     )}

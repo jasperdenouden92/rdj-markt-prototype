@@ -149,7 +149,7 @@ export default function VaartuigDetail() {
 
   /* ── Matches table columns ── */
   const matchColumns: Column[] = [
-    { key: 'cargo', header: 'Lading', type: 'leading-text', badgeKey: 'eigenBadge', actionLabel: 'Onderhandeling' },
+    { key: 'cargo', header: 'Lading', type: 'leading-text', badgeKey: 'eigenBadge', actionLabel: 'Onderhandeling', actionCompletedKey: 'actionCompletedLabel' },
     { key: 'company', header: 'Relatie', type: 'text', subtextKey: 'contactPersoon', textColor: 'text-rdj-text-brand', width: 'w-[180px]', onClickKey: 'onRelatieClick' },
     { key: 'laadHaven', header: 'Laden', type: 'text', subtextKey: 'laadDatum', width: 'w-[180px]' },
     { key: 'losHaven', header: 'Lossen', type: 'text', subtextKey: 'losDatum', width: 'w-[180px]' },
@@ -164,10 +164,13 @@ export default function VaartuigDetail() {
     </svg>
   );
 
-  const matchTableData: RowData[] = vesselMatches.map((m) => ({
+  const activeNegStatuses = ["Via werklijst", "Bod verstuurd", "Bod ontvangen"];
+
+  const matchTableData: RowData[] = vesselMatches.map((m, idx) => ({
     id: m.id,
     cargo: m.cargo,
     eigenBadge: m.isEigen ? undefined : 'Markt',
+    matchStatus: idx < 2 ? 'aangeboden' : 'openstaand',
     company: m.company,
     contactPersoon: m.contactPersoon,
     onRelatieClick: () => { const rel = mockRelaties.find(r => r.naam === m.company); if (rel) navigate(`/crm/relatie/${rel.id}`); },
@@ -215,6 +218,20 @@ export default function VaartuigDetail() {
     contactDate: b.contact.date,
     contactAvatar: avatars[idx % avatars.length],
   }));
+
+  const filteredMatchData = matchFilter === "Alles"
+    ? matchTableData.map((row) => row.matchStatus === 'aangeboden'
+        ? { ...row, _muted: true, actionCompletedLabel: 'Aangeboden' }
+        : row)
+    : matchTableData.filter((row) => row.matchStatus === matchFilter.toLowerCase());
+
+  const filteredNegData = negFilter === "Alles"
+    ? negTableData
+    : negFilter === "Actief"
+      ? negTableData.filter((row) => activeNegStatuses.includes(row.status as string))
+      : negFilter === "Goedgekeurd"
+        ? negTableData.filter((row) => row.status === "Goedgekeurd")
+        : negTableData.filter((row) => row.status === "Afgewezen" || row.status === "Afgekeurd");
 
   /* ── Actions ── */
   const actions = (
@@ -270,17 +287,17 @@ export default function VaartuigDetail() {
                         />
                         <Pagination
                           currentPage={matchPage}
-                          totalItems={vesselMatches.length}
+                          totalItems={filteredMatchData.length}
                           rowsPerPage={matchRowsPerPage}
                           onPageChange={setMatchPage}
                           onRowsPerPageChange={setMatchRowsPerPage}
                         />
                         <Table
                           columns={matchColumns}
-                          data={matchTableData}
+                          data={filteredMatchData}
                           hoveredRowId={hoveredRow}
                           onRowHover={setHoveredRow}
-                          onRowClick={(row) => {
+                          onRowAction={(row) => {
                             const relatie = mockRelaties.find(r => r.naam === row.company);
                             setConversationDialog({
                               relatieId: relatie?.id || "rel-001",
@@ -305,14 +322,14 @@ export default function VaartuigDetail() {
                         />
                         <Pagination
                           currentPage={negPage}
-                          totalItems={vesselNegotiations.length}
+                          totalItems={filteredNegData.length}
                           rowsPerPage={negRowsPerPage}
                           onPageChange={setNegPage}
                           onRowsPerPageChange={setNegRowsPerPage}
                         />
                         <Table
                           columns={negColumns}
-                          data={negTableData}
+                          data={filteredNegData}
                           hoveredRowId={hoveredRow}
                           onRowHover={setHoveredRow}
                           onRowClick={(row) => setSelectedNegotiationId(row.id)}
@@ -330,7 +347,7 @@ export default function VaartuigDetail() {
                           onFilterChange={setActivityFilter}
                         />
                         <div className="w-full px-[24px]">
-                          <ActivityFeed />
+                          <ActivityFeed filter={activityFilter === "Jouw activiteit" ? "mine" : "all"} />
                         </div>
                       </>
                     )}

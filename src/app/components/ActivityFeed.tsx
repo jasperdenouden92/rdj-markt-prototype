@@ -17,9 +17,13 @@ interface ActivityEvent {
 interface ActivityFeedProps {
   /** Whether to show as a compact section (inbox) or full tab content */
   compact?: boolean;
+  /** Filter activity events — "all" shows everything, "mine" shows only current user's activity */
+  filter?: "all" | "mine";
 }
 
-export default function ActivityFeed({ compact }: ActivityFeedProps) {
+const CURRENT_USER = "Khoa Nguyen";
+
+export default function ActivityFeed({ compact, filter = "all" }: ActivityFeedProps) {
   const [comment, setComment] = useState("");
 
   const mockEvents: ActivityEvent[] = [
@@ -54,7 +58,10 @@ export default function ActivityFeed({ compact }: ActivityFeedProps) {
     },
   ];
 
-  const displayEvents = compact ? mockEvents.slice(0, 2) : mockEvents;
+  const filteredEvents = filter === "mine"
+    ? mockEvents.filter((e) => e.user === CURRENT_USER)
+    : mockEvents;
+  const displayEvents = compact ? filteredEvents.slice(0, 2) : filteredEvents;
 
   return (
     <div className="flex flex-col gap-[16px]">

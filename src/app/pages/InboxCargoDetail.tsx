@@ -110,7 +110,7 @@ export default function InboxCargoDetail() {
 
   // Table columns for vessel matches
   const matchColumns: Column[] = [
-    { key: "name", header: "Naam", type: "leading-text", subtextKey: "subtype", badgeKey: "statusBadge", actionLabel: "Onderhandeling" },
+    { key: "name", header: "Naam", type: "leading-text", subtextKey: "subtype", badgeKey: "statusBadge", actionLabel: "Onderhandeling", actionCompletedKey: "actionCompletedLabel" },
     { key: "company", header: "Relatie", type: "text", subtextKey: "contact", textColor: "text-rdj-text-brand", width: "w-[180px]", onClickKey: "onRelatieClick" },
     { key: "location", header: "Locatie", type: "text", subtextKey: "locationDate", width: "w-[200px]" },
     { key: "capacity", header: "Groottonnage", type: "text", width: "w-[140px]" },
@@ -187,6 +187,24 @@ export default function InboxCargoDetail() {
     contactAvatar: avatars[idx % avatars.length],
   }));
 
+  const activeNegStatuses = ["Via werklijst", "Bod verstuurd", "Bod ontvangen"];
+
+  const filteredMatchRows = matchFilter === "Alles"
+    ? matchRows.map((row) => row.statusBadge === "Aangeboden"
+        ? { ...row, _muted: true, actionCompletedLabel: 'Aangeboden' }
+        : row)
+    : matchFilter === "Aangeboden"
+      ? matchRows.filter((row) => row.statusBadge === "Aangeboden")
+      : matchRows.filter((row) => !row.statusBadge);
+
+  const filteredNegData = negFilter === "Alles"
+    ? negTableData
+    : negFilter === "Actief"
+      ? negTableData.filter((row) => activeNegStatuses.includes(row.status as string))
+      : negFilter === "Goedgekeurd"
+        ? negTableData.filter((row) => row.status === "Goedgekeurd")
+        : negTableData.filter((row) => row.status === "Afgewezen" || row.status === "Afgekeurd");
+
   return (
     <>
       <Toaster position="top-right" richColors />
@@ -254,17 +272,17 @@ export default function InboxCargoDetail() {
                         />
                         <Pagination
                           currentPage={matchPage}
-                          totalItems={matchRows.length}
+                          totalItems={filteredMatchRows.length}
                           rowsPerPage={matchRowsPerPage}
                           onPageChange={setMatchPage}
                           onRowsPerPageChange={setMatchRowsPerPage}
                         />
                         <Table
                           columns={matchColumns}
-                          data={matchRows}
+                          data={filteredMatchRows}
                           hoveredRowId={hoveredRow}
                           onRowHover={setHoveredRow}
-                          onRowClick={(row) => {
+                          onRowAction={(row) => {
                             const relatie = mockRelaties.find(r => r.naam === row.company);
                             setConversationDialog({
                               relatieId: relatie?.id || "rel-001",
@@ -289,14 +307,14 @@ export default function InboxCargoDetail() {
                         />
                         <Pagination
                           currentPage={negPage}
-                          totalItems={mockNegotiations.length}
+                          totalItems={filteredNegData.length}
                           rowsPerPage={negRowsPerPage}
                           onPageChange={setNegPage}
                           onRowsPerPageChange={setNegRowsPerPage}
                         />
                         <Table
                           columns={negColumns}
-                          data={negTableData}
+                          data={filteredNegData}
                           hoveredRowId={hoveredRow}
                           onRowHover={setHoveredRow}
                           onRowClick={(row) => setSelectedNegotiationId(row.id)}
@@ -314,7 +332,7 @@ export default function InboxCargoDetail() {
                           onFilterChange={setActivityFilter}
                         />
                         <div className="w-full px-[24px]">
-                          <ActivityFeed />
+                          <ActivityFeed filter={activityFilter === "Jouw activiteit" ? "mine" : "all"} />
                         </div>
                       </>
                     )}

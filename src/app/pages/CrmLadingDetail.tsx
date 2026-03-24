@@ -110,7 +110,7 @@ export default function CrmLadingDetail() {
   );
 
   const matchColumns: Column[] = [
-    { key: "name", header: "Vaartuig", type: "leading-text", subtextKey: "type", badgeKey: "eigenBadge", actionLabel: "Onderhandeling" },
+    { key: "name", header: "Vaartuig", type: "leading-text", subtextKey: "type", badgeKey: "eigenBadge", actionLabel: "Onderhandeling", actionCompletedKey: "actionCompletedLabel" },
     { key: "company", header: "Relatie", type: "text", subtextKey: "contactPersoon", textColor: "text-rdj-text-brand", width: "w-[180px]", onClickKey: "onRelatieClick" },
     { key: "location", header: "Locatie", type: "text", subtextKey: "locationDate", width: "w-[200px]" },
     { key: "distance", header: "Groottonnage", type: "text", align: "right", width: "w-[120px]" },
@@ -119,11 +119,12 @@ export default function CrmLadingDetail() {
     { key: "matchPercentage", header: "Match", type: "progress", align: "right", width: "w-[100px]" },
   ];
 
-  const matchTableData: RowData[] = matches.map((m) => ({
+  const matchTableData: RowData[] = matches.map((m, idx) => ({
     id: m.id,
     name: m.vaartuigNaam,
     type: m.vaartuigType,
     eigenBadge: m.isEigen ? undefined : "Markt",
+    matchStatus: idx < 2 ? 'aangeboden' : 'openstaand',
     company: m.relatie,
     contactPersoon: m.contactPersoon,
     onRelatieClick: () => { const rel = mockRelaties.find(r => r.naam === m.relatie); if (rel) navigate(`/crm/relatie/${rel.id}`); },
@@ -137,6 +138,12 @@ export default function CrmLadingDetail() {
     sourceIconVariant: "grey",
     matchPercentage: m.matchPercentage,
   }));
+
+  const filteredMatchData = matchFilter === "Alles"
+    ? matchTableData.map((row) => row.matchStatus === 'aangeboden'
+        ? { ...row, _muted: true, actionCompletedLabel: 'Aangeboden' }
+        : row)
+    : matchTableData.filter((row) => row.matchStatus === matchFilter.toLowerCase());
 
   return (
     <div className="flex min-h-screen bg-white">
@@ -174,17 +181,23 @@ export default function CrmLadingDetail() {
                         />
                         <Pagination
                           currentPage={matchPage}
-                          totalItems={matches.length}
+                          totalItems={filteredMatchData.length}
                           rowsPerPage={matchRowsPerPage}
                           onPageChange={setMatchPage}
                           onRowsPerPageChange={setMatchRowsPerPage}
                         />
                         <Table
                           columns={matchColumns}
-                          data={matchTableData}
+                          data={filteredMatchData}
                           hoveredRowId={hoveredRow}
                           onRowHover={setHoveredRow}
-                          onRowClick={() => {}}
+                          onRowAction={(row) => {
+                            const rel = mockRelaties.find(r => r.naam === row.company);
+                            setConversationDialog({
+                              relatieId: rel?.id || relatie?.id || "",
+                              relatieName: (row.company as string) || relatie?.naam || "",
+                            });
+                          }}
                         />
                       </>
                     )}
@@ -218,7 +231,7 @@ export default function CrmLadingDetail() {
                           onFilterChange={setActivityFilter}
                         />
                         <div className="w-full px-[24px]">
-                          <ActivityFeed />
+                          <ActivityFeed filter={activityFilter === "Jouw activiteit" ? "mine" : "all"} />
                         </div>
                       </>
                     )}
