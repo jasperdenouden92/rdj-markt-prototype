@@ -4,6 +4,7 @@ import Sidebar from "../components/Sidebar";
 import PageHeader from "../components/PageHeader";
 import Table from "../components/Table";
 import type { Column, RowData } from "../components/Table";
+import useTableSort from "../components/useTableSort";
 import Pagination from "../components/Pagination";
 import FilterDropdown from "../components/FilterDropdown";
 import Button from "../components/Button";
@@ -110,6 +111,8 @@ export default function Ladingen() {
     };
   });
 
+  const { sortedColumns, sortedData } = useTableSort(columns, tableData);
+
   const handleCreate = (data: Partial<RelatieLading>) => {
     const newLading: RelatieLading = {
       id: `rl-${Date.now()}`,
@@ -195,8 +198,8 @@ export default function Ladingen() {
         />
 
         <Table
-          columns={columns}
-          data={tableData}
+          columns={sortedColumns}
+          data={sortedData}
           hoveredRowId={hoveredRow}
           onRowHover={setHoveredRow}
           onRowClick={(row) => {

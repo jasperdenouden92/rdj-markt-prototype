@@ -10,6 +10,7 @@ import FilterDropdown from "../components/FilterDropdown";
 import Pagination from "../components/Pagination";
 import Table from "../components/Table";
 import type { Column } from "../components/Table";
+import useTableSort from "../components/useTableSort";
 import svgPaths from "../../imports/svg-5yigdc067t";
 import { useInboxLadingen, updateLadingMarktPriority } from "../data/useMarktData";
 import { mockRelaties } from "../data/mock-relatie-data";
@@ -411,6 +412,8 @@ export default function Inbox() {
     priority: item.priority,
   }; });
 
+  const { sortedColumns, sortedData } = useTableSort(columns, tableData);
+
   return (
     <>
       <Toaster position="top-right" richColors />
@@ -522,8 +525,8 @@ export default function Inbox() {
               onRowsPerPageChange={setRowsPerPage}
             />
             <Table
-              columns={columns}
-              data={tableData}
+              columns={sortedColumns}
+              data={sortedData}
               onRowClick={(row) => navigate(`/markt/inbox/lading/${row.id}`)}
               hoveredRowId={hoveredRow}
               onRowHover={setHoveredRow}

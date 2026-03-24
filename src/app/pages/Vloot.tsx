@@ -5,6 +5,7 @@ import PageHeader from "../components/PageHeader";
 import type { PageTab } from "../components/PageHeader";
 import Table from "../components/Table";
 import type { Column, RowData } from "../components/Table";
+import useTableSort from "../components/useTableSort";
 import Pagination from "../components/Pagination";
 import FilterDropdown from "../components/FilterDropdown";
 import Badge from "../components/Badge";
@@ -77,8 +78,6 @@ export default function Vloot() {
       header: "Naam",
       type: "leading-text",
       subtextKey: "type",
-      sortActive: true,
-      sortDirection: "asc",
       actionLabel: "Openen",
     },
     {
@@ -220,6 +219,10 @@ export default function Vloot() {
     breedte: v.breedte,
   }));
 
+  const { sortedColumns, sortedData } = useTableSort(columns, tableData, {
+    initialSortKey: "naam",
+  });
+
   return (
     <div className="flex min-h-screen bg-rdj-bg-primary">
       <Sidebar />
@@ -329,8 +332,8 @@ export default function Vloot() {
         />
 
         <Table
-          columns={columns}
-          data={tableData}
+          columns={sortedColumns}
+          data={sortedData}
           selectable
           selectedIds={[]}
           onSelectAll={() => {}}

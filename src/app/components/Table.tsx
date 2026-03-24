@@ -18,22 +18,49 @@ interface ColumnHeaderProps {
   align?: "left" | "right";
 }
 
+function SortArrow({ direction }: { direction: "asc" | "desc" }) {
+  return (
+    <svg
+      className={`shrink-0 size-[12px] transition-transform ${direction === "asc" ? "rotate-180" : ""}`}
+      viewBox="0 0 12 12"
+      fill="none"
+    >
+      <path
+        d="M6 2.5L6 9.5M6 9.5L9 6.5M6 9.5L3 6.5"
+        stroke="currentColor"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
+
 function ColumnHeader({
   label,
   sortActive = false,
   sortDirection = "asc",
   align = "left",
 }: ColumnHeaderProps) {
-  const arrow = sortActive ? (sortDirection === "asc" ? " ↑" : " ↓") : "";
   return (
-    <p
-      className={`font-sans font-bold leading-[18px] text-[12px] whitespace-nowrap ${
-        sortActive ? "text-rdj-text-primary" : "text-rdj-text-secondary"
-      } ${align === "right" ? "text-right" : "text-left"}`}
+    <div
+      className={`flex items-center gap-[4px] ${
+        align === "right" ? "justify-end" : "justify-start"
+      }`}
     >
-      {label}
-      {arrow}
-    </p>
+      <p
+        className={`font-sans font-bold leading-[18px] text-[12px] whitespace-nowrap ${
+          sortActive ? "text-rdj-text-primary" : "text-rdj-text-secondary"
+        }`}
+      >
+        {label}
+      </p>
+      {sortActive && (
+        <span className="text-rdj-text-primary">
+          <SortArrow direction={sortDirection} />
+        </span>
+      )}
+    </div>
   );
 }
 
