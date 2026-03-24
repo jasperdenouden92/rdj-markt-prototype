@@ -17,6 +17,7 @@ import ContractDetail from "./pages/ContractDetail";
 import Taken from "./pages/Taken";
 import CrmLadingDetail from "./pages/CrmLadingDetail";
 import CrmVaartuigDetail from "./pages/CrmVaartuigDetail";
+import Bevrachters from "./pages/Bevrachters";
 import Ladingen from "./pages/Ladingen";
 import LadingModuleDetail from "./pages/LadingModuleDetail";
 import Vloot from "./pages/Vloot";
@@ -125,6 +126,14 @@ export const router = createBrowserRouter([
       {
         path: "markt/deals",
         element: <Navigate to="/markt/onderhandelingen/ladingen" replace />,
+      },
+      {
+        path: "markt/bevrachters",
+        Component: Bevrachters,
+      },
+      {
+        path: "markt/bevrachters/:id",
+        Component: RelatieDetail,
       },
       {
         path: "markt/database",

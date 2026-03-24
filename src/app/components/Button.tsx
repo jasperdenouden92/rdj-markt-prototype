@@ -21,7 +21,7 @@ interface ButtonProps extends Omit<ButtonHTMLAttributes<HTMLButtonElement>, "chi
 }
 
 const sizeConfig = {
-  sm: { px: "px-[12px]", py: "py-[8px]", iconPx: "p-[8px]", gap: "gap-[4px]", iconSize: "size-[16px]" },
+  sm: { px: "px-[12px]", py: "py-[8px]", iconPx: "p-[10px]", gap: "gap-[4px]", iconSize: "size-[16px]" },
   md: { px: "px-[14px]", py: "py-[10px]", iconPx: "p-[10px]", gap: "gap-[4px]", iconSize: "size-[20px]" },
   lg: { px: "px-[18px]", py: "py-[10px]", iconPx: "p-[12px]", gap: "gap-[6px]", iconSize: "size-[20px]" },
 };

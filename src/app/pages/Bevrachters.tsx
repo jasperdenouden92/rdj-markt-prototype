@@ -7,13 +7,9 @@ import type { Column, RowData } from "../components/Table";
 import Pagination from "../components/Pagination";
 import FilterDropdown from "../components/FilterDropdown";
 import Button from "../components/Button";
-import Badge from "../components/Badge";
-import RelatieFormDialog from "../components/RelatieFormDialog";
-import GespreksverslagQuickDialog from "../components/GespreksverslagQuickDialog";
-import { mockRelaties, mockContactPersonen, mockGebruikers, LADINGGROEP_SUGGESTIES, SOORT_RELATIE_OPTIES, mockRelatieCounts, mockGespreksverslagen } from "../data/mock-relatie-data";
-import type { Gespreksverslag } from "../data/mock-relatie-data";
+import ConversationDialog from "../components/ConversationDialog";
+import { mockRelaties, mockContactPersonen, mockGebruikers, LADINGGROEP_SUGGESTIES, SOORT_RELATIE_OPTIES, mockRelatieCounts } from "../data/mock-relatie-data";
 import { mockTaken } from "../data/mock-taken-data";
-import type { Relatie } from "../data/api";
 
 function getInitials(name: string): string {
   return name
@@ -38,30 +34,22 @@ function isDateExpired(dateStr?: string, daysThreshold = 30): boolean {
   return diff > daysThreshold * 24 * 60 * 60 * 1000;
 }
 
-const statusVariantMap: Record<string, string> = {
-  actief: "success",
-  inactief: "grey",
-  prospect: "brand",
-};
-
-export default function Relaties() {
+export default function Bevrachters() {
   const navigate = useNavigate();
   const [search, setSearch] = useState("");
-  const [statusFilter, setStatusFilter] = useState<string[]>([]);
   const [ladingGroepFilter, setLadingGroepFilter] = useState<string[]>([]);
-  const [soortRelatieFilter, setSoortRelatieFilter] = useState<string[]>([]);
   const [eigenaarFilter, setEigenaarFilter] = useState<string[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(25);
   const [hoveredRow, setHoveredRow] = useState<string | null>(null);
-  const [showCreateDialog, setShowCreateDialog] = useState(false);
-  const [verslagRelatieId, setVerslagRelatieId] = useState<string | null>(null);
-  const [relaties, setRelaties] = useState<Relatie[]>(mockRelaties);
+  const [conversationRelatie, setConversationRelatie] = useState<{ id: string; naam: string } | null>(null);
 
-  const soortRelatieOptions = useMemo(
-    () => ["Alle soorten", ...SOORT_RELATIE_OPTIES.map((o) => o.label)],
+  // Pre-filter: only active bevrachters
+  const bevrachters = useMemo(
+    () => mockRelaties.filter((r) => r.status === "actief" && (r.soortRelatie || []).includes("bevrachter")),
     []
   );
+
   const eigenaarOptions = useMemo(
     () => ["Alle eigenaren", ...mockGebruikers.map((g) => g.naam)],
     []
@@ -72,13 +60,8 @@ export default function Relaties() {
   );
 
   const filtered = useMemo(() => {
-    return relaties.filter((r) => {
+    return bevrachters.filter((r) => {
       if (search && !r.naam.toLowerCase().includes(search.toLowerCase())) return false;
-      if (statusFilter.length > 0 && r.status && !statusFilter.map((s) => s.toLowerCase()).includes(r.status)) return false;
-      if (soortRelatieFilter.length > 0) {
-        const labels = (r.soortRelatie || []).map((v) => SOORT_RELATIE_OPTIES.find((o) => o.value === v)?.label).filter(Boolean) as string[];
-        if (!labels.some((l) => soortRelatieFilter.includes(l))) return false;
-      }
       if (ladingGroepFilter.length > 0 && !(r.ladingGroepen || []).some((g) => ladingGroepFilter.includes(g))) return false;
       if (eigenaarFilter.length > 0) {
         const eigenaar = mockGebruikers.find((g) => g.id === r.eigenaarId);
@@ -86,12 +69,32 @@ export default function Relaties() {
       }
       return true;
     });
-  }, [relaties, search, statusFilter, soortRelatieFilter, ladingGroepFilter, eigenaarFilter]);
+  }, [bevrachters, search, ladingGroepFilter, eigenaarFilter]);
 
   const paged = useMemo(() => {
     const start = (currentPage - 1) * rowsPerPage;
     return filtered.slice(start, start + rowsPerPage);
   }, [filtered, currentPage, rowsPerPage]);
+
+  const onderhandelingIcon = (
+    <svg className="size-[16px]" fill="none" viewBox="0 0 20 20">
+      <path
+        d="M4 4C3.44772 4 3 4.44772 3 5V13C3 13.5523 3.44772 14 4 14H6V16.5L9.5 14H16C16.5523 14 17 13.5523 17 13V5C17 4.44772 16.5523 4 16 4H4Z"
+        stroke="currentColor"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        fill="none"
+      />
+      <path
+        d="M10 7V11M8 9H12"
+        stroke="currentColor"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
 
   const columns: Column[] = [
     {
@@ -100,21 +103,8 @@ export default function Relaties() {
       type: "leading-text",
       subtextKey: "plaatsLabel",
       actionLabel: "Openen",
+      extraActionsKey: "extraActions",
       minWidth: "min-w-[480px]",
-    },
-    {
-      key: "statusLabel",
-      header: "Status",
-      type: "status",
-      variantKey: "statusVariant",
-      defaultVariant: "grey",
-      width: "w-[120px]",
-    },
-    {
-      key: "soortRelatieLabel",
-      header: "Soort relatie",
-      type: "text",
-      width: "w-[200px]",
     },
     {
       key: "ladingGroepen",
@@ -167,44 +157,6 @@ export default function Relaties() {
       expiredKey: "contactExpired",
       width: "w-[140px]",
     },
-    {
-      key: "verslagAction",
-      header: "",
-      type: "custom" as const,
-      width: "w-[48px]",
-      render: (row: RowData) => (
-        <div className="flex items-center justify-center opacity-0 group-hover/row:opacity-100 transition-opacity">
-          <button
-            onClick={(e) => {
-              e.stopPropagation();
-              setVerslagRelatieId(row.id);
-            }}
-            className="size-[32px] rounded-full flex items-center justify-center bg-[#1567a4] hover:bg-[#125a8f] transition-colors text-white shadow-sm"
-            title="Gespreksverslag toevoegen"
-          >
-            <svg className="size-[18px]" fill="none" viewBox="0 0 20 20">
-              {/* Speech bubble */}
-              <path
-                d="M4 4C3.44772 4 3 4.44772 3 5V13C3 13.5523 3.44772 14 4 14H6V16.5L9.5 14H16C16.5523 14 17 13.5523 17 13V5C17 4.44772 16.5523 4 16 4H4Z"
-                stroke="currentColor"
-                strokeWidth="1.5"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                fill="none"
-              />
-              {/* Plus inside bubble */}
-              <path
-                d="M10 7V11M8 9H12"
-                stroke="currentColor"
-                strokeWidth="1.5"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-            </svg>
-          </button>
-        </div>
-      ),
-    },
   ];
 
   const tableData: RowData[] = paged.map((r) => {
@@ -216,8 +168,18 @@ export default function Relaties() {
       id: r.id,
       naam: r.naam,
       plaatsLabel: [r.plaats, r.land].filter(Boolean).join(", ") || "—",
-      statusLabel: r.status ? r.status.charAt(0).toUpperCase() + r.status.slice(1) : "—",
-      statusVariant: statusVariantMap[r.status || ""] || "grey",
+      extraActions: (
+        <Button
+          variant="secondary"
+          size="sm"
+          icon={onderhandelingIcon}
+          title="Gesprek starten"
+          onClick={(e) => {
+            e.stopPropagation();
+            setConversationRelatie({ id: r.id, naam: r.naam });
+          }}
+        />
+      ),
       soortRelatieLabel: (r.soortRelatie || []).map((v) => SOORT_RELATIE_OPTIES.find((o) => o.value === v)?.label).filter(Boolean).join(", ") || "—",
       ladingGroepen: r.ladingGroepen || [],
       contactCount: String(contactCount),
@@ -232,17 +194,6 @@ export default function Relaties() {
     };
   });
 
-  const handleCreateRelatie = (data: Partial<Relatie>) => {
-    const newRelatie: Relatie = {
-      id: `rel-${Date.now()}`,
-      naam: data.naam || "Nieuwe relatie",
-      contactPersoonIds: [],
-      ...data,
-    };
-    setRelaties((prev) => [newRelatie, ...prev]);
-    setShowCreateDialog(false);
-  };
-
   return (
     <div className="flex min-h-screen bg-rdj-bg-primary">
       <Sidebar />
@@ -250,35 +201,9 @@ export default function Relaties() {
       <div className="flex-1 flex flex-col overflow-auto">
         <div className="pt-[32px] pb-[8px]">
           <PageHeader
-            title="Relaties"
-            actions={
-              <Button
-                variant="primary"
-                label="Nieuwe relatie"
-                leadingIcon={
-                  <svg fill="none" viewBox="0 0 12 12">
-                    <path d="M6 1V11M1 6H11" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.67" />
-                  </svg>
-                }
-                onClick={() => setShowCreateDialog(true)}
-              />
-            }
+            title="Bevrachters"
             filtersLeft={
               <>
-                <FilterDropdown
-                  label="Status"
-                  options={["Alle statussen", "Actief", "Inactief", "Prospect"]}
-                  allLabel="Alle statussen"
-                  selectedValues={statusFilter}
-                  onMultiSelect={(v) => { setStatusFilter(v); setCurrentPage(1); }}
-                />
-                <FilterDropdown
-                  label="Soort relatie"
-                  options={soortRelatieOptions}
-                  allLabel="Alle soorten"
-                  selectedValues={soortRelatieFilter}
-                  onMultiSelect={(v) => { setSoortRelatieFilter(v); setCurrentPage(1); }}
-                />
                 <FilterDropdown
                   label="Ladinggroep"
                   options={ladingGroepOptions}
@@ -327,37 +252,17 @@ export default function Relaties() {
           data={tableData}
           hoveredRowId={hoveredRow}
           onRowHover={setHoveredRow}
-          onRowClick={(row) => navigate(`/crm/relatie/${row.id}`)}
+          onRowClick={(row) => navigate(`/markt/bevrachters/${row.id}`)}
         />
       </div>
 
-      {showCreateDialog && (
-        <RelatieFormDialog
-          onSave={handleCreateRelatie}
-          onClose={() => setShowCreateDialog(false)}
+      {conversationRelatie && (
+        <ConversationDialog
+          relatieId={conversationRelatie.id}
+          relatieName={conversationRelatie.naam}
+          onClose={() => setConversationRelatie(null)}
         />
       )}
-
-      {verslagRelatieId && (() => {
-        const relatie = relaties.find((r) => r.id === verslagRelatieId);
-        const cpList = mockContactPersonen.filter((cp) => relatie?.contactPersoonIds?.includes(cp.id));
-        return (
-          <GespreksverslagQuickDialog
-            relatieId={verslagRelatieId}
-            relatieNaam={relatie?.naam || ""}
-            contactPersonen={cpList}
-            onSave={(verslag) => {
-              const newVerslag: Gespreksverslag = {
-                ...verslag,
-                id: `gv-${Date.now()}`,
-                aanmaakDatum: new Date().toISOString(),
-              };
-              mockGespreksverslagen.push(newVerslag);
-            }}
-            onClose={() => setVerslagRelatieId(null)}
-          />
-        );
-      })()}
     </div>
   );
 }
