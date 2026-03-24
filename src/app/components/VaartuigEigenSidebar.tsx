@@ -65,8 +65,6 @@ export default function VaartuigEigenSidebar({ id, onEdit }: VaartuigEigenSideba
         <DetailRow label="Diepgang" value={data.diepgang} editable onEdit={() => onEdit?.("diepgang")} />
         <DetailRow label="Kruiphoogte" value={data.kruiphoogte} editable onEdit={() => onEdit?.("kruiphoogte")} />
         <DetailRow label="Bijzonderheden" type="badges" badges={data.bijzonderheden} editable onEdit={() => onEdit?.("bijzonderheden")} />
-        <DetailRow label="Relatie" type="linked" value={data.relatie} onClick={() => navigate(`/crm/relatie/${data.relatieId}`)} />
-        <DetailRow label="Contactpersoon" value={data.contactpersoon} />
       </DetailsSidebarSection>
 
       {/* Divider */}

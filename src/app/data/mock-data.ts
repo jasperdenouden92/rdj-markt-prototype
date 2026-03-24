@@ -381,7 +381,7 @@ export const mockMatches: Match[] = [
 export const mockNegotiations: Negotiation[] = [
   {
     id: 'N001',
-    company: 'Provaart Logistics BV',
+    company: 'Rederij van Dam',
     tonnage: '2.000 ton',
     deadline: 'Za 14 Mrt, 16:00',
     deadlineExpired: true,
@@ -422,7 +422,7 @@ export const mockNegotiations: Negotiation[] = [
   },
   {
     id: 'N004',
-    company: 'Janlow B.V.',
+    company: 'Scheepvaartbedrijf Damen',
     tonnage: '2.000 ton',
     deadline: 'Morgen, 11:00',
     status: 'Bod ontvangen',
@@ -436,7 +436,7 @@ export const mockNegotiations: Negotiation[] = [
   },
   {
     id: 'N005',
-    company: 'Cargill N.V.',
+    company: 'Rijnvaart Groep',
     tonnage: '2.000 ton',
     deadline: 'Do 19 Mrt, 11:15',
     status: 'Via werklijst',

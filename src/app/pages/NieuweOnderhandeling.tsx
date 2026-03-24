@@ -173,15 +173,11 @@ export default function NieuweOnderhandeling() {
   const handleSubmit = () => {
     const fromInbox = location.state?.fromInbox;
     
-    if (fromInbox) {
-      toast.success('Lading naar pijplijn verplaatst', {
-        description: 'De onderhandeling is gestart en de lading is verplaatst naar de pijplijn.',
-        duration: 3000,
-      });
-      navigate(`/markt/pijplijn/${id}`);
-    } else {
-      navigate(-1);
-    }
+    toast.success('Onderhandeling gestart', {
+      description: 'De onderhandeling is aangemaakt.',
+      duration: 3000,
+    });
+    navigate(-1);
   };
 
   const handleCancel = () => {

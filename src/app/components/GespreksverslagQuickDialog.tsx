@@ -46,7 +46,6 @@ const statusBadge: Record<string, { label: string; cls: string }> = {
   markt: { label: "Markt", cls: "bg-[#ecfdf3] text-[#067647]" },
   // Ladinguitvraag
   inbox: { label: "Inbox", cls: "bg-[#f2f4f7] text-rdj-text-secondary" },
-  pijplijn: { label: "Pijplijn", cls: "bg-[#e3effb] text-[#1567a4]" },
 };
 
 
@@ -119,9 +118,9 @@ export default function GespreksverslagQuickDialog({
     (v) => v.status === "intake" || v.status === "werklijst" || v.status === "markt"
   );
 
-  // Ladinguitvraag: bekende ladingen van deze relatie (inbox, pijplijn)
+  // Ladinguitvraag: bekende ladingen van deze relatie (inbox)
   const bekendeLadingen = mockRelatieLadingen.filter(
-    (l) => l.relatieId === relatieId && (l.status === "inbox" || l.status === "pijplijn")
+    (l) => l.relatieId === relatieId && l.status === "inbox"
   );
 
   useEffect(() => {

@@ -55,9 +55,10 @@ interface ConversationDialogProps {
   relatieId: string;
   relatieName: string;
   preSelectedItemId?: string;
-  preSelectedItemType?: "lading" | "vaartuig";
+  preSelectedItemType?: "lading" | "vaartuig" | "relatie-vaartuig" | "relatie-lading";
   preSelectedMatchName?: string;
   preSelectedOriginId?: string;
+  preSelectedRightName?: string;
   onClose: () => void;
   onSave?: () => void;
 }
@@ -71,19 +72,20 @@ export default function ConversationDialog({
   preSelectedItemType,
   preSelectedMatchName,
   preSelectedOriginId,
+  preSelectedRightName,
   onClose,
   onSave,
 }: ConversationDialogProps) {
   const getInitialTab = (): TabValue => {
-    if (!preSelectedMatchName) {
-      if (preSelectedItemType === "lading") return "eigen-ladingen";
-      if (preSelectedItemType === "vaartuig") return "eigen-vaartuigen";
-    }
+    if (preSelectedItemType === "lading") return "eigen-ladingen";
+    if (preSelectedItemType === "vaartuig") return "eigen-vaartuigen";
+    if (preSelectedItemType === "relatie-vaartuig") return "vaartuigen-relatie";
+    if (preSelectedItemType === "relatie-lading") return "ladingen-relatie";
     return "eigen-ladingen";
   };
 
   const [activeTab, setActiveTab] = useState<TabValue>(getInitialTab);
-  const [selectedLeftId, setSelectedLeftId] = useState<string | null>(preSelectedMatchName ? null : (preSelectedItemId ?? null));
+  const [selectedLeftId, setSelectedLeftId] = useState<string | null>(preSelectedItemId ?? null);
   const [dataLoaded, setDataLoaded] = useState(false);
   const [itemStatuses, setItemStatuses] = useState<Map<string, ItemStatus>>(new Map());
   const [itemConditions, setItemConditions] = useState<Map<string, ConditionValues>>(new Map());
@@ -248,54 +250,86 @@ export default function ConversationDialog({
     setDataLoaded(true);
   }
 
-  // After data loads, find and select the matched item by name
+  // After data loads, find and select/expand the matched item by name
   useEffect(() => {
     if (!dataLoaded || matchAppliedRef.current || !preSelectedMatchName) return;
 
-    // Search relatie vaartuigen first (most common when clicking vessel matches from markt cargo)
-    const rv = relatieVaartuigenItems.find(v => v.title === preSelectedMatchName);
-    if (rv) {
-      matchAppliedRef.current = true;
-      skipNextTabClearRef.current = true;
-      setActiveTab("vaartuigen-relatie");
-      setSelectedLeftId(rv.id);
-      setExpandedConditions(new Set([rv.id]));
+    // When preSelectedItemId is also provided, the left panel already has the correct selection.
+    // Find the match in RIGHT panel items and expand it there.
+    if (preSelectedItemId) {
+      const allRightCandidates = [
+        ...relatieLadingenItems,
+        ...relatieVaartuigenItems,
+        ...eigenLadingen,
+        ...eigenVaartuigen,
+        ...marktLadingen,
+        ...marktVaartuigen,
+      ];
+      const found = allRightCandidates.find(item => item.title === preSelectedMatchName);
+      if (found) {
+        matchAppliedRef.current = true;
+        // Enable markt toggles if needed so the item appears in the right panel
+        if (marktLadingen.some(l => l.id === found.id)) setShowMarktLadingen(true);
+        if (marktVaartuigen.some(v => v.id === found.id)) setShowMarktVaartuigen(true);
+        setExpandedConditions(prev => new Set(prev).add(found.id));
+      }
       return;
     }
 
-    // Search eigen vaartuigen
-    const ev = eigenVaartuigen.find(v => v.title === preSelectedMatchName);
-    if (ev) {
-      matchAppliedRef.current = true;
-      skipNextTabClearRef.current = true;
-      setActiveTab("eigen-vaartuigen");
-      setSelectedLeftId(ev.id);
-      setExpandedConditions(new Set([ev.id]));
-      return;
+    // No preSelectedItemId — find and select on the left panel
+    // Build search order, prioritising the list matching preSelectedItemType
+    const searchOrder: { list: DisplayItem[]; tab: TabValue }[] = [
+      { list: relatieVaartuigenItems, tab: "vaartuigen-relatie" },
+      { list: eigenVaartuigen, tab: "eigen-vaartuigen" },
+      { list: relatieLadingenItems, tab: "ladingen-relatie" },
+      { list: eigenLadingen, tab: "eigen-ladingen" },
+    ];
+    // If a specific item type hint was given, search that list first
+    const typeTabMap: Record<string, TabValue> = {
+      "relatie-vaartuig": "vaartuigen-relatie",
+      "relatie-lading": "ladingen-relatie",
+      "vaartuig": "eigen-vaartuigen",
+      "lading": "eigen-ladingen",
+    };
+    if (preSelectedItemType && typeTabMap[preSelectedItemType]) {
+      const preferredTab = typeTabMap[preSelectedItemType];
+      const idx = searchOrder.findIndex(s => s.tab === preferredTab);
+      if (idx > 0) {
+        const [preferred] = searchOrder.splice(idx, 1);
+        searchOrder.unshift(preferred);
+      }
     }
 
-    // Search relatie ladingen
-    const rl = relatieLadingenItems.find(l => l.title === preSelectedMatchName);
-    if (rl) {
+    // Helper: extract keywords (4+ chars) from a name for fuzzy fallback
+    const extractKeywords = (name: string) =>
+      name.replace(/[\d.,]+\s*ton\s*/i, "").split(/[\s·()\-–]+/).filter(w => w.length >= 4).map(w => w.toLowerCase());
+
+    const selectItem = (item: DisplayItem, tab: TabValue) => {
       matchAppliedRef.current = true;
       skipNextTabClearRef.current = true;
-      setActiveTab("ladingen-relatie");
-      setSelectedLeftId(rl.id);
-      setExpandedConditions(new Set([rl.id]));
-      return;
+      setActiveTab(tab);
+      setSelectedLeftId(item.id);
+      setExpandedConditions(new Set([item.id]));
+    };
+
+    // First pass: exact title match
+    for (const { list, tab } of searchOrder) {
+      const found = list.find(item => item.title === preSelectedMatchName);
+      if (found) { selectItem(found, tab); return; }
     }
 
-    // Search eigen ladingen
-    const el = eigenLadingen.find(l => l.title === preSelectedMatchName);
-    if (el) {
-      matchAppliedRef.current = true;
-      skipNextTabClearRef.current = true;
-      setActiveTab("eigen-ladingen");
-      setSelectedLeftId(el.id);
-      setExpandedConditions(new Set([el.id]));
-      return;
+    // Second pass: keyword fallback (e.g. "3.000 ton Houtpellets (DSIT)" matches "Houtpellets Salzgitter")
+    const keywords = extractKeywords(preSelectedMatchName);
+    if (keywords.length > 0) {
+      for (const { list, tab } of searchOrder) {
+        const found = list.find(item => {
+          const itemLower = item.title.toLowerCase();
+          return keywords.some(kw => itemLower.includes(kw));
+        });
+        if (found) { selectItem(found, tab); return; }
+      }
     }
-  }, [dataLoaded, preSelectedMatchName, relatieVaartuigenItems, eigenVaartuigen, relatieLadingenItems, eigenLadingen]);
+  }, [dataLoaded, preSelectedMatchName, preSelectedItemId, preSelectedItemType, relatieVaartuigenItems, eigenVaartuigen, relatieLadingenItems, eigenLadingen, marktLadingen, marktVaartuigen]);
 
   // After vessel is selected, expand origin cargo conditions on the right panel
   useEffect(() => {
@@ -331,6 +365,37 @@ export default function ConversationDialog({
       return;
     }
   }, [selectedLeftId, preSelectedOriginId, dataLoaded, eigenLadingen, marktLadingen, eigenVaartuigen, marktVaartuigen]);
+
+  // When preSelectedItemId is provided, also expand it so its conditions are visible
+  useEffect(() => {
+    if (!dataLoaded || !preSelectedItemId || !preSelectedMatchName) return;
+    setExpandedConditions(prev => {
+      if (prev.has(preSelectedItemId)) return prev;
+      return new Set(prev).add(preSelectedItemId);
+    });
+  }, [dataLoaded, preSelectedItemId, preSelectedMatchName]);
+
+  // After left item is selected, find preSelectedRightName in right panel items and expand it
+  const rightNameAppliedRef = useRef(false);
+  useEffect(() => {
+    if (!dataLoaded || rightNameAppliedRef.current || !preSelectedRightName || !selectedLeftId) return;
+
+    const allCandidates = [
+      ...eigenLadingen,
+      ...eigenVaartuigen,
+      ...marktLadingen,
+      ...marktVaartuigen,
+      ...relatieLadingenItems,
+      ...relatieVaartuigenItems,
+    ];
+    const found = allCandidates.find(item => item.title === preSelectedRightName);
+    if (found) {
+      rightNameAppliedRef.current = true;
+      if (marktLadingen.some(l => l.id === found.id)) setShowMarktLadingen(true);
+      if (marktVaartuigen.some(v => v.id === found.id)) setShowMarktVaartuigen(true);
+      setExpandedConditions(prev => new Set(prev).add(found.id));
+    }
+  }, [dataLoaded, selectedLeftId, preSelectedRightName, eigenLadingen, eigenVaartuigen, marktLadingen, marktVaartuigen, relatieLadingenItems, relatieVaartuigenItems]);
 
   const combinedLadingen = showMarktLadingen ? [...eigenLadingen, ...marktLadingen] : eigenLadingen;
   const combinedVaartuigen = showMarktVaartuigen ? [...eigenVaartuigen, ...marktVaartuigen] : eigenVaartuigen;

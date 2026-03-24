@@ -98,20 +98,11 @@ export default function NieuwBod() {
   });
 
   const handleSubmit = () => {
-    navigate(`/markt/pijplijn/${id}`, { 
-      state: { 
-        openNegotiationId: negotiationId,
-        newBid: formData 
-      } 
-    });
+    navigate(-1);
   };
 
   const handleCancel = () => {
-    navigate(`/markt/pijplijn/${id}`, { 
-      state: { 
-        openNegotiationId: negotiationId
-      } 
-    });
+    navigate(-1);
   };
 
   return (
@@ -131,22 +122,8 @@ export default function NieuwBod() {
                 <p className="font-sans font-bold leading-[20px] text-rdj-text-secondary text-[14px] whitespace-nowrap">Markt</p>
               </button>
               <BreadcrumbChevron />
-              <button 
-                onClick={() => navigate('/markt/pijplijn')}
-                className="flex items-center justify-center px-[8px] py-[4px] rounded-[6px] shrink-0 hover:bg-rdj-bg-primary-hover"
-              >
-                <p className="font-sans font-bold leading-[20px] text-rdj-text-secondary text-[14px] whitespace-nowrap">Pijplijn</p>
-              </button>
-              <BreadcrumbChevron />
-              <button 
-                onClick={() => navigate(`/markt/pijplijn/${id}`)}
-                className="flex items-center justify-center px-[8px] py-[4px] rounded-[6px] shrink-0 hover:bg-rdj-bg-primary-hover"
-              >
-                <p className="font-sans font-bold leading-[20px] text-rdj-text-secondary text-[14px] whitespace-nowrap">{id?.substring(0, 12)}</p>
-              </button>
-              <BreadcrumbChevron />
-              <button 
-                onClick={() => navigate(`/markt/pijplijn/${id}`)}
+              <button
+                onClick={() => navigate('/markt/onderhandelingen')}
                 className="flex items-center justify-center px-[8px] py-[4px] rounded-[6px] shrink-0 hover:bg-rdj-bg-primary-hover"
               >
                 <p className="font-sans font-bold leading-[20px] text-rdj-text-secondary text-[14px] whitespace-nowrap">Onderhandelingen</p>
