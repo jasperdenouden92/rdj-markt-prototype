@@ -383,7 +383,9 @@ export default function VaartuigDetail() {
           relatieId={conversationDialog.relatieId}
           relatieName={conversationDialog.relatieName}
           preSelectedMatchName={conversationDialog.matchName}
-          preSelectedOriginId={id}
+          preSelectedOriginId={conversationDialog.matchName ? id : undefined}
+          preSelectedItemId={conversationDialog.matchName ? undefined : id}
+          preSelectedItemType={conversationDialog.matchName ? undefined : "vaartuig"}
           onClose={() => setConversationDialog(null)}
         />
       )}

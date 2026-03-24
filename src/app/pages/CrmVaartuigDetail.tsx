@@ -42,7 +42,7 @@ export default function CrmVaartuigDetail() {
   const [matchFilter, setMatchFilter] = useState("Alles");
   const [negFilter, setNegFilter] = useState("Actief");
   const [activityFilter, setActivityFilter] = useState("Alle activiteit");
-  const [conversationDialog, setConversationDialog] = useState<{ relatieId: string; relatieName: string } | null>(null);
+  const [conversationDialog, setConversationDialog] = useState<{ relatieId: string; relatieName: string; matchName?: string } | null>(null);
 
   const vaartuig = useMemo(() => mockRelatieVaartuigen.find((v) => v.id === id), [id]);
   const relatie = useMemo(() => mockRelaties.find((r) => r.id === (relatieId || vaartuig?.relatieId)), [relatieId, vaartuig]);
@@ -194,6 +194,7 @@ export default function CrmVaartuigDetail() {
                             setConversationDialog({
                               relatieId: rel?.id || relatie?.id || "",
                               relatieName: (row.company as string) || relatie?.naam || "",
+                              matchName: row.cargo as string,
                             });
                           }}
                         />
@@ -291,8 +292,10 @@ export default function CrmVaartuigDetail() {
         <ConversationDialog
           relatieId={conversationDialog.relatieId}
           relatieName={conversationDialog.relatieName}
-          preSelectedItemId={id}
-          preSelectedItemType="vaartuig"
+          preSelectedMatchName={conversationDialog.matchName}
+          preSelectedOriginId={conversationDialog.matchName ? id : undefined}
+          preSelectedItemId={conversationDialog.matchName ? undefined : id}
+          preSelectedItemType={conversationDialog.matchName ? undefined : "vaartuig"}
           onClose={() => setConversationDialog(null)}
         />
       )}

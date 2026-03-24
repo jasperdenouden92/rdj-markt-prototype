@@ -129,19 +129,25 @@ export default function ConversationDialog({
     const partijen = await api.list<Partij>("partij");
     const subpartijen = await api.list<Subpartij>("subpartij");
     const havens = await api.list<{ id: string; naam: string }>("haven");
+    const exen = await api.list<{ id: string; naam: string; type: string }>("ex");
     const partijMap = new Map(partijen.map(p => [p.id, p]));
     const subpartijMap = new Map(subpartijen.map(s => [s.id, s]));
     const havenMap = new Map(havens.map(h => [h.id, h]));
+    const exMap = new Map(exen.map(e => [e.id, e]));
 
     setEigenLadingen(
       allLadingenEigen.map(le => {
         const partij = partijMap.get(le.partijId);
         const subpartij = subpartijMap.get(le.subpartijId);
+        const ex = partij?.exId ? exMap.get(partij.exId) : null;
         const laadHaven = partij ? havenMap.get(partij.laadhavenId)?.naam : undefined;
         const losHaven = subpartij ? havenMap.get(subpartij.loshavenId)?.naam : undefined;
+        const title = ex
+          ? (ex.type === "opslag" ? ex.naam : `m/v ${ex.naam}`)
+          : partij?.naam || le.opmerking || le.id;
         return {
           id: le.id,
-          title: partij?.naam || le.opmerking || le.id,
+          title,
           subtitle: `${le.tonnage.toLocaleString("nl-NL")} ton`,
           meta: "",
           source: "eigen" as const,
@@ -183,7 +189,7 @@ export default function ConversationDialog({
           const soort = soortMap.get(lm.ladingSoortId)?.naam || "";
           return {
             id: lm.id,
-            title: `${lm.tonnage.toLocaleString("nl-NL")} ton ${soort}`,
+            title: soort || `${lm.tonnage.toLocaleString("nl-NL")} ton`,
             subtitle: relNaam,
             meta: "",
             source: "markt" as const,
