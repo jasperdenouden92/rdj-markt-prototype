@@ -13,6 +13,7 @@ import VaartuigMarktSidebar from "../components/VaartuigMarktSidebar";
 import OnderhandelingSidepanel from "../components/OnderhandelingSidepanel";
 import ConversationDialog from "../components/ConversationDialog";
 import ActivityFeed from "../components/ActivityFeed";
+import SectionHeader from "../components/SectionHeader";
 import { useInboxVaartuigSummary } from "../data/useDetailData";
 import { mockNegotiations } from "../data/mock-data";
 import { mockRelaties } from "../data/mock-relatie-data";
@@ -87,6 +88,9 @@ export default function InboxVesselDetail() {
   const [selectedNegotiation, setSelectedNegotiation] = useState<{ id: string; status: string; bron: string } | null>(null);
   const setActiveTab = (tab: typeof activeTab) => { setActiveTabRaw(tab); setSelectedNegotiation(null); };
   const [conversationDialog, setConversationDialog] = useState<{ relatieId: string; relatieName: string; matchName?: string } | null>(null);
+  const [matchFilter, setMatchFilter] = useState("Alles");
+  const [negFilter, setNegFilter] = useState("Actief");
+  const [activityFilter, setActivityFilter] = useState("Alle activiteit");
   const { data: summary, loading: summaryLoading } = useInboxVaartuigSummary(id);
   const avatars = [imgAvatar, imgAvatar1, imgAvatar2, imgAvatar3, imgAvatar4];
 
@@ -103,7 +107,7 @@ export default function InboxVesselDetail() {
 
   // Table columns for cargo matches (ladingen die passen bij dit vaartuig)
   const matchColumns: Column[] = [
-    { key: "lading", header: "Lading", type: "leading-text", subtextKey: "ladingSubtext", actionLabel: "Onderhandeling" },
+    { key: "lading", header: "Lading", type: "leading-text", subtextKey: "ladingSubtext", actionLabel: "Onderhandeling", actionCompletedKey: "actionCompletedLabel" },
     { key: "relatie", header: "Relatie", type: "text", subtextKey: "relatieContact", textColor: "text-rdj-text-brand", width: "w-[180px]", onClickKey: "onRelatieClick" },
     { key: "laden", header: "Laden", type: "text", subtextKey: "ladenDatum", width: "w-[140px]" },
     { key: "lossen", header: "Lossen", type: "text", subtextKey: "lossenDatum", width: "w-[140px]" },
@@ -125,9 +129,9 @@ export default function InboxVesselDetail() {
 
   // Mock match data for vessel
   const matchRows: RowData[] = [
-    { id: "1", lading: "Houtpellets Salzgitter", ladingSubtext: "2.000 ton · Houtpellets (DSIT)", relatie: "Provaart Logistics BV", relatieContact: "Jan de Vries", laden: "Salzgitter Stichkanal", ladenDatum: "Vr 14 Mrt 2026", lossen: "Hamburg Veddelkanal", lossenDatum: "Di 18 Mrt 2026", matchPct: 90, onRelatieClick: () => { const rel = mockRelaties.find(r => r.naam === "Provaart Logistics BV"); if (rel) navigate(`/crm/relatie/${rel.id}`); } },
-    { id: "2", lading: "Staal Dordrecht–Antwerpen", ladingSubtext: "3.000 ton · Staal", relatie: "Janlow B.V.", relatieContact: "Pieter Jansen", laden: "Dordrecht", ladenDatum: "Za 15 Mrt 2026", lossen: "Antwerpen", lossenDatum: "Ma 17 Mrt 2026", matchPct: 75, onRelatieClick: () => { const rel = mockRelaties.find(r => r.naam === "Janlow B.V."); if (rel) navigate(`/crm/relatie/${rel.id}`); } },
-    { id: "3", lading: "Sojabonen Rotterdam", ladingSubtext: "3.500 ton · Sojabonen", relatie: "Cargill N.V.", relatieContact: "Sophie van Dam", laden: "Rotterdam Botlek", ladenDatum: "Zo 16 Mrt 2026", lossen: "Basel", lossenDatum: "Do 20 Mrt 2026", matchPct: 60, onRelatieClick: () => { const rel = mockRelaties.find(r => r.naam === "Cargill N.V."); if (rel) navigate(`/crm/relatie/${rel.id}`); } },
+    { id: "1", lading: "Houtpellets Salzgitter", ladingSubtext: "2.000 ton · Houtpellets (DSIT)", relatie: "Provaart Logistics BV", relatieContact: "Jan de Vries", laden: "Salzgitter Stichkanal", ladenDatum: "Vr 14 Mrt 2026", lossen: "Hamburg Veddelkanal", lossenDatum: "Di 18 Mrt 2026", matchPct: 90, matchStatus: "aangeboden", onRelatieClick: () => { const rel = mockRelaties.find(r => r.naam === "Provaart Logistics BV"); if (rel) navigate(`/crm/relatie/${rel.id}`); } },
+    { id: "2", lading: "Staal Dordrecht–Antwerpen", ladingSubtext: "3.000 ton · Staal", relatie: "Janlow B.V.", relatieContact: "Pieter Jansen", laden: "Dordrecht", ladenDatum: "Za 15 Mrt 2026", lossen: "Antwerpen", lossenDatum: "Ma 17 Mrt 2026", matchPct: 75, matchStatus: "openstaand", onRelatieClick: () => { const rel = mockRelaties.find(r => r.naam === "Janlow B.V."); if (rel) navigate(`/crm/relatie/${rel.id}`); } },
+    { id: "3", lading: "Sojabonen Rotterdam", ladingSubtext: "3.500 ton · Sojabonen", relatie: "Cargill N.V.", relatieContact: "Sophie van Dam", laden: "Rotterdam Botlek", ladenDatum: "Zo 16 Mrt 2026", lossen: "Basel", lossenDatum: "Do 20 Mrt 2026", matchPct: 60, matchStatus: "openstaand", onRelatieClick: () => { const rel = mockRelaties.find(r => r.naam === "Cargill N.V."); if (rel) navigate(`/crm/relatie/${rel.id}`); } },
   ];
 
   /* ── Tabs ── */
@@ -165,6 +169,22 @@ export default function InboxVesselDetail() {
     contactDate: neg.contact.date,
     contactAvatar: avatars[idx % avatars.length],
   }));
+
+  const activeNegStatuses = ["Via werklijst", "Bod verstuurd", "Bod ontvangen"];
+
+  const filteredMatchRows = matchFilter === "Alles"
+    ? matchRows.map((row) => row.matchStatus === 'aangeboden'
+        ? { ...row, _muted: true, actionCompletedLabel: 'Aangeboden' }
+        : row)
+    : matchRows.filter((row) => row.matchStatus === matchFilter.toLowerCase());
+
+  const filteredNegData = negFilter === "Alles"
+    ? negTableData
+    : negFilter === "Actief"
+      ? negTableData.filter((row) => activeNegStatuses.includes(row.status as string))
+      : negFilter === "Goedgekeurd"
+        ? negTableData.filter((row) => row.status === "Goedgekeurd")
+        : negTableData.filter((row) => row.status === "Afgewezen" || row.status === "Afgekeurd");
 
   return (
     <>
@@ -221,19 +241,26 @@ export default function InboxVesselDetail() {
                   <div className="w-full pt-[20px]">
                     {activeTab === 'matches' && (
                       <>
+                        <SectionHeader
+                          title="Matches"
+                          filterLabel={matchFilter}
+                          filterOptions={["Alles", "Openstaand", "Aangeboden"]}
+                          filterValue={matchFilter}
+                          onFilterChange={setMatchFilter}
+                        />
                         <Pagination
                           currentPage={matchPage}
-                          totalItems={matchRows.length}
+                          totalItems={filteredMatchRows.length}
                           rowsPerPage={matchRowsPerPage}
                           onPageChange={setMatchPage}
                           onRowsPerPageChange={setMatchRowsPerPage}
                         />
                         <Table
                           columns={matchColumns}
-                          data={matchRows}
+                          data={filteredMatchRows}
                           hoveredRowId={hoveredRow}
                           onRowHover={setHoveredRow}
-                          onRowClick={(row) => {
+                          onRowAction={(row) => {
                             const relatie = mockRelaties.find(r => r.naam === row.relatie);
                             setConversationDialog({
                               relatieId: relatie?.id || "rel-001",
@@ -247,16 +274,25 @@ export default function InboxVesselDetail() {
 
                     {activeTab === 'onderhandelingen' && (
                       <>
+                        <SectionHeader
+                          title="Onderhandelingen"
+                          filterLabel={negFilter}
+                          filterOptions={["Alles", "Actief", "Goedgekeurd", "Afgewezen"]}
+                          filterValue={negFilter}
+                          onFilterChange={setNegFilter}
+                          onAdd={() => setConversationDialog({ relatieId: "", relatieName: "" })}
+                          addTooltip="Onderhandeling starten"
+                        />
                         <Pagination
                           currentPage={negPage}
-                          totalItems={mockNegotiations.length}
+                          totalItems={filteredNegData.length}
                           rowsPerPage={negRowsPerPage}
                           onPageChange={setNegPage}
                           onRowsPerPageChange={setNegRowsPerPage}
                         />
                         <Table
                           columns={negColumns}
-                          data={negTableData}
+                          data={filteredNegData}
                           hoveredRowId={hoveredRow}
                           onRowHover={setHoveredRow}
                           activeRowId={selectedNegotiation?.id ?? null}
@@ -266,9 +302,18 @@ export default function InboxVesselDetail() {
                     )}
 
                     {activeTab === 'activiteit' && (
-                      <div className="w-full px-[24px]">
-                        <ActivityFeed />
-                      </div>
+                      <>
+                        <SectionHeader
+                          title="Activiteit"
+                          filterLabel={activityFilter}
+                          filterOptions={["Alle activiteit", "Jouw activiteit"]}
+                          filterValue={activityFilter}
+                          onFilterChange={setActivityFilter}
+                        />
+                        <div className="w-full px-[24px]">
+                          <ActivityFeed filter={activityFilter === "Jouw activiteit" ? "mine" : "all"} />
+                        </div>
+                      </>
                     )}
                   </div>
                 </div>

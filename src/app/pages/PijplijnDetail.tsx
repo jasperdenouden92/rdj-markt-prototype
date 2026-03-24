@@ -91,7 +91,9 @@ export default function PijplijnDetail() {
   const [activeTab, setActiveTabRaw] = useState<'onderhandelingen' | 'matches' | 'activiteit'>('onderhandelingen');
   const [selectedNegotiation, setSelectedNegotiation] = useState<{ id: string; status: string; bron: string } | null>(null);
   const setActiveTab = (tab: typeof activeTab) => { setActiveTabRaw(tab); setSelectedNegotiation(null); };
-  const [negotiationFilter, setNegotiationFilter] = useState('Actieve onderhandelingen');
+  const [negotiationFilter, setNegotiationFilter] = useState('Actief');
+  const [matchFilter, setMatchFilter] = useState("Alles");
+  const [activityFilter, setActivityFilter] = useState("Alle activiteit");
   const [hoveredRow, setHoveredRow] = useState<string | null>(null);
   const [conversationDialog, setConversationDialog] = useState<{ relatieId: string; relatieName: string } | null>(null);
 
@@ -211,7 +213,7 @@ export default function PijplijnDetail() {
   );
 
   const ladingMatchColumns: Column[] = [
-    { key: 'name', header: 'Vaartuig', type: 'leading-text', subtextKey: 'type', badgeKey: 'eigenBadge', actionLabel: 'Onderhandeling' },
+    { key: 'name', header: 'Vaartuig', type: 'leading-text', subtextKey: 'type', badgeKey: 'eigenBadge', actionLabel: 'Onderhandeling', actionCompletedKey: 'actionCompletedLabel' },
     { key: 'company', header: 'Relatie', type: 'text', subtextKey: 'contactPersoon', textColor: 'text-rdj-text-brand', width: 'w-[180px]', onClickKey: 'onRelatieClick' },
     { key: 'location', header: 'Locatie', type: 'text', subtextKey: 'locationDate', width: 'w-[200px]' },
     { key: 'capacity', header: 'Groottonnage', type: 'text', align: 'right', width: 'w-[120px]' },
@@ -220,11 +222,12 @@ export default function PijplijnDetail() {
     { key: 'matchPct', header: 'Match', type: 'progress', align: 'right', width: 'w-[100px]' },
   ];
 
-  const ladingMatchData: RowData[] = mockLadingMatches.map(m => ({
+  const ladingMatchData: RowData[] = mockLadingMatches.map((m, idx) => ({
     id: m.id,
     name: m.name,
     type: m.type,
     eigenBadge: m.isEigen ? undefined : 'Markt',
+    matchStatus: idx < 2 ? 'aangeboden' : 'openstaand',
     company: m.company,
     contactPersoon: m.contactPersoon,
     onRelatieClick: () => { const rel = mockRelaties.find(r => r.naam === m.company); if (rel) navigate(`/crm/relatie/${rel.id}`); },
@@ -240,7 +243,7 @@ export default function PijplijnDetail() {
   }));
 
   const vaartuigMatchColumns: Column[] = [
-    { key: 'lading', header: 'Lading', type: 'leading-text', badgeKey: 'eigenBadge', actionLabel: 'Onderhandeling' },
+    { key: 'lading', header: 'Lading', type: 'leading-text', badgeKey: 'eigenBadge', actionLabel: 'Onderhandeling', actionCompletedKey: 'actionCompletedLabel' },
     { key: 'company', header: 'Relatie', type: 'text', subtextKey: 'contactPersoon', textColor: 'text-rdj-text-brand', width: 'w-[180px]', onClickKey: 'onRelatieClick' },
     { key: 'laden', header: 'Laden', type: 'text', subtextKey: 'ladenDatum', width: 'w-[180px]' },
     { key: 'lossen', header: 'Lossen', type: 'text', subtextKey: 'lossenDatum', width: 'w-[180px]' },
@@ -248,10 +251,11 @@ export default function PijplijnDetail() {
     { key: 'matchPct', header: 'Match', type: 'progress', align: 'right', width: 'w-[100px]' },
   ];
 
-  const vaartuigMatchData: RowData[] = mockVaartuigMatches.map(m => ({
+  const vaartuigMatchData: RowData[] = mockVaartuigMatches.map((m, idx) => ({
     id: m.id,
     lading: m.lading,
     eigenBadge: m.isEigen ? undefined : 'Markt',
+    matchStatus: idx < 2 ? 'aangeboden' : 'openstaand',
     company: m.company,
     contactPersoon: m.contactPersoon,
     onRelatieClick: () => { const rel = mockRelaties.find(r => r.naam === m.company); if (rel) navigate(`/crm/relatie/${rel.id}`); },
@@ -268,6 +272,22 @@ export default function PijplijnDetail() {
 
   const matchColumns = isVaartuig ? vaartuigMatchColumns : ladingMatchColumns;
   const matchData = isVaartuig ? vaartuigMatchData : ladingMatchData;
+
+  const activeNegStatuses = ["Via werklijst", "Bod verstuurd", "Bod ontvangen"];
+
+  const filteredMatchData = matchFilter === "Alles"
+    ? matchData.map((row) => row.matchStatus === 'aangeboden'
+        ? { ...row, _muted: true, actionCompletedLabel: 'Aangeboden' }
+        : row)
+    : matchData.filter((row) => row.matchStatus === matchFilter.toLowerCase());
+
+  const filteredNegData = negotiationFilter === "Alles"
+    ? negTableData
+    : negotiationFilter === "Actief"
+      ? negTableData.filter((row) => activeNegStatuses.includes(row.status as string))
+      : negotiationFilter === "Goedgekeurd"
+        ? negTableData.filter((row) => row.status === "Goedgekeurd")
+        : negTableData.filter((row) => row.status === "Afgewezen" || row.status === "Afgekeurd");
 
   /* ── Determine correct sidebar ── */
   const renderSidebar = () => {
@@ -399,7 +419,7 @@ export default function PijplijnDetail() {
                 <SectionHeader
                   title="Onderhandelingen"
                   filterLabel={negotiationFilter}
-                  filterOptions={['Actieve onderhandelingen', 'Alle onderhandelingen', 'Goedgekeurd', 'Afgewezen']}
+                  filterOptions={['Alles', 'Actief', 'Goedgekeurd', 'Afgewezen']}
                   filterValue={negotiationFilter}
                   onFilterChange={setNegotiationFilter}
                   onAdd={() => navigate(`/markt/pijplijn/${isVaartuig ? 'vaartuig/' : ''}${id}/nieuweonderhandeling`)}
@@ -407,14 +427,14 @@ export default function PijplijnDetail() {
                 />
                 <Pagination
                   currentPage={negPage}
-                  totalItems={negTableData.length}
+                  totalItems={filteredNegData.length}
                   rowsPerPage={negRowsPerPage}
                   onPageChange={setNegPage}
                   onRowsPerPageChange={setNegRowsPerPage}
                 />
                 <Table
                   columns={negColumns}
-                  data={negTableData}
+                  data={filteredNegData}
                   hoveredRowId={hoveredRow}
                   onRowHover={setHoveredRow}
                   activeRowId={selectedNegotiation?.id ?? null}
@@ -425,20 +445,26 @@ export default function PijplijnDetail() {
 
             {activeTab === 'matches' && (
               <>
-                <SectionHeader title="Matches" />
+                <SectionHeader
+                  title="Matches"
+                  filterLabel={matchFilter}
+                  filterOptions={["Alles", "Openstaand", "Aangeboden"]}
+                  filterValue={matchFilter}
+                  onFilterChange={setMatchFilter}
+                />
                 <Pagination
                   currentPage={matchPage}
-                  totalItems={matchData.length}
+                  totalItems={filteredMatchData.length}
                   rowsPerPage={matchRowsPerPage}
                   onPageChange={setMatchPage}
                   onRowsPerPageChange={setMatchRowsPerPage}
                 />
                 <Table
                   columns={matchColumns}
-                  data={matchData}
+                  data={filteredMatchData}
                   hoveredRowId={hoveredRow}
                   onRowHover={setHoveredRow}
-                  onRowClick={(row) => {
+                  onRowAction={(row) => {
                     const relatie = mockRelaties.find(r => r.naam === row.company);
                     setConversationDialog({
                       relatieId: relatie?.id || "rel-001",
@@ -450,7 +476,16 @@ export default function PijplijnDetail() {
             )}
 
             {activeTab === 'activiteit' && (
-              <ActivityFeed />
+              <>
+                <SectionHeader
+                  title="Activiteit"
+                  filterLabel={activityFilter}
+                  filterOptions={["Alle activiteit", "Jouw activiteit"]}
+                  filterValue={activityFilter}
+                  onFilterChange={setActivityFilter}
+                />
+                <ActivityFeed filter={activityFilter === "Jouw activiteit" ? "mine" : "all"} />
+              </>
             )}
           </div>
         </div>

@@ -52,7 +52,7 @@ export default function SectionHeader({
   const displayLabel = filterValue || filterLabel || "Filter";
 
   return (
-    <div className="flex items-center justify-between mb-[16px]">
+    <div className="flex items-center justify-between px-[24px] py-[12px]">
       {/* Title */}
       <p className="font-sans font-bold leading-[26px] text-rdj-text-primary text-[18px]">
         {title}

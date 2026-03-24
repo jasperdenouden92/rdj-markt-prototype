@@ -70,6 +70,8 @@ export interface LeadingTextColumn extends BaseColumn {
   iconKey?: string;
   /** Label for the hover action button (default: "Openen") */
   actionLabel?: string;
+  /** Row key for a completed-action label (e.g. "Aangeboden"). When set, shows a check + label instead of the action button. */
+  actionCompletedKey?: string;
 }
 
 export interface TextColumn extends BaseColumn {
@@ -221,6 +223,7 @@ function CellLeadingText({
   const showDot = col.dotKey ? !!row[col.dotKey] : false;
   const hasDotKey = !!col.dotKey;
   const actionLabel = col.actionLabel ?? "Openen";
+  const actionCompleted = col.actionCompletedKey ? row[col.actionCompletedKey] as string | undefined : undefined;
 
   const badgeLabel = col.badgeKey ? row[col.badgeKey] : undefined;
   const iconType = col.iconKey ? row[col.iconKey] : undefined;
@@ -263,7 +266,16 @@ function CellLeadingText({
           </p>
         )}
       </div>
-      {onAction && (
+      {actionCompleted ? (
+        <div className="shrink-0 flex items-center gap-[4px]">
+          <svg className="block size-[16px]" fill="none" viewBox="0 0 16 16">
+            <path d="M3.333 8L6.667 11.333L12.667 5.333" stroke="var(--color-rdj-text-tertiary)" strokeWidth="1.67" strokeLinecap="round" strokeLinejoin="round" />
+          </svg>
+          <p className="font-sans font-bold leading-[20px] text-rdj-text-tertiary text-[14px] whitespace-nowrap">
+            {actionCompleted}
+          </p>
+        </div>
+      ) : onAction ? (
         <div className="shrink-0 opacity-0 group-hover/row:opacity-100 transition-opacity">
           <Button
             variant="secondary"
@@ -275,7 +287,7 @@ function CellLeadingText({
             }}
           />
         </div>
-      )}
+      ) : null}
     </div>
   );
 }
@@ -688,6 +700,7 @@ export default function Table({
         {data.map((row, rowIndex) => {
           const isSelected = selectable && selectedIds.includes(row.id);
           const isActive = activeRowId === row.id;
+          const isMuted = !!row._muted;
           const bgCls = isSelected || isActive
             ? "bg-rdj-bg-active hover:bg-rdj-bg-active-hover"
             : "hover:bg-rdj-bg-primary-hover";
@@ -695,7 +708,7 @@ export default function Table({
           return (
           <div
             key={row.id}
-            className={`group/row flex items-center px-[24px] py-[16px] gap-[16px] border-b border-rdj-border-secondary ${bgCls} transition-colors ${onRowClick ? "cursor-pointer" : ""}`}
+            className={`group/row flex items-center px-[24px] py-[16px] gap-[16px] border-b border-rdj-border-secondary ${bgCls} transition-colors ${onRowClick ? "cursor-pointer" : ""} ${isMuted ? "bg-rdj-bg-secondary opacity-60" : ""}`}
             onMouseEnter={() => onRowHover?.(row.id)}
             onMouseLeave={() => onRowHover?.(null)}
             onClick={onRowClick ? () => onRowClick(row) : undefined}
