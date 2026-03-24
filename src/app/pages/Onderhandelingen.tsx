@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router";
 import { Send, MailOpen, Check, X } from "lucide-react";
 import Sidebar from "../components/Sidebar";
@@ -9,7 +9,7 @@ import Pagination from "../components/Pagination";
 import Table from "../components/Table";
 import type { Column } from "../components/Table";
 import Button from "../components/Button";
-import NegotiationDialog from "../components/NegotiationDialog";
+import OnderhandelingSidepanel from "../components/OnderhandelingSidepanel";
 import svgPaths from "../../imports/svg-q07ncv0e2v";
 import imgAvatar from "../../assets/a2737d3b5b234fc04041650cb9f114889c6859da.png";
 
@@ -467,9 +467,12 @@ export default function Onderhandelingen() {
   const [currentPage, setCurrentPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(50);
   const [hoveredRow, setHoveredRow] = useState<string | null>(null);
-  const [selectedNegotiationId, setSelectedNegotiationId] = useState<string | null>(
+  const [selectedNegotiation, setSelectedNegotiation] = useState<{ id: string; status: string; bron: string } | null>(
     null
   );
+
+  // Close sidepanel on tab switch
+  useEffect(() => { setSelectedNegotiation(null); }, [activeTab]);
 
   /* ── Filter logic: Ladingen ── */
   const filteredLadingen = mockLadingenOnderhandelingen.filter((item) => {
@@ -696,6 +699,7 @@ export default function Onderhandelingen() {
     updateDate: item.updateDate,
     updateUserAvatar: item.updateUserAvatar,
     updateUserInitials: item.updateUserInitials,
+    bron: item.bron,
   }));
 
   /* ── Map vaartuigen rows ── */
@@ -723,6 +727,7 @@ export default function Onderhandelingen() {
     updateDate: item.updateDate,
     updateUserAvatar: item.updateUserAvatar,
     updateUserInitials: item.updateUserInitials,
+    bron: item.bron,
   }));
 
   return (
@@ -889,9 +894,10 @@ export default function Onderhandelingen() {
               columns={ladingenColumns}
               data={ladingenRows}
               hoveredRowId={hoveredRow}
+              activeRowId={selectedNegotiation?.id ?? null}
               onRowHover={setHoveredRow}
               onRowClick={(row) => {
-                setSelectedNegotiationId(row.id);
+                setSelectedNegotiation({ id: row.id, status: row.status as string, bron: row.bron as string });
               }}
             />
           )}
@@ -901,9 +907,10 @@ export default function Onderhandelingen() {
               columns={vaartuigenColumns}
               data={vaartuigenRows}
               hoveredRowId={hoveredRow}
+              activeRowId={selectedNegotiation?.id ?? null}
               onRowHover={setHoveredRow}
               onRowClick={(row) => {
-                setSelectedNegotiationId(row.id);
+                setSelectedNegotiation({ id: row.id, status: row.status as string, bron: row.bron as string });
               }}
             />
           )}
@@ -918,11 +925,13 @@ export default function Onderhandelingen() {
         </div>
       </div>
 
-      {/* Negotiation Dialog */}
-      {selectedNegotiationId && (
-        <NegotiationDialog
-          negotiationId={selectedNegotiationId}
-          onClose={() => setSelectedNegotiationId(null)}
+      {/* Negotiation Sidepanel */}
+      {selectedNegotiation && (
+        <OnderhandelingSidepanel
+          negotiationId={selectedNegotiation.id}
+          status={selectedNegotiation.status as "Via werklijst" | "Bod verstuurd" | "Bod ontvangen" | "Goedgekeurd" | "Afgewezen"}
+          bron={selectedNegotiation.bron as "eigen" | "markt"}
+          onClose={() => setSelectedNegotiation(null)}
         />
       )}
     </div>

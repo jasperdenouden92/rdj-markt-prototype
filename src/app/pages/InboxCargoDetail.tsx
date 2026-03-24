@@ -12,7 +12,7 @@ import Pagination from "../components/Pagination";
 import Button from "../components/Button";
 import LadingMarktSidebar from "../components/LadingMarktSidebar";
 import StartNegotiationSidebar from "../components/StartNegotiationSidebar";
-import NegotiationDialog from "../components/NegotiationDialog";
+import OnderhandelingSidepanel from "../components/OnderhandelingSidepanel";
 import ConversationDialog from "../components/ConversationDialog";
 import ActivityFeed from "../components/ActivityFeed";
 import { useInboxLadingSummary } from "../data/useDetailData";
@@ -84,10 +84,11 @@ function BreadcrumbChevron() {
 export default function InboxCargoDetail() {
   const { id } = useParams();
   const navigate = useNavigate();
-  const [activeTab, setActiveTab] = useState<'matches' | 'onderhandelingen' | 'activiteit'>('matches');
+  const [activeTab, setActiveTabRaw] = useState<'matches' | 'onderhandelingen' | 'activiteit'>('matches');
   const [selectedMatch, setSelectedMatch] = useState<any>(null);
   const [offeredMatches, setOfferedMatches] = useState<Set<string>>(new Set());
-  const [selectedNegotiationId, setSelectedNegotiationId] = useState<string | null>(null);
+  const [selectedNegotiation, setSelectedNegotiation] = useState<{ id: string; status: string; bron: string } | null>(null);
+  const setActiveTab = (tab: typeof activeTab) => { setActiveTabRaw(tab); setSelectedNegotiation(null); };
   const [conversationDialog, setConversationDialog] = useState<{ relatieId: string; relatieName: string; matchName?: string } | null>(null);
   const [hoveredRow, setHoveredRow] = useState<string | null>(null);
   const { data: summary, loading: summaryLoading } = useInboxLadingSummary(id);
@@ -279,7 +280,8 @@ export default function InboxCargoDetail() {
                           data={negTableData}
                           hoveredRowId={hoveredRow}
                           onRowHover={setHoveredRow}
-                          onRowClick={(row) => setSelectedNegotiationId(row.id)}
+                          activeRowId={selectedNegotiation?.id ?? null}
+                          onRowClick={(row) => setSelectedNegotiation({ id: row.id, status: row.status as string, bron: "markt" })}
                         />
                       </>
                     )}
@@ -308,10 +310,12 @@ export default function InboxCargoDetail() {
       )}
 
       {/* Negotiation Sidebar */}
-      {selectedNegotiationId && (
-        <NegotiationDialog
-          negotiationId={selectedNegotiationId}
-          onClose={() => setSelectedNegotiationId(null)}
+      {selectedNegotiation && (
+        <OnderhandelingSidepanel
+          negotiationId={selectedNegotiation.id}
+          status={selectedNegotiation.status as any}
+          bron={selectedNegotiation.bron as any}
+          onClose={() => setSelectedNegotiation(null)}
         />
       )}
 

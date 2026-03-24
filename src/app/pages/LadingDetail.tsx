@@ -11,7 +11,7 @@ import Pagination from "../components/Pagination";
 import Button from "../components/Button";
 import ActivityFeed from "../components/ActivityFeed";
 import LadingEigenSidebar from "../components/LadingEigenSidebar";
-import NegotiationDialog from "../components/NegotiationDialog";
+import OnderhandelingSidepanel from "../components/OnderhandelingSidepanel";
 import ConversationDialog from "../components/ConversationDialog";
 import { useBevrachtingLadingSummary } from "../data/useDetailData";
 import { mockMatches, mockNegotiations } from "../data/mock-data";
@@ -54,9 +54,10 @@ const negotiationStatusTypeMap: Record<string, "default" | "color"> = {
 export default function LadingDetail() {
   const { id } = useParams();
   const navigate = useNavigate();
-  const [activeTab, setActiveTab] = useState<'matches' | 'onderhandelingen' | 'activiteit'>('matches');
+  const [activeTab, setActiveTabRaw] = useState<'matches' | 'onderhandelingen' | 'activiteit'>('matches');
   const [hoveredRow, setHoveredRow] = useState<string | null>(null);
-  const [selectedNegotiationId, setSelectedNegotiationId] = useState<string | null>(null);
+  const [selectedNegotiation, setSelectedNegotiation] = useState<{ id: string; status: string; bron: string } | null>(null);
+  const setActiveTab = (tab: typeof activeTab) => { setActiveTabRaw(tab); setSelectedNegotiation(null); };
   const [conversationDialog, setConversationDialog] = useState<{ relatieId: string; relatieName: string } | null>(null);
 
   /* Pagination state per tab */
@@ -284,7 +285,8 @@ export default function LadingDetail() {
                           data={negTableData}
                           hoveredRowId={hoveredRow}
                           onRowHover={setHoveredRow}
-                          onRowClick={(row) => setSelectedNegotiationId(row.id)}
+                          activeRowId={selectedNegotiation?.id ?? null}
+                          onRowClick={(row) => setSelectedNegotiation({ id: row.id, status: row.status as string, bron: "eigen" })}
                         />
                       </>
                     )}
@@ -306,10 +308,12 @@ export default function LadingDetail() {
       </div>
 
       {/* Negotiation Sidebar */}
-      {selectedNegotiationId && (
-        <NegotiationDialog
-          negotiationId={selectedNegotiationId}
-          onClose={() => setSelectedNegotiationId(null)}
+      {selectedNegotiation && (
+        <OnderhandelingSidepanel
+          negotiationId={selectedNegotiation.id}
+          status={selectedNegotiation.status as any}
+          bron={selectedNegotiation.bron as any}
+          onClose={() => setSelectedNegotiation(null)}
         />
       )}
 

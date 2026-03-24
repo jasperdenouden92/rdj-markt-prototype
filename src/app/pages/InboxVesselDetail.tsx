@@ -10,7 +10,7 @@ import type { Column, RowData } from "../components/Table";
 import Pagination from "../components/Pagination";
 import Button from "../components/Button";
 import VaartuigMarktSidebar from "../components/VaartuigMarktSidebar";
-import NegotiationDialog from "../components/NegotiationDialog";
+import OnderhandelingSidepanel from "../components/OnderhandelingSidepanel";
 import ConversationDialog from "../components/ConversationDialog";
 import ActivityFeed from "../components/ActivityFeed";
 import { useInboxVaartuigSummary } from "../data/useDetailData";
@@ -82,9 +82,10 @@ function BreadcrumbChevron() {
 export default function InboxVesselDetail() {
   const { id } = useParams();
   const navigate = useNavigate();
-  const [activeTab, setActiveTab] = useState<'matches' | 'onderhandelingen' | 'activiteit'>('matches');
+  const [activeTab, setActiveTabRaw] = useState<'matches' | 'onderhandelingen' | 'activiteit'>('matches');
   const [hoveredRow, setHoveredRow] = useState<string | null>(null);
-  const [selectedNegotiationId, setSelectedNegotiationId] = useState<string | null>(null);
+  const [selectedNegotiation, setSelectedNegotiation] = useState<{ id: string; status: string; bron: string } | null>(null);
+  const setActiveTab = (tab: typeof activeTab) => { setActiveTabRaw(tab); setSelectedNegotiation(null); };
   const [conversationDialog, setConversationDialog] = useState<{ relatieId: string; relatieName: string; matchName?: string } | null>(null);
   const { data: summary, loading: summaryLoading } = useInboxVaartuigSummary(id);
   const avatars = [imgAvatar, imgAvatar1, imgAvatar2, imgAvatar3, imgAvatar4];
@@ -258,7 +259,8 @@ export default function InboxVesselDetail() {
                           data={negTableData}
                           hoveredRowId={hoveredRow}
                           onRowHover={setHoveredRow}
-                          onRowClick={(row) => setSelectedNegotiationId(row.id)}
+                          activeRowId={selectedNegotiation?.id ?? null}
+                          onRowClick={(row) => setSelectedNegotiation({ id: row.id, status: row.status as string, bron: "markt" })}
                         />
                       </>
                     )}
@@ -280,10 +282,12 @@ export default function InboxVesselDetail() {
       </div>
 
       {/* Negotiation Sidebar */}
-      {selectedNegotiationId && (
-        <NegotiationDialog
-          negotiationId={selectedNegotiationId}
-          onClose={() => setSelectedNegotiationId(null)}
+      {selectedNegotiation && (
+        <OnderhandelingSidepanel
+          negotiationId={selectedNegotiation.id}
+          status={selectedNegotiation.status as any}
+          bron={selectedNegotiation.bron as any}
+          onClose={() => setSelectedNegotiation(null)}
         />
       )}
 

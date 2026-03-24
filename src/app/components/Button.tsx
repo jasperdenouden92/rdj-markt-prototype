@@ -1,6 +1,6 @@
 import { type ReactNode, type ButtonHTMLAttributes } from "react";
 
-type ButtonVariant = "primary" | "secondary" | "tertiary" | "tertiary-gray" | "text";
+type ButtonVariant = "primary" | "secondary" | "secondary-destructive" | "tertiary" | "tertiary-gray" | "text";
 type ButtonSize = "sm" | "md" | "lg";
 
 interface ButtonProps extends Omit<ButtonHTMLAttributes<HTMLButtonElement>, "children"> {
@@ -57,6 +57,13 @@ export default function Button({
       border:
         "absolute border border-[#d0d5dd] dark:border-[#475467] border-solid inset-0 pointer-events-none rounded-[6px] shadow-[0px_1px_2px_0px_rgba(16,24,40,0.05)]",
     },
+    "secondary-destructive": {
+      outer: "bg-white",
+      text: "text-[#D92D20]",
+      iconColor: "[&_svg_path]:stroke-[#D92D20] [&_svg_circle]:stroke-[#D92D20] [&_svg_rect]:stroke-[#D92D20] [&_svg_line]:stroke-[#D92D20]",
+      border:
+        "absolute border border-[#d0d5dd] border-solid inset-0 pointer-events-none rounded-[6px] shadow-[0px_1px_2px_0px_rgba(16,24,40,0.05)]",
+    },
     tertiary: {
       outer: "",
       text: "text-[#344054]",
@@ -103,8 +110,8 @@ export default function Button({
       disabled={disabled}
       className={[
         v.outer,
-        variant === "primary" || variant === "secondary" ? "relative rounded-[6px] shrink-0" : "shrink-0",
-        fullWidth ? "w-full" : "",
+        variant === "primary" || variant === "secondary" || variant === "secondary-destructive" ? `relative rounded-[6px] ${fullWidth ? "" : "shrink-0"}` : fullWidth ? "" : "shrink-0",
+        fullWidth ? "w-full min-w-0" : "",
         disabled ? "opacity-50 cursor-not-allowed" : "cursor-pointer hover:opacity-90",
         className,
       ]
