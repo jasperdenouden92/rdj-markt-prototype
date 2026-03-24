@@ -14,6 +14,7 @@ import Table from "../components/Table";
 import type { Column } from "../components/Table";
 import Pagination from "../components/Pagination";
 import { mockCargos, mockVessels, Cargo, Vessel } from "../data/mock-data";
+import { splitColors } from "../utils/splitColors";
 import { mockRelaties } from "../data/mock-relatie-data";
 import svgPaths from "../../imports/svg-5lxjaeghl9";
 import FloatingActionBar from "../components/FloatingActionBar";
@@ -84,13 +85,16 @@ export default function Bevrachting() {
   const handleSaveConditions = (conditions: ConditionsData) => {
     if (!modalCargo) return;
 
-    // Parse total tonnage from the cargo weight string
+    // Parse tonnage from the cargo weight string (current card's weight, not the original total)
     // Support range format "0–500 ton X" — use the highest number as total
     const rangeWeightMatch = modalCargo.weight.match(/^([\d.,]+)\s*[–-]\s*([\d.,]+)\s*ton/);
     const singleWeightMatch = modalCargo.weight.match(/([\d.]+)\s*ton/);
     const totalTonnage = rangeWeightMatch
       ? parseFloat(rangeWeightMatch[2].replace(/\./g, ''))
       : (singleWeightMatch ? parseFloat(singleWeightMatch[1].replace(/\./g, '')) : 0);
+
+    // The original total weight (before any splits)
+    const originalTotalWeight = modalCargo.splitTotalWeight || modalCargo.weight;
 
     const minVal = parseFloat(conditions.tonnageMin.replace(/\./g, '').replace(',', '.')) || 0;
     const maxVal = conditions.tonnageMax.trim()
@@ -99,7 +103,6 @@ export default function Bevrachting() {
     const isRange = maxVal > 0 && maxVal !== minVal;
 
     // Remaining is based on minVal for ranges (max remaining when least goes to werklijst)
-    const effectiveMax = isRange ? maxVal : minVal;
     const remainingMax = totalTonnage - minVal;
     const remainingMin = isRange ? totalTonnage - maxVal : remainingMax;
     // There's a remaining split when min > 0 but less than the full cargo.
@@ -113,37 +116,75 @@ export default function Bevrachting() {
     const formatTonnage = (t: number) =>
       t.toLocaleString('nl-NL', { maximumFractionDigits: 0 });
 
-    // Build the werklijst card
-    const werklijstCard: Cargo = {
-      ...modalCargo,
-      status: 'werklijst' as const,
-      conditions: {
-        ...modalCargo.conditions,
-        markt: conditions,
-      },
-    };
+    // Determine the split origin and next split number
+    const originId = modalCargo.splitOriginId || modalCargo.id;
+    const existingSplits = cargos.filter(c => c.splitOriginId === originId || c.id === originId);
+    const maxSplitIndex = existingSplits.reduce((max, c) => Math.max(max, c.splitIndex ?? 0), 0);
 
-    // Split when not the full tonnage goes to werklijst
+    // Assign a color index for this split group (based on how many distinct origins exist)
+    const existingOrigins = new Set(cargos.filter(c => c.splitOriginId).map(c => c.splitOriginId!));
+    const splitColorIndex = modalCargo.splitColorIndex ?? (existingOrigins.has(originId)
+      ? cargos.find(c => c.splitOriginId === originId || (c.id === originId && c.splitColorIndex != null))?.splitColorIndex ?? existingOrigins.size
+      : existingOrigins.size);
+
     if (hasRemaining) {
+      const isFirstSplit = maxSplitIndex === 0;
+      const nextSplitIndex = isFirstSplit ? 2 : maxSplitIndex + 1;
+
       // Remaining card shows a range if werklijst was a range, otherwise fixed
-      const remainingWeight = isRange && remainingMin !== remainingMax
+      const remainingWeightBase = isRange && remainingMin !== remainingMax
         ? `${formatTonnage(remainingMin)}–${formatTonnage(remainingMax)} ton ${cargoType}`
         : `${formatTonnage(remainingMax)} ton ${cargoType}`;
 
-      const remainingCard: Cargo = {
+      // Parse original total for "(van X ton)" display
+      const origMatch = originalTotalWeight.match(/([\d.]+)\s*ton/);
+      const origTotal = origMatch ? parseFloat(origMatch[1].replace(/\./g, '')) : totalTonnage;
+
+      // The werklijst card is the split-off (#2, #3, ...)
+      const werklijstCard: Cargo = {
         ...modalCargo,
-        id: `${modalCargo.id}-rest`,
-        cargo: remainingWeight,
-        weight: remainingWeight,
+        id: `${originId}-${nextSplitIndex}`,
+        status: 'werklijst' as const,
+        splitIndex: nextSplitIndex,
+        splitOriginId: originId,
+        splitColorIndex,
+        splitTotalWeight: originalTotalWeight,
+        conditions: {
+          ...modalCargo.conditions,
+          markt: conditions,
+        },
+      };
+
+      // The original card stays in intake as #1 with remaining tonnage
+      const intakeCard: Cargo = {
+        ...modalCargo,
+        id: isFirstSplit ? modalCargo.id : `${originId}-rest`,
+        cargo: `${remainingWeightBase} (van ${formatTonnage(origTotal)} ton)`,
+        weight: remainingWeightBase,
         status: 'intake' as const,
+        splitIndex: 1,
+        splitOriginId: originId,
+        splitColorIndex,
+        splitTotalWeight: originalTotalWeight,
         conditions: undefined,
       };
 
       setCargos(cargos.flatMap(c =>
-        c.id === modalCargo.id ? [werklijstCard, remainingCard] : [c]
+        c.id === modalCargo.id ? [intakeCard, werklijstCard] : [c]
       ));
     } else {
-      // Full tonnage goes to werklijst
+      // Full tonnage goes to werklijst — no split
+      const werklijstCard: Cargo = {
+        ...modalCargo,
+        status: 'werklijst' as const,
+        splitIndex: maxSplitIndex > 0 ? maxSplitIndex + 1 : undefined,
+        splitOriginId: modalCargo.splitOriginId,
+        splitColorIndex: modalCargo.splitColorIndex,
+        conditions: {
+          ...modalCargo.conditions,
+          markt: conditions,
+        },
+      };
       setCargos(cargos.map(c =>
         c.id === modalCargo.id ? werklijstCard : c
       ));
@@ -169,7 +210,7 @@ export default function Bevrachting() {
   };
 
   const tableColumns: Column[] = [
-    { key: 'subpartij', header: 'Subpartij', type: 'leading-text', subtextKey: 'subpartijEx', badgeKey: 'leadingBadge', iconKey: 'exTypeIcon' },
+    { key: 'subpartij', header: 'Subpartij', type: 'leading-text', subtextKey: 'subpartijEx', badgeKey: 'leadingBadge', badgeStyleKey: 'leadingBadgeStyle', iconKey: 'exTypeIcon' },
     { key: 'statusLabel', header: 'Status', type: 'status', width: 'w-[140px]', variantKey: 'statusVariant' },
     { key: 'ladingType', header: 'Lading', type: 'text', width: 'w-[160px]', subtextKey: 'ladingSG' },
     { key: 'tonnage', header: 'Tonnage', type: 'text', width: 'w-[120px]', align: 'right' },
@@ -248,7 +289,11 @@ export default function Bevrachting() {
       deadline: deadlineMap[c.status] ?? '',
       eigenaarLabel: '',
       eigenaarInitials: ownerInitials[ownerIdx] || undefined,
-      leadingBadge: c.status === 'markt' ? 'Markt' : undefined,
+      leadingBadge: c.splitIndex != null ? `#${c.splitIndex}` : (c.status === 'markt' ? 'Markt' : undefined),
+      leadingBadgeStyle: c.splitIndex != null && c.splitColorIndex != null ? (() => {
+        const color = splitColors[c.splitColorIndex % splitColors.length];
+        return { backgroundColor: color.bg, color: color.text, borderColor: color.border };
+      })() : undefined,
     };
   });
 
