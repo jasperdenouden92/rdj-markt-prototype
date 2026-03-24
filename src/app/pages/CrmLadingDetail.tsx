@@ -9,6 +9,8 @@ import type { Column, RowData } from "../components/Table";
 import Pagination from "../components/Pagination";
 import Button from "../components/Button";
 import ActivityFeed from "../components/ActivityFeed";
+import SectionHeader from "../components/SectionHeader";
+import ConversationDialog from "../components/ConversationDialog";
 import { mockRelaties, mockRelatieLadingen, mockRelatieLadingMatches } from "../data/mock-relatie-data";
 
 const ladingStatusMap: Record<string, { label: string; variant: "success" | "warning" | "brand" | "grey" }> = {
@@ -37,6 +39,10 @@ export default function CrmLadingDetail() {
   const [hoveredRow, setHoveredRow] = useState<string | null>(null);
   const [matchPage, setMatchPage] = useState(1);
   const [matchRowsPerPage, setMatchRowsPerPage] = useState(50);
+  const [matchFilter, setMatchFilter] = useState("Alles");
+  const [negFilter, setNegFilter] = useState("Actief");
+  const [activityFilter, setActivityFilter] = useState("Alle activiteit");
+  const [conversationDialog, setConversationDialog] = useState<{ relatieId: string; relatieName: string } | null>(null);
 
   const lading = useMemo(() => mockRelatieLadingen.find((l) => l.id === id), [id]);
   const relatie = useMemo(() => mockRelaties.find((r) => r.id === (relatieId || lading?.relatieId)), [relatieId, lading]);
@@ -104,7 +110,7 @@ export default function CrmLadingDetail() {
   );
 
   const matchColumns: Column[] = [
-    { key: "name", header: "Vaartuig", type: "leading-text", subtextKey: "type", badgeKey: "eigenBadge", actionLabel: "Onderhandeling" },
+    { key: "name", header: "Vaartuig", type: "leading-text", subtextKey: "type", badgeKey: "eigenBadge", actionLabel: "Onderhandeling", actionCompletedKey: "actionCompletedLabel" },
     { key: "company", header: "Relatie", type: "text", subtextKey: "contactPersoon", textColor: "text-rdj-text-brand", width: "w-[180px]", onClickKey: "onRelatieClick" },
     { key: "location", header: "Locatie", type: "text", subtextKey: "locationDate", width: "w-[200px]" },
     { key: "distance", header: "Groottonnage", type: "text", align: "right", width: "w-[120px]" },
@@ -113,11 +119,12 @@ export default function CrmLadingDetail() {
     { key: "matchPercentage", header: "Match", type: "progress", align: "right", width: "w-[100px]" },
   ];
 
-  const matchTableData: RowData[] = matches.map((m) => ({
+  const matchTableData: RowData[] = matches.map((m, idx) => ({
     id: m.id,
     name: m.vaartuigNaam,
     type: m.vaartuigType,
     eigenBadge: m.isEigen ? undefined : "Markt",
+    matchStatus: idx < 2 ? 'aangeboden' : 'openstaand',
     company: m.relatie,
     contactPersoon: m.contactPersoon,
     onRelatieClick: () => { const rel = mockRelaties.find(r => r.naam === m.relatie); if (rel) navigate(`/crm/relatie/${rel.id}`); },
@@ -131,6 +138,12 @@ export default function CrmLadingDetail() {
     sourceIconVariant: "grey",
     matchPercentage: m.matchPercentage,
   }));
+
+  const filteredMatchData = matchFilter === "Alles"
+    ? matchTableData.map((row) => row.matchStatus === 'aangeboden'
+        ? { ...row, _muted: true, actionCompletedLabel: 'Aangeboden' }
+        : row)
+    : matchTableData.filter((row) => row.matchStatus === matchFilter.toLowerCase());
 
   return (
     <div className="flex min-h-screen bg-white">
@@ -159,35 +172,68 @@ export default function CrmLadingDetail() {
                   <div className="w-full pt-[20px]">
                     {activeTab === "matches" && (
                       <>
+                        <SectionHeader
+                          title="Matches"
+                          filterLabel={matchFilter}
+                          filterOptions={["Alles", "Openstaand", "Aangeboden"]}
+                          filterValue={matchFilter}
+                          onFilterChange={setMatchFilter}
+                        />
                         <Pagination
                           currentPage={matchPage}
-                          totalItems={matches.length}
+                          totalItems={filteredMatchData.length}
                           rowsPerPage={matchRowsPerPage}
                           onPageChange={setMatchPage}
                           onRowsPerPageChange={setMatchRowsPerPage}
                         />
                         <Table
                           columns={matchColumns}
-                          data={matchTableData}
+                          data={filteredMatchData}
                           hoveredRowId={hoveredRow}
                           onRowHover={setHoveredRow}
-                          onRowClick={() => {}}
+                          onRowAction={(row) => {
+                            const rel = mockRelaties.find(r => r.naam === row.company);
+                            setConversationDialog({
+                              relatieId: rel?.id || relatie?.id || "",
+                              relatieName: (row.company as string) || relatie?.naam || "",
+                            });
+                          }}
                         />
                       </>
                     )}
 
                     {activeTab === "onderhandelingen" && (
-                      <div className="w-full px-[24px] py-[48px] text-center">
-                        <p className="font-sans font-normal text-[14px] text-rdj-text-tertiary">
-                          Nog geen onderhandelingen gestart voor deze lading.
-                        </p>
-                      </div>
+                      <>
+                        <SectionHeader
+                          title="Onderhandelingen"
+                          filterLabel={negFilter}
+                          filterOptions={["Alles", "Actief", "Goedgekeurd", "Afgewezen"]}
+                          filterValue={negFilter}
+                          onFilterChange={setNegFilter}
+                          onAdd={() => setConversationDialog({ relatieId: relatie?.id || "", relatieName: relatie?.naam || "" })}
+                          addTooltip="Onderhandeling starten"
+                        />
+                        <div className="w-full px-[24px] py-[48px] text-center">
+                          <p className="font-sans font-normal text-[14px] text-rdj-text-tertiary">
+                            Nog geen onderhandelingen gestart voor deze lading.
+                          </p>
+                        </div>
+                      </>
                     )}
 
                     {activeTab === "activiteit" && (
-                      <div className="w-full px-[24px]">
-                        <ActivityFeed />
-                      </div>
+                      <>
+                        <SectionHeader
+                          title="Activiteit"
+                          filterLabel={activityFilter}
+                          filterOptions={["Alle activiteit", "Jouw activiteit"]}
+                          filterValue={activityFilter}
+                          onFilterChange={setActivityFilter}
+                        />
+                        <div className="w-full px-[24px]">
+                          <ActivityFeed filter={activityFilter === "Jouw activiteit" ? "mine" : "all"} />
+                        </div>
+                      </>
                     )}
                   </div>
                 </div>
@@ -245,6 +291,17 @@ export default function CrmLadingDetail() {
           </div>
         </div>
       </div>
+
+      {/* Conversation dialog */}
+      {conversationDialog && (
+        <ConversationDialog
+          relatieId={conversationDialog.relatieId}
+          relatieName={conversationDialog.relatieName}
+          preSelectedItemId={id}
+          preSelectedItemType="lading"
+          onClose={() => setConversationDialog(null)}
+        />
+      )}
     </div>
   );
 }
