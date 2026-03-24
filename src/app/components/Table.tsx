@@ -74,6 +74,8 @@ export interface LeadingTextColumn extends BaseColumn {
   actionLabel?: string;
   /** Row key for a completed-action label (e.g. "Aangeboden"). When set, shows a check + label instead of the action button. */
   actionCompletedKey?: string;
+  /** Optional max-width class, e.g. "max-w-[480px]" */
+  maxWidth?: string;
 }
 
 export interface TextColumn extends BaseColumn {
@@ -677,7 +679,7 @@ export default function Table({
           {columns.map((col) => {
             const isLeading = col.type === "leading-text";
             const widthCls = isLeading
-              ? "flex-1 min-w-[400px]"
+              ? `flex-1 min-w-[400px]${(col as LeadingTextColumn).maxWidth ? ` ${(col as LeadingTextColumn).maxWidth}` : ''}`
               : `${col.width ?? "w-[120px]"} shrink-0`;
             // When a leading-text column has a dotKey, offset the header
             // to align with the text content (past the dot + gap space)
@@ -730,7 +732,7 @@ export default function Table({
             {columns.map((col) => {
               const isLeading = col.type === "leading-text";
               const widthCls = isLeading
-                ? "flex-1 min-w-[400px]"
+                ? `flex-1 min-w-[400px]${(col as LeadingTextColumn).maxWidth ? ` ${(col as LeadingTextColumn).maxWidth}` : ''}`
                 : `${col.width ?? "w-[120px]"} shrink-0`;
 
               const actionHandler = onRowAction ?? onRowClick;

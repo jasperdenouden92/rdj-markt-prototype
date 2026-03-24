@@ -107,7 +107,8 @@ export default function InboxVesselDetail() {
 
   // Table columns for cargo matches (ladingen die passen bij dit vaartuig)
   const matchColumns: Column[] = [
-    { key: "lading", header: "Lading", type: "leading-text", subtextKey: "ladingSubtext", actionLabel: "Onderhandeling", actionCompletedKey: "actionCompletedLabel" },
+    { key: "lading", header: "Lading", type: "leading-text", subtextKey: "ladingSubtext", maxWidth: "max-w-[480px]", actionLabel: "Onderhandeling", actionCompletedKey: "actionCompletedLabel" },
+    { key: "tonnage", header: "Tonnage", type: "text", width: "w-[120px]", align: "right" },
     { key: "relatie", header: "Relatie", type: "text", subtextKey: "relatieContact", textColor: "text-rdj-text-brand", width: "w-[180px]", onClickKey: "onRelatieClick" },
     { key: "laden", header: "Laden", type: "text", subtextKey: "ladenDatum", width: "w-[140px]" },
     { key: "lossen", header: "Lossen", type: "text", subtextKey: "lossenDatum", width: "w-[140px]" },
@@ -129,9 +130,9 @@ export default function InboxVesselDetail() {
 
   // Mock match data for vessel
   const matchRows: RowData[] = [
-    { id: "1", lading: "Houtpellets Salzgitter", ladingSubtext: "2.000 ton · Houtpellets (DSIT)", relatie: "Provaart Logistics BV", relatieContact: "Jan de Vries", laden: "Salzgitter Stichkanal", ladenDatum: "Vr 14 Mrt 2026", lossen: "Hamburg Veddelkanal", lossenDatum: "Di 18 Mrt 2026", matchPct: 90, matchStatus: "aangeboden", onRelatieClick: () => { const rel = mockRelaties.find(r => r.naam === "Provaart Logistics BV"); if (rel) navigate(`/crm/relatie/${rel.id}`); } },
-    { id: "2", lading: "Staal Dordrecht–Antwerpen", ladingSubtext: "3.000 ton · Staal", relatie: "Janlow B.V.", relatieContact: "Pieter Jansen", laden: "Dordrecht", ladenDatum: "Za 15 Mrt 2026", lossen: "Antwerpen", lossenDatum: "Ma 17 Mrt 2026", matchPct: 75, matchStatus: "openstaand", onRelatieClick: () => { const rel = mockRelaties.find(r => r.naam === "Janlow B.V."); if (rel) navigate(`/crm/relatie/${rel.id}`); } },
-    { id: "3", lading: "Sojabonen Rotterdam", ladingSubtext: "3.500 ton · Sojabonen", relatie: "Cargill N.V.", relatieContact: "Sophie van Dam", laden: "Rotterdam Botlek", ladenDatum: "Zo 16 Mrt 2026", lossen: "Basel", lossenDatum: "Do 20 Mrt 2026", matchPct: 60, matchStatus: "openstaand", onRelatieClick: () => { const rel = mockRelaties.find(r => r.naam === "Cargill N.V."); if (rel) navigate(`/crm/relatie/${rel.id}`); } },
+    { id: "1", lading: "Houtpellets Salzgitter", ladingSubtext: "2.000 ton Houtpellets (DSIT)", tonnage: "2.000 ton", relatie: "Provaart Logistics BV", relatieContact: "Jan de Vries", laden: "Salzgitter Stichkanal", ladenDatum: "Vr 14 Mrt 2026", lossen: "Hamburg Veddelkanal", lossenDatum: "Di 18 Mrt 2026", matchPct: 90, matchStatus: "aangeboden", onRelatieClick: () => { const rel = mockRelaties.find(r => r.naam === "Provaart Logistics BV"); if (rel) navigate(`/crm/relatie/${rel.id}`); } },
+    { id: "2", lading: "Staal", ladingSubtext: "3.000 ton", tonnage: "3.000 ton", relatie: "Janlow B.V.", relatieContact: "Pieter Jansen", laden: "Dordrecht", ladenDatum: "Za 15 Mrt 2026", lossen: "Antwerpen", lossenDatum: "Ma 17 Mrt 2026", matchPct: 75, matchStatus: "openstaand", onRelatieClick: () => { const rel = mockRelaties.find(r => r.naam === "Janlow B.V."); if (rel) navigate(`/crm/relatie/${rel.id}`); } },
+    { id: "3", lading: "Sojabonen", ladingSubtext: "3.500 ton", tonnage: "3.500 ton", relatie: "Cargill N.V.", relatieContact: "Sophie van Dam", laden: "Rotterdam Botlek", ladenDatum: "Zo 16 Mrt 2026", lossen: "Basel", lossenDatum: "Do 20 Mrt 2026", matchPct: 60, matchStatus: "openstaand", onRelatieClick: () => { const rel = mockRelaties.find(r => r.naam === "Cargill N.V."); if (rel) navigate(`/crm/relatie/${rel.id}`); } },
   ];
 
   /* ── Tabs ── */

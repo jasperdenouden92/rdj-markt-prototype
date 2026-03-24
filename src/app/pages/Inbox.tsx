@@ -360,7 +360,8 @@ export default function Inbox() {
   };
 
   const columns: Column[] = [
-    { key: 'title', header: 'Lading', type: 'leading-text' },
+    { key: 'ladingSoort', header: 'Lading', type: 'leading-text', maxWidth: 'max-w-[480px]' },
+    { key: 'tonnage', header: 'Tonnage', type: 'text', width: 'w-[120px]', align: 'right' },
     { key: 'relation', header: 'Relatie', type: 'text', width: 'w-[180px]', textColor: 'text-rdj-text-brand', subtextKey: 'relationLink', onClickKey: 'onRelatieClick' },
     { key: 'loadLocation', header: 'Laden', type: 'text', width: 'w-[180px]', editable: true },
     { key: 'unloadLocation', header: 'Lossen', type: 'text', width: 'w-[180px]', editable: true },
@@ -388,9 +389,15 @@ export default function Inbox() {
     { key: 'priority', header: 'Prioriteit', type: 'rating', width: 'w-[140px]', onRate: handleRate, editable: true },
   ];
 
-  const tableData = filteredItems.map(item => ({
+  const tableData = filteredItems.map(item => {
+    // Split title like "2.500 ton Graan (0412)" into tonnage and lading soort
+    const tonnageMatch = item.title.match(/^([\d.,\s\-]+ton)\s+(.+)$/);
+    const tonnage = tonnageMatch ? tonnageMatch[1].trim() : '';
+    const ladingSoort = tonnageMatch ? tonnageMatch[2] : item.title;
+    return {
     id: item.id,
-    title: item.title,
+    ladingSoort,
+    tonnage,
     relation: item.relation,
     relationLink: item.relationLink,
     onRelatieClick: () => { const rel = mockRelaties.find(r => r.naam === item.relation); if (rel) navigate(`/crm/relatie/${rel.id}`); },
@@ -402,7 +409,7 @@ export default function Inbox() {
     ownerLabel: '',
     ownerInitials: item.owner ? 'PJ' : undefined,
     priority: item.priority,
-  }));
+  }; });
 
   return (
     <>
