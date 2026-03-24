@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect, useMemo } from "react";
 import { useNavigate, useLocation } from "react-router";
 import { Send, MailOpen, Check, X } from "lucide-react";
+import { Toaster } from "sonner";
 import Sidebar from "../components/Sidebar";
 import PageHeader from "../components/PageHeader";
 import SegmentedButtonGroup from "../components/SegmentedButtonGroup";
@@ -471,12 +472,28 @@ export default function Onderhandelingen() {
   const [selectedNegotiation, setSelectedNegotiation] = useState<{ id: string; status: string; bron: string; relatieName?: string } | null>(
     null
   );
+  const [statusOverrides, setStatusOverrides] = useState<Record<string, string>>({});
+
+  const handleStatusChange = (id: string, newStatus: string) => {
+    setStatusOverrides(prev => ({ ...prev, [id]: newStatus }));
+    setSelectedNegotiation(prev => prev ? { ...prev, status: newStatus } : null);
+  };
 
   // Close sidepanel on tab switch
   useEffect(() => { setSelectedNegotiation(null); }, [activeTab]);
 
+  // Apply status overrides to mock data
+  const ladingenWithOverrides = mockLadingenOnderhandelingen.map(item => ({
+    ...item,
+    status: statusOverrides[item.id] || item.status,
+  }));
+  const vaartuigenWithOverrides = mockVaartuigenOnderhandelingen.map(item => ({
+    ...item,
+    status: statusOverrides[item.id] || item.status,
+  }));
+
   /* ── Filter logic: Ladingen ── */
-  const filteredLadingen = mockLadingenOnderhandelingen.filter((item) => {
+  const filteredLadingen = ladingenWithOverrides.filter((item) => {
     if (statusFilter === "actief" && !activeStatuses.includes(item.status))
       return false;
     if (statusFilter === "goedgekeurd" && item.status !== "Goedgekeurd")
@@ -496,7 +513,7 @@ export default function Onderhandelingen() {
   });
 
   /* ── Filter logic: Vaartuigen ── */
-  const filteredVaartuigen = mockVaartuigenOnderhandelingen.filter((item) => {
+  const filteredVaartuigen = vaartuigenWithOverrides.filter((item) => {
     if (statusFilter === "actief" && !activeStatuses.includes(item.status))
       return false;
     if (statusFilter === "goedgekeurd" && item.status !== "Goedgekeurd")
@@ -938,8 +955,10 @@ export default function Onderhandelingen() {
           soort={activeTab === "vaartuigen" ? "vaartuig" : "lading"}
           relatieName={selectedNegotiation.relatieName}
           onClose={() => setSelectedNegotiation(null)}
+          onStatusChange={handleStatusChange}
         />
       )}
+      <Toaster position="top-right" richColors />
     </div>
   );
 }
