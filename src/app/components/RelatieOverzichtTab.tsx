@@ -54,7 +54,7 @@ function generateAiSummary(
   }
 
   // Ladingen met matches op eigen vaartuigen
-  const marktLadingen = ctx.relatieLadingen.filter((l) => l.status === "markt" || l.status === "pijplijn");
+  const marktLadingen = ctx.relatieLadingen.filter((l) => l.status === "markt");
   for (const lading of marktLadingen) {
     if (lading.matches && lading.matches > 0) {
       items.push({ icon: "ship", text: `"${lading.titel}" staat in de markt met ${lading.matches} match${lading.matches > 1 ? "es" : ""}` });

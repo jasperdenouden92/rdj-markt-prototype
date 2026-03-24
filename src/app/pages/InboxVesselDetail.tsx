@@ -12,10 +12,10 @@ import Button from "../components/Button";
 import VaartuigMarktSidebar from "../components/VaartuigMarktSidebar";
 import OnderhandelingSidepanel from "../components/OnderhandelingSidepanel";
 import ConversationDialog from "../components/ConversationDialog";
+import BrokerDialog from "../components/BrokerDialog";
 import ActivityFeed from "../components/ActivityFeed";
 import SectionHeader from "../components/SectionHeader";
 import { useInboxVaartuigSummary } from "../data/useDetailData";
-import { mockNegotiations } from "../data/mock-data";
 import { mockRelaties } from "../data/mock-relatie-data";
 import imgAvatar from "../../assets/a2737d3b5b234fc04041650cb9f114889c6859da.png";
 import imgAvatar1 from "../../assets/3627de284acb374a4d9313b3c2dbaeeb87a48224.png";
@@ -25,30 +25,29 @@ import imgAvatar4 from "../../assets/9e45f45f537bea4bf653bc0307471e5ff5545f63.pn
 
 /* ── Status variant map ── */
 const negotiationStatusVariantMap: Record<string, string> = {
-  "Via werklijst": "brand",
-  "Bod verstuurd": "brand",
-  "Bod ontvangen": "brand",
-  "Goedgekeurd": "success",
-  "Afgewezen": "error",
-  "Afgekeurd": "error",
+  "In onderhandeling": "brand",
+  "Geaccepteerd": "success",
+  "Geweigerd": "error",
 };
 
+/* ── Inbox status mapping ── */
+function toInboxStatus(raw: string): string {
+  if (raw === "Via werklijst" || raw === "Bod verstuurd" || raw === "Bod ontvangen") return "In onderhandeling";
+  if (raw === "Goedgekeurd") return "Geaccepteerd";
+  if (raw === "Afgewezen" || raw === "Afgekeurd") return "Geweigerd";
+  return raw;
+}
+
 const negotiationStatusIconMap: Record<string, React.ReactNode | null> = {
-  "Via werklijst": null,
-  "Bod verstuurd": <Send strokeWidth={2.5} />,
-  "Bod ontvangen": <MailOpen strokeWidth={2.5} />,
-  "Goedgekeurd": <Check strokeWidth={2.5} />,
-  "Afgewezen": <X strokeWidth={2.5} />,
-  "Afgekeurd": <X strokeWidth={2.5} />,
+  "In onderhandeling": <Send strokeWidth={2.5} />,
+  "Geaccepteerd": <Check strokeWidth={2.5} />,
+  "Geweigerd": <X strokeWidth={2.5} />,
 };
 
 const negotiationStatusTypeMap: Record<string, "default" | "color"> = {
-  "Via werklijst": "default",
-  "Bod verstuurd": "color",
-  "Bod ontvangen": "color",
-  "Goedgekeurd": "color",
-  "Afgewezen": "color",
-  "Afgekeurd": "color",
+  "In onderhandeling": "color",
+  "Geaccepteerd": "color",
+  "Geweigerd": "color",
 };
 
 /* ── Match percentage donut ── */
@@ -85,9 +84,10 @@ export default function InboxVesselDetail() {
   const navigate = useNavigate();
   const [activeTab, setActiveTabRaw] = useState<'matches' | 'onderhandelingen' | 'activiteit'>('matches');
   const [hoveredRow, setHoveredRow] = useState<string | null>(null);
-  const [selectedNegotiation, setSelectedNegotiation] = useState<{ id: string; status: string; bron: string } | null>(null);
+  const [selectedNegotiation, setSelectedNegotiation] = useState<{ id: string; status: string; bron: string; relatieName?: string } | null>(null);
   const setActiveTab = (tab: typeof activeTab) => { setActiveTabRaw(tab); setSelectedNegotiation(null); };
-  const [conversationDialog, setConversationDialog] = useState<{ relatieId: string; relatieName: string; matchName?: string } | null>(null);
+  const [conversationDialog, setConversationDialog] = useState<{ relatieId: string; relatieName: string; matchName?: string; itemType?: "lading" | "vaartuig" | "relatie-vaartuig" | "relatie-lading"; rightName?: string } | null>(null);
+  const [brokerDialog, setBrokerDialog] = useState<{ relatieA: { id: string; name: string }; vesselName: string; vesselSubtitle: string; relatieB: { id: string; name: string }; cargoName: string; cargoSubtitle: string } | null>(null);
   const [matchFilter, setMatchFilter] = useState("Alles");
   const [negFilter, setNegFilter] = useState("Actief");
   const [activityFilter, setActivityFilter] = useState("Alle activiteit");
@@ -107,7 +107,7 @@ export default function InboxVesselDetail() {
 
   // Table columns for cargo matches (ladingen die passen bij dit vaartuig)
   const matchColumns: Column[] = [
-    { key: "lading", header: "Lading", type: "leading-text", subtextKey: "ladingSubtext", maxWidth: "max-w-[480px]", actionLabel: "Onderhandeling", actionCompletedKey: "actionCompletedLabel" },
+    { key: "lading", header: "Lading", type: "leading-text", subtextKey: "ladingSubtext", maxWidth: "max-w-[480px]", badgeKey: "sourceBadge", actionLabel: "Onderhandeling", actionCompletedKey: "actionCompletedLabel" },
     { key: "tonnage", header: "Tonnage", type: "text", width: "w-[120px]", align: "right" },
     { key: "relatie", header: "Relatie", type: "text", subtextKey: "relatieContact", textColor: "text-rdj-text-brand", width: "w-[180px]", onClickKey: "onRelatieClick" },
     { key: "laden", header: "Laden", type: "text", subtextKey: "ladenDatum", width: "w-[140px]" },
@@ -128,50 +128,74 @@ export default function InboxVesselDetail() {
     },
   ];
 
-  // Mock match data for vessel
+  // Mock match data — eigen ladingen + markt ladingen
   const matchRows: RowData[] = [
-    { id: "1", lading: "Houtpellets Salzgitter", ladingSubtext: "2.000 ton Houtpellets (DSIT)", tonnage: "2.000 ton", relatie: "Provaart Logistics BV", relatieContact: "Jan de Vries", laden: "Salzgitter Stichkanal", ladenDatum: "Vr 14 Mrt 2026", lossen: "Hamburg Veddelkanal", lossenDatum: "Di 18 Mrt 2026", matchPct: 90, matchStatus: "aangeboden", onRelatieClick: () => { const rel = mockRelaties.find(r => r.naam === "Provaart Logistics BV"); if (rel) navigate(`/crm/relatie/${rel.id}`); } },
-    { id: "2", lading: "Staal", ladingSubtext: "3.000 ton", tonnage: "3.000 ton", relatie: "Janlow B.V.", relatieContact: "Pieter Jansen", laden: "Dordrecht", ladenDatum: "Za 15 Mrt 2026", lossen: "Antwerpen", lossenDatum: "Ma 17 Mrt 2026", matchPct: 75, matchStatus: "openstaand", onRelatieClick: () => { const rel = mockRelaties.find(r => r.naam === "Janlow B.V."); if (rel) navigate(`/crm/relatie/${rel.id}`); } },
-    { id: "3", lading: "Sojabonen", ladingSubtext: "3.500 ton", tonnage: "3.500 ton", relatie: "Cargill N.V.", relatieContact: "Sophie van Dam", laden: "Rotterdam Botlek", ladenDatum: "Zo 16 Mrt 2026", lossen: "Basel", lossenDatum: "Do 20 Mrt 2026", matchPct: 60, matchStatus: "openstaand", onRelatieClick: () => { const rel = mockRelaties.find(r => r.naam === "Cargill N.V."); if (rel) navigate(`/crm/relatie/${rel.id}`); } },
+    { id: "1", lading: "Graan Rotterdam Q1", ladingSubtext: "3.500 ton Graan", isEigen: true, tonnage: "3.500 ton", relatie: "—", relatieContact: "", laden: "Rotterdam", ladenDatum: "Ma 17 Mrt 2026", lossen: "Krefeld", lossenDatum: "Do 20 Mrt 2026", matchPct: 92, matchStatus: "openstaand" },
+    { id: "2", lading: "Houtpellets Salzgitter", ladingSubtext: "2.000 ton Houtpellets (DSIT)", isEigen: true, tonnage: "2.000 ton", relatie: "—", relatieContact: "", laden: "Salzgitter Stichkanal", ladenDatum: "Vr 14 Mrt 2026", lossen: "Hamburg Veddelkanal", lossenDatum: "Di 18 Mrt 2026", matchPct: 90, matchStatus: "aangeboden" },
+    { id: "3", lading: "Staal", ladingSubtext: "3.000 ton", isEigen: false, tonnage: "3.000 ton", relatie: "Janlow B.V.", relatieContact: "Pieter Jansen", laden: "Dordrecht", ladenDatum: "Za 15 Mrt 2026", lossen: "Antwerpen", lossenDatum: "Ma 17 Mrt 2026", matchPct: 75, matchStatus: "openstaand", onRelatieClick: () => { const rel = mockRelaties.find(r => r.naam === "Janlow B.V."); if (rel) navigate(`/crm/relatie/${rel.id}`); } },
+    { id: "4", lading: "Sojabonen Botlek", ladingSubtext: "3.500 ton Sojabonen", isEigen: true, tonnage: "3.500 ton", relatie: "—", relatieContact: "", laden: "Rotterdam Botlek", ladenDatum: "Zo 16 Mrt 2026", lossen: "Basel", lossenDatum: "Do 20 Mrt 2026", matchPct: 70, matchStatus: "openstaand" },
+    { id: "5", lading: "Sojabonen", ladingSubtext: "3.500 ton", isEigen: false, tonnage: "3.500 ton", relatie: "Cargill N.V.", relatieContact: "Sophie van Dam", laden: "Rotterdam Botlek", ladenDatum: "Zo 16 Mrt 2026", lossen: "Basel", lossenDatum: "Do 20 Mrt 2026", matchPct: 60, matchStatus: "openstaand", onRelatieClick: () => { const rel = mockRelaties.find(r => r.naam === "Cargill N.V."); if (rel) navigate(`/crm/relatie/${rel.id}`); } },
+  ].map(row => ({ ...row, sourceBadge: row.isEigen ? undefined : "Markt" }));
+
+  /* ── Vessel-specific negotiations with cargo info ── */
+  const vesselNegotiations = [
+    { id: 'N001', aanbod: 'Houtpellets Salzgitter', aanbodSubtext: '2.000 ton Houtpellets', bron: 'eigen' as const, company: 'Provaart Logistics BV', freightPrice: '€3,50/ton', freightPriceDiff: '+12,5%', tonnage: '2.000 ton', deadline: 'Za 14 Mrt, 16:00', deadlineExpired: true, status: 'Bod verstuurd', contact: { name: 'Erick Nieuwkoop', date: 'Ma 9 Mrt 07:28' } },
+    { id: 'N002', aanbod: 'Staal Dordrecht', aanbodSubtext: '3.000 ton Staal', bron: 'markt' as const, company: 'Janlow B.V.', ladingRelatie: 'Janlow B.V.', freightPrice: '€3,00/ton', freightPriceDiff: '-3,2%', tonnage: '3.000 ton', deadline: 'Morgen, 9:00', deadlineExpired: true, status: 'Bod verstuurd', contact: { name: 'Michiel den Hond', date: 'Di 10 Mrt 19:53' } },
+    { id: 'N003', aanbod: 'Grind Amsterdam', aanbodSubtext: '1.200 ton Grind', bron: 'eigen' as const, company: 'Rederij Alfa', freightPrice: '€2,80/ton', freightPriceDiff: '-9,7%', tonnage: '1.200 ton', deadline: 'Morgen, 10:00', status: 'Bod verstuurd', contact: { name: 'Khoa Nguyen', date: 'Zo 8 Mrt 01:31' } },
+    { id: 'N004', aanbod: 'Sojabonen Rotterdam', aanbodSubtext: '3.500 ton Sojabonen', bron: 'markt' as const, company: 'Cargill N.V.', ladingRelatie: 'Cargill N.V.', freightPrice: '€3,00/ton', freightPriceDiff: '0,0%', tonnage: '3.500 ton', deadline: 'Morgen, 11:00', status: 'Bod ontvangen', contact: { name: 'Erick Nieuwkoop', date: 'Za 7 Mrt 18:39' } },
+    { id: 'N005', aanbod: 'Kunstmest Terneuzen', aanbodSubtext: '2.500 ton Kunstmest', bron: 'eigen' as const, company: 'Cargill N.V.', freightPrice: '€3,25/ton', freightPriceDiff: '+4,8%', tonnage: '2.500 ton', deadline: 'Do 19 Mrt, 11:15', status: 'Goedgekeurd', contact: { name: 'Michiel den Hond', date: 'Vr 6 Mrt 11:47' } },
   ];
 
   /* ── Tabs ── */
   const tabs: PageTab[] = [
     { label: 'Matches', path: '#matches', isActive: activeTab === 'matches', badge: String(matchRows.length) },
-    { label: 'Onderhandelingen', path: '#onderhandelingen', isActive: activeTab === 'onderhandelingen', badge: String(mockNegotiations.length) },
+    { label: 'Onderhandelingen', path: '#onderhandelingen', isActive: activeTab === 'onderhandelingen', badge: String(vesselNegotiations.length) },
     { label: 'Activiteit', path: '#activiteit', isActive: activeTab === 'activiteit' },
   ];
 
   /* ── Negotiations table ── */
   const negColumns: Column[] = [
-    { key: 'company', header: 'Relatie', type: 'leading-text', actionLabel: 'Openen' },
-    { key: 'freightPrice', header: 'Vrachtprijs', type: 'text', subtextKey: 'freightPriceDiff', subtextColorKey: 'freightPriceDiffColor', subtextTooltipKey: 'freightPriceDiffTooltip', align: 'right', width: 'w-[160px]' },
+    { key: 'aanbod', header: 'Aanbod', type: 'leading-text', actionLabel: 'Openen', subtextKey: 'aanbodSubtext', badgeKey: 'aanbodBadge' },
+    { key: 'freightPrice', header: 'Vrachtprijs', type: 'text', subtextKey: 'freightPriceDiff', subtextColorKey: 'freightPriceDiffColor', subtextTooltipKey: 'freightPriceDiffTooltip', width: 'w-[140px]' },
     { key: 'tonnage', header: 'Tonnage', type: 'text', align: 'right', width: 'w-[120px]' },
     { key: 'deadline', header: 'Deadline', type: 'deadline', expiredKey: 'deadlineExpired', editable: true, width: 'w-[160px]' },
     { key: 'status', header: 'Status', type: 'status', variantKey: 'statusVariant', iconKey: 'statusIcon', typeKey: 'statusType', width: 'w-[160px]' },
     { key: 'contactName', header: 'Laatste update', type: 'text', subtextKey: 'contactDate', avatarSrcKey: 'contactAvatar', width: 'w-[200px]' },
   ];
 
-  const negTableData: RowData[] = mockNegotiations.map((neg, idx) => ({
+  const negTableData: RowData[] = vesselNegotiations.map((neg, idx) => ({
     id: neg.id,
+    aanbod: neg.aanbod,
+    aanbodSubtext: neg.bron === 'markt' && neg.ladingRelatie ? (
+      <>{neg.aanbodSubtext} · <span
+        className="text-rdj-text-brand cursor-pointer hover:underline"
+        onClick={(e: React.MouseEvent) => {
+          e.stopPropagation();
+          const rel = mockRelaties.find(r => r.naam === neg.ladingRelatie);
+          if (rel) navigate(`/crm/relatie/${rel.id}`);
+        }}
+      >{neg.ladingRelatie}</span></>
+    ) : neg.aanbodSubtext,
+    aanbodBadge: neg.bron === 'markt' ? 'Marktlading' : undefined,
     company: neg.company,
+    bron: neg.bron,
     freightPrice: neg.freightPrice || '—',
     freightPriceDiff: neg.freightPriceDiff || '',
-    freightPriceDiffColor: neg.freightPriceDiff?.startsWith('+') ? '#F79009' : undefined,
+    freightPriceDiffColor: neg.freightPriceDiff?.startsWith('+') ? '#F79009' : neg.freightPriceDiff?.startsWith('-') ? '#17B26A' : undefined,
     freightPriceDiffTooltip: neg.freightPriceDiff && neg.freightPriceDiff !== '' && neg.freightPriceDiff !== '0,0%' && neg.freightPriceDiff !== '+0,0%' ? 'Vergeleken met verkoop' : undefined,
     tonnage: neg.tonnage,
     deadline: neg.deadline,
     deadlineExpired: neg.deadlineExpired,
-    status: neg.status,
-    statusVariant: negotiationStatusVariantMap[neg.status] || 'grey',
-    statusIcon: negotiationStatusIconMap[neg.status] || null,
-    statusType: negotiationStatusTypeMap[neg.status] || 'default',
+    status: toInboxStatus(neg.status),
+    statusVariant: negotiationStatusVariantMap[toInboxStatus(neg.status)] || 'grey',
+    statusIcon: negotiationStatusIconMap[toInboxStatus(neg.status)] || null,
+    statusType: negotiationStatusTypeMap[toInboxStatus(neg.status)] || 'default',
     contactName: neg.contact.name,
     contactDate: neg.contact.date,
     contactAvatar: avatars[idx % avatars.length],
   }));
 
-  const activeNegStatuses = ["Via werklijst", "Bod verstuurd", "Bod ontvangen"];
+  const activeNegStatuses = ["In onderhandeling"];
 
   const filteredMatchRows = matchFilter === "Alles"
     ? matchRows.map((row) => row.matchStatus === 'aangeboden'
@@ -183,9 +207,9 @@ export default function InboxVesselDetail() {
     ? negTableData
     : negFilter === "Actief"
       ? negTableData.filter((row) => activeNegStatuses.includes(row.status as string))
-      : negFilter === "Goedgekeurd"
-        ? negTableData.filter((row) => row.status === "Goedgekeurd")
-        : negTableData.filter((row) => row.status === "Afgewezen" || row.status === "Afgekeurd");
+      : negFilter === "Geaccepteerd"
+        ? negTableData.filter((row) => row.status === "Geaccepteerd")
+        : negTableData.filter((row) => row.status === "Geweigerd");
 
   return (
     <>
@@ -262,12 +286,27 @@ export default function InboxVesselDetail() {
                           hoveredRowId={hoveredRow}
                           onRowHover={setHoveredRow}
                           onRowAction={(row) => {
-                            const relatie = mockRelaties.find(r => r.naam === row.relatie);
-                            setConversationDialog({
-                              relatieId: relatie?.id || "rel-001",
-                              relatieName: (row.relatie as string) || "Onbekend",
-                              matchName: row.lading as string,
-                            });
+                            if (row.isEigen) {
+                              // Eigen lading: open conversation with the vaartuig owner
+                              setConversationDialog({
+                                relatieId: summary?.relatieId || "",
+                                relatieName: summary?.relatieName || "Onbekend",
+                                matchName: summary?.title,
+                                itemType: "relatie-vaartuig",
+                                rightName: row.lading as string,
+                              });
+                            } else {
+                              // Markt lading: open broker dialog (two relaties)
+                              const relatieB = mockRelaties.find(r => r.naam === row.relatie);
+                              setBrokerDialog({
+                                relatieA: { id: summary?.relatieId || "", name: summary?.relatieName || "Onbekend" },
+                                vesselName: summary?.title || "—",
+                                vesselSubtitle: summary?.subtitle || "",
+                                relatieB: { id: relatieB?.id || "", name: (row.relatie as string) || "Onbekend" },
+                                cargoName: row.lading as string,
+                                cargoSubtitle: row.ladingSubtext as string || "",
+                              });
+                            }
                           }}
                         />
                       </>
@@ -278,11 +317,12 @@ export default function InboxVesselDetail() {
                         <SectionHeader
                           title="Onderhandelingen"
                           filterLabel={negFilter}
-                          filterOptions={["Alles", "Actief", "Goedgekeurd", "Afgewezen"]}
+                          filterOptions={["Alles", "Actief", "Geaccepteerd", "Geweigerd"]}
                           filterValue={negFilter}
                           onFilterChange={setNegFilter}
                           onAdd={() => setConversationDialog({ relatieId: "", relatieName: "" })}
                           addTooltip="Onderhandeling starten"
+                          addPrimary
                         />
                         <Pagination
                           currentPage={negPage}
@@ -297,7 +337,7 @@ export default function InboxVesselDetail() {
                           hoveredRowId={hoveredRow}
                           onRowHover={setHoveredRow}
                           activeRowId={selectedNegotiation?.id ?? null}
-                          onRowClick={(row) => setSelectedNegotiation({ id: row.id, status: row.status as string, bron: "markt" })}
+                          onRowClick={(row) => setSelectedNegotiation({ id: row.id, status: row.status as string, bron: "markt", relatieName: summary?.relatieName })}
                         />
                       </>
                     )}
@@ -334,6 +374,7 @@ export default function InboxVesselDetail() {
           status={selectedNegotiation.status as any}
           bron={selectedNegotiation.bron as any}
           soort="vaartuig"
+          relatieName={selectedNegotiation.relatieName}
           onClose={() => setSelectedNegotiation(null)}
         />
       )}
@@ -344,10 +385,22 @@ export default function InboxVesselDetail() {
           relatieId={conversationDialog.relatieId}
           relatieName={conversationDialog.relatieName}
           preSelectedMatchName={conversationDialog.matchName}
-          preSelectedOriginId={conversationDialog.matchName ? id : undefined}
-          preSelectedItemId={conversationDialog.matchName ? undefined : id}
-          preSelectedItemType={conversationDialog.matchName ? undefined : "vaartuig"}
+          preSelectedItemType={conversationDialog.itemType}
+          preSelectedRightName={conversationDialog.rightName}
           onClose={() => setConversationDialog(null)}
+        />
+      )}
+
+      {/* Broker dialog (markt-markt matches) */}
+      {brokerDialog && (
+        <BrokerDialog
+          relatieA={brokerDialog.relatieA}
+          vesselName={brokerDialog.vesselName}
+          vesselSubtitle={brokerDialog.vesselSubtitle}
+          relatieB={brokerDialog.relatieB}
+          cargoName={brokerDialog.cargoName}
+          cargoSubtitle={brokerDialog.cargoSubtitle}
+          onClose={() => setBrokerDialog(null)}
         />
       )}
     </>

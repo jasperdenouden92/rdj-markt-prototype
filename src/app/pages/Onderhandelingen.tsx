@@ -468,7 +468,7 @@ export default function Onderhandelingen() {
   const [currentPage, setCurrentPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(50);
   const [hoveredRow, setHoveredRow] = useState<string | null>(null);
-  const [selectedNegotiation, setSelectedNegotiation] = useState<{ id: string; status: string; bron: string } | null>(
+  const [selectedNegotiation, setSelectedNegotiation] = useState<{ id: string; status: string; bron: string; relatieName?: string } | null>(
     null
   );
 
@@ -901,7 +901,7 @@ export default function Onderhandelingen() {
               activeRowId={selectedNegotiation?.id ?? null}
               onRowHover={setHoveredRow}
               onRowClick={(row) => {
-                setSelectedNegotiation({ id: row.id, status: row.status as string, bron: row.bron as string });
+                setSelectedNegotiation({ id: row.id, status: row.status as string, bron: row.bron as string, relatieName: row.company as string });
               }}
             />
           )}
@@ -914,7 +914,7 @@ export default function Onderhandelingen() {
               activeRowId={selectedNegotiation?.id ?? null}
               onRowHover={setHoveredRow}
               onRowClick={(row) => {
-                setSelectedNegotiation({ id: row.id, status: row.status as string, bron: row.bron as string });
+                setSelectedNegotiation({ id: row.id, status: row.status as string, bron: row.bron as string, relatieName: row.company as string });
               }}
             />
           )}
@@ -936,6 +936,7 @@ export default function Onderhandelingen() {
           status={selectedNegotiation.status as "Via werklijst" | "Bod verstuurd" | "Bod ontvangen" | "Goedgekeurd" | "Afgewezen"}
           bron={selectedNegotiation.bron as "eigen" | "markt"}
           soort={activeTab === "vaartuigen" ? "vaartuig" : "lading"}
+          relatieName={selectedNegotiation.relatieName}
           onClose={() => setSelectedNegotiation(null)}
         />
       )}

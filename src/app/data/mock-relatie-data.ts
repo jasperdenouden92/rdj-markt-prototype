@@ -299,7 +299,7 @@ export interface RelatieLading {
   product: string;
   laaddatum?: string;
   losdatum?: string;
-  status: "inbox" | "pijplijn" | "intake" | "werklijst" | "markt" | "gesloten";
+  status: "inbox" | "intake" | "werklijst" | "markt" | "gesloten";
   prioriteit?: number;
   matches: number;
   onderhandelingen: number;
@@ -338,12 +338,12 @@ export const mockRelatieLadingen: RelatieLading[] = [
   { id: "rl-011", relatieId: "rel-008", contractId: "ctr-009", ladingSoortId: "ls-006", titel: "Kolen Maastricht–Luik", laadhaven: "Maastricht", loshaven: "Luik", tonnage: "2.200 ton", product: "Kolen", laaddatum: "2026-03-12", losdatum: "2026-03-13", status: "gesloten", matches: 0, onderhandelingen: 0 },
   { id: "rl-012", relatieId: "rel-010", contractId: "ctr-006", ladingSoortId: "ls-007", titel: "Sojabonen inspectie Botlek", laadhaven: "Rotterdam Botlek", loshaven: "Rotterdam Botlek", tonnage: "5.000 ton", product: "Sojabonen", laaddatum: "2026-03-21", status: "intake", matches: 0, onderhandelingen: 0 },
   { id: "rl-013", relatieId: "rel-012", ladingSoortId: "ls-008", titel: "Containers Rotterdam–Duisburg", exNaam: "m/v Merganser", laadhaven: "Rotterdam", loshaven: "Duisburg", tonnage: "2.000 ton", product: "Containers", laaddatum: "2026-03-23", losdatum: "2026-03-25", status: "markt", matches: 4, onderhandelingen: 2 },
-  // Ladinguitvraag (bekende ladingen per relatie): inbox, pijplijn
-  { id: "rl-101", relatieId: "rel-001", ladingSoortId: "ls-003", titel: "Houtpellets retour", laadhaven: "Hamburg Veddelkanal", loshaven: "Salzgitter Stichkanal", tonnage: "1.500 ton", product: "Houtpellets", laaddatum: "2026-03-20", losdatum: "2026-03-22", status: "pijplijn", prioriteit: 4, matches: 0, onderhandelingen: 0 },
+  // Ladinguitvraag (bekende ladingen per relatie): inbox
+  { id: "rl-101", relatieId: "rel-001", ladingSoortId: "ls-003", titel: "Houtpellets retour", laadhaven: "Hamburg Veddelkanal", loshaven: "Salzgitter Stichkanal", tonnage: "1.500 ton", product: "Houtpellets", laaddatum: "2026-03-20", losdatum: "2026-03-22", status: "inbox", prioriteit: 4, matches: 0, onderhandelingen: 0 },
   { id: "rl-102", relatieId: "rel-001", ladingSoortId: "ls-001", titel: "Graan Krefeld–Rotterdam", laadhaven: "Krefeld", loshaven: "Rotterdam", tonnage: "2.000 ton", product: "Graan", status: "inbox", prioriteit: 2, matches: 0, onderhandelingen: 0 },
-  { id: "rl-103", relatieId: "rel-002", ladingSoortId: "ls-004", titel: "Staal Antwerpen–Dordrecht", laadhaven: "Antwerpen", loshaven: "Dordrecht", tonnage: "3.000 ton", product: "Staal", laaddatum: "2026-03-18", status: "pijplijn", prioriteit: 5, matches: 0, onderhandelingen: 0 },
+  { id: "rl-103", relatieId: "rel-002", ladingSoortId: "ls-004", titel: "Staal Antwerpen–Dordrecht", laadhaven: "Antwerpen", loshaven: "Dordrecht", tonnage: "3.000 ton", product: "Staal", laaddatum: "2026-03-18", status: "inbox", prioriteit: 5, matches: 0, onderhandelingen: 0 },
   { id: "rl-104", relatieId: "rel-002", ladingSoortId: "ls-002", titel: "Zand Gent–Rotterdam", laadhaven: "Gent", loshaven: "Rotterdam", tonnage: "2.500 ton", product: "Zand", status: "inbox", prioriteit: 0, matches: 0, onderhandelingen: 0 },
-  { id: "rl-105", relatieId: "rel-003", ladingSoortId: "ls-007", titel: "Sojabonen Basel–Botlek", laadhaven: "Basel", loshaven: "Rotterdam Botlek", tonnage: "4.000 ton", product: "Sojabonen", laaddatum: "2026-03-24", losdatum: "2026-03-28", status: "pijplijn", prioriteit: 3, matches: 0, onderhandelingen: 0 },
+  { id: "rl-105", relatieId: "rel-003", ladingSoortId: "ls-007", titel: "Sojabonen Basel–Botlek", laadhaven: "Basel", loshaven: "Rotterdam Botlek", tonnage: "4.000 ton", product: "Sojabonen", laaddatum: "2026-03-24", losdatum: "2026-03-28", status: "inbox", prioriteit: 3, matches: 0, onderhandelingen: 0 },
 ];
 
 /** Mock vaartuigen per relatie */
@@ -355,7 +355,7 @@ export interface RelatieVaartuig {
   capaciteit: string;
   locatie: string;
   beschikbaarVanaf: string;
-  status: "inbox" | "pijplijn" | "intake" | "werklijst" | "markt" | "gesloten";
+  status: "inbox" | "intake" | "werklijst" | "markt" | "gesloten";
   prioriteit?: number;
   matches: number;
   onderhandelingen: number;
@@ -363,7 +363,6 @@ export interface RelatieVaartuig {
 
 const VAARTUIG_STATUS_MAP: Record<string, string> = {
   inbox: "Inbox",
-  pijplijn: "Pijplijn",
   intake: "Intake",
   werklijst: "Werklijst",
   markt: "Markt",

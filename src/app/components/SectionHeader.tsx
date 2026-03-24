@@ -17,9 +17,11 @@ export interface SectionHeaderProps {
   filterValue?: string;
   onFilterChange?: (value: string) => void;
 
-  /** Add button — secondary icon-only with plus */
+  /** Add button — icon-only with plus */
   onAdd?: () => void;
   addTooltip?: string;
+  /** Use primary (brand) style for the add button */
+  addPrimary?: boolean;
 
   /** Completely custom right-side content (overrides filter + add) */
   actions?: ReactNode;
@@ -33,6 +35,7 @@ export default function SectionHeader({
   onFilterChange,
   onAdd,
   addTooltip,
+  addPrimary,
   actions,
 }: SectionHeaderProps) {
   const [dropdownOpen, setDropdownOpen] = useState(false);
@@ -116,12 +119,12 @@ export default function SectionHeader({
               </div>
             )}
 
-            {/* Add button — secondary icon-only */}
+            {/* Add button */}
             {onAdd && (
               <button
                 onClick={onAdd}
                 title={addTooltip}
-                className="bg-white relative rounded-[6px] shrink-0 hover:bg-rdj-bg-primary-hover transition-colors cursor-pointer"
+                className={`relative rounded-[6px] shrink-0 transition-colors cursor-pointer ${addPrimary ? "bg-rdj-bg-brand-solid hover:bg-rdj-bg-brand-solid-hover text-white" : "bg-white hover:bg-rdj-bg-primary-hover"}`}
               >
                 <div className="content-stretch flex items-center justify-center overflow-clip p-[8px] relative rounded-[inherit]">
                   <div className="overflow-clip relative shrink-0 size-[20px]">
@@ -132,7 +135,7 @@ export default function SectionHeader({
                     >
                       <path
                         d="M10 4.16667V15.8333M4.16667 10H15.8333"
-                        stroke="var(--color-rdj-text-primary)"
+                        stroke={addPrimary ? "white" : "var(--color-rdj-text-primary)"}
                         strokeLinecap="round"
                         strokeLinejoin="round"
                         strokeWidth="1.66667"

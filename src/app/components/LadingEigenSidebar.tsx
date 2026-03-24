@@ -148,6 +148,8 @@ export default function LadingEigenSidebar({ id, onEdit }: LadingEigenSidebarPro
           <DetailsSidebarSection>
             <DetailRow label="Partij" type="linked" value={data.partij} />
             <DetailRow label="Subpartij" type="linked" value={data.subpartij} />
+            <DetailRow label="Opdrachtgever" type="linked" value={data.opdrachtgever} onClick={() => navigate(`/crm/relatie/${data.relatieId}`)} />
+            <DetailRow label="Contactpersoon" value={data.opdrachtgeverContact} />
             <DetailRow label="Tonnage" value={data.tonnage} editable onEdit={() => onEdit?.("tonnage")} />
             <DetailRow label="Ex." value={data.ex} subtext={data.exType} />
             <DetailRow label="Lading" value={data.lading} editable onEdit={() => onEdit?.("lading")} />
@@ -159,8 +161,6 @@ export default function LadingEigenSidebar({ id, onEdit }: LadingEigenSidebarPro
             <DetailRow label="Laaddatum" value={data.laaddatum} editable onEdit={() => onEdit?.("laaddatum")} />
             <DetailRow label="Loshaven" value={data.loshaven} editable onEdit={() => onEdit?.("loshaven")} />
             <DetailRow label="Losdatum" value={data.losdatum} editable onEdit={() => onEdit?.("losdatum")} />
-            <DetailRow label="Relatie" type="linked" value={data.relatie} onClick={() => navigate(`/crm/relatie/${data.relatieId}`)} />
-            <DetailRow label="Contactpersoon" value={data.contactpersoon} />
           </DetailsSidebarSection>
 
           {/* Divider */}

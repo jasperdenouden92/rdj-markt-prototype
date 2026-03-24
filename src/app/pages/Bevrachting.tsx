@@ -552,7 +552,7 @@ export default function Bevrachting() {
             }
           }}
           onArchive={() => setSelectedItems([])}
-          onMoveToPipeline={() => setSelectedItems([])}
+          onNegotiate={() => setSelectedItems([])}
         />
       )}
 
