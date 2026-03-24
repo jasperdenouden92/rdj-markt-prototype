@@ -1,8 +1,9 @@
 import { useState } from "react";
-import { X, Check, ArrowRight, Send, MailOpen } from "lucide-react";
+import { X, Check, ArrowRight, Send, MailOpen, PenLine, ListTodo } from "lucide-react";
 import ModelessPanel from "./ModelessPanel";
 import { DetailsSidebarSection } from "./DetailsSidebar";
 import DetailRow from "./DetailRow";
+import FeaturedIcon from "./FeaturedIcon";
 import Button from "./Button";
 import Badge, { type BadgeVariant, type BadgeType } from "./Badge";
 
@@ -77,44 +78,67 @@ const mockLading = {
   deadline: "17 jan 2026",
 };
 
-/* ── Mock activiteit data (alleen wijzigingen) ── */
-const mockActiviteit = [
+/* ── Mock activiteit data (onderhandelingsstappen) ── */
+interface ActivityChange {
+  label: string;
+  value: string;
+  oldValue?: string;
+}
+
+interface ActivityEvent {
+  id: string;
+  user: string;
+  initials: string;
+  title: string;
+  timestamp: string;
+  message?: string;
+  changes?: ActivityChange[];
+}
+
+const mockActiviteit: ActivityEvent[] = [
   {
     id: "1",
     user: "Khoa Nguyen",
     initials: "KN",
-    action: 'heeft de vrachtprijs gewijzigd naar "€8,50 per ton"',
+    title: "Bod bijgewerkt",
     timestamp: "Vandaag, 14:22",
+    message: "Lading aangepast.",
+    changes: [
+      { label: "Lading", value: "2.000 ton Houtpellets", oldValue: "Houtpellets 3.000 ton" },
+    ],
   },
   {
     id: "2",
     user: "Erick Nieuwkoop",
     initials: "EN",
-    action: "heeft de laaddatum gewijzigd naar \"15 jan 2026, 08:00\"",
+    title: "Bod ontvangen",
     timestamp: "Vandaag, 09:15",
+    message: "Lading toegevoegd.",
+    changes: [
+      { label: "Lading", value: "2.000 ton Houtpellets" },
+    ],
   },
   {
     id: "3",
     user: "Khoa Nguyen",
     initials: "KN",
-    action: 'heeft de loshaven gewijzigd naar "Antwerpen"',
+    title: "Bod verstuurd",
     timestamp: "Gisteren, 16:32",
-    detail: "Was: Rotterdam Europoort",
+    message: "Voor het eerst gesproken.",
+    changes: [
+      { label: "Vrachtprijs", value: "€3,50 per ton" },
+      { label: "Laagwater toeslag", value: "Basis IJsselkop · m Twentekanaal\n2,50m / 10% per dm" },
+      { label: "Laden", value: "Sluipner\nJan 4, 2025 10:00" },
+      { label: "Lossen", value: "IJmuiden\nMelden bij aankomst" },
+    ],
   },
   {
     id: "4",
-    user: "Michiel den Hond",
-    initials: "MH",
-    action: "heeft het bod bijgewerkt",
-    timestamp: "Ma 20 Jan, 11:04",
-    detail: "Tonnage aangepast van 1.000 t naar 1.200 t",
-  },
-  {
-    id: "5",
     user: "Erick Nieuwkoop",
     initials: "EN",
-    action: "heeft de onderhandeling gestart",
-    timestamp: "Vr 17 Jan, 08:47",
+    title: "Via werklijst",
+    timestamp: "Ma 20 Jan, 11:04",
+    message: "Ik bijgevoegd beschikbare vaartuigen en lading van dinsdag 27 januari. Bij interesse, neem contact op met bevrachting@rederijdejong.nl of bel +31 (0)10-2311510.",
   },
 ];
 
@@ -387,6 +411,14 @@ function LadingTab() {
   );
 }
 
+/* ── Activity title → icon mapping ── */
+const activityIconMap: Record<string, React.ReactNode> = {
+  "Bod bijgewerkt": <PenLine size={16} strokeWidth={2} />,
+  "Bod ontvangen": <MailOpen size={16} strokeWidth={2} />,
+  "Bod verstuurd": <Send size={16} strokeWidth={2} />,
+  "Via werklijst": <ListTodo size={16} strokeWidth={2} />,
+};
+
 /* ── Activiteit Tab ── */
 function ActiviteitTab() {
   return (
@@ -395,32 +427,66 @@ function ActiviteitTab() {
         <div key={event.id} className="flex gap-[12px] relative">
           {/* Timeline line */}
           {index < mockActiviteit.length - 1 && (
-            <div className="absolute left-[15px] top-[36px] bottom-0 w-px bg-rdj-border-secondary" />
+            <div className="absolute left-[16px] top-[36px] bottom-0 w-px bg-rdj-border-secondary" />
           )}
 
-          {/* Avatar */}
-          <div className="relative rounded-full shrink-0 size-[32px] bg-rdj-bg-secondary flex items-center justify-center z-[1]">
-            <p className="font-sans font-bold text-rdj-text-primary text-[12px]">
-              {event.initials}
-            </p>
+          {/* Featured icon on timeline */}
+          <div className="shrink-0 z-[1]">
+            <FeaturedIcon
+              icon={activityIconMap[event.title] ?? <ListTodo size={16} strokeWidth={2} />}
+              variant="brand"
+              size={32}
+            />
           </div>
 
           {/* Content */}
-          <div className="flex-1 pb-[20px]">
-            <p className="font-sans font-normal leading-[20px] text-rdj-text-secondary text-[14px]">
-              <span className="font-sans font-bold text-rdj-text-primary">
-                {event.user}
-              </span>{" "}
-              {event.action}
-            </p>
-            <p className="font-sans font-normal leading-[20px] text-rdj-text-tertiary text-[12px] mt-[2px]">
-              {event.timestamp}
-            </p>
-            {event.detail && (
-              <div className="mt-[8px] bg-rdj-bg-secondary rounded-[8px] px-[12px] py-[8px]">
-                <p className="font-sans font-normal leading-[20px] text-rdj-text-secondary text-[14px]">
-                  {event.detail}
+          <div className="flex-1 pb-[24px] min-w-0">
+            {/* Header: title + timestamp + avatar */}
+            <div className="flex items-center gap-[6px] min-h-[32px]">
+              <p className="font-sans font-bold leading-[20px] text-rdj-text-primary text-[14px]">
+                {event.title}
+              </p>
+              <p className="font-sans font-normal leading-[20px] text-rdj-text-tertiary text-[12px] flex-1">
+                {event.timestamp}
+              </p>
+              {/* Avatar */}
+              <div className="relative rounded-full shrink-0 size-[28px] bg-rdj-bg-secondary flex items-center justify-center">
+                <p className="font-sans font-bold text-rdj-text-primary text-[10px]">
+                  {event.initials}
                 </p>
+              </div>
+            </div>
+
+            {/* Card with message + changes */}
+            {(event.message || (event.changes && event.changes.length > 0)) && (
+              <div className="mt-[8px] border border-rdj-border-secondary rounded-[8px] overflow-hidden shadow-[0px_1px_2px_0px_rgba(16,24,40,0.05)]">
+                {event.message && (
+                  <div className="px-[16px] py-[12px]">
+                    <p className="font-sans font-normal leading-[20px] text-rdj-text-secondary text-[14px]">
+                      &ldquo;{event.message}&rdquo;
+                    </p>
+                  </div>
+                )}
+
+                {event.changes && event.changes.length > 0 && (
+                  <div className={`flex flex-col gap-[8px] px-[16px] py-[12px] ${event.message ? "border-t border-rdj-border-secondary" : ""}`}>
+                    {event.changes.map((change, i) => (
+                      <div key={i} className="flex gap-[12px]">
+                        <p className="font-sans font-normal leading-[18px] text-rdj-text-tertiary text-[12px] w-[120px] shrink-0">
+                          {change.label}
+                        </p>
+                        <div className="flex-1">
+                          <p className="font-sans font-normal leading-[18px] text-rdj-text-primary text-[12px] whitespace-pre-line">
+                            {change.oldValue && (
+                              <span className="line-through text-rdj-text-tertiary">{change.oldValue} </span>
+                            )}
+                            <span className="font-bold">{change.value}</span>
+                          </p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
               </div>
             )}
           </div>

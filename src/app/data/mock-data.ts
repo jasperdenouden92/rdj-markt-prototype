@@ -17,6 +17,10 @@ export interface Cargo {
   bids?: number;
   exType?: string;
   priceInfo?: string;
+  splitIndex?: number;
+  splitOriginId?: string;
+  splitColorIndex?: number;
+  splitTotalWeight?: string;
   conditions?: {
     eigen?: {
       price: string;
@@ -146,6 +150,9 @@ export const mockCargos: Cargo[] = [
     company: 'Provaart Logistics BV',
     code: 'PRO029-01 ra',
     status: 'werklijst',
+    splitIndex: 2,
+    splitOriginId: 'CRG002',
+    splitColorIndex: 0,
     cargo: '1.000 (van 2.000 ton) Houtpellets (DSIT)',
     weight: '1.000 ton Houtpellets (DSIT)',
     from: 'Salzgitter Stichkanal',

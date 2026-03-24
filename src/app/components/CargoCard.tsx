@@ -4,6 +4,7 @@ import { useNavigate } from "react-router";
 import imgAvatar from "../../assets/a2737d3b5b234fc04041650cb9f114889c6859da.png";
 import { Cargo } from "../data/mock-data";
 import { mockRelaties } from "../data/mock-relatie-data";
+import { splitColors } from "../utils/splitColors";
 
 interface CargoCardProps {
   cargo: Cargo;
@@ -39,6 +40,17 @@ export default function CargoCard({ cargo }: CargoCardProps) {
               <p className="font-sans font-bold leading-[20px] text-rdj-text-primary text-[14px]">
                 {cargo.title}
               </p>
+              {cargo.splitIndex != null && cargo.splitColorIndex != null && (() => {
+                const color = splitColors[cargo.splitColorIndex % splitColors.length];
+                return (
+                  <span
+                    className="inline-flex items-center justify-center px-[5px] py-[1px] rounded-[4px] font-sans font-bold text-[10px] leading-[14px] whitespace-nowrap"
+                    style={{ backgroundColor: color.bg, color: color.text, border: `1px solid ${color.border}` }}
+                  >
+                    #{cargo.splitIndex}
+                  </span>
+                );
+              })()}
             </div>
             <p className="font-sans font-normal leading-[18px] text-rdj-text-secondary text-[12px] mt-[2px]">
               {cargo.company && (
@@ -105,8 +117,8 @@ export default function CargoCard({ cargo }: CargoCardProps) {
           <p className="font-sans font-normal leading-[18px] text-[#344054] text-[12px] flex-1 min-w-0 truncate">
             {cargo.conditions?.markt ? (
               cargo.conditions.markt.tonnageMax
-                ? `${cargo.conditions.markt.tonnageMin}–${cargo.conditions.markt.tonnageMax} ton (van ${cargo.weight})`
-                : `${cargo.conditions.markt.tonnageMin} ton (van ${cargo.weight})`
+                ? `${cargo.conditions.markt.tonnageMin}–${cargo.conditions.markt.tonnageMax} ton (van ${cargo.splitTotalWeight || cargo.weight})`
+                : `${cargo.conditions.markt.tonnageMin} ton (van ${cargo.splitTotalWeight || cargo.weight})`
             ) : cargo.cargo}
           </p>
         </div>

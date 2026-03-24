@@ -66,6 +66,8 @@ export interface LeadingTextColumn extends BaseColumn {
   badgeKey?: string;
   /** Row key for the badge variant (BadgeVariant). Defaults to "grey" */
   badgeVariantKey?: string;
+  /** Row key for custom badge inline style (e.g. { backgroundColor, color, borderColor }) */
+  badgeStyleKey?: string;
   /** Row key for an icon type indicator ("vaartuig" | "warehouse") */
   iconKey?: string;
   /** Label for the hover action button (default: "Openen") */
@@ -226,6 +228,7 @@ function CellLeadingText({
   const actionCompleted = col.actionCompletedKey ? row[col.actionCompletedKey] as string | undefined : undefined;
 
   const badgeLabel = col.badgeKey ? row[col.badgeKey] : undefined;
+  const badgeStyle = col.badgeStyleKey ? row[col.badgeStyleKey] as React.CSSProperties | undefined : undefined;
   const iconType = col.iconKey ? row[col.iconKey] : undefined;
 
   return (
@@ -255,7 +258,10 @@ function CellLeadingText({
             {text}
           </p>
           {badgeLabel && (
-            <span className="shrink-0 inline-flex items-center border border-rdj-border-secondary rounded-[4px] px-[4px] py-[0px] font-sans font-bold leading-[16px] text-[11px] text-rdj-text-primary whitespace-nowrap">
+            <span
+              className={`shrink-0 inline-flex items-center rounded-[4px] px-[4px] py-[0px] font-sans font-bold leading-[16px] text-[11px] whitespace-nowrap ${badgeStyle ? '' : 'border border-rdj-border-secondary text-rdj-text-primary'}`}
+              style={badgeStyle ? { backgroundColor: badgeStyle.backgroundColor, color: badgeStyle.color, border: `1px solid ${badgeStyle.borderColor}` } : undefined}
+            >
               {badgeLabel}
             </span>
           )}
