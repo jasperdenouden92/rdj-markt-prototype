@@ -95,7 +95,7 @@ export default function PijplijnDetail() {
   const [matchFilter, setMatchFilter] = useState("Alles");
   const [activityFilter, setActivityFilter] = useState("Alle activiteit");
   const [hoveredRow, setHoveredRow] = useState<string | null>(null);
-  const [conversationDialog, setConversationDialog] = useState<{ relatieId: string; relatieName: string } | null>(null);
+  const [conversationDialog, setConversationDialog] = useState<{ relatieId: string; relatieName: string; matchName?: string } | null>(null);
 
   /* Pagination */
   const [negPage, setNegPage] = useState(1);
@@ -469,6 +469,7 @@ export default function PijplijnDetail() {
                     setConversationDialog({
                       relatieId: relatie?.id || "rel-001",
                       relatieName: (row.company as string) || "Onbekend",
+                      matchName: (isVaartuig ? row.lading : row.name) as string,
                     });
                   }}
                 />
@@ -509,8 +510,10 @@ export default function PijplijnDetail() {
         <ConversationDialog
           relatieId={conversationDialog.relatieId}
           relatieName={conversationDialog.relatieName}
-          preSelectedItemId={id}
-          preSelectedItemType={isVaartuig ? "vaartuig" : "lading"}
+          preSelectedMatchName={conversationDialog.matchName}
+          preSelectedOriginId={conversationDialog.matchName ? id : undefined}
+          preSelectedItemId={conversationDialog.matchName ? undefined : id}
+          preSelectedItemType={conversationDialog.matchName ? undefined : (isVaartuig ? "vaartuig" : "lading")}
           onClose={() => setConversationDialog(null)}
         />
       )}

@@ -171,11 +171,12 @@ interface OnderhandelingSidepanelProps {
   negotiationId: string;
   status: NegotiationStatus;
   bron: NegotiationBron;
+  initialTab?: Tab;
   onClose: () => void;
 }
 
-export default function OnderhandelingSidepanel({ negotiationId, status, bron, onClose }: OnderhandelingSidepanelProps) {
-  const [activeTab, setActiveTab] = useState<Tab>("condities");
+export default function OnderhandelingSidepanel({ negotiationId, status, bron, initialTab, onClose }: OnderhandelingSidepanelProps) {
+  const [activeTab, setActiveTab] = useState<Tab>(initialTab ?? "condities");
   const [overig, setOverig] = useState("");
   const isActive = activeStatuses.includes(status);
 

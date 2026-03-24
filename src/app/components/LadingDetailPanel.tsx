@@ -60,7 +60,7 @@ export default function LadingDetailPanel({ id, onClose }: LadingDetailPanelProp
   const [activeTab, setActiveTab] = useState<'matches' | 'onderhandelingen' | 'activiteit'>('matches');
   const [hoveredRow, setHoveredRow] = useState<string | null>(null);
   const [selectedNegotiationId, setSelectedNegotiationId] = useState<string | null>(null);
-  const [conversationDialog, setConversationDialog] = useState<{ relatieId: string; relatieName: string } | null>(null);
+  const [conversationDialog, setConversationDialog] = useState<{ relatieId: string; relatieName: string; matchName?: string } | null>(null);
 
   const [matchPage, setMatchPage] = useState(1);
   const [matchRowsPerPage, setMatchRowsPerPage] = useState(50);
@@ -223,11 +223,12 @@ export default function LadingDetailPanel({ id, onClose }: LadingDetailPanelProp
                 data={matchTableData}
                 hoveredRowId={hoveredRow}
                 onRowHover={setHoveredRow}
-                onRowClick={(row) => {
+                onRowAction={(row) => {
                   const relatie = mockRelaties.find(r => r.naam === row.company);
                   setConversationDialog({
                     relatieId: relatie?.id || "rel-001",
                     relatieName: (row.company as string) || "Onbekend",
+                    matchName: row.name as string,
                   });
                 }}
               />
@@ -274,8 +275,10 @@ export default function LadingDetailPanel({ id, onClose }: LadingDetailPanelProp
         <ConversationDialog
           relatieId={conversationDialog.relatieId}
           relatieName={conversationDialog.relatieName}
-          preSelectedItemId={id}
-          preSelectedItemType="lading"
+          preSelectedMatchName={conversationDialog.matchName}
+          preSelectedOriginId={conversationDialog.matchName ? id : undefined}
+          preSelectedItemId={conversationDialog.matchName ? undefined : id}
+          preSelectedItemType={conversationDialog.matchName ? undefined : "lading"}
           onClose={() => setConversationDialog(null)}
         />
       )}
