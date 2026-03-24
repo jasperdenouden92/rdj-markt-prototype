@@ -197,23 +197,12 @@ export default function LadingMarktSidebar({ id, onEdit }: LadingMarktSidebarPro
       {activeTab === "condities" && (
         <>
           {(["prijs", "laadtijd", "liggeldLaden", "lostijd", "liggeldLossen"] as ConditiesField[]).map(field => {
-            const diff = calcPctDiff(getVal("zoekcriteria", field), getVal("inkoop", field));
             return (
               <DetailsSidebarSection key={field} title={fieldLabels[field]}>
-                <DetailRow
-                  label="Inkoop"
-                  value={fmt(field, getVal("inkoop", field))}
-                  editValue={rawStr(getVal("inkoop", field))}
-                  editable
-                  onSave={(v) => saveField("inkoop", field, v)}
-                />
                 <DetailRow
                   label="Zoekcriteria"
                   value={fmt(field, getVal("zoekcriteria", field))}
                   editValue={rawStr(getVal("zoekcriteria", field))}
-                  subtext={diff?.text}
-                  subtextColor={diff?.color}
-                  subtextTooltip={diff ? "Vergeleken met inkoop" : undefined}
                   editable
                   onSave={(v) => saveField("zoekcriteria", field, v)}
                 />

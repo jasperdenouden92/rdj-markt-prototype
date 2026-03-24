@@ -360,6 +360,7 @@ export default function LadingDetail() {
           negotiationId={selectedNegotiation.id}
           status={selectedNegotiation.status as any}
           bron={selectedNegotiation.bron as any}
+          soort="lading"
           onClose={() => setSelectedNegotiation(null)}
         />
       )}

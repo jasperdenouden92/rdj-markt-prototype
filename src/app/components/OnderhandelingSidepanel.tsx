@@ -1,17 +1,20 @@
 import { useState } from "react";
-import { X, Check, ArrowRight, Send, MailOpen, PenLine, ListTodo } from "lucide-react";
+import { X, Check, ArrowRight, Send, MailOpen, PenLine, ListTodo, Calendar, Pencil, MessageSquare } from "lucide-react";
 import ModelessPanel from "./ModelessPanel";
 import { DetailsSidebarSection } from "./DetailsSidebar";
 import DetailRow from "./DetailRow";
 import FeaturedIcon from "./FeaturedIcon";
 import Button from "./Button";
 import Badge, { type BadgeVariant, type BadgeType } from "./Badge";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "./ui/dialog";
+import { Input } from "./ui/input";
+import { Label } from "./ui/label";
 
 /**
- * OnderhandelingSidepanel — modeless panel for a negotiation with 4 tabs:
- * Condities, Vaartuig, Lading, Activiteit.
+ * OnderhandelingSidepanel — modeless panel for a negotiation.
  *
- * Condities shows all three variants: Inkoop, Verkoop, Zoekcriteria.
+ * Main section: header with deadline/eigenaar, condities content, approve/reject footer.
+ * Side section (sidebar): tabs for Activiteit, Vaartuig, Lading.
  */
 
 type ConditiesField = "prijs" | "laadtijd" | "liggeldLaden" | "lostijd" | "liggeldLossen";
@@ -31,6 +34,13 @@ const mockCondities: Record<ConditiesField, { inkoop: number | null; verkoop: nu
   liggeldLaden: { inkoop: 12.50, verkoop: 10.00, zoekcriteria: 11.00 },
   lostijd: { inkoop: 16, verkoop: 14, zoekcriteria: 16 },
   liggeldLossen: { inkoop: 15.00, verkoop: 12.00, zoekcriteria: 13.50 },
+};
+
+/* ── Mock negotiation meta ── */
+const mockNegotiationMeta = {
+  deadline: "17 jan 2026",
+  eigenaar: "Khoa Nguyen",
+  eigenaarInitials: "KN",
 };
 
 /* ── Mock vaartuig data ── */
@@ -171,88 +181,108 @@ function calcPctDiff(
   const sign = rounded > 0 ? "+" : "";
   return {
     text: `${sign}${rounded}%`,
-    color: rounded > 0 ? "#F79009" : "",
+    color: rounded > 0 ? "#F79009" : "#17B26A",
   };
 }
 
-type Tab = "condities" | "vaartuig" | "lading" | "activiteit";
+type SideTab = "activiteit" | "vaartuig" | "lading";
 
-type NegotiationStatus = "Via werklijst" | "Bod verstuurd" | "Bod ontvangen" | "Goedgekeurd" | "Afgewezen";
+type NegotiationStatus = "Via werklijst" | "Bod verstuurd" | "Bod ontvangen" | "Openstaand bod" | "Goedgekeurd" | "Afgewezen";
 
-const activeStatuses: NegotiationStatus[] = ["Via werklijst", "Bod verstuurd", "Bod ontvangen"];
+const activeStatuses: NegotiationStatus[] = ["Via werklijst", "Bod verstuurd", "Bod ontvangen", "Openstaand bod"];
 
 const statusBadgeConfig: Record<NegotiationStatus, { variant: BadgeVariant; type: BadgeType; icon: React.ReactNode | null }> = {
   "Via werklijst": { variant: "brand", type: "default", icon: null },
   "Bod verstuurd": { variant: "brand", type: "color", icon: <Send strokeWidth={2.5} /> },
   "Bod ontvangen": { variant: "brand", type: "color", icon: <MailOpen strokeWidth={2.5} /> },
+  "Openstaand bod": { variant: "brand", type: "color", icon: <Send strokeWidth={2.5} /> },
   "Goedgekeurd": { variant: "success", type: "color", icon: <Check strokeWidth={2.5} /> },
   "Afgewezen": { variant: "error", type: "color", icon: <X strokeWidth={2.5} /> },
 };
 
 type NegotiationBron = "eigen" | "markt";
+type NegotiationSoort = "lading" | "vaartuig";
 
 interface OnderhandelingSidepanelProps {
   negotiationId: string;
   status: NegotiationStatus;
   bron: NegotiationBron;
-  initialTab?: Tab;
+  soort: NegotiationSoort;
+  /** Relatie name shown in the title */
+  relatieName?: string;
+  /** Subtitle description (e.g. "1.200 t Grind · MS Adriana") */
+  subtitle?: string;
   onClose: () => void;
 }
 
-export default function OnderhandelingSidepanel({ negotiationId, status, bron, initialTab, onClose }: OnderhandelingSidepanelProps) {
-  const [activeTab, setActiveTab] = useState<Tab>(initialTab ?? "condities");
+export default function OnderhandelingSidepanel({ negotiationId, status, bron, soort, relatieName, subtitle: subtitleText, onClose }: OnderhandelingSidepanelProps) {
+  const [sideTab, setSideTab] = useState<SideTab>("activiteit");
   const [overig, setOverig] = useState("");
   const isActive = activeStatuses.includes(status);
+  const [conditiesOverrides, setConditiesOverrides] = useState<Partial<Record<ConditiesField, number | null>>>({});
+  const [extraEvents, setExtraEvents] = useState<ActivityEvent[]>([]);
+  const allEvents = [...extraEvents, ...mockActiviteit];
 
-  const tabs: { id: Tab; label: string }[] = [
-    { id: "condities", label: "Condities" },
+  const handleConditiesSave = (updates: Partial<Record<ConditiesField, number | null>>, opmerking: string) => {
+    setConditiesOverrides(prev => ({ ...prev, ...updates }));
+    // Build changes list for activity
+    const changes: ActivityChange[] = [];
+    const modeA = (bron === "eigen" && soort === "lading") || (bron === "markt" && soort === "vaartuig");
+    const colLabel = modeA ? "Inkoop" : "Verkoop";
+    for (const [field, val] of Object.entries(updates)) {
+      if (val != null) {
+        changes.push({ label: `${colLabel} ${fieldLabels[field as ConditiesField].toLowerCase()}`, value: fmt(field as ConditiesField, val) });
+      }
+    }
+    const newEvent: ActivityEvent = {
+      id: `evt-${Date.now()}`,
+      user: mockNegotiationMeta.eigenaar,
+      initials: mockNegotiationMeta.eigenaarInitials,
+      title: "Bod bijgewerkt",
+      timestamp: "Zojuist",
+      message: opmerking || undefined,
+      changes: changes.length > 0 ? changes : undefined,
+    };
+    setExtraEvents(prev => [newEvent, ...prev]);
+  };
+
+  const sideTabs: { id: SideTab; label: string }[] = [
+    { id: "activiteit", label: "Activiteit" },
     { id: "vaartuig", label: "Vaartuig" },
     { id: "lading", label: "Lading" },
-    { id: "activiteit", label: "Activiteit" },
   ];
 
   return (
     <ModelessPanel
-      initialWidth={480}
-      resizable={false}
-      title="Onderhandeling met Rederij Alfa"
+      initialWidth={600}
+      resizable
+      title={`Onderhandeling met ${relatieName || "Rederij Alfa"}`}
       subtitle={
-        <div className="flex flex-col gap-[16px]">
-          <div className="flex flex-col gap-[8px] items-start">
-            <span>1.200 t Grind · MS Adriana</span>
+        <div className="flex flex-col gap-[8px]">
+          <span>{subtitleText || "1.200 t Grind · MS Adriana"}</span>
+          <div className="flex items-center gap-[12px] flex-wrap">
             <Badge
               label={status}
               variant={statusBadgeConfig[status].variant}
               type={statusBadgeConfig[status].type}
               icon={statusBadgeConfig[status].icon ?? undefined}
             />
-          </div>
-          {/* Tab bar */}
-          <div className="flex gap-[4px] h-[40px] items-center">
-            {tabs.map((tab) => {
-              const isActive = tab.id === activeTab;
-              return (
-                <button
-                  key={tab.id}
-                  onClick={() => setActiveTab(tab.id)}
-                  className={`h-full relative rounded-[4px] shrink-0 ${
-                    isActive ? "bg-rdj-bg-brand" : ""
-                  }`}
-                >
-                  <div className="flex flex-row items-center justify-center overflow-clip rounded-[inherit] size-full">
-                    <div className="flex h-full items-center justify-center px-[12px] py-[8px]">
-                      <p
-                        className={`font-sans font-bold leading-[20px] text-[14px] whitespace-nowrap ${
-                          isActive ? "text-rdj-text-primary" : "text-rdj-text-tertiary"
-                        }`}
-                      >
-                        {tab.label}
-                      </p>
-                    </div>
-                  </div>
-                </button>
-              );
-            })}
+            <div className="flex items-center gap-[6px]">
+              <Calendar size={14} className="text-rdj-text-tertiary shrink-0" />
+              <p className="font-sans font-normal leading-[20px] text-rdj-text-secondary text-[14px]">
+                {mockNegotiationMeta.deadline}
+              </p>
+            </div>
+            <div className="flex items-center gap-[6px]">
+              <div className="relative rounded-full shrink-0 size-[20px] bg-rdj-bg-secondary flex items-center justify-center">
+                <p className="font-sans font-bold text-rdj-text-secondary text-[8px]">
+                  {mockNegotiationMeta.eigenaarInitials}
+                </p>
+              </div>
+              <p className="font-sans font-normal leading-[20px] text-rdj-text-secondary text-[14px]">
+                {mockNegotiationMeta.eigenaar}
+              </p>
+            </div>
           </div>
         </div>
       }
@@ -284,57 +314,205 @@ export default function OnderhandelingSidepanel({ negotiationId, status, bron, i
           </div>
         ) : undefined
       }
+      sidebar={
+        <div className="flex flex-col h-full">
+          {/* Side tab bar */}
+          <div className="flex gap-[4px] h-[40px] items-center px-[16px] pt-[16px] shrink-0">
+            {sideTabs.map((tab) => {
+              const active = tab.id === sideTab;
+              return (
+                <button
+                  key={tab.id}
+                  onClick={() => setSideTab(tab.id)}
+                  className={`h-full relative rounded-[4px] shrink-0 ${
+                    active ? "bg-rdj-bg-brand" : ""
+                  }`}
+                >
+                  <div className="flex flex-row items-center justify-center overflow-clip rounded-[inherit] size-full">
+                    <div className="flex h-full items-center justify-center px-[12px] py-[8px]">
+                      <p
+                        className={`font-sans font-bold leading-[20px] text-[14px] whitespace-nowrap ${
+                          active ? "text-rdj-text-primary" : "text-rdj-text-tertiary"
+                        }`}
+                      >
+                        {tab.label}
+                      </p>
+                    </div>
+                  </div>
+                </button>
+              );
+            })}
+          </div>
+
+          {/* Side tab content */}
+          <div className="flex flex-col gap-[16px] p-[16px] flex-1 overflow-y-auto">
+            {sideTab === "activiteit" && <ActiviteitTab events={allEvents} />}
+            {sideTab === "vaartuig" && <VaartuigTab />}
+            {sideTab === "lading" && <LadingTab />}
+          </div>
+        </div>
+      }
     >
-      {/* Tab content */}
+      {/* Main section: Condities */}
       <div className="flex flex-col gap-[16px] p-[24px]">
-        {activeTab === "condities" && <ConditiesTab bron={bron} overig={overig} onOverigChange={setOverig} />}
-        {activeTab === "vaartuig" && <VaartuigTab />}
-        {activeTab === "lading" && <LadingTab />}
-        {activeTab === "activiteit" && <ActiviteitTab />}
+        <ConditiesTab bron={bron} soort={soort} overig={overig} onOverigChange={setOverig} overrides={conditiesOverrides} onEditSave={handleConditiesSave} />
       </div>
     </ModelessPanel>
   );
 }
 
-/* ── Condities Tab ── */
-function ConditiesTab({ bron, overig, onOverigChange }: { bron: NegotiationBron; overig: string; onOverigChange: (v: string) => void }) {
-  // Markt: inkoop → zoekcriteria → verkoop
-  // Eigen: verkoop → zoekcriteria → inkoop
-  const isMarkt = bron === "markt";
-  const baseLabel = isMarkt ? "Inkoop" : "Verkoop";
-  const compareLabel = isMarkt ? "Verkoop" : "Inkoop";
-  const baseKey = isMarkt ? "inkoop" : "verkoop";
-  const compareKey = isMarkt ? "verkoop" : "inkoop";
+/* ── Condities content ── */
+/**
+ * Three modes based on bron + soort:
+ *   Mode A (eigen lading / markt vaartuig): Verkoop · Zoekcriteria · Inkoop (focus)
+ *   Mode B (eigen vaartuig): Zoekcriteria · Verkoop (focus)
+ *   Mode C (markt lading): Zoekcriteria only (no focus)
+ */
+function ConditiesTab({ bron, soort, overig, onOverigChange, overrides, onEditSave }: { bron: NegotiationBron; soort: NegotiationSoort; overig: string; onOverigChange: (v: string) => void; overrides: Partial<Record<ConditiesField, number | null>>; onEditSave: (updates: Partial<Record<ConditiesField, number | null>>, opmerking: string) => void }) {
+  // Mode A: eigen lading OR markt vaartuig → 3 data columns, focus on inkoop
+  // Mode B: eigen vaartuig → 2 data columns, focus on verkoop
+  // Mode C: markt lading → 1 data column (zoekcriteria only, no focus)
+  const modeA = (bron === "eigen" && soort === "lading") || (bron === "markt" && soort === "vaartuig");
+  const modeC = bron === "markt" && soort === "lading";
+  const [editOpen, setEditOpen] = useState(false);
+
+  const fields: ConditiesField[] = ["prijs", "laadtijd", "liggeldLaden", "lostijd", "liggeldLossen"];
+
+  // Get value with overrides applied
+  const getVal = (field: ConditiesField, key: "inkoop" | "verkoop" | "zoekcriteria"): number | null => {
+    if (key === "inkoop" && modeA && field in overrides) return overrides[field] ?? mockCondities[field].inkoop;
+    if (key === "verkoop" && !modeA && !modeC && field in overrides) return overrides[field] ?? mockCondities[field].verkoop;
+    return mockCondities[field][key];
+  };
+
+  const gridCols = modeA ? "grid-cols-[1fr_1fr_1fr_1fr]" : modeC ? "grid-cols-[1fr_1fr]" : "grid-cols-[1fr_1fr_1fr]";
+
+  // Focus column position: always the last column
+  // Mode A: 4 cols → focus at col 4 (75% start), Mode B: 3 cols → focus at col 3 (66.67% start)
+  const focusLeft = modeA ? "left-[75%]" : "left-[66.67%]";
+  const focusWidth = modeA ? "w-[25%]" : "w-[33.33%]";
 
   return (
     <>
-      {(["prijs", "laadtijd", "liggeldLaden", "lostijd", "liggeldLossen"] as ConditiesField[]).map((field) => {
-        const vals = mockCondities[field];
-        const baseVal = vals[baseKey];
-        const zoekVal = vals.zoekcriteria;
-        const compareVal = vals[compareKey];
-        const diffZoek = calcPctDiff(zoekVal, baseVal);
-        const diffCompare = calcPctDiff(compareVal, baseVal);
-        return (
-          <DetailsSidebarSection key={field} title={fieldLabels[field]}>
-            <DetailRow label={baseLabel} value={fmt(field, baseVal)} />
-            <DetailRow
-              label="Zoekcriteria"
-              value={fmt(field, zoekVal)}
-              subtext={diffZoek?.text}
-              subtextColor={diffZoek?.color}
-              subtextTooltip={diffZoek ? `Vergeleken met ${baseLabel.toLowerCase()}` : undefined}
-            />
-            <DetailRow
-              label={compareLabel}
-              value={fmt(field, compareVal)}
-              subtext={diffCompare?.text}
-              subtextColor={diffCompare?.color}
-              subtextTooltip={diffCompare ? `Vergeleken met ${baseLabel.toLowerCase()}` : undefined}
-            />
-          </DetailsSidebarSection>
-        );
-      })}
+      {/* Condities table with focus column background */}
+      <div className="relative">
+        {/* Full-height focus column background (not shown for mode C) */}
+        {!modeC && (
+          <div className={`absolute ${focusLeft} ${focusWidth} top-0 bottom-0 bg-rdj-bg-brand rounded-[8px]`} />
+        )}
+
+        {/* Column headers */}
+        <div className={`relative grid ${gridCols} gap-[8px] px-[4px] py-[4px]`}>
+          <div />
+          {modeA ? (
+            <>
+              <p className="font-sans font-normal leading-[20px] text-rdj-text-tertiary text-[12px]">Verkoop</p>
+              <p className="font-sans font-normal leading-[20px] text-rdj-text-tertiary text-[12px]">Zoekcriteria</p>
+              <div className="flex items-center gap-[4px] px-[8px]">
+                <p className="font-sans font-normal leading-[20px] text-rdj-text-tertiary text-[12px]">Inkoop</p>
+                <button onClick={() => setEditOpen(true)} className="text-rdj-text-tertiary hover:text-rdj-text-brand transition-colors">
+                  <Pencil size={12} strokeWidth={2} />
+                </button>
+              </div>
+            </>
+          ) : modeC ? (
+            <p className="font-sans font-normal leading-[20px] text-rdj-text-tertiary text-[12px]">Zoekcriteria</p>
+          ) : (
+            <>
+              <p className="font-sans font-normal leading-[20px] text-rdj-text-tertiary text-[12px]">Zoekcriteria</p>
+              <div className="flex items-center gap-[4px] px-[8px]">
+                <p className="font-sans font-normal leading-[20px] text-rdj-text-tertiary text-[12px]">Verkoop</p>
+                <button onClick={() => setEditOpen(true)} className="text-rdj-text-tertiary hover:text-rdj-text-brand transition-colors">
+                  <Pencil size={12} strokeWidth={2} />
+                </button>
+              </div>
+            </>
+          )}
+        </div>
+
+        {/* Divider */}
+        <div className="relative w-full h-px bg-rdj-border-secondary" />
+
+        {/* Rows */}
+        {fields.map((field) => {
+          if (modeA) {
+            const verkoopVal = getVal(field, "verkoop");
+            const zoekVal = getVal(field, "zoekcriteria");
+            const inkoopVal = getVal(field, "inkoop");
+            const diffZoek = field === "prijs" ? calcPctDiff(zoekVal, verkoopVal) : undefined;
+            const diffInkoop = field === "prijs" ? calcPctDiff(inkoopVal, verkoopVal) : undefined;
+            return (
+              <div key={field} className={`relative grid ${gridCols} gap-[8px] py-[8px] px-[4px]`}>
+                <p className="font-sans font-normal leading-[20px] text-rdj-text-secondary text-[14px]">
+                  {fieldLabels[field]}
+                </p>
+                <p className="font-sans font-bold leading-[20px] text-rdj-text-primary text-[14px]">
+                  {fmt(field, verkoopVal)}
+                </p>
+                <div>
+                  <p className="font-sans font-bold leading-[20px] text-rdj-text-primary text-[14px]">
+                    {fmt(field, zoekVal)}
+                  </p>
+                  {diffZoek && (
+                    <p className="font-sans font-normal leading-[18px] text-[12px]" style={diffZoek.color ? { color: diffZoek.color } : undefined}>
+                      {diffZoek.text}
+                    </p>
+                  )}
+                </div>
+                <div className="px-[8px]">
+                  <p className="font-sans font-bold leading-[20px] text-rdj-text-primary text-[14px]">
+                    {fmt(field, inkoopVal)}
+                  </p>
+                  {diffInkoop && (
+                    <p className="font-sans font-normal leading-[18px] text-[12px]" style={diffInkoop.color ? { color: diffInkoop.color } : undefined}>
+                      {diffInkoop.text}
+                    </p>
+                  )}
+                </div>
+              </div>
+            );
+          } else if (modeC) {
+            const zoekVal = getVal(field, "zoekcriteria");
+            return (
+              <div key={field} className={`relative grid ${gridCols} gap-[8px] py-[8px] px-[4px]`}>
+                <p className="font-sans font-normal leading-[20px] text-rdj-text-secondary text-[14px]">
+                  {fieldLabels[field]}
+                </p>
+                <p className="font-sans font-bold leading-[20px] text-rdj-text-primary text-[14px]">
+                  {fmt(field, zoekVal)}
+                </p>
+              </div>
+            );
+          } else {
+            const zoekVal = getVal(field, "zoekcriteria");
+            const verkoopVal = getVal(field, "verkoop");
+            const diffVerkoop = field === "prijs" ? calcPctDiff(verkoopVal, zoekVal) : undefined;
+            return (
+              <div key={field} className={`relative grid ${gridCols} gap-[8px] py-[8px] px-[4px]`}>
+                <p className="font-sans font-normal leading-[20px] text-rdj-text-secondary text-[14px]">
+                  {fieldLabels[field]}
+                </p>
+                <p className="font-sans font-bold leading-[20px] text-rdj-text-primary text-[14px]">
+                  {fmt(field, zoekVal)}
+                </p>
+                <div className="px-[8px]">
+                  <p className="font-sans font-bold leading-[20px] text-rdj-text-primary text-[14px]">
+                    {fmt(field, verkoopVal)}
+                  </p>
+                  {diffVerkoop && (
+                    <p className="font-sans font-normal leading-[18px] text-[12px]" style={diffVerkoop.color ? { color: diffVerkoop.color } : undefined}>
+                      {diffVerkoop.text}
+                    </p>
+                  )}
+                </div>
+              </div>
+            );
+          }
+        })}
+      </div>
+
+      {/* Divider before overig */}
+      <div className="w-full h-px bg-rdj-border-secondary" />
 
       <DetailsSidebarSection title="Overig">
         <textarea
@@ -345,7 +523,95 @@ function ConditiesTab({ bron, overig, onOverigChange }: { bron: NegotiationBron;
           className="w-full px-[12px] py-[8px] font-sans font-normal leading-[20px] text-rdj-text-primary text-[14px] bg-transparent border border-transparent rounded-[6px] outline-none resize-none transition-all hover:border-rdj-border-primary hover:bg-rdj-bg-secondary-hover focus:border-rdj-border-brand focus:bg-white placeholder:text-rdj-text-tertiary"
         />
       </DetailsSidebarSection>
+
+      {/* Edit focus column dialog */}
+      {editOpen && !modeC && (
+        <EditConditiesDialog
+          fields={fields}
+          focusLabel={modeA ? "Inkoop" : "Verkoop"}
+          currentValues={Object.fromEntries(fields.map(f => [f, modeA ? getVal(f, "inkoop") : getVal(f, "verkoop")])) as Record<ConditiesField, number | null>}
+          onSave={(updates, opmerking) => { onEditSave(updates, opmerking); setEditOpen(false); }}
+          onClose={() => setEditOpen(false)}
+        />
+      )}
     </>
+  );
+}
+
+/* ── Edit Condities Dialog ── */
+function EditConditiesDialog({ fields, focusLabel, currentValues, onSave, onClose }: {
+  fields: ConditiesField[];
+  focusLabel: string;
+  currentValues: Record<ConditiesField, number | null>;
+  onSave: (updates: Partial<Record<ConditiesField, number | null>>, opmerking: string) => void;
+  onClose: () => void;
+}) {
+  const [values, setValues] = useState<Record<ConditiesField, string>>(
+    Object.fromEntries(fields.map(f => [f, currentValues[f] != null ? String(currentValues[f]) : ""])) as Record<ConditiesField, string>
+  );
+  const [opmerking, setOpmerking] = useState("");
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    const updates: Partial<Record<ConditiesField, number | null>> = {};
+    for (const field of fields) {
+      const raw = values[field].trim().replace(",", ".");
+      const num = raw === "" ? null : parseFloat(raw);
+      if (num !== currentValues[field]) {
+        updates[field] = isNaN(num as number) ? null : num;
+      }
+    }
+    onSave(updates, opmerking.trim());
+  };
+
+  return (
+    <Dialog open onOpenChange={() => onClose()}>
+      <DialogContent className="sm:max-w-[400px]">
+        <DialogHeader>
+          <DialogTitle>{focusLabel} bewerken</DialogTitle>
+        </DialogHeader>
+
+        <form onSubmit={handleSubmit} className="flex flex-col gap-[12px] pt-[4px]">
+          {fields.map(field => (
+            <div key={field} className="flex flex-col gap-[4px]">
+              <Label htmlFor={`edit-${field}`} className="font-sans font-bold text-[13px] text-[#344054]">
+                {fieldLabels[field]}
+              </Label>
+              <Input
+                id={`edit-${field}`}
+                value={values[field]}
+                onChange={(e) => setValues(prev => ({ ...prev, [field]: e.target.value }))}
+                placeholder={field === "prijs" ? "0,00" : field === "laadtijd" || field === "lostijd" ? "Uren" : "0,00"}
+                autoFocus={field === "prijs"}
+              />
+            </div>
+          ))}
+
+          {/* Divider */}
+          <div className="w-full h-px bg-rdj-border-secondary" />
+
+          {/* Opmerking */}
+          <div className="flex flex-col gap-[4px]">
+            <Label htmlFor="edit-opmerking" className="font-sans font-bold text-[13px] text-[#344054]">
+              Opmerking
+            </Label>
+            <textarea
+              id="edit-opmerking"
+              value={opmerking}
+              onChange={(e) => setOpmerking(e.target.value)}
+              placeholder="Bijv. 'Laadtijd aangepast naar wens relatie.'"
+              rows={2}
+              className="w-full px-[12px] py-[8px] font-sans font-normal leading-[20px] text-rdj-text-primary text-[14px] border border-[#d0d5dd] rounded-[8px] outline-none resize-none transition-all focus:border-rdj-border-brand focus:ring-1 focus:ring-rdj-border-brand placeholder:text-rdj-text-tertiary"
+            />
+          </div>
+
+          <div className="flex gap-[12px] pt-[4px]">
+            <Button variant="secondary" label="Annuleren" fullWidth onClick={onClose} />
+            <Button variant="primary" label="Opslaan" fullWidth type="submit" />
+          </div>
+        </form>
+      </DialogContent>
+    </Dialog>
   );
 }
 
@@ -420,13 +686,13 @@ const activityIconMap: Record<string, React.ReactNode> = {
 };
 
 /* ── Activiteit Tab ── */
-function ActiviteitTab() {
+function ActiviteitTab({ events }: { events: ActivityEvent[] }) {
   return (
     <div className="flex flex-col">
-      {mockActiviteit.map((event, index) => (
+      {events.map((event, index) => (
         <div key={event.id} className="flex gap-[12px] relative">
           {/* Timeline line */}
-          {index < mockActiviteit.length - 1 && (
+          {index < events.length - 1 && (
             <div className="absolute left-[16px] top-[36px] bottom-0 w-px bg-rdj-border-secondary" />
           )}
 
