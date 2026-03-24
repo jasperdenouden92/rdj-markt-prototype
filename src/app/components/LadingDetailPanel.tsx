@@ -291,6 +291,7 @@ function LadingEigenSidebarContent({ id }: { id: string }) {
   const marktResult = useLadingMarktDetail(id);
   const [activeTab, setActiveTab] = useState<string>("details");
   const [localPriority, setLocalPriority] = useState<number | null>(null);
+  const [overig, setOverig] = useState("");
 
   const loading = eigenResult.loading || marktResult.loading;
   const data = eigenResult.data;
@@ -396,31 +397,70 @@ function LadingEigenSidebarContent({ id }: { id: string }) {
 
       {activeTab === "condities" && !isMarkt && data && (
         <>
-          <DetailsSidebarSection title="Eigen">
-            <DetailRow label="Prijs" value={data.eigenPrijs} editable />
-            <DetailRow label="Laadtijd" value={data.eigenLaadtijd} editable />
-            <DetailRow label="Liggeld laden" value={data.eigenLiggeldLaden} editable />
-            <DetailRow label="Lostijd" value={data.eigenLostijd} editable />
-            <DetailRow label="Liggeld lossen" value={data.eigenLiggeldLossen} editable />
+          <DetailsSidebarSection title="Prijs">
+            <DetailRow label="Verkoop" value={data.eigenPrijs} editable />
+            <DetailRow label="Zoekcriteria" value={data.marktPrijs} />
           </DetailsSidebarSection>
-          <DetailsSidebarSection title="Markt">
-            <DetailRow label="Prijs" value={data.marktPrijs} />
-            <DetailRow label="Laadtijd" value={data.marktLaadtijd} />
-            <DetailRow label="Liggeld laden" value={data.marktLiggeldLaden} />
-            <DetailRow label="Lostijd" value={data.marktLostijd} />
-            <DetailRow label="Liggeld lossen" value={data.marktLiggeldLossen} />
+          <DetailsSidebarSection title="Laadtijd">
+            <DetailRow label="Verkoop" value={data.eigenLaadtijd} editable />
+            <DetailRow label="Zoekcriteria" value={data.marktLaadtijd} />
+          </DetailsSidebarSection>
+          <DetailsSidebarSection title="Liggeld laden">
+            <DetailRow label="Verkoop" value={data.eigenLiggeldLaden} editable />
+            <DetailRow label="Zoekcriteria" value={data.marktLiggeldLaden} />
+          </DetailsSidebarSection>
+          <DetailsSidebarSection title="Lostijd">
+            <DetailRow label="Verkoop" value={data.eigenLostijd} editable />
+            <DetailRow label="Zoekcriteria" value={data.marktLostijd} />
+          </DetailsSidebarSection>
+          <DetailsSidebarSection title="Liggeld lossen">
+            <DetailRow label="Verkoop" value={data.eigenLiggeldLossen} editable />
+            <DetailRow label="Zoekcriteria" value={data.marktLiggeldLossen} />
+          </DetailsSidebarSection>
+          <DetailsSidebarSection title="Overig">
+            <textarea
+              value={overig}
+              onChange={(e) => setOverig(e.target.value)}
+              placeholder="Voeg opmerkingen toe..."
+              rows={3}
+              className="w-full px-[12px] py-[8px] font-sans font-normal leading-[20px] text-rdj-text-primary text-[14px] bg-transparent border border-transparent rounded-[6px] outline-none resize-none transition-all hover:border-rdj-border-primary hover:bg-rdj-bg-secondary-hover focus:border-rdj-border-brand focus:bg-white placeholder:text-rdj-text-tertiary"
+            />
           </DetailsSidebarSection>
         </>
       )}
 
       {activeTab === "condities" && isMarkt && marktData && (
-        <DetailsSidebarSection>
-          <DetailRow label="Prijs" value={marktData.prijs} editable />
-          <DetailRow label="Laadtijd" value={marktData.laadtijd} editable />
-          <DetailRow label="Liggeld laden" value={marktData.liggeldLaden} editable />
-          <DetailRow label="Lostijd" value={marktData.lostijd} editable />
-          <DetailRow label="Liggeld lossen" value={marktData.liggeldLossen} editable />
-        </DetailsSidebarSection>
+        <>
+          <DetailsSidebarSection title="Prijs">
+            <DetailRow label="Inkoop" value={marktData.prijs} editable />
+            <DetailRow label="Zoekcriteria" value={marktData.prijs} />
+          </DetailsSidebarSection>
+          <DetailsSidebarSection title="Laadtijd">
+            <DetailRow label="Inkoop" value={marktData.laadtijd} editable />
+            <DetailRow label="Zoekcriteria" value={marktData.laadtijd} />
+          </DetailsSidebarSection>
+          <DetailsSidebarSection title="Liggeld laden">
+            <DetailRow label="Inkoop" value={marktData.liggeldLaden} editable />
+            <DetailRow label="Zoekcriteria" value={marktData.liggeldLaden} />
+          </DetailsSidebarSection>
+          <DetailsSidebarSection title="Lostijd">
+            <DetailRow label="Inkoop" value={marktData.lostijd} editable />
+            <DetailRow label="Zoekcriteria" value={marktData.lostijd} />
+          </DetailsSidebarSection>
+          <DetailsSidebarSection title="Liggeld lossen">
+            <DetailRow label="Inkoop" value={marktData.liggeldLossen} editable />
+            <DetailRow label="Zoekcriteria" value={marktData.liggeldLossen} />
+          </DetailsSidebarSection>
+          <DetailsSidebarSection title="Overig">
+            <textarea
+              value={overig}
+              onChange={(e) => setOverig(e.target.value)}
+              placeholder="Voeg opmerkingen toe..."
+              rows={3}
+              className="w-full px-[12px] py-[8px] font-sans font-normal leading-[20px] text-rdj-text-primary text-[14px] bg-transparent border border-transparent rounded-[6px] outline-none resize-none transition-all hover:border-rdj-border-primary hover:bg-rdj-bg-secondary-hover focus:border-rdj-border-brand focus:bg-white placeholder:text-rdj-text-tertiary"
+            />
+          </DetailsSidebarSection>
+        </>
       )}
     </div>
   );
