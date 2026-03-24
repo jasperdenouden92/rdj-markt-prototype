@@ -80,9 +80,9 @@ const mockLading = {
   laaddatum: "15 jan 2026, 08:00",
   loshaven: "Antwerpen",
   losdatum: "16 jan 2026, 14:00",
-  relatie: "Rederij de Jong",
-  relatieId: "rel-2",
-  contactpersoon: "Pieter Jansen",
+  opdrachtgever: "Rederij de Jong",
+  opdrachtgeverId: "rel-2",
+  opdrachtgeverContact: "Pieter Jansen",
   eigenaar: "Erick Nieuwkoop",
   eigenaarInitials: "EN",
   deadline: "17 jan 2026",
@@ -187,9 +187,9 @@ function calcPctDiff(
 
 type SideTab = "activiteit" | "vaartuig" | "lading";
 
-type NegotiationStatus = "Via werklijst" | "Bod verstuurd" | "Bod ontvangen" | "Openstaand bod" | "Goedgekeurd" | "Afgewezen";
+type NegotiationStatus = "Via werklijst" | "Bod verstuurd" | "Bod ontvangen" | "Openstaand bod" | "Goedgekeurd" | "Afgewezen" | "In onderhandeling" | "Geaccepteerd" | "Geweigerd";
 
-const activeStatuses: NegotiationStatus[] = ["Via werklijst", "Bod verstuurd", "Bod ontvangen", "Openstaand bod"];
+const activeStatuses: NegotiationStatus[] = ["Via werklijst", "Bod verstuurd", "Bod ontvangen", "Openstaand bod", "In onderhandeling"];
 
 const statusBadgeConfig: Record<NegotiationStatus, { variant: BadgeVariant; type: BadgeType; icon: React.ReactNode | null }> = {
   "Via werklijst": { variant: "brand", type: "default", icon: null },
@@ -198,6 +198,9 @@ const statusBadgeConfig: Record<NegotiationStatus, { variant: BadgeVariant; type
   "Openstaand bod": { variant: "brand", type: "color", icon: <Send strokeWidth={2.5} /> },
   "Goedgekeurd": { variant: "success", type: "color", icon: <Check strokeWidth={2.5} /> },
   "Afgewezen": { variant: "error", type: "color", icon: <X strokeWidth={2.5} /> },
+  "In onderhandeling": { variant: "brand", type: "color", icon: <Send strokeWidth={2.5} /> },
+  "Geaccepteerd": { variant: "success", type: "color", icon: <Check strokeWidth={2.5} /> },
+  "Geweigerd": { variant: "error", type: "color", icon: <X strokeWidth={2.5} /> },
 };
 
 type NegotiationBron = "eigen" | "markt";
@@ -212,11 +215,13 @@ interface OnderhandelingSidepanelProps {
   relatieName?: string;
   /** Subtitle description (e.g. "1.200 t Grind · MS Adriana") */
   subtitle?: string;
+  /** Initial sidebar tab (defaults to "activiteit") */
+  initialSideTab?: SideTab;
   onClose: () => void;
 }
 
-export default function OnderhandelingSidepanel({ negotiationId, status, bron, soort, relatieName, subtitle: subtitleText, onClose }: OnderhandelingSidepanelProps) {
-  const [sideTab, setSideTab] = useState<SideTab>("activiteit");
+export default function OnderhandelingSidepanel({ negotiationId, status, bron, soort, relatieName, subtitle: subtitleText, initialSideTab, onClose }: OnderhandelingSidepanelProps) {
+  const [sideTab, setSideTab] = useState<SideTab>(initialSideTab || "activiteit");
   const [overig, setOverig] = useState("");
   const isActive = activeStatuses.includes(status);
   const [conditiesOverrides, setConditiesOverrides] = useState<Partial<Record<ConditiesField, number | null>>>({});
@@ -227,8 +232,8 @@ export default function OnderhandelingSidepanel({ negotiationId, status, bron, s
     setConditiesOverrides(prev => ({ ...prev, ...updates }));
     // Build changes list for activity
     const changes: ActivityChange[] = [];
-    const modeA = (bron === "eigen" && soort === "lading") || (bron === "markt" && soort === "vaartuig");
-    const colLabel = modeA ? "Inkoop" : "Verkoop";
+    const focusInkoop = (bron === "eigen" && soort === "lading") || (bron === "markt" && soort === "vaartuig");
+    const colLabel = focusInkoop ? "Inkoop" : "Verkoop";
     for (const [field, val] of Object.entries(updates)) {
       if (val != null) {
         changes.push({ label: `${colLabel} ${fieldLabels[field as ConditiesField].toLowerCase()}`, value: fmt(field as ConditiesField, val) });
@@ -364,31 +369,29 @@ export default function OnderhandelingSidepanel({ negotiationId, status, bron, s
 /* ── Condities content ── */
 /**
  * Three modes based on bron + soort:
- *   Mode A (eigen lading / markt vaartuig): Verkoop · Zoekcriteria · Inkoop (focus)
- *   Mode B (eigen vaartuig): Zoekcriteria · Verkoop (focus)
- *   Mode C (markt lading): Zoekcriteria only (no focus)
+ *   Mode A (eigen lading): Verkoop · Zoekcriteria · Inkoop (focus)
+ *   Mode B (markt vaartuig): Verkoop · Inkoop (focus)
+ *   Mode C (eigen vaartuig / markt lading): Zoekcriteria · Verkoop (focus)
  */
 function ConditiesTab({ bron, soort, overig, onOverigChange, overrides, onEditSave }: { bron: NegotiationBron; soort: NegotiationSoort; overig: string; onOverigChange: (v: string) => void; overrides: Partial<Record<ConditiesField, number | null>>; onEditSave: (updates: Partial<Record<ConditiesField, number | null>>, opmerking: string) => void }) {
-  // Mode A: eigen lading OR markt vaartuig → 3 data columns, focus on inkoop
-  // Mode B: eigen vaartuig → 2 data columns, focus on verkoop
-  // Mode C: markt lading → 1 data column (zoekcriteria only, no focus)
-  const modeA = (bron === "eigen" && soort === "lading") || (bron === "markt" && soort === "vaartuig");
-  const modeC = bron === "markt" && soort === "lading";
+  const modeA = bron === "eigen" && soort === "lading";
+  const modeB = bron === "markt" && soort === "vaartuig";
+  // modeC = everything else (eigen vaartuig / markt lading)
+  const focusIsInkoop = modeA || modeB;
   const [editOpen, setEditOpen] = useState(false);
 
   const fields: ConditiesField[] = ["prijs", "laadtijd", "liggeldLaden", "lostijd", "liggeldLossen"];
 
   // Get value with overrides applied
   const getVal = (field: ConditiesField, key: "inkoop" | "verkoop" | "zoekcriteria"): number | null => {
-    if (key === "inkoop" && modeA && field in overrides) return overrides[field] ?? mockCondities[field].inkoop;
-    if (key === "verkoop" && !modeA && !modeC && field in overrides) return overrides[field] ?? mockCondities[field].verkoop;
+    if (key === "inkoop" && focusIsInkoop && field in overrides) return overrides[field] ?? mockCondities[field].inkoop;
+    if (key === "verkoop" && !focusIsInkoop && field in overrides) return overrides[field] ?? mockCondities[field].verkoop;
     return mockCondities[field][key];
   };
 
-  const gridCols = modeA ? "grid-cols-[1fr_1fr_1fr_1fr]" : modeC ? "grid-cols-[1fr_1fr]" : "grid-cols-[1fr_1fr_1fr]";
+  const gridCols = modeA ? "grid-cols-[1fr_1fr_1fr_1fr]" : "grid-cols-[1fr_1fr_1fr]";
 
   // Focus column position: always the last column
-  // Mode A: 4 cols → focus at col 4 (75% start), Mode B: 3 cols → focus at col 3 (66.67% start)
   const focusLeft = modeA ? "left-[75%]" : "left-[66.67%]";
   const focusWidth = modeA ? "w-[25%]" : "w-[33.33%]";
 
@@ -396,10 +399,8 @@ function ConditiesTab({ bron, soort, overig, onOverigChange, overrides, onEditSa
     <>
       {/* Condities table with focus column background */}
       <div className="relative">
-        {/* Full-height focus column background (not shown for mode C) */}
-        {!modeC && (
-          <div className={`absolute ${focusLeft} ${focusWidth} top-0 bottom-0 bg-rdj-bg-brand rounded-[8px]`} />
-        )}
+        {/* Full-height focus column background */}
+        <div className={`absolute ${focusLeft} ${focusWidth} top-0 bottom-0 bg-rdj-bg-brand rounded-[8px]`} />
 
         {/* Column headers */}
         <div className={`relative grid ${gridCols} gap-[8px] px-[4px] py-[4px]`}>
@@ -415,8 +416,16 @@ function ConditiesTab({ bron, soort, overig, onOverigChange, overrides, onEditSa
                 </button>
               </div>
             </>
-          ) : modeC ? (
-            <p className="font-sans font-normal leading-[20px] text-rdj-text-tertiary text-[12px]">Zoekcriteria</p>
+          ) : modeB ? (
+            <>
+              <p className="font-sans font-normal leading-[20px] text-rdj-text-tertiary text-[12px]">Verkoop</p>
+              <div className="flex items-center gap-[4px] px-[8px]">
+                <p className="font-sans font-normal leading-[20px] text-rdj-text-tertiary text-[12px]">Inkoop</p>
+                <button onClick={() => setEditOpen(true)} className="text-rdj-text-tertiary hover:text-rdj-text-brand transition-colors">
+                  <Pencil size={12} strokeWidth={2} />
+                </button>
+              </div>
+            </>
           ) : (
             <>
               <p className="font-sans font-normal leading-[20px] text-rdj-text-tertiary text-[12px]">Zoekcriteria</p>
@@ -471,16 +480,28 @@ function ConditiesTab({ bron, soort, overig, onOverigChange, overrides, onEditSa
                 </div>
               </div>
             );
-          } else if (modeC) {
-            const zoekVal = getVal(field, "zoekcriteria");
+          } else if (modeB) {
+            const verkoopVal = getVal(field, "verkoop");
+            const inkoopVal = getVal(field, "inkoop");
+            const diffInkoop = field === "prijs" ? calcPctDiff(inkoopVal, verkoopVal) : undefined;
             return (
               <div key={field} className={`relative grid ${gridCols} gap-[8px] py-[8px] px-[4px]`}>
                 <p className="font-sans font-normal leading-[20px] text-rdj-text-secondary text-[14px]">
                   {fieldLabels[field]}
                 </p>
                 <p className="font-sans font-bold leading-[20px] text-rdj-text-primary text-[14px]">
-                  {fmt(field, zoekVal)}
+                  {fmt(field, verkoopVal)}
                 </p>
+                <div className="px-[8px]">
+                  <p className="font-sans font-bold leading-[20px] text-rdj-text-primary text-[14px]">
+                    {fmt(field, inkoopVal)}
+                  </p>
+                  {diffInkoop && (
+                    <p className="font-sans font-normal leading-[18px] text-[12px]" style={diffInkoop.color ? { color: diffInkoop.color } : undefined}>
+                      {diffInkoop.text}
+                    </p>
+                  )}
+                </div>
               </div>
             );
           } else {
@@ -525,11 +546,11 @@ function ConditiesTab({ bron, soort, overig, onOverigChange, overrides, onEditSa
       </DetailsSidebarSection>
 
       {/* Edit focus column dialog */}
-      {editOpen && !modeC && (
+      {editOpen && (
         <EditConditiesDialog
           fields={fields}
-          focusLabel={modeA ? "Inkoop" : "Verkoop"}
-          currentValues={Object.fromEntries(fields.map(f => [f, modeA ? getVal(f, "inkoop") : getVal(f, "verkoop")])) as Record<ConditiesField, number | null>}
+          focusLabel={focusIsInkoop ? "Inkoop" : "Verkoop"}
+          currentValues={Object.fromEntries(fields.map(f => [f, focusIsInkoop ? getVal(f, "inkoop") : getVal(f, "verkoop")])) as Record<ConditiesField, number | null>}
           onSave={(updates, opmerking) => { onEditSave(updates, opmerking); setEditOpen(false); }}
           onClose={() => setEditOpen(false)}
         />
@@ -652,6 +673,8 @@ function LadingTab() {
       <DetailsSidebarSection>
         <DetailRow label="Partij" type="linked" value={mockLading.partij} />
         <DetailRow label="Subpartij" type="linked" value={mockLading.subpartij} />
+        <DetailRow label="Opdrachtgever" type="linked" value={mockLading.opdrachtgever} />
+        <DetailRow label="Contactpersoon" value={mockLading.opdrachtgeverContact} />
         <DetailRow label="Tonnage" value={mockLading.tonnage} />
         <DetailRow label="Ex." value={mockLading.ex} subtext={mockLading.exType} />
         <DetailRow label="Lading" value={mockLading.lading} />
@@ -663,8 +686,6 @@ function LadingTab() {
         <DetailRow label="Laaddatum" value={mockLading.laaddatum} />
         <DetailRow label="Loshaven" value={mockLading.loshaven} />
         <DetailRow label="Losdatum" value={mockLading.losdatum} />
-        <DetailRow label="Relatie" type="linked" value={mockLading.relatie} />
-        <DetailRow label="Contactpersoon" value={mockLading.contactpersoon} />
       </DetailsSidebarSection>
 
       <div className="w-full h-px bg-rdj-border-secondary shrink-0" />

@@ -14,6 +14,7 @@ import LadingMarktSidebar from "../components/LadingMarktSidebar";
 import StartNegotiationSidebar from "../components/StartNegotiationSidebar";
 import OnderhandelingSidepanel from "../components/OnderhandelingSidepanel";
 import ConversationDialog from "../components/ConversationDialog";
+import BrokerDialog from "../components/BrokerDialog";
 import ActivityFeed from "../components/ActivityFeed";
 import SectionHeader from "../components/SectionHeader";
 import { useInboxLadingSummary } from "../data/useDetailData";
@@ -25,32 +26,30 @@ import imgAvatar2 from "../../assets/e7809035038b3816de2a1d67c5de86ebeed325d0.pn
 import imgAvatar3 from "../../assets/bf485cb6f98c12534c69bc81459ce34f2e24e4a8.png";
 import imgAvatar4 from "../../assets/9e45f45f537bea4bf653bc0307471e5ff5545f63.png";
 
-/* ── Status variant map ── */
+/* ── Inbox status mapping: marktaanbod uses In onderhandeling / Geaccepteerd / Geweigerd ── */
+function toInboxStatus(raw: string): string {
+  if (raw === "Via werklijst" || raw === "Bod verstuurd" || raw === "Bod ontvangen") return "In onderhandeling";
+  if (raw === "Goedgekeurd") return "Geaccepteerd";
+  if (raw === "Afgewezen" || raw === "Afgekeurd") return "Geweigerd";
+  return raw;
+}
+
 const negotiationStatusVariantMap: Record<string, string> = {
-  "Via werklijst": "brand",
-  "Bod verstuurd": "brand",
-  "Bod ontvangen": "brand",
-  "Goedgekeurd": "success",
-  "Afgewezen": "error",
-  "Afgekeurd": "error",
+  "In onderhandeling": "brand",
+  "Geaccepteerd": "success",
+  "Geweigerd": "error",
 };
 
 const negotiationStatusIconMap: Record<string, React.ReactNode | null> = {
-  "Via werklijst": null,
-  "Bod verstuurd": <Send strokeWidth={2.5} />,
-  "Bod ontvangen": <MailOpen strokeWidth={2.5} />,
-  "Goedgekeurd": <Check strokeWidth={2.5} />,
-  "Afgewezen": <X strokeWidth={2.5} />,
-  "Afgekeurd": <X strokeWidth={2.5} />,
+  "In onderhandeling": <Send strokeWidth={2.5} />,
+  "Geaccepteerd": <Check strokeWidth={2.5} />,
+  "Geweigerd": <X strokeWidth={2.5} />,
 };
 
 const negotiationStatusTypeMap: Record<string, "default" | "color"> = {
-  "Via werklijst": "default",
-  "Bod verstuurd": "color",
-  "Bod ontvangen": "color",
-  "Goedgekeurd": "color",
-  "Afgewezen": "color",
-  "Afgekeurd": "color",
+  "In onderhandeling": "color",
+  "Geaccepteerd": "color",
+  "Geweigerd": "color",
 };
 
 /* ── Match percentage donut ── */
@@ -88,9 +87,10 @@ export default function InboxCargoDetail() {
   const [activeTab, setActiveTabRaw] = useState<'matches' | 'onderhandelingen' | 'activiteit'>('matches');
   const [selectedMatch, setSelectedMatch] = useState<any>(null);
   const [offeredMatches, setOfferedMatches] = useState<Set<string>>(new Set());
-  const [selectedNegotiation, setSelectedNegotiation] = useState<{ id: string; status: string; bron: string } | null>(null);
+  const [selectedNegotiation, setSelectedNegotiation] = useState<{ id: string; status: string; bron: string; relatieName?: string } | null>(null);
   const setActiveTab = (tab: typeof activeTab) => { setActiveTabRaw(tab); setSelectedNegotiation(null); };
-  const [conversationDialog, setConversationDialog] = useState<{ relatieId: string; relatieName: string; matchName?: string } | null>(null);
+  const [conversationDialog, setConversationDialog] = useState<{ relatieId: string; relatieName: string; matchName?: string; itemType?: "lading" | "vaartuig" | "relatie-vaartuig" | "relatie-lading"; rightName?: string } | null>(null);
+  const [brokerDialog, setBrokerDialog] = useState<{ relatieA: { id: string; name: string }; vesselName: string; vesselSubtitle: string; relatieB: { id: string; name: string }; cargoName: string; cargoSubtitle: string } | null>(null);
   const [hoveredRow, setHoveredRow] = useState<string | null>(null);
   const [matchFilter, setMatchFilter] = useState("Alles");
   const [negFilter, setNegFilter] = useState("Actief");
@@ -111,7 +111,7 @@ export default function InboxCargoDetail() {
 
   // Table columns for vessel matches
   const matchColumns: Column[] = [
-    { key: "name", header: "Naam", type: "leading-text", subtextKey: "subtype", badgeKey: "statusBadge", actionLabel: "Onderhandeling", actionCompletedKey: "actionCompletedLabel" },
+    { key: "name", header: "Naam", type: "leading-text", subtextKey: "subtype", badgeKey: "sourceBadge", actionLabel: "Onderhandeling", actionCompletedKey: "actionCompletedLabel" },
     { key: "company", header: "Relatie", type: "text", subtextKey: "contact", textColor: "text-rdj-text-brand", width: "w-[180px]", onClickKey: "onRelatieClick" },
     { key: "location", header: "Locatie", type: "text", subtextKey: "locationDate", width: "w-[200px]" },
     { key: "capacity", header: "Groottonnage", type: "text", width: "w-[140px]" },
@@ -132,11 +132,13 @@ export default function InboxCargoDetail() {
     },
   ];
 
-  // Mock match data
+  // Mock match data — eigen vaartuigen + markt vaartuigen
   const matchRows: RowData[] = [
-    { id: "1", name: "Emily", subtype: "Motorschip", statusBadge: offeredMatches.has("1") ? "Aangeboden" : undefined, company: "Provaart Logistics BV", contact: "Jan de Vries", location: "Waalhaven", locationDate: "Vanaf Wo 12 Mrt, 2026", capacity: "3.000 mt", content: "3.800 m³", matchPct: 90, onRelatieClick: () => { const rel = mockRelaties.find(r => r.naam === "Provaart Logistics BV"); if (rel) navigate(`/crm/relatie/${rel.id}`); } },
-    { id: "2", name: "S.S. Anna", subtype: "Motorschip", statusBadge: offeredMatches.has("2") ? "Aangeboden" : undefined, company: "Janlow B.V.", contact: "Pieter Jansen", location: "Bremerhaven", locationDate: "Vanaf Vr 14 Mrt, 2026", capacity: "2.500 mt", content: "3.000 m³", matchPct: 85, onRelatieClick: () => { const rel = mockRelaties.find(r => r.naam === "Janlow B.V."); if (rel) navigate(`/crm/relatie/${rel.id}`); } },
-  ];
+    { id: "1", name: "Antonia V", subtype: "Motorschip · 4.200 mt", isEigen: true, company: "—", contact: "", location: "Rotterdam", locationDate: "Vanaf Vr 14 Mrt, 2026", capacity: "4.200 mt", content: "5.200 m³", matchPct: 95, matchStatus: "openstaand" },
+    { id: "2", name: "Emily", subtype: "Motorschip", isEigen: false, company: "Provaart Logistics BV", contact: "Jan de Vries", location: "Waalhaven", locationDate: "Vanaf Wo 12 Mrt, 2026", capacity: "3.000 mt", content: "3.800 m³", matchPct: 90, matchStatus: offeredMatches.has("2") ? "aangeboden" : "openstaand", onRelatieClick: () => { const rel = mockRelaties.find(r => r.naam === "Provaart Logistics BV"); if (rel) navigate(`/crm/relatie/${rel.id}`); } },
+    { id: "3", name: "Duwbak Alfa-1", subtype: "Duwbak · 2.000 mt", isEigen: true, company: "—", contact: "", location: "Dordrecht", locationDate: "Vanaf Di 1 Apr, 2026", capacity: "2.000 mt", content: "2.400 m³", matchPct: 82, matchStatus: "openstaand" },
+    { id: "4", name: "S.S. Anna", subtype: "Motorschip", isEigen: false, company: "Janlow B.V.", contact: "Pieter Jansen", location: "Bremerhaven", locationDate: "Vanaf Vr 14 Mrt, 2026", capacity: "2.500 mt", content: "3.000 m³", matchPct: 78, matchStatus: offeredMatches.has("4") ? "aangeboden" : "openstaand", onRelatieClick: () => { const rel = mockRelaties.find(r => r.naam === "Janlow B.V."); if (rel) navigate(`/crm/relatie/${rel.id}`); } },
+  ].map(row => ({ ...row, sourceBadge: row.isEigen ? undefined : "Markt" }));
 
   const handleMatchClick = (row: RowData) => {
     setSelectedMatch({ id: row.id, name: row.name as string, company: row.company as string, contact: row.contact as string, location: row.location as string, locationDate: row.locationDate as string, capacity: row.capacity as string, content: row.content as string, matchPercentage: `${row.matchPct}%` });
@@ -147,10 +149,6 @@ export default function InboxCargoDetail() {
     navigate("/markt/inbox/ladingen");
   };
 
-  const handleMoveToPipeline = () => {
-    toast.success("Lading naar pijplijn verplaatst", { description: "De lading is nu zichtbaar in het Pijplijn scherm.", duration: 3000 });
-    navigate("/markt/inbox/ladingen");
-  };
 
   /* ── Tabs ── */
   const tabs: PageTab[] = [
@@ -161,8 +159,7 @@ export default function InboxCargoDetail() {
 
   /* ── Negotiations table ── */
   const negColumns: Column[] = [
-    { key: 'company', header: 'Relatie', type: 'leading-text', actionLabel: 'Openen' },
-    { key: 'freightPrice', header: 'Vrachtprijs', type: 'text', subtextKey: 'freightPriceDiff', subtextColorKey: 'freightPriceDiffColor', subtextTooltipKey: 'freightPriceDiffTooltip', align: 'right', width: 'w-[160px]' },
+    { key: 'freightPrice', header: 'Vrachtprijs', type: 'leading-text', actionLabel: 'Openen', subtextKey: 'freightPriceDiff', subtextColorKey: 'freightPriceDiffColor', subtextTooltipKey: 'freightPriceDiffTooltip' },
     { key: 'tonnage', header: 'Tonnage', type: 'text', align: 'right', width: 'w-[120px]' },
     { key: 'deadline', header: 'Deadline', type: 'deadline', expiredKey: 'deadlineExpired', editable: true, width: 'w-[160px]' },
     { key: 'status', header: 'Status', type: 'status', variantKey: 'statusVariant', iconKey: 'statusIcon', typeKey: 'statusType', width: 'w-[160px]' },
@@ -179,32 +176,32 @@ export default function InboxCargoDetail() {
     tonnage: neg.tonnage,
     deadline: neg.deadline,
     deadlineExpired: neg.deadlineExpired,
-    status: neg.status,
-    statusVariant: negotiationStatusVariantMap[neg.status] || 'grey',
-    statusIcon: negotiationStatusIconMap[neg.status] || null,
-    statusType: negotiationStatusTypeMap[neg.status] || 'default',
+    status: toInboxStatus(neg.status),
+    statusVariant: negotiationStatusVariantMap[toInboxStatus(neg.status)] || 'grey',
+    statusIcon: negotiationStatusIconMap[toInboxStatus(neg.status)] || null,
+    statusType: negotiationStatusTypeMap[toInboxStatus(neg.status)] || 'default',
     contactName: neg.contact.name,
     contactDate: neg.contact.date,
     contactAvatar: avatars[idx % avatars.length],
   }));
 
-  const activeNegStatuses = ["Via werklijst", "Bod verstuurd", "Bod ontvangen"];
+  const activeNegStatuses = ["In onderhandeling"];
 
   const filteredMatchRows = matchFilter === "Alles"
-    ? matchRows.map((row) => row.statusBadge === "Aangeboden"
+    ? matchRows.map((row) => row.matchStatus === "aangeboden"
         ? { ...row, _muted: true, actionCompletedLabel: 'Aangeboden' }
         : row)
     : matchFilter === "Aangeboden"
-      ? matchRows.filter((row) => row.statusBadge === "Aangeboden")
-      : matchRows.filter((row) => !row.statusBadge);
+      ? matchRows.filter((row) => row.matchStatus === "aangeboden")
+      : matchRows.filter((row) => row.matchStatus !== "aangeboden");
 
   const filteredNegData = negFilter === "Alles"
     ? negTableData
     : negFilter === "Actief"
       ? negTableData.filter((row) => activeNegStatuses.includes(row.status as string))
-      : negFilter === "Goedgekeurd"
-        ? negTableData.filter((row) => row.status === "Goedgekeurd")
-        : negTableData.filter((row) => row.status === "Afgewezen" || row.status === "Afgekeurd");
+      : negFilter === "Geaccepteerd"
+        ? negTableData.filter((row) => row.status === "Geaccepteerd")
+        : negTableData.filter((row) => row.status === "Geweigerd");
 
   return (
     <>
@@ -246,12 +243,9 @@ export default function InboxCargoDetail() {
                       )
                     }
                     actions={
-                      <>
-                        <Button variant="secondary" label="Archiveren" onClick={handleArchive}
-                          leadingIcon={<svg fill="none" viewBox="0 0 14 14"><path d="M13 1L1 13M1 1L13 13" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.66667" /></svg>}
-                        />
-                        <Button variant="primary" label="Naar pijplijn sturen" onClick={handleMoveToPipeline} />
-                      </>
+                      <Button variant="secondary" label="Archiveren" onClick={handleArchive}
+                        leadingIcon={<svg fill="none" viewBox="0 0 14 14"><path d="M13 1L1 13M1 1L13 13" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.66667" /></svg>}
+                      />
                     }
                     tabs={tabs}
                     onTabClick={(tab: PageTab) => {
@@ -284,12 +278,27 @@ export default function InboxCargoDetail() {
                           hoveredRowId={hoveredRow}
                           onRowHover={setHoveredRow}
                           onRowAction={(row) => {
-                            const relatie = mockRelaties.find(r => r.naam === row.company);
-                            setConversationDialog({
-                              relatieId: relatie?.id || "rel-001",
-                              relatieName: (row.company as string) || "Onbekend",
-                              matchName: row.name as string,
-                            });
+                            if (row.isEigen) {
+                              // Eigen vaartuig: open conversation with the lading owner
+                              setConversationDialog({
+                                relatieId: summary?.relatieId || "",
+                                relatieName: summary?.relatieName || "Onbekend",
+                                matchName: summary?.title,
+                                itemType: "relatie-lading",
+                                rightName: row.name as string,
+                              });
+                            } else {
+                              // Markt vaartuig: open broker dialog (two relaties)
+                              const relatieA = mockRelaties.find(r => r.naam === row.company);
+                              setBrokerDialog({
+                                relatieA: { id: relatieA?.id || "", name: (row.company as string) || "Onbekend" },
+                                vesselName: row.name as string,
+                                vesselSubtitle: (row.subtype as string) || "",
+                                relatieB: { id: summary?.relatieId || "", name: summary?.relatieName || "Onbekend" },
+                                cargoName: summary?.title || "—",
+                                cargoSubtitle: summary?.subtitle || "",
+                              });
+                            }
                           }}
                         />
                       </>
@@ -300,11 +309,12 @@ export default function InboxCargoDetail() {
                         <SectionHeader
                           title="Onderhandelingen"
                           filterLabel={negFilter}
-                          filterOptions={["Alles", "Actief", "Goedgekeurd", "Afgewezen"]}
+                          filterOptions={["Alles", "Actief", "Geaccepteerd", "Geweigerd"]}
                           filterValue={negFilter}
                           onFilterChange={setNegFilter}
                           onAdd={() => setConversationDialog({ relatieId: "", relatieName: "" })}
                           addTooltip="Onderhandeling starten"
+                          addPrimary
                         />
                         <Pagination
                           currentPage={negPage}
@@ -319,7 +329,7 @@ export default function InboxCargoDetail() {
                           hoveredRowId={hoveredRow}
                           onRowHover={setHoveredRow}
                           activeRowId={selectedNegotiation?.id ?? null}
-                          onRowClick={(row) => setSelectedNegotiation({ id: row.id, status: row.status as string, bron: "markt" })}
+                          onRowClick={(row) => setSelectedNegotiation({ id: row.id, status: row.status as string, bron: "markt", relatieName: summary?.relatieName })}
                         />
                       </>
                     )}
@@ -363,6 +373,7 @@ export default function InboxCargoDetail() {
           status={selectedNegotiation.status as any}
           bron={selectedNegotiation.bron as any}
           soort="lading"
+          relatieName={selectedNegotiation.relatieName}
           onClose={() => setSelectedNegotiation(null)}
         />
       )}
@@ -373,10 +384,22 @@ export default function InboxCargoDetail() {
           relatieId={conversationDialog.relatieId}
           relatieName={conversationDialog.relatieName}
           preSelectedMatchName={conversationDialog.matchName}
-          preSelectedOriginId={conversationDialog.matchName ? id : undefined}
-          preSelectedItemId={conversationDialog.matchName ? undefined : id}
-          preSelectedItemType={conversationDialog.matchName ? undefined : "lading"}
+          preSelectedItemType={conversationDialog.itemType}
+          preSelectedRightName={conversationDialog.rightName}
           onClose={() => setConversationDialog(null)}
+        />
+      )}
+
+      {/* Broker dialog (markt-markt matches) */}
+      {brokerDialog && (
+        <BrokerDialog
+          relatieA={brokerDialog.relatieA}
+          vesselName={brokerDialog.vesselName}
+          vesselSubtitle={brokerDialog.vesselSubtitle}
+          relatieB={brokerDialog.relatieB}
+          cargoName={brokerDialog.cargoName}
+          cargoSubtitle={brokerDialog.cargoSubtitle}
+          onClose={() => setBrokerDialog(null)}
         />
       )}
     </>

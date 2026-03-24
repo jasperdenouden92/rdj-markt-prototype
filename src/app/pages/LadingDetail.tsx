@@ -57,7 +57,7 @@ export default function LadingDetail() {
   const navigate = useNavigate();
   const [activeTab, setActiveTabRaw] = useState<'matches' | 'onderhandelingen' | 'activiteit'>('matches');
   const [hoveredRow, setHoveredRow] = useState<string | null>(null);
-  const [selectedNegotiation, setSelectedNegotiation] = useState<{ id: string; status: string; bron: string } | null>(null);
+  const [selectedNegotiation, setSelectedNegotiation] = useState<{ id: string; status: string; bron: string; relatieName?: string } | null>(null);
   const setActiveTab = (tab: typeof activeTab) => { setActiveTabRaw(tab); setSelectedNegotiation(null); };
   const [conversationDialog, setConversationDialog] = useState<{ relatieId: string; relatieName: string; matchName?: string } | null>(null);
   const [matchFilter, setMatchFilter] = useState("Alles");
@@ -288,6 +288,14 @@ export default function LadingDetail() {
                           data={filteredMatchData}
                           hoveredRowId={hoveredRow}
                           onRowHover={setHoveredRow}
+                          onRowClick={(row) => {
+                            const relatie = mockRelaties.find(r => r.naam === row.company);
+                            setConversationDialog({
+                              relatieId: relatie?.id || "rel-001",
+                              relatieName: (row.company as string) || "Onbekend",
+                              matchName: row.name as string,
+                            });
+                          }}
                           onRowAction={(row) => {
                             const relatie = mockRelaties.find(r => r.naam === row.company);
                             setConversationDialog({
@@ -324,7 +332,7 @@ export default function LadingDetail() {
                           hoveredRowId={hoveredRow}
                           onRowHover={setHoveredRow}
                           activeRowId={selectedNegotiation?.id ?? null}
-                          onRowClick={(row) => setSelectedNegotiation({ id: row.id, status: row.status as string, bron: "eigen" })}
+                          onRowClick={(row) => setSelectedNegotiation({ id: row.id, status: row.status as string, bron: "eigen", relatieName: row.company as string })}
                         />
                       </>
                     )}
@@ -361,6 +369,7 @@ export default function LadingDetail() {
           status={selectedNegotiation.status as any}
           bron={selectedNegotiation.bron as any}
           soort="lading"
+          relatieName={selectedNegotiation.relatieName}
           onClose={() => setSelectedNegotiation(null)}
         />
       )}
@@ -371,9 +380,8 @@ export default function LadingDetail() {
           relatieId={conversationDialog.relatieId}
           relatieName={conversationDialog.relatieName}
           preSelectedMatchName={conversationDialog.matchName}
-          preSelectedOriginId={conversationDialog.matchName ? id : undefined}
-          preSelectedItemId={conversationDialog.matchName ? undefined : id}
-          preSelectedItemType={conversationDialog.matchName ? undefined : "lading"}
+          preSelectedItemId={id}
+          preSelectedItemType="lading"
           onClose={() => setConversationDialog(null)}
         />
       )}

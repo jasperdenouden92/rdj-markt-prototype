@@ -146,8 +146,8 @@ export interface ResolvedLadingEigen {
   loshavenCity: string;
   losdatum: string;
   relatieId: string;
-  relatie: string;
-  contactpersoon: string;
+  opdrachtgever: string;
+  opdrachtgeverContact: string;
   eigenaar: string;
   eigenaarInitials: string;
   deadline: string;
@@ -400,8 +400,8 @@ export function useLadingEigenDetail(id: string | undefined) {
           loshavenCity: "",
           losdatum: subpartij?.losdatum || "Af te stemmen",
           relatieId: item.relatieId,
-          relatie: relatie?.naam || "—",
-          contactpersoon: contact?.naam || "—",
+          opdrachtgever: relatie?.naam || "—",
+          opdrachtgeverContact: contact?.naam || "—",
           eigenaar: eigenaar?.naam || "—",
           eigenaarInitials: eigenaar ? getInitials(eigenaar.naam) : "",
           deadline: item.deadline || "—",
@@ -578,215 +578,14 @@ export function useVaartuigEigenDetail(id: string | undefined) {
 }
 
 /**
- * Combined hook that tries to load a lading from either eigen or markt.
- * Returns the resolved type and summary data for PijplijnDetail header.
- */
-export interface PijplijnLadingSummary {
-  type: "eigen" | "markt";
-  title: string;
-  subtitle: string;
-  status: string;
-  statusColor: string;
-  loadSummary: string;
-}
-
-export function usePijplijnLadingSummary(id: string | undefined, typeHint?: "eigen" | "markt") {
-  const [data, setData] = useState<PijplijnLadingSummary | null>(null);
-  const [detectedType, setDetectedType] = useState<"eigen" | "markt">(typeHint || "eigen");
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const mountedRef = useRef(true);
-
-  useEffect(() => {
-    mountedRef.current = true;
-    if (!id) { setLoading(false); return; }
-
-    (async () => {
-      setLoading(true);
-      setError(null);
-      try {
-        const maps = await getLookups();
-
-        // Try the hinted type first, then fallback
-        const tryOrder: Array<"eigen" | "markt"> = typeHint
-          ? [typeHint, typeHint === "eigen" ? "markt" : "eigen"]
-          : ["eigen", "markt"];
-
-        let resolved: PijplijnLadingSummary | null = null;
-
-        for (const t of tryOrder) {
-          try {
-            if (t === "eigen") {
-              const item = await api.get<LadingEigen>("lading_eigen", id);
-              const partij = maps.partijen.get(item.partijId);
-              const subpartij = maps.subpartijen.get(item.subpartijId);
-              const ex = partij?.exId ? maps.exen.get(partij.exId) : null;
-              const soort = partij ? maps.ladingSoorten.get(partij.ladingSoortId) : null;
-              const subsoort = partij ? maps.ladingSubsoorten.get(partij.subsoortId) : null;
-              const relatie = maps.relaties.get(item.relatieId);
-              const laadhaven = partij ? maps.havens.get(partij.laadhavenId) : null;
-              const loshaven = subpartij ? maps.havens.get(subpartij.loshavenId) : null;
-
-              const soortLabel = subsoort ? `${soort?.naam || ""} (${subsoort.naam})` : soort?.naam || "";
-              resolved = {
-                type: "eigen",
-                title: ex ? `${ex.type === "opslag" ? ex.naam : `m/v ${ex.naam}`} - ${relatie?.naam || ""}` : `${subpartij?.naam || ""} - ${relatie?.naam || ""}`,
-                subtitle: `${formatTonnage(item.tonnage)} ton ${soortLabel}`,
-                status: "Is in de markt",
-                statusColor: "#17B26A",
-                loadSummary: `${laadhaven?.naam || "—"} (${subpartij?.laaddatum ? formatDate(subpartij.laaddatum) : "Af te stemmen"}) naar ${loshaven?.naam || "—"} (${subpartij?.losdatum ? formatDate(subpartij.losdatum) : "Af te stemmen"})`,
-              };
-              setDetectedType("eigen");
-            } else {
-              const item = await api.get<LadingMarkt & { status?: string; pijplijnStatus?: string; laaddatum?: string; losdatum?: string }>("lading_markt", id);
-              const soort = maps.ladingSoorten.get(item.ladingSoortId);
-              const subsoort = maps.ladingSubsoorten.get(item.subsoortId);
-              const relatie = maps.relaties.get(item.relatieId);
-              const laadhaven = maps.havens.get(item.laadhavenId);
-              const loshaven = maps.havens.get(item.loshavenId);
-
-              const soortLabel = subsoort ? `${soort?.naam || ""} (${subsoort.naam})` : soort?.naam || "";
-              const pijplijnStatus = (item as any).pijplijnStatus || "markt";
-              const statusLabel = pijplijnStatus === "markt" ? "Is in de markt"
-                : pijplijnStatus === "onderhandeling" ? "Is in onderhandeling"
-                : "Geprijsd";
-              const statusColor = pijplijnStatus === "markt" ? "#17B26A"
-                : pijplijnStatus === "onderhandeling" ? "#F79009"
-                : "#667085";
-
-              resolved = {
-                type: "markt",
-                title: `${formatTonnage(item.tonnage)} ton ${soortLabel} - ${relatie?.naam || ""}`,
-                subtitle: "",
-                status: statusLabel,
-                statusColor,
-                loadSummary: `${laadhaven?.naam || "—"} (${item.laaddatum ? formatDate(item.laaddatum) : "Af te stemmen"}) naar ${loshaven?.naam || "—"} (${item.losdatum ? formatDate(item.losdatum) : "Af te stemmen"})`,
-              };
-              setDetectedType("markt");
-            }
-            break; // Success, stop trying
-          } catch {
-            continue; // Try next type
-          }
-        }
-
-        if (!resolved) {
-          throw new Error(`Lading met id "${id}" niet gevonden in eigen of markt`);
-        }
-
-        if (mountedRef.current) setData(resolved);
-      } catch (err: any) {
-        console.error("usePijplijnLadingSummary error:", err);
-        if (mountedRef.current) setError(err.message);
-      } finally {
-        if (mountedRef.current) setLoading(false);
-      }
-    })();
-
-    return () => { mountedRef.current = false; };
-  }, [id, typeHint]);
-
-  return { data, detectedType, loading, error };
-}
-
-/**
- * Combined hook that tries to load a vaartuig from either eigen or markt.
- * Returns the resolved type and summary data for PijplijnDetail header.
- */
-export interface PijplijnVaartuigSummary {
-  type: "eigen" | "markt";
-  title: string;
-  subtitle: string;
-  status: string;
-  statusColor: string;
-  loadSummary: string;
-}
-
-export function usePijplijnVaartuigSummary(id: string | undefined, typeHint?: "eigen" | "markt") {
-  const [data, setData] = useState<PijplijnVaartuigSummary | null>(null);
-  const [detectedType, setDetectedType] = useState<"eigen" | "markt">(typeHint || "markt");
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const mountedRef = useRef(true);
-
-  useEffect(() => {
-    mountedRef.current = true;
-    if (!id) { setLoading(false); return; }
-
-    (async () => {
-      setLoading(true);
-      setError(null);
-      try {
-        const maps = await getLookups();
-
-        const tryOrder: Array<"eigen" | "markt"> = typeHint
-          ? [typeHint, typeHint === "eigen" ? "markt" : "eigen"]
-          : ["markt", "eigen"];
-
-        let resolved: PijplijnVaartuigSummary | null = null;
-
-        for (const t of tryOrder) {
-          try {
-            if (t === "markt") {
-              const item = await api.get<VaartuigMarkt>("vaartuig_markt", id);
-              const locatie = maps.havens.get(item.huidigeLocatieId);
-              const relatie = maps.relaties.get(item.relatieId);
-
-              resolved = {
-                type: "markt",
-                title: `${item.naam} - ${relatie?.naam || ""}`,
-                subtitle: `${item.groottonnage.toLocaleString("nl-NL")} ton · ${item.lengte}m × ${item.breedte}m`,
-                status: "Is in de markt",
-                statusColor: "#17B26A",
-                loadSummary: `${locatie?.naam || "—"} · Beschikbaar vanaf ${item.beschikbaarVanaf ? formatDate(item.beschikbaarVanaf) : "Af te stemmen"}`,
-              };
-              setDetectedType("markt");
-            } else {
-              const item = await api.get<VaartuigEigen>("vaartuig_eigen", id);
-              const locatie = maps.havens.get(item.huidigeLocatieId);
-
-              resolved = {
-                type: "eigen",
-                title: `${item.naam} - Rederij de Jong`,
-                subtitle: `${item.groottonnage.toLocaleString("nl-NL")} ton · ${item.lengte}m × ${item.breedte}m`,
-                status: "Is in de markt",
-                statusColor: "#17B26A",
-                loadSummary: `${locatie?.naam || "—"} · Beschikbaar vanaf ${item.beschikbaarVanaf ? formatDate(item.beschikbaarVanaf) : "Af te stemmen"}`,
-              };
-              setDetectedType("eigen");
-            }
-            break;
-          } catch {
-            continue;
-          }
-        }
-
-        if (!resolved) {
-          throw new Error(`Vaartuig met id "${id}" niet gevonden in eigen of markt`);
-        }
-
-        if (mountedRef.current) setData(resolved);
-      } catch (err: any) {
-        console.error("usePijplijnVaartuigSummary error:", err);
-        if (mountedRef.current) setError(err.message);
-      } finally {
-        if (mountedRef.current) setLoading(false);
-      }
-    })();
-
-    return () => { mountedRef.current = false; };
-  }, [id, typeHint]);
-
-  return { data, detectedType, loading, error };
-}
-
-/**
  * Unified hook for inbox detail pages - resolves a lading_markt with full summary.
  */
 export interface InboxLadingSummary {
   title: string;
   subtitle: string;
   breadcrumbLabel: string;
+  relatieId: string;
+  relatieName: string;
 }
 
 export function useInboxLadingSummary(id: string | undefined) {
@@ -812,6 +611,7 @@ export function useInboxLadingSummary(id: string | undefined) {
         const subsoort = maps.ladingSubsoorten.get(item.subsoortId);
         const laadhaven = maps.havens.get(item.laadhavenId);
         const loshaven = maps.havens.get(item.loshavenId);
+        const relatie = maps.relaties.get(item.relatieId);
 
         const soortLabel = subsoort ? `${soort?.naam || ""} (${subsoort.naam})` : soort?.naam || "";
         const title = `${formatTonnage(item.tonnage)} ton ${soortLabel}`;
@@ -820,6 +620,8 @@ export function useInboxLadingSummary(id: string | undefined) {
           title,
           subtitle: `Vanuit ${laadhaven?.naam || "—"} (${item.laaddatum ? formatDate(item.laaddatum) : "Af te stemmen"}) naar ${loshaven?.naam || "—"} (${item.losdatum ? formatDate(item.losdatum) : "Af te stemmen"})`,
           breadcrumbLabel: title.substring(0, 20),
+          relatieId: item.relatieId,
+          relatieName: relatie?.naam || "—",
         };
 
         if (mountedRef.current) setData(resolved);
@@ -844,6 +646,8 @@ export interface InboxVaartuigSummary {
   title: string;
   subtitle: string;
   breadcrumbLabel: string;
+  relatieId: string;
+  relatieName: string;
 }
 
 export function useInboxVaartuigSummary(id: string | undefined) {
@@ -866,11 +670,14 @@ export function useInboxVaartuigSummary(id: string | undefined) {
         ]);
 
         const locatie = maps.havens.get(item.huidigeLocatieId);
+        const relatie = maps.relaties.get(item.relatieId);
 
         const resolved: InboxVaartuigSummary = {
           title: item.naam,
           subtitle: `Motorschip in ${locatie?.naam || "—"} · Beschikbaar op ${item.beschikbaarVanaf ? formatDate(item.beschikbaarVanaf) : "Af te stemmen"}`,
           breadcrumbLabel: item.naam,
+          relatieId: item.relatieId,
+          relatieName: relatie?.naam || "—",
         };
 
         if (mountedRef.current) setData(resolved);
@@ -937,8 +744,8 @@ export function useBevrachtingLadingSummary(id: string | undefined) {
             title,
             exType: ex?.type,
             subtitle: `${formatTonnage(item.tonnage)} ton ${soortLabel} vanuit ${laadhaven?.naam || "—"} (${subpartij?.laaddatum ? formatDate(subpartij.laaddatum) : "Af te stemmen"}) naar ${loshaven?.naam || "—"} (${subpartij?.losdatum ? formatDate(subpartij.losdatum) : "Af te stemmen"})`,
-            status: status === "pijplijn" ? "Pijplijn" : status === "inbox" ? "Inbox" : status === "markt" ? "In de markt" : status === "werklijst" ? "Werklijst" : status === "intake" ? "Intake" : "Gesloten",
-            statusVariant: status === "pijplijn" ? "brand" : status === "inbox" ? "grey" : status === "markt" ? "success" : status === "werklijst" ? "warning" : status === "intake" ? "brand" : "grey",
+            status: status === "inbox" ? "Inbox" : status === "markt" ? "In de markt" : status === "werklijst" ? "Werklijst" : status === "intake" ? "Intake" : "Gesloten",
+            statusVariant: status === "inbox" ? "grey" : status === "markt" ? "success" : status === "werklijst" ? "warning" : status === "intake" ? "brand" : "grey",
             breadcrumbLabel: title.substring(0, 20),
           };
         } catch {
@@ -956,8 +763,8 @@ export function useBevrachtingLadingSummary(id: string | undefined) {
           resolved = {
             title,
             subtitle: `vanuit ${laadhaven?.naam || "—"} (${item.laaddatum ? formatDate(item.laaddatum) : "Af te stemmen"}) naar ${loshaven?.naam || "—"} (${item.losdatum ? formatDate(item.losdatum) : "Af te stemmen"})`,
-            status: status === "pijplijn" ? "Pijplijn" : status === "inbox" ? "Inbox" : status === "markt" ? "In de markt" : status === "werklijst" ? "Werklijst" : status === "intake" ? "Intake" : "Gesloten",
-            statusVariant: status === "pijplijn" ? "brand" : status === "inbox" ? "grey" : status === "markt" ? "success" : status === "werklijst" ? "warning" : status === "intake" ? "brand" : "grey",
+            status: status === "inbox" ? "Inbox" : status === "markt" ? "In de markt" : status === "werklijst" ? "Werklijst" : status === "intake" ? "Intake" : "Gesloten",
+            statusVariant: status === "inbox" ? "grey" : status === "markt" ? "success" : status === "werklijst" ? "warning" : status === "intake" ? "brand" : "grey",
             breadcrumbLabel: title.substring(0, 20),
           };
         }
@@ -1022,8 +829,8 @@ export function useBevrachtingVaartuigSummary(id: string | undefined) {
         const resolved: BevrachtingVaartuigSummary = {
           title: item.naam,
           subtitle: `Motorschip · ${item.groottonnage.toLocaleString("nl-NL")} ton · ${locatie?.naam || "—"} (${item.beschikbaarVanaf ? formatDate(item.beschikbaarVanaf) : "Af te stemmen"})`,
-          status: status === "pijplijn" ? "Pijplijn" : status === "inbox" ? "Inbox" : status === "markt" ? "In de markt" : status === "werklijst" ? "Werklijst" : status === "intake" ? "Intake" : "Gesloten",
-          statusVariant: status === "pijplijn" ? "brand" : status === "inbox" ? "grey" : status === "markt" ? "success" : status === "werklijst" ? "warning" : status === "intake" ? "brand" : "grey",
+          status: status === "inbox" ? "Inbox" : status === "markt" ? "In de markt" : status === "werklijst" ? "Werklijst" : status === "intake" ? "Intake" : "Gesloten",
+          statusVariant: status === "inbox" ? "grey" : status === "markt" ? "success" : status === "werklijst" ? "warning" : status === "intake" ? "brand" : "grey",
           breadcrumbLabel: item.naam,
         };
 

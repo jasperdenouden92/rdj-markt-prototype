@@ -276,7 +276,7 @@ export default function ContractDetail() {
                           <div>
                             <p className="font-sans font-bold text-[16px] leading-[24px] text-rdj-text-primary mb-[12px]">Markt</p>
                             <Link
-                              to="/markt/pijplijn"
+                              to="/markt/onderhandelingen"
                               className="flex items-center justify-between border border-rdj-border-secondary rounded-[8px] p-[16px] hover:bg-[#f9fafb] transition-colors group"
                             >
                               <div>

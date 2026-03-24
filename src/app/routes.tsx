@@ -104,7 +104,7 @@ export const router = createBrowserRouter([
         path: "markt/bevrachting/vaartuig/:id/nieuweonderhandeling",
         Component: NieuweOnderhandeling,
       },
-      // Nieuw bod (previously under pijplijn)
+      // Nieuw bod
       {
         path: "markt/onderhandelingen/:id/nieuwbod",
         Component: NieuwBod,

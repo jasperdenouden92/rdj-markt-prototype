@@ -18,7 +18,7 @@ interface FloatingActionBarProps {
   /** Called when "Archiveren" is clicked */
   onArchive: () => void;
   /** Called when "Naar onderhandeling sturen" is clicked */
-  onMoveToPipeline: () => void;
+  onNegotiate: () => void;
 }
 
 export default function FloatingActionBar({
@@ -27,7 +27,7 @@ export default function FloatingActionBar({
   itemLabel,
   onSelectAll,
   onArchive,
-  onMoveToPipeline,
+  onNegotiate,
 }: FloatingActionBarProps) {
   if (selectedCount === 0) return null;
 
@@ -62,7 +62,7 @@ export default function FloatingActionBar({
                 variant="primary"
                 size="sm"
                 label="Naar onderhandeling sturen"
-                onClick={(e) => { e.stopPropagation(); onMoveToPipeline(); }}
+                onClick={(e) => { e.stopPropagation(); onNegotiate(); }}
               />
             </div>
           </div>
