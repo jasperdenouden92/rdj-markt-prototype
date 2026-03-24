@@ -8,6 +8,7 @@ import PageHeader from "../components/PageHeader";
 import type { PageTab } from "../components/PageHeader";
 import Table from "../components/Table";
 import type { Column, RowData } from "../components/Table";
+import useTableSort from "../components/useTableSort";
 import Pagination from "../components/Pagination";
 import FilterDropdown from "../components/FilterDropdown";
 import SegmentedButtonGroup from "../components/SegmentedButtonGroup";
@@ -224,6 +225,8 @@ export default function Contracten() {
     };
   });
 
+  const { sortedColumns, sortedData } = useTableSort(columns, tableData);
+
   const handleCreate = (data: Partial<Contract>) => {
     const newContract: Contract = {
       id: `ctr-${Date.now()}`,
@@ -354,8 +357,8 @@ export default function Contracten() {
                 onRowsPerPageChange={setRowsPerPage}
               />
               <Table
-                columns={columns}
-                data={tableData}
+                columns={sortedColumns}
+                data={sortedData}
                 hoveredRowId={hoveredRow}
                 onRowHover={setHoveredRow}
                 onRowClick={(row) => navigate(`/crm/deal/${row.id}`)}

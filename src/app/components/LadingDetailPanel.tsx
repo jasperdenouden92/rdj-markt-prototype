@@ -1,10 +1,11 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { Send, MailOpen, Check, X } from "lucide-react";
 import ModelessPanel from "./ModelessPanel";
 import type { PageTab } from "./PageHeader";
 import Badge from "./Badge";
 import Table from "./Table";
 import type { Column, RowData } from "./Table";
+import useTableSort from "./useTableSort";
 import Pagination from "./Pagination";
 import Button from "./Button";
 import ActivityFeed from "./ActivityFeed";
@@ -140,6 +141,9 @@ export default function LadingDetailPanel({ id, onClose }: LadingDetailPanelProp
     contactAvatar: avatars[idx % avatars.length],
   }));
 
+  const { sortedColumns: sortedMatchColumns, sortedData: sortedMatchData } = useTableSort(matchColumns, matchTableData);
+  const { sortedColumns: sortedNegColumns, sortedData: sortedNegData } = useTableSort(negColumns, negTableData);
+
   const actions = (
     <>
       <Button
@@ -219,8 +223,8 @@ export default function LadingDetailPanel({ id, onClose }: LadingDetailPanelProp
                 onRowsPerPageChange={setMatchRowsPerPage}
               />
               <Table
-                columns={matchColumns}
-                data={matchTableData}
+                columns={sortedMatchColumns}
+                data={sortedMatchData}
                 hoveredRowId={hoveredRow}
                 onRowHover={setHoveredRow}
                 onRowAction={(row) => {
@@ -245,8 +249,8 @@ export default function LadingDetailPanel({ id, onClose }: LadingDetailPanelProp
                 onRowsPerPageChange={setNegRowsPerPage}
               />
               <Table
-                columns={negColumns}
-                data={negTableData}
+                columns={sortedNegColumns}
+                data={sortedNegData}
                 hoveredRowId={hoveredRow}
                 onRowHover={setHoveredRow}
                 onRowClick={(row) => setSelectedNegotiationId(row.id)}
