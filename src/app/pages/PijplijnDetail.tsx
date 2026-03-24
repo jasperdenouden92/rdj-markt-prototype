@@ -499,6 +499,7 @@ export default function PijplijnDetail() {
             negotiationId={selectedNegotiation.id}
             status={selectedNegotiation.status as any}
             bron={selectedNegotiation.bron as any}
+            soort={isVaartuig ? "vaartuig" : "lading"}
             onClose={() => setSelectedNegotiation(null)}
           />
         )}

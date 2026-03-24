@@ -931,6 +931,7 @@ export default function Onderhandelingen() {
           negotiationId={selectedNegotiation.id}
           status={selectedNegotiation.status as "Via werklijst" | "Bod verstuurd" | "Bod ontvangen" | "Goedgekeurd" | "Afgewezen"}
           bron={selectedNegotiation.bron as "eigen" | "markt"}
+          soort={activeTab === "vaartuigen" ? "vaartuig" : "lading"}
           onClose={() => setSelectedNegotiation(null)}
         />
       )}

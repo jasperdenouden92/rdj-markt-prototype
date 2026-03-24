@@ -332,6 +332,7 @@ export default function InboxVesselDetail() {
           negotiationId={selectedNegotiation.id}
           status={selectedNegotiation.status as any}
           bron={selectedNegotiation.bron as any}
+          soort="vaartuig"
           onClose={() => setSelectedNegotiation(null)}
         />
       )}
