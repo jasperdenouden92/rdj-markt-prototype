@@ -24,7 +24,7 @@ import imgAvatar4 from "../../assets/9e45f45f537bea4bf653bc0307471e5ff5545f63.pn
 
 /* ── Mock vessel matches ── */
 const vesselMatches = [
-  { id: 'VM001', cargo: '3.000 ton Houtpellets (DSIT)', company: 'Rederij de Jong', contactPersoon: 'Pieter de Jong', laadHaven: 'Salzgitter Stichkanal', laadDatum: 'Ma 12 Jan 10:00', losHaven: 'Hamburg Veddelkanal', losDatum: 'Vr 16 Jan 14:00', matchPercentage: 92, isEigen: true, source: 'Rederij de Jong', sourceDate: 'Do 5 Feb 12:44' },
+  { id: 'VM001', cargo: '3.000 ton Houtpellets (DSIT)', exNaam: 'Houtpellets Salzgitter', company: 'Rederij de Jong', contactPersoon: 'Pieter de Jong', laadHaven: 'Salzgitter Stichkanal', laadDatum: 'Ma 12 Jan 10:00', losHaven: 'Hamburg Veddelkanal', losDatum: 'Vr 16 Jan 14:00', matchPercentage: 92, isEigen: true, source: 'Rederij de Jong', sourceDate: 'Do 5 Feb 12:44' },
   { id: 'VM002', cargo: '2.000 ton Koolraapzaad', company: 'Agro Delta Groep', contactPersoon: 'Jaeger den Oud', laadHaven: 'Rotterdam Europoort', laadDatum: 'Do 15 Jan 08:00', losHaven: 'Mannheim', losDatum: 'Ma 19 Jan', matchPercentage: 85, isEigen: false, source: 'Automatische feed', sourceDate: 'Do 5 Feb 12:44' },
   { id: 'VM003', cargo: '2.000 ton Houtpellets', company: 'Provaart Logistics BV', contactPersoon: 'Frits van Dam', laadHaven: 'Rotterdam Europoort', laadDatum: 'Do 15 Jan 08:00', losHaven: 'Mannheim', losDatum: 'Af te stemmen', matchPercentage: 78, isEigen: false, source: 'Automatische feed', sourceDate: 'Do 5 Feb 13:24' },
   { id: 'VM004', cargo: '1.500 ton Graan', company: 'Cargill N.V.', contactPersoon: 'Lisa Abraham', laadHaven: 'Bremerhaven', laadDatum: 'Ma 19 Jan', losHaven: 'Duisburg', losDatum: 'Wo 21 Jan', matchPercentage: 65, isEigen: false, source: 'Automatische feed', sourceDate: 'Vr 6 Feb 09:01' },
@@ -94,7 +94,8 @@ export default function VaartuigDetailPanel({ id, onClose }: VaartuigDetailPanel
   ];
 
   const matchColumns: Column[] = [
-    { key: 'cargo', header: 'Lading', type: 'leading-text', badgeKey: 'eigenBadge', actionLabel: 'Onderhandeling' },
+    { key: 'cargoTitle', header: 'Lading', type: 'leading-text', subtextKey: 'cargoSubtitle', maxWidth: 'max-w-[480px]', badgeKey: 'eigenBadge', actionLabel: 'Onderhandeling' },
+    { key: 'tonnage', header: 'Tonnage', type: 'text', width: 'w-[120px]', align: 'right' },
     { key: 'company', header: 'Relatie', type: 'text', subtextKey: 'contactPersoon', textColor: 'text-rdj-text-brand', width: 'w-[160px]', onClickKey: 'onRelatieClick' },
     { key: 'laadHaven', header: 'Laden', type: 'text', subtextKey: 'laadDatum', width: 'w-[160px]' },
     { key: 'losHaven', header: 'Lossen', type: 'text', subtextKey: 'losDatum', width: 'w-[160px]' },
@@ -109,9 +110,15 @@ export default function VaartuigDetailPanel({ id, onClose }: VaartuigDetailPanel
   );
 
   const navigate = useNavigate();
-  const matchTableData: RowData[] = vesselMatches.map((m) => ({
+  const matchTableData: RowData[] = vesselMatches.map((m) => {
+    const tonnageMatch = m.cargo.match(/^([\d.,\s\-]+ton)\s+(.+)$/);
+    const tonnage = tonnageMatch ? tonnageMatch[1].trim() : '';
+    const ladingSoort = tonnageMatch ? tonnageMatch[2] : m.cargo;
+    return {
     id: m.id,
-    cargo: m.cargo,
+    cargoTitle: m.isEigen ? m.exNaam ?? ladingSoort : ladingSoort,
+    cargoSubtitle: m.isEigen ? `${tonnage} ${ladingSoort}`.trim() : tonnage,
+    tonnage,
     eigenBadge: m.isEigen ? undefined : 'Markt',
     company: m.company,
     contactPersoon: m.contactPersoon,
@@ -125,7 +132,7 @@ export default function VaartuigDetailPanel({ id, onClose }: VaartuigDetailPanel
     sourceIcon: sourceIcon,
     sourceIconVariant: 'grey',
     matchPercentage: m.matchPercentage,
-  }));
+  }; });
 
   const negColumns: Column[] = [
     { key: 'company', header: 'Relatie', type: 'leading-text', subtextKey: 'cargo', actionLabel: 'Openen' },
@@ -249,7 +256,7 @@ export default function VaartuigDetailPanel({ id, onClose }: VaartuigDetailPanel
                   setConversationDialog({
                     relatieId: relatie?.id || "rel-001",
                     relatieName: (row.company as string) || "Onbekend",
-                    matchName: row.cargo as string,
+                    matchName: row.cargoTitle as string,
                   });
                 }}
               />
