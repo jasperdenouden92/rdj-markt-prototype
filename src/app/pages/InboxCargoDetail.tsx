@@ -49,6 +49,8 @@ export default function InboxCargoDetail() {
   const [selectedMatch, setSelectedMatch] = useState<any>(null);
   const [offeredMatches, setOfferedMatches] = useState<Set<string>>(new Set());
   const [conversationDialog, setConversationDialog] = useState<{ relatieId: string; relatieName: string; matchName?: string } | null>(null);
+  const [matchFilter, setMatchFilter] = useState("Alles");
+  const [activityFilter, setActivityFilter] = useState("Alle activiteit");
   const { data: summary, loading: summaryLoading } = useInboxLadingSummary(id);
 
   useEffect(() => {
@@ -150,7 +152,13 @@ export default function InboxCargoDetail() {
 
                 {/* Matches section */}
                 <div className="w-full px-[24px]">
-                  <SectionHeader title="Matches" />
+                  <SectionHeader
+                    title="Matches"
+                    filterLabel={matchFilter}
+                    filterOptions={["Alles", "Openstaand", "Aangeboden"]}
+                    filterValue={matchFilter}
+                    onFilterChange={setMatchFilter}
+                  />
                   <div className="border-t border-rdj-border-secondary">
                     <Table
                       columns={matchColumns}
@@ -169,7 +177,13 @@ export default function InboxCargoDetail() {
 
                 {/* Activity section */}
                 <div className="w-full px-[24px]">
-                  <SectionHeader title="Activiteit" />
+                  <SectionHeader
+                    title="Activiteit"
+                    filterLabel={activityFilter}
+                    filterOptions={["Alle activiteit", "Jouw activiteit"]}
+                    filterValue={activityFilter}
+                    onFilterChange={setActivityFilter}
+                  />
                   <ActivityFeed compact />
                 </div>
               </div>

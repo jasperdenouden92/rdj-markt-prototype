@@ -47,6 +47,8 @@ export default function InboxVesselDetail() {
   const navigate = useNavigate();
   const { data: summary, loading: summaryLoading } = useInboxVaartuigSummary(id);
   const [conversationDialog, setConversationDialog] = useState<{ relatieId: string; relatieName: string; matchName?: string } | null>(null);
+  const [matchFilter, setMatchFilter] = useState("Alles");
+  const [activityFilter, setActivityFilter] = useState("Alle activiteit");
 
   const handleArchive = () => {
     toast.success("Vaartuig gearchiveerd", { description: "Het vaartuig is verwijderd uit de inbox.", duration: 3000 });
@@ -130,7 +132,13 @@ export default function InboxVesselDetail() {
 
                 {/* Matches section */}
                 <div className="w-full px-[24px]">
-                  <SectionHeader title="Matches" />
+                  <SectionHeader
+                    title="Matches"
+                    filterLabel={matchFilter}
+                    filterOptions={["Alles", "Openstaand", "Aangeboden"]}
+                    filterValue={matchFilter}
+                    onFilterChange={setMatchFilter}
+                  />
                   <div className="border-t border-rdj-border-secondary">
                     <Table
                       columns={matchColumns}
@@ -149,7 +157,13 @@ export default function InboxVesselDetail() {
 
                 {/* Activity section */}
                 <div className="w-full px-[24px]">
-                  <SectionHeader title="Activiteit" />
+                  <SectionHeader
+                    title="Activiteit"
+                    filterLabel={activityFilter}
+                    filterOptions={["Alle activiteit", "Jouw activiteit"]}
+                    filterValue={activityFilter}
+                    onFilterChange={setActivityFilter}
+                  />
                   <ActivityFeed compact />
                 </div>
               </div>

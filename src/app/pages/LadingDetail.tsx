@@ -10,6 +10,7 @@ import type { Column, RowData } from "../components/Table";
 import Pagination from "../components/Pagination";
 import Button from "../components/Button";
 import ActivityFeed from "../components/ActivityFeed";
+import SectionHeader from "../components/SectionHeader";
 import LadingEigenSidebar from "../components/LadingEigenSidebar";
 import NegotiationDialog from "../components/NegotiationDialog";
 import ConversationDialog from "../components/ConversationDialog";
@@ -58,6 +59,9 @@ export default function LadingDetail() {
   const [hoveredRow, setHoveredRow] = useState<string | null>(null);
   const [selectedNegotiationId, setSelectedNegotiationId] = useState<string | null>(null);
   const [conversationDialog, setConversationDialog] = useState<{ relatieId: string; relatieName: string } | null>(null);
+  const [matchFilter, setMatchFilter] = useState("Alles");
+  const [negFilter, setNegFilter] = useState("Actief");
+  const [activityFilter, setActivityFilter] = useState("Alle activiteit");
 
   /* Pagination state per tab */
   const [matchPage, setMatchPage] = useState(1);
@@ -247,6 +251,13 @@ export default function LadingDetail() {
                   <div className="w-full pt-[20px]">
                     {activeTab === 'matches' && (
                       <>
+                        <SectionHeader
+                          title="Matches"
+                          filterLabel={matchFilter}
+                          filterOptions={["Alles", "Openstaand", "Aangeboden"]}
+                          filterValue={matchFilter}
+                          onFilterChange={setMatchFilter}
+                        />
                         <Pagination
                           currentPage={matchPage}
                           totalItems={mockMatches.length}
@@ -272,6 +283,15 @@ export default function LadingDetail() {
 
                     {activeTab === 'onderhandelingen' && (
                       <>
+                        <SectionHeader
+                          title="Onderhandelingen"
+                          filterLabel={negFilter}
+                          filterOptions={["Alles", "Actief", "Goedgekeurd", "Afgewezen"]}
+                          filterValue={negFilter}
+                          onFilterChange={setNegFilter}
+                          onAdd={() => setConversationDialog({ relatieId: "", relatieName: "" })}
+                          addTooltip="Onderhandeling starten"
+                        />
                         <Pagination
                           currentPage={negPage}
                           totalItems={mockNegotiations.length}
@@ -290,9 +310,18 @@ export default function LadingDetail() {
                     )}
 
                     {activeTab === 'activiteit' && (
-                      <div className="w-full px-[24px]">
-                        <ActivityFeed />
-                      </div>
+                      <>
+                        <SectionHeader
+                          title="Activiteit"
+                          filterLabel={activityFilter}
+                          filterOptions={["Alle activiteit", "Jouw activiteit"]}
+                          filterValue={activityFilter}
+                          onFilterChange={setActivityFilter}
+                        />
+                        <div className="w-full px-[24px]">
+                          <ActivityFeed />
+                        </div>
+                      </>
                     )}
                   </div>
                 </div>

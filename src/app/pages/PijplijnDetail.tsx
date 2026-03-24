@@ -90,7 +90,9 @@ export default function PijplijnDetail() {
   const location = useLocation();
   const [activeTab, setActiveTab] = useState<'onderhandelingen' | 'matches' | 'activiteit'>('onderhandelingen');
   const [selectedNegotiationId, setSelectedNegotiationId] = useState<string | null>(null);
-  const [negotiationFilter, setNegotiationFilter] = useState('Actieve onderhandelingen');
+  const [negotiationFilter, setNegotiationFilter] = useState('Actief');
+  const [matchFilter, setMatchFilter] = useState("Alles");
+  const [activityFilter, setActivityFilter] = useState("Alle activiteit");
   const [hoveredRow, setHoveredRow] = useState<string | null>(null);
   const [conversationDialog, setConversationDialog] = useState<{ relatieId: string; relatieName: string } | null>(null);
 
@@ -391,7 +393,7 @@ export default function PijplijnDetail() {
                 <SectionHeader
                   title="Onderhandelingen"
                   filterLabel={negotiationFilter}
-                  filterOptions={['Actieve onderhandelingen', 'Alle onderhandelingen', 'Goedgekeurd', 'Afgewezen']}
+                  filterOptions={['Alles', 'Actief', 'Goedgekeurd', 'Afgewezen']}
                   filterValue={negotiationFilter}
                   onFilterChange={setNegotiationFilter}
                   onAdd={() => navigate(`/markt/pijplijn/${isVaartuig ? 'vaartuig/' : ''}${id}/nieuweonderhandeling`)}
@@ -416,7 +418,13 @@ export default function PijplijnDetail() {
 
             {activeTab === 'matches' && (
               <>
-                <SectionHeader title="Matches" />
+                <SectionHeader
+                  title="Matches"
+                  filterLabel={matchFilter}
+                  filterOptions={["Alles", "Openstaand", "Aangeboden"]}
+                  filterValue={matchFilter}
+                  onFilterChange={setMatchFilter}
+                />
                 <Pagination
                   currentPage={matchPage}
                   totalItems={matchData.length}
@@ -441,7 +449,16 @@ export default function PijplijnDetail() {
             )}
 
             {activeTab === 'activiteit' && (
-              <ActivityFeed />
+              <>
+                <SectionHeader
+                  title="Activiteit"
+                  filterLabel={activityFilter}
+                  filterOptions={["Alle activiteit", "Jouw activiteit"]}
+                  filterValue={activityFilter}
+                  onFilterChange={setActivityFilter}
+                />
+                <ActivityFeed />
+              </>
             )}
           </div>
         </div>

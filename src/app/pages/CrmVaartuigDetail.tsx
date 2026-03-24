@@ -9,6 +9,8 @@ import type { Column, RowData } from "../components/Table";
 import Pagination from "../components/Pagination";
 import Button from "../components/Button";
 import ActivityFeed from "../components/ActivityFeed";
+import SectionHeader from "../components/SectionHeader";
+import ConversationDialog from "../components/ConversationDialog";
 import { mockRelaties, mockRelatieVaartuigen, mockRelatieVaartuigMatches } from "../data/mock-relatie-data";
 
 const vaartuigStatusMap: Record<string, { label: string; variant: "success" | "warning" | "brand" | "grey" }> = {
@@ -37,6 +39,10 @@ export default function CrmVaartuigDetail() {
   const [hoveredRow, setHoveredRow] = useState<string | null>(null);
   const [matchPage, setMatchPage] = useState(1);
   const [matchRowsPerPage, setMatchRowsPerPage] = useState(50);
+  const [matchFilter, setMatchFilter] = useState("Alles");
+  const [negFilter, setNegFilter] = useState("Actief");
+  const [activityFilter, setActivityFilter] = useState("Alle activiteit");
+  const [conversationDialog, setConversationDialog] = useState<{ relatieId: string; relatieName: string } | null>(null);
 
   const vaartuig = useMemo(() => mockRelatieVaartuigen.find((v) => v.id === id), [id]);
   const relatie = useMemo(() => mockRelaties.find((r) => r.id === (relatieId || vaartuig?.relatieId)), [relatieId, vaartuig]);
@@ -157,6 +163,13 @@ export default function CrmVaartuigDetail() {
                   <div className="w-full pt-[20px]">
                     {activeTab === "matches" && (
                       <>
+                        <SectionHeader
+                          title="Matches"
+                          filterLabel={matchFilter}
+                          filterOptions={["Alles", "Openstaand", "Aangeboden"]}
+                          filterValue={matchFilter}
+                          onFilterChange={setMatchFilter}
+                        />
                         <Pagination
                           currentPage={matchPage}
                           totalItems={matches.length}
@@ -175,17 +188,37 @@ export default function CrmVaartuigDetail() {
                     )}
 
                     {activeTab === "onderhandelingen" && (
-                      <div className="w-full px-[24px] py-[48px] text-center">
-                        <p className="font-sans font-normal text-[14px] text-rdj-text-tertiary">
-                          Nog geen onderhandelingen gestart voor dit vaartuig.
-                        </p>
-                      </div>
+                      <>
+                        <SectionHeader
+                          title="Onderhandelingen"
+                          filterLabel={negFilter}
+                          filterOptions={["Alles", "Actief", "Goedgekeurd", "Afgewezen"]}
+                          filterValue={negFilter}
+                          onFilterChange={setNegFilter}
+                          onAdd={() => setConversationDialog({ relatieId: relatie?.id || "", relatieName: relatie?.naam || "" })}
+                          addTooltip="Onderhandeling starten"
+                        />
+                        <div className="w-full px-[24px] py-[48px] text-center">
+                          <p className="font-sans font-normal text-[14px] text-rdj-text-tertiary">
+                            Nog geen onderhandelingen gestart voor dit vaartuig.
+                          </p>
+                        </div>
+                      </>
                     )}
 
                     {activeTab === "activiteit" && (
-                      <div className="w-full px-[24px]">
-                        <ActivityFeed />
-                      </div>
+                      <>
+                        <SectionHeader
+                          title="Activiteit"
+                          filterLabel={activityFilter}
+                          filterOptions={["Alle activiteit", "Jouw activiteit"]}
+                          filterValue={activityFilter}
+                          onFilterChange={setActivityFilter}
+                        />
+                        <div className="w-full px-[24px]">
+                          <ActivityFeed />
+                        </div>
+                      </>
                     )}
                   </div>
                 </div>
@@ -239,6 +272,17 @@ export default function CrmVaartuigDetail() {
           </div>
         </div>
       </div>
+
+      {/* Conversation dialog */}
+      {conversationDialog && (
+        <ConversationDialog
+          relatieId={conversationDialog.relatieId}
+          relatieName={conversationDialog.relatieName}
+          preSelectedItemId={id}
+          preSelectedItemType="vaartuig"
+          onClose={() => setConversationDialog(null)}
+        />
+      )}
     </div>
   );
 }
