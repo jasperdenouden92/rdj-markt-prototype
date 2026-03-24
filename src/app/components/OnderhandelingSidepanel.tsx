@@ -1,5 +1,7 @@
 import { useState } from "react";
-import { X, Check, ArrowRight, Send, MailOpen, PenLine, ListTodo, Calendar, Pencil, MessageSquare } from "lucide-react";
+import { X, Check, ArrowRight, Send, MailOpen, PenLine, ListTodo, Calendar, Pencil, MessageSquare, FileText, Truck, ShoppingBag, UserX } from "lucide-react";
+import { toast } from "sonner";
+import ApprovalConfirmationDialog, { type ApprovalOptions } from "./ApprovalConfirmationDialog";
 import ModelessPanel from "./ModelessPanel";
 import { DetailsSidebarSection } from "./DetailsSidebar";
 import DetailRow from "./DetailRow";
@@ -218,15 +220,80 @@ interface OnderhandelingSidepanelProps {
   /** Initial sidebar tab (defaults to "activiteit") */
   initialSideTab?: SideTab;
   onClose: () => void;
+  onStatusChange?: (id: string, newStatus: string) => void;
 }
 
-export default function OnderhandelingSidepanel({ negotiationId, status, bron, soort, relatieName, subtitle: subtitleText, initialSideTab, onClose }: OnderhandelingSidepanelProps) {
+type ApprovalAction = "generateCharter" | "sendToLoadPlanning" | "removeFromMarket" | "rejectOtherBids";
+
+const approvalActionConfig: { key: ApprovalAction; label: string; icon: React.ReactNode; toastMsg: (relatieName?: string) => string }[] = [
+  { key: "generateCharter", label: "Charter genereren & verzenden", icon: <FileText size={16} strokeWidth={2.5} />, toastMsg: (r) => `Charter gegenereerd en verstuurd naar ${r || "relatie"}` },
+  { key: "sendToLoadPlanning", label: "Doorsturen naar laadplanning", icon: <Truck size={16} strokeWidth={2.5} />, toastMsg: () => "Lading doorgestuurd naar laadplanning" },
+  { key: "removeFromMarket", label: "Partij uit de markt halen", icon: <ShoppingBag size={16} strokeWidth={2.5} />, toastMsg: () => "Partij uit de markt gehaald" },
+  { key: "rejectOtherBids", label: "Andere biedingen afwijzen", icon: <UserX size={16} strokeWidth={2.5} />, toastMsg: () => "Andere biedingen afgewezen" },
+];
+
+export default function OnderhandelingSidepanel({ negotiationId, status: initialStatus, bron, soort, relatieName, subtitle: subtitleText, initialSideTab, onClose, onStatusChange }: OnderhandelingSidepanelProps) {
   const [sideTab, setSideTab] = useState<SideTab>(initialSideTab || "activiteit");
   const [overig, setOverig] = useState("");
-  const isActive = activeStatuses.includes(status);
+  const [currentStatus, setCurrentStatus] = useState<NegotiationStatus>(initialStatus);
+  const isActive = activeStatuses.includes(currentStatus);
   const [conditiesOverrides, setConditiesOverrides] = useState<Partial<Record<ConditiesField, number | null>>>({});
   const [extraEvents, setExtraEvents] = useState<ActivityEvent[]>([]);
   const allEvents = [...extraEvents, ...mockActiviteit];
+  const [showApprovalDialog, setShowApprovalDialog] = useState(false);
+  const [completedActions, setCompletedActions] = useState<Set<ApprovalAction>>(new Set());
+
+  const handleApprove = (options: ApprovalOptions) => {
+    setShowApprovalDialog(false);
+    setCurrentStatus("Goedgekeurd");
+    onStatusChange?.(negotiationId, "Goedgekeurd");
+
+    const completed = new Set<ApprovalAction>();
+    if (options.generateCharter) {
+      completed.add("generateCharter");
+      toast.success("Charter gegenereerd", { description: `Verstuurd naar ${relatieName || "relatie"}` });
+    }
+    if (options.sendToLoadPlanning) {
+      completed.add("sendToLoadPlanning");
+      toast.success("Lading doorgestuurd naar laadplanning");
+    }
+    if (options.removeFromMarket) {
+      completed.add("removeFromMarket");
+      toast.success("Partij uit de markt gehaald");
+    }
+    if (options.rejectOtherBids) {
+      completed.add("rejectOtherBids");
+      toast.success("Andere biedingen afgewezen", { description: options.sendRejectionEmail ? "Afwijzingsmails verstuurd" : undefined });
+    }
+    setCompletedActions(completed);
+
+    // Add activity event
+    setExtraEvents(prev => [{
+      id: `evt-${Date.now()}`,
+      user: mockNegotiationMeta.eigenaar,
+      initials: mockNegotiationMeta.eigenaarInitials,
+      title: "Onderhandeling goedgekeurd",
+      timestamp: "Zojuist",
+    }, ...prev]);
+  };
+
+  const handleReject = () => {
+    setCurrentStatus("Afgewezen");
+    onStatusChange?.(negotiationId, "Afgewezen");
+    toast.success("Onderhandeling afgewezen");
+    setExtraEvents(prev => [{
+      id: `evt-${Date.now()}`,
+      user: mockNegotiationMeta.eigenaar,
+      initials: mockNegotiationMeta.eigenaarInitials,
+      title: "Onderhandeling afgewezen",
+      timestamp: "Zojuist",
+    }, ...prev]);
+  };
+
+  const handlePostApprovalAction = (action: typeof approvalActionConfig[number]) => {
+    setCompletedActions(prev => new Set(prev).add(action.key));
+    toast.success(action.toastMsg(relatieName));
+  };
 
   const handleConditiesSave = (updates: Partial<Record<ConditiesField, number | null>>, opmerking: string) => {
     setConditiesOverrides(prev => ({ ...prev, ...updates }));
@@ -257,7 +324,7 @@ export default function OnderhandelingSidepanel({ negotiationId, status, bron, s
     { id: "lading", label: "Lading" },
   ];
 
-  return (
+  return (<>
     <ModelessPanel
       initialWidth={600}
       resizable
@@ -267,10 +334,10 @@ export default function OnderhandelingSidepanel({ negotiationId, status, bron, s
           <span>{subtitleText || "1.200 t Grind · MS Adriana"}</span>
           <div className="flex items-center gap-[12px] flex-wrap">
             <Badge
-              label={status}
-              variant={statusBadgeConfig[status].variant}
-              type={statusBadgeConfig[status].type}
-              icon={statusBadgeConfig[status].icon ?? undefined}
+              label={currentStatus}
+              variant={statusBadgeConfig[currentStatus].variant}
+              type={statusBadgeConfig[currentStatus].type}
+              icon={statusBadgeConfig[currentStatus].icon ?? undefined}
             />
             <div className="flex items-center gap-[6px]">
               <Calendar size={14} className="text-rdj-text-tertiary shrink-0" />
@@ -300,22 +367,32 @@ export default function OnderhandelingSidepanel({ negotiationId, status, bron, s
               label="Afwijzen"
               leadingIcon={<X strokeWidth={2.5} />}
               fullWidth
+              onClick={handleReject}
             />
             <Button
               variant="primary"
               label="Goedkeuren"
               leadingIcon={<Check strokeWidth={2.5} />}
               fullWidth
+              onClick={() => setShowApprovalDialog(true)}
             />
           </div>
-        ) : status === "Goedgekeurd" ? (
-          <div className="border-t border-rdj-border-secondary px-[24px] py-[16px]">
-            <Button
-              variant="primary"
-              label="Doorsturen naar laadplanning"
-              leadingIcon={<ArrowRight strokeWidth={2.5} />}
-              fullWidth
-            />
+        ) : currentStatus === "Goedgekeurd" ? (
+          <div className="border-t border-rdj-border-secondary px-[24px] py-[16px] flex flex-col gap-[8px]">
+            {approvalActionConfig.every(a => completedActions.has(a.key)) ? (
+              <p className="font-sans font-normal text-rdj-text-tertiary text-[13px] leading-[20px] text-center">Alle acties afgerond</p>
+            ) : (
+              approvalActionConfig.filter(a => !completedActions.has(a.key)).map(action => (
+                <Button
+                  key={action.key}
+                  variant="secondary"
+                  label={action.label}
+                  leadingIcon={action.icon}
+                  fullWidth
+                  onClick={() => handlePostApprovalAction(action)}
+                />
+              ))
+            )}
           </div>
         ) : undefined
       }
@@ -363,6 +440,13 @@ export default function OnderhandelingSidepanel({ negotiationId, status, bron, s
         <ConditiesTab bron={bron} soort={soort} overig={overig} onOverigChange={setOverig} overrides={conditiesOverrides} onEditSave={handleConditiesSave} />
       </div>
     </ModelessPanel>
+    <ApprovalConfirmationDialog
+      open={showApprovalDialog}
+      onClose={() => setShowApprovalDialog(false)}
+      onConfirm={handleApprove}
+      relatieName={relatieName}
+    />
+  </>
   );
 }
 
