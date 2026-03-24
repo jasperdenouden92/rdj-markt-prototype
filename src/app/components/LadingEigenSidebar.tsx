@@ -74,6 +74,7 @@ export default function LadingEigenSidebar({ id, onEdit }: LadingEigenSidebarPro
   const { data, loading, error } = useLadingEigenDetail(id);
   const [activeTab, setActiveTab] = useState<string>("details");
   const [overrides, setOverrides] = useState<Overrides>({});
+  const [overig, setOverig] = useState("");
 
   const getVal = (section: "eigen" | "markt", field: ConditiesField): number | null => {
     const key = `${section}${field.charAt(0).toUpperCase()}${field.slice(1)}` as keyof Overrides;
@@ -174,28 +175,20 @@ export default function LadingEigenSidebar({ id, onEdit }: LadingEigenSidebarPro
 
       {activeTab === "condities" && (
         <>
-          {/* Verkoop condities */}
-          <DetailsSidebarSection title="Verkoop">
-            {(["prijs", "laadtijd", "liggeldLaden", "lostijd", "liggeldLossen"] as ConditiesField[]).map(field => (
-              <DetailRow
-                key={field}
-                label={field === "prijs" ? "Prijs" : field === "laadtijd" ? "Laadtijd" : field === "liggeldLaden" ? "Liggeld laden" : field === "lostijd" ? "Lostijd" : "Liggeld lossen"}
-                value={fmt(field, getVal("eigen", field))}
-                editValue={rawStr(getVal("eigen", field))}
-                editable
-                onSave={(v) => saveField("eigen", field, v)}
-              />
-            ))}
-          </DetailsSidebarSection>
-
-          {/* Zoekcriteria condities */}
-          <DetailsSidebarSection title="Zoekcriteria">
-            {(["prijs", "laadtijd", "liggeldLaden", "lostijd", "liggeldLossen"] as ConditiesField[]).map(field => {
-              const diff = calcPctDiff(getVal("markt", field), getVal("eigen", field));
-              return (
+          {(["prijs", "laadtijd", "liggeldLaden", "lostijd", "liggeldLossen"] as ConditiesField[]).map(field => {
+            const label = field === "prijs" ? "Prijs" : field === "laadtijd" ? "Laadtijd" : field === "liggeldLaden" ? "Liggeld laden" : field === "lostijd" ? "Lostijd" : "Liggeld lossen";
+            const diff = calcPctDiff(getVal("markt", field), getVal("eigen", field));
+            return (
+              <DetailsSidebarSection key={field} title={label}>
                 <DetailRow
-                  key={field}
-                  label={field === "prijs" ? "Prijs" : field === "laadtijd" ? "Laadtijd" : field === "liggeldLaden" ? "Liggeld laden" : field === "lostijd" ? "Lostijd" : "Liggeld lossen"}
+                  label="Verkoop"
+                  value={fmt(field, getVal("eigen", field))}
+                  editValue={rawStr(getVal("eigen", field))}
+                  editable
+                  onSave={(v) => saveField("eigen", field, v)}
+                />
+                <DetailRow
+                  label="Zoekcriteria"
                   value={fmt(field, getVal("markt", field))}
                   editValue={rawStr(getVal("markt", field))}
                   subtext={diff?.text}
@@ -204,8 +197,19 @@ export default function LadingEigenSidebar({ id, onEdit }: LadingEigenSidebarPro
                   editable
                   onSave={(v) => saveField("markt", field, v)}
                 />
-              );
-            })}
+              </DetailsSidebarSection>
+            );
+          })}
+
+          {/* Overig */}
+          <DetailsSidebarSection title="Overig">
+            <textarea
+              value={overig}
+              onChange={(e) => setOverig(e.target.value)}
+              placeholder="Voeg opmerkingen toe..."
+              rows={3}
+              className="w-full px-[12px] py-[8px] font-sans font-normal leading-[20px] text-rdj-text-primary text-[14px] bg-transparent border border-transparent rounded-[6px] outline-none resize-none transition-all hover:border-rdj-border-primary hover:bg-rdj-bg-secondary-hover focus:border-rdj-border-brand focus:bg-white placeholder:text-rdj-text-tertiary"
+            />
           </DetailsSidebarSection>
         </>
       )}

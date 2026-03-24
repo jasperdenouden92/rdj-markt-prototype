@@ -82,6 +82,7 @@ export default function LadingMarktSidebar({ id, onEdit }: LadingMarktSidebarPro
   const { data, loading, error } = useLadingMarktDetail(id);
   const [activeTab, setActiveTab] = useState<string>("details");
   const [overrides, setOverrides] = useState<Overrides>({});
+  const [overig, setOverig] = useState("");
 
   const getVal = (section: "inkoop" | "zoekcriteria", field: ConditiesField): number | null => {
     const key = `${section}${field.charAt(0).toUpperCase()}${field.slice(1)}` as keyof Overrides;
@@ -195,28 +196,19 @@ export default function LadingMarktSidebar({ id, onEdit }: LadingMarktSidebarPro
 
       {activeTab === "condities" && (
         <>
-          {/* Inkoop condities */}
-          <DetailsSidebarSection title="Inkoop">
-            {(["prijs", "laadtijd", "liggeldLaden", "lostijd", "liggeldLossen"] as ConditiesField[]).map(field => (
-              <DetailRow
-                key={field}
-                label={fieldLabels[field]}
-                value={fmt(field, getVal("inkoop", field))}
-                editValue={rawStr(getVal("inkoop", field))}
-                editable
-                onSave={(v) => saveField("inkoop", field, v)}
-              />
-            ))}
-          </DetailsSidebarSection>
-
-          {/* Zoekcriteria condities */}
-          <DetailsSidebarSection title="Zoekcriteria">
-            {(["prijs", "laadtijd", "liggeldLaden", "lostijd", "liggeldLossen"] as ConditiesField[]).map(field => {
-              const diff = calcPctDiff(getVal("zoekcriteria", field), getVal("inkoop", field));
-              return (
+          {(["prijs", "laadtijd", "liggeldLaden", "lostijd", "liggeldLossen"] as ConditiesField[]).map(field => {
+            const diff = calcPctDiff(getVal("zoekcriteria", field), getVal("inkoop", field));
+            return (
+              <DetailsSidebarSection key={field} title={fieldLabels[field]}>
                 <DetailRow
-                  key={field}
-                  label={fieldLabels[field]}
+                  label="Inkoop"
+                  value={fmt(field, getVal("inkoop", field))}
+                  editValue={rawStr(getVal("inkoop", field))}
+                  editable
+                  onSave={(v) => saveField("inkoop", field, v)}
+                />
+                <DetailRow
+                  label="Zoekcriteria"
                   value={fmt(field, getVal("zoekcriteria", field))}
                   editValue={rawStr(getVal("zoekcriteria", field))}
                   subtext={diff?.text}
@@ -225,8 +217,19 @@ export default function LadingMarktSidebar({ id, onEdit }: LadingMarktSidebarPro
                   editable
                   onSave={(v) => saveField("zoekcriteria", field, v)}
                 />
-              );
-            })}
+              </DetailsSidebarSection>
+            );
+          })}
+
+          {/* Overig */}
+          <DetailsSidebarSection title="Overig">
+            <textarea
+              value={overig}
+              onChange={(e) => setOverig(e.target.value)}
+              placeholder="Voeg opmerkingen toe..."
+              rows={3}
+              className="w-full px-[12px] py-[8px] font-sans font-normal leading-[20px] text-rdj-text-primary text-[14px] bg-transparent border border-transparent rounded-[6px] outline-none resize-none transition-all hover:border-rdj-border-primary hover:bg-rdj-bg-secondary-hover focus:border-rdj-border-brand focus:bg-white placeholder:text-rdj-text-tertiary"
+            />
           </DetailsSidebarSection>
         </>
       )}
