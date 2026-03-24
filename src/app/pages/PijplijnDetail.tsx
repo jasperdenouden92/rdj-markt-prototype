@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useParams, useNavigate, useLocation } from "react-router";
 import Sidebar from "../components/Sidebar";
-import NegotiationDialog from "../components/NegotiationDialog";
+import OnderhandelingSidepanel from "../components/OnderhandelingSidepanel";
 import LadingEigenSidebar from "../components/LadingEigenSidebar";
 import LadingMarktSidebar from "../components/LadingMarktSidebar";
 import VaartuigEigenSidebar from "../components/VaartuigEigenSidebar";
@@ -88,8 +88,9 @@ export default function PijplijnDetail() {
   const { id } = useParams();
   const navigate = useNavigate();
   const location = useLocation();
-  const [activeTab, setActiveTab] = useState<'onderhandelingen' | 'matches' | 'activiteit'>('onderhandelingen');
-  const [selectedNegotiationId, setSelectedNegotiationId] = useState<string | null>(null);
+  const [activeTab, setActiveTabRaw] = useState<'onderhandelingen' | 'matches' | 'activiteit'>('onderhandelingen');
+  const [selectedNegotiation, setSelectedNegotiation] = useState<{ id: string; status: string; bron: string } | null>(null);
+  const setActiveTab = (tab: typeof activeTab) => { setActiveTabRaw(tab); setSelectedNegotiation(null); };
   const [negotiationFilter, setNegotiationFilter] = useState('Actief');
   const [matchFilter, setMatchFilter] = useState("Alles");
   const [activityFilter, setActivityFilter] = useState("Alle activiteit");
@@ -122,9 +123,16 @@ export default function PijplijnDetail() {
   // Check if we should open a specific negotiation after returning
   useEffect(() => {
     if (location.state?.openNegotiationId) {
-      setSelectedNegotiationId(location.state.openNegotiationId);
+      const negId = location.state.openNegotiationId;
+      const allNegs = isVaartuig ? mockNegotiationsVaartuig : mockNegotiationsLading;
+      const found = allNegs.find(n => n.id === negId);
+      setSelectedNegotiation({
+        id: negId,
+        status: found?.status || "Via werklijst",
+        bron: detectedType || "eigen",
+      });
     }
-  }, [location.state]);
+  }, [location.state, isVaartuig, detectedType]);
 
   // Status badge color mapping
   const statusBgMap: Record<string, string> = {
@@ -429,7 +437,8 @@ export default function PijplijnDetail() {
                   data={filteredNegData}
                   hoveredRowId={hoveredRow}
                   onRowHover={setHoveredRow}
-                  onRowClick={(row) => setSelectedNegotiationId(row.id)}
+                  activeRowId={selectedNegotiation?.id ?? null}
+                  onRowClick={(row) => setSelectedNegotiation({ id: row.id, status: row.status as string, bron: detectedType || "eigen" })}
                 />
               </>
             )}
@@ -485,10 +494,12 @@ export default function PijplijnDetail() {
         {renderSidebar()}
 
         {/* Negotiation Sidebar - overlays on top */}
-        {selectedNegotiationId && (
-          <NegotiationDialog
-            negotiationId={selectedNegotiationId}
-            onClose={() => setSelectedNegotiationId(null)}
+        {selectedNegotiation && (
+          <OnderhandelingSidepanel
+            negotiationId={selectedNegotiation.id}
+            status={selectedNegotiation.status as any}
+            bron={selectedNegotiation.bron as any}
+            onClose={() => setSelectedNegotiation(null)}
           />
         )}
       </div>

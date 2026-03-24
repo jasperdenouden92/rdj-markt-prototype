@@ -16,6 +16,12 @@ interface ModelessPanelProps {
   children: ReactNode;
   /** Right sidebar content */
   sidebar?: ReactNode;
+  /** Optional initial width for the content area (defaults to MAX_WIDTH_CONTENT) */
+  initialWidth?: number;
+  /** Whether the panel can be resized by dragging (defaults to true) */
+  resizable?: boolean;
+  /** Optional sticky footer below the scrollable content */
+  footer?: ReactNode;
 }
 
 export default function ModelessPanel({
@@ -24,8 +30,11 @@ export default function ModelessPanel({
   onClose,
   children,
   sidebar,
+  initialWidth,
+  resizable = true,
+  footer,
 }: ModelessPanelProps) {
-  const [contentWidth, setContentWidth] = useState(MAX_WIDTH_CONTENT);
+  const [contentWidth, setContentWidth] = useState(initialWidth ?? MAX_WIDTH_CONTENT);
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const isDragging = useRef(false);
   const startX = useRef(0);
@@ -73,10 +82,12 @@ export default function ModelessPanel({
       className="fixed inset-y-0 right-0 z-30 flex flex-col bg-white border-l border-rdj-border-secondary shadow-[0px_20px_24px_-4px_rgba(16,24,40,0.08),0px_8px_8px_-4px_rgba(16,24,40,0.03)] animate-[slide-in-right_150ms_ease-out] transition-[width] duration-150 ease-out"
     >
       {/* Resize handle */}
-      <div
-        onMouseDown={handleMouseDown}
-        className="absolute left-0 top-0 bottom-0 w-[4px] cursor-col-resize hover:bg-rdj-fg-brand/30 active:bg-rdj-fg-brand/50 z-10"
-      />
+      {resizable && (
+        <div
+          onMouseDown={handleMouseDown}
+          className="absolute left-0 top-0 bottom-0 w-[4px] cursor-col-resize hover:bg-rdj-fg-brand/30 active:bg-rdj-fg-brand/50 z-10"
+        />
+      )}
       {/* Header */}
       <div className="border-b border-rdj-border-secondary px-[24px] py-[16px] shrink-0">
         <div className="flex items-start justify-between">
@@ -111,9 +122,16 @@ export default function ModelessPanel({
 
       {/* Body: main content + sidebar */}
       <div className="flex flex-1 min-h-0">
-        {/* Main content */}
-        <div className="flex-1 overflow-y-auto min-w-0">
-          {children}
+        {/* Main content + footer column */}
+        <div className="flex-1 flex flex-col min-w-0">
+          <div className="flex-1 overflow-y-auto min-w-0">
+            {children}
+          </div>
+          {footer && (
+            <div className="shrink-0">
+              {footer}
+            </div>
+          )}
         </div>
 
         {/* Right sidebar */}

@@ -13,7 +13,7 @@ import ActivityFeed from "../components/ActivityFeed";
 import SectionHeader from "../components/SectionHeader";
 import VaartuigEigenSidebar from "../components/VaartuigEigenSidebar";
 import VaartuigMarktSidebar from "../components/VaartuigMarktSidebar";
-import NegotiationDialog from "../components/NegotiationDialog";
+import OnderhandelingSidepanel from "../components/OnderhandelingSidepanel";
 import ConversationDialog from "../components/ConversationDialog";
 import { useBevrachtingVaartuigSummary } from "../data/useDetailData";
 import { mockRelaties } from "../data/mock-relatie-data";
@@ -69,9 +69,10 @@ const statusTypeMap: Record<string, "default" | "color"> = {
 export default function VaartuigDetail() {
   const { id } = useParams();
   const navigate = useNavigate();
-  const [activeTab, setActiveTab] = useState<'matches' | 'onderhandelingen' | 'activiteit'>('matches');
+  const [activeTab, setActiveTabRaw] = useState<'matches' | 'onderhandelingen' | 'activiteit'>('matches');
   const [hoveredRow, setHoveredRow] = useState<string | null>(null);
-  const [selectedNegotiationId, setSelectedNegotiationId] = useState<string | null>(null);
+  const [selectedNegotiation, setSelectedNegotiation] = useState<{ id: string; status: string; bron: string } | null>(null);
+  const setActiveTab = (tab: typeof activeTab) => { setActiveTabRaw(tab); setSelectedNegotiation(null); };
   const [conversationDialog, setConversationDialog] = useState<{ relatieId: string; relatieName: string; matchName?: string } | null>(null);
   const [matchFilter, setMatchFilter] = useState("Alles");
   const [negFilter, setNegFilter] = useState("Actief");
@@ -332,7 +333,8 @@ export default function VaartuigDetail() {
                           data={filteredNegData}
                           hoveredRowId={hoveredRow}
                           onRowHover={setHoveredRow}
-                          onRowClick={(row) => setSelectedNegotiationId(row.id)}
+                          activeRowId={selectedNegotiation?.id ?? null}
+                          onRowClick={(row) => setSelectedNegotiation({ id: row.id, status: row.status as string, bron: "eigen" })}
                         />
                       </>
                     )}
@@ -366,10 +368,12 @@ export default function VaartuigDetail() {
       </div>
 
       {/* Negotiation Sidebar */}
-      {selectedNegotiationId && (
-        <NegotiationDialog
-          negotiationId={selectedNegotiationId}
-          onClose={() => setSelectedNegotiationId(null)}
+      {selectedNegotiation && (
+        <OnderhandelingSidepanel
+          negotiationId={selectedNegotiation.id}
+          status={selectedNegotiation.status as any}
+          bron={selectedNegotiation.bron as any}
+          onClose={() => setSelectedNegotiation(null)}
         />
       )}
 
