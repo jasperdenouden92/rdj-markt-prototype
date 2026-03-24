@@ -379,10 +379,14 @@ export default function OnderhandelingSidepanel({ negotiationId, status: initial
           </div>
         ) : currentStatus === "Goedgekeurd" ? (
           <div className="border-t border-rdj-border-secondary px-[24px] py-[16px] flex flex-col gap-[8px]">
-            {approvalActionConfig.every(a => completedActions.has(a.key)) ? (
-              <p className="font-sans font-normal text-rdj-text-tertiary text-[13px] leading-[20px] text-center">Alle acties afgerond</p>
-            ) : (
-              approvalActionConfig.filter(a => !completedActions.has(a.key)).map(action => (
+            {approvalActionConfig.map(action => {
+              const done = completedActions.has(action.key);
+              return done ? (
+                <div key={action.key} className="flex items-center gap-[8px] px-[12px] py-[8px] rounded-[6px] bg-rdj-bg-secondary">
+                  <Check size={16} strokeWidth={2.5} className="text-[#17B26A] shrink-0" />
+                  <span className="font-sans font-normal text-rdj-text-tertiary text-[14px] leading-[20px]">{action.label}</span>
+                </div>
+              ) : (
                 <Button
                   key={action.key}
                   variant="secondary"
@@ -391,8 +395,8 @@ export default function OnderhandelingSidepanel({ negotiationId, status: initial
                   fullWidth
                   onClick={() => handlePostApprovalAction(action)}
                 />
-              ))
-            )}
+              );
+            })}
           </div>
         ) : undefined
       }
