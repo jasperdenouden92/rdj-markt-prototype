@@ -1,18 +1,57 @@
 import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router";
+import { Send, MailOpen, Check, X } from "lucide-react";
 import { toast, Toaster } from "sonner";
 import Sidebar from "../components/Sidebar";
 import PageHeader from "../components/PageHeader";
-import SectionHeader from "../components/SectionHeader";
+import type { PageTab } from "../components/PageHeader";
+import Badge from "../components/Badge";
 import Table from "../components/Table";
 import type { Column, RowData } from "../components/Table";
+import Pagination from "../components/Pagination";
 import Button from "../components/Button";
 import LadingMarktSidebar from "../components/LadingMarktSidebar";
 import StartNegotiationSidebar from "../components/StartNegotiationSidebar";
+import NegotiationDialog from "../components/NegotiationDialog";
 import ConversationDialog from "../components/ConversationDialog";
 import ActivityFeed from "../components/ActivityFeed";
+import SectionHeader from "../components/SectionHeader";
 import { useInboxLadingSummary } from "../data/useDetailData";
+import { mockNegotiations } from "../data/mock-data";
 import { mockRelaties } from "../data/mock-relatie-data";
+import imgAvatar from "../../assets/a2737d3b5b234fc04041650cb9f114889c6859da.png";
+import imgAvatar1 from "../../assets/3627de284acb374a4d9313b3c2dbaeeb87a48224.png";
+import imgAvatar2 from "../../assets/e7809035038b3816de2a1d67c5de86ebeed325d0.png";
+import imgAvatar3 from "../../assets/bf485cb6f98c12534c69bc81459ce34f2e24e4a8.png";
+import imgAvatar4 from "../../assets/9e45f45f537bea4bf653bc0307471e5ff5545f63.png";
+
+/* ── Status variant map ── */
+const negotiationStatusVariantMap: Record<string, string> = {
+  "Via werklijst": "brand",
+  "Bod verstuurd": "brand",
+  "Bod ontvangen": "brand",
+  "Goedgekeurd": "success",
+  "Afgewezen": "error",
+  "Afgekeurd": "error",
+};
+
+const negotiationStatusIconMap: Record<string, React.ReactNode | null> = {
+  "Via werklijst": null,
+  "Bod verstuurd": <Send strokeWidth={2.5} />,
+  "Bod ontvangen": <MailOpen strokeWidth={2.5} />,
+  "Goedgekeurd": <Check strokeWidth={2.5} />,
+  "Afgewezen": <X strokeWidth={2.5} />,
+  "Afgekeurd": <X strokeWidth={2.5} />,
+};
+
+const negotiationStatusTypeMap: Record<string, "default" | "color"> = {
+  "Via werklijst": "default",
+  "Bod verstuurd": "color",
+  "Bod ontvangen": "color",
+  "Goedgekeurd": "color",
+  "Afgewezen": "color",
+  "Afgekeurd": "color",
+};
 
 /* ── Match percentage donut ── */
 function MatchDonut({ percentage, color }: { percentage: number; color: string }) {
@@ -46,12 +85,23 @@ function BreadcrumbChevron() {
 export default function InboxCargoDetail() {
   const { id } = useParams();
   const navigate = useNavigate();
+  const [activeTab, setActiveTab] = useState<'matches' | 'onderhandelingen' | 'activiteit'>('matches');
   const [selectedMatch, setSelectedMatch] = useState<any>(null);
   const [offeredMatches, setOfferedMatches] = useState<Set<string>>(new Set());
+  const [selectedNegotiationId, setSelectedNegotiationId] = useState<string | null>(null);
   const [conversationDialog, setConversationDialog] = useState<{ relatieId: string; relatieName: string; matchName?: string } | null>(null);
+  const [hoveredRow, setHoveredRow] = useState<string | null>(null);
   const [matchFilter, setMatchFilter] = useState("Alles");
+  const [negFilter, setNegFilter] = useState("Actief");
   const [activityFilter, setActivityFilter] = useState("Alle activiteit");
   const { data: summary, loading: summaryLoading } = useInboxLadingSummary(id);
+  const avatars = [imgAvatar, imgAvatar1, imgAvatar2, imgAvatar3, imgAvatar4];
+
+  /* Pagination state per tab */
+  const [matchPage, setMatchPage] = useState(1);
+  const [matchRowsPerPage, setMatchRowsPerPage] = useState(50);
+  const [negPage, setNegPage] = useState(1);
+  const [negRowsPerPage, setNegRowsPerPage] = useState(50);
 
   useEffect(() => {
     const stored = localStorage.getItem(`offered-matches-${id}`);
@@ -101,6 +151,42 @@ export default function InboxCargoDetail() {
     navigate("/markt/inbox/ladingen");
   };
 
+  /* ── Tabs ── */
+  const tabs: PageTab[] = [
+    { label: 'Matches', path: '#matches', isActive: activeTab === 'matches', badge: String(matchRows.length) },
+    { label: 'Onderhandelingen', path: '#onderhandelingen', isActive: activeTab === 'onderhandelingen', badge: String(mockNegotiations.length) },
+    { label: 'Activiteit', path: '#activiteit', isActive: activeTab === 'activiteit' },
+  ];
+
+  /* ── Negotiations table ── */
+  const negColumns: Column[] = [
+    { key: 'company', header: 'Relatie', type: 'leading-text', actionLabel: 'Openen' },
+    { key: 'freightPrice', header: 'Vrachtprijs', type: 'text', subtextKey: 'freightPriceDiff', subtextColorKey: 'freightPriceDiffColor', subtextTooltipKey: 'freightPriceDiffTooltip', align: 'right', width: 'w-[160px]' },
+    { key: 'tonnage', header: 'Tonnage', type: 'text', align: 'right', width: 'w-[120px]' },
+    { key: 'deadline', header: 'Deadline', type: 'deadline', expiredKey: 'deadlineExpired', editable: true, width: 'w-[160px]' },
+    { key: 'status', header: 'Status', type: 'status', variantKey: 'statusVariant', iconKey: 'statusIcon', typeKey: 'statusType', width: 'w-[160px]' },
+    { key: 'contactName', header: 'Laatste update', type: 'text', subtextKey: 'contactDate', avatarSrcKey: 'contactAvatar', width: 'w-[200px]' },
+  ];
+
+  const negTableData: RowData[] = mockNegotiations.map((neg, idx) => ({
+    id: neg.id,
+    company: neg.company,
+    freightPrice: neg.freightPrice || '—',
+    freightPriceDiff: neg.freightPriceDiff || '',
+    freightPriceDiffColor: neg.freightPriceDiff?.startsWith('+') ? '#F79009' : undefined,
+    freightPriceDiffTooltip: neg.freightPriceDiff && neg.freightPriceDiff !== '' && neg.freightPriceDiff !== '0,0%' && neg.freightPriceDiff !== '+0,0%' ? 'Vergeleken met verkoop' : undefined,
+    tonnage: neg.tonnage,
+    deadline: neg.deadline,
+    deadlineExpired: neg.deadlineExpired,
+    status: neg.status,
+    statusVariant: negotiationStatusVariantMap[neg.status] || 'grey',
+    statusIcon: negotiationStatusIconMap[neg.status] || null,
+    statusType: negotiationStatusTypeMap[neg.status] || 'default',
+    contactName: neg.contact.name,
+    contactDate: neg.contact.date,
+    contactAvatar: avatars[idx % avatars.length],
+  }));
+
   return (
     <>
       <Toaster position="top-right" richColors />
@@ -129,62 +215,110 @@ export default function InboxCargoDetail() {
 
             {/* Page content with max width */}
             <div className="flex flex-col items-center size-full">
-              <div className="flex flex-col gap-[32px] items-start max-w-[1116px] w-full py-[32px]">
-                {/* Page Header */}
-                <PageHeader
-                  title={summaryLoading ? "Laden..." : (summary?.title || "—")}
-                  subtitle={
-                    summaryLoading ? undefined : (
-                      <p className="font-sans font-normal leading-[24px] text-rdj-text-secondary text-[16px]">
-                        {summary?.subtitle || ""}
-                      </p>
-                    )
-                  }
-                  actions={
-                    <>
-                      <Button variant="secondary" label="Archiveren" onClick={handleArchive}
-                        leadingIcon={<svg fill="none" viewBox="0 0 14 14"><path d="M13 1L1 13M1 1L13 13" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.66667" /></svg>}
-                      />
-                      <Button variant="primary" label="Naar pijplijn sturen" onClick={handleMoveToPipeline} />
-                    </>
-                  }
-                />
-
-                {/* Matches section */}
-                <div className="w-full px-[24px]">
-                  <SectionHeader
-                    title="Matches"
-                    filterLabel={matchFilter}
-                    filterOptions={["Alles", "Openstaand", "Aangeboden"]}
-                    filterValue={matchFilter}
-                    onFilterChange={setMatchFilter}
+              <div className="flex flex-col items-center py-[24px] w-full">
+                <div className="flex flex-col gap-[0px] items-start max-w-[1116px] pt-[24px] w-full">
+                  <PageHeader
+                    title={summaryLoading ? "Laden..." : (summary?.title || "—")}
+                    subtitle={
+                      summaryLoading ? undefined : (
+                        <p className="font-sans font-normal leading-[24px] text-rdj-text-secondary text-[16px]">
+                          {summary?.subtitle || ""}
+                        </p>
+                      )
+                    }
+                    actions={
+                      <>
+                        <Button variant="secondary" label="Archiveren" onClick={handleArchive}
+                          leadingIcon={<svg fill="none" viewBox="0 0 14 14"><path d="M13 1L1 13M1 1L13 13" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.66667" /></svg>}
+                        />
+                        <Button variant="primary" label="Naar pijplijn sturen" onClick={handleMoveToPipeline} />
+                      </>
+                    }
+                    tabs={tabs}
+                    onTabClick={(tab: PageTab) => {
+                      const tabKey = tab.path.replace('#', '') as 'matches' | 'onderhandelingen' | 'activiteit';
+                      setActiveTab(tabKey);
+                    }}
                   />
-                  <div className="border-t border-rdj-border-secondary">
-                    <Table
-                      columns={matchColumns}
-                      data={matchRows}
-                      onRowClick={(row) => {
-                        const relatie = mockRelaties.find(r => r.naam === row.company);
-                        setConversationDialog({
-                          relatieId: relatie?.id || "rel-001",
-                          relatieName: (row.company as string) || "Onbekend",
-                          matchName: row.name as string,
-                        });
-                      }}
-                    />
+
+                  {/* Tab Content */}
+                  <div className="w-full pt-[20px]">
+                    {activeTab === 'matches' && (
+                      <>
+                        <SectionHeader
+                          title="Matches"
+                          filterLabel={matchFilter}
+                          filterOptions={["Alles", "Openstaand", "Aangeboden"]}
+                          filterValue={matchFilter}
+                          onFilterChange={setMatchFilter}
+                        />
+                        <Pagination
+                          currentPage={matchPage}
+                          totalItems={matchRows.length}
+                          rowsPerPage={matchRowsPerPage}
+                          onPageChange={setMatchPage}
+                          onRowsPerPageChange={setMatchRowsPerPage}
+                        />
+                        <Table
+                          columns={matchColumns}
+                          data={matchRows}
+                          hoveredRowId={hoveredRow}
+                          onRowHover={setHoveredRow}
+                          onRowClick={(row) => {
+                            const relatie = mockRelaties.find(r => r.naam === row.company);
+                            setConversationDialog({
+                              relatieId: relatie?.id || "rel-001",
+                              relatieName: (row.company as string) || "Onbekend",
+                              matchName: row.name as string,
+                            });
+                          }}
+                        />
+                      </>
+                    )}
+
+                    {activeTab === 'onderhandelingen' && (
+                      <>
+                        <SectionHeader
+                          title="Onderhandelingen"
+                          filterLabel={negFilter}
+                          filterOptions={["Alles", "Actief", "Goedgekeurd", "Afgewezen"]}
+                          filterValue={negFilter}
+                          onFilterChange={setNegFilter}
+                          onAdd={() => setConversationDialog({ relatieId: "", relatieName: "" })}
+                          addTooltip="Onderhandeling starten"
+                        />
+                        <Pagination
+                          currentPage={negPage}
+                          totalItems={mockNegotiations.length}
+                          rowsPerPage={negRowsPerPage}
+                          onPageChange={setNegPage}
+                          onRowsPerPageChange={setNegRowsPerPage}
+                        />
+                        <Table
+                          columns={negColumns}
+                          data={negTableData}
+                          hoveredRowId={hoveredRow}
+                          onRowHover={setHoveredRow}
+                          onRowClick={(row) => setSelectedNegotiationId(row.id)}
+                        />
+                      </>
+                    )}
+
+                    {activeTab === 'activiteit' && (
+                      <>
+                        <SectionHeader
+                          title="Activiteit"
+                          filterLabel={activityFilter}
+                          filterOptions={["Alle activiteit", "Jouw activiteit"]}
+                          filterValue={activityFilter}
+                          onFilterChange={setActivityFilter}
+                        />
+                        <div className="w-full px-[24px]">
+                          <ActivityFeed />
+                        </div>
+                      </>
+                    )}
                   </div>
-                </div>
-
-                {/* Activity section */}
-                <div className="w-full px-[24px]">
-                  <SectionHeader
-                    title="Activiteit"
-                    filterLabel={activityFilter}
-                    filterOptions={["Alle activiteit", "Jouw activiteit"]}
-                    filterValue={activityFilter}
-                    onFilterChange={setActivityFilter}
-                  />
-                  <ActivityFeed compact />
                 </div>
               </div>
             </div>
@@ -200,6 +334,14 @@ export default function InboxCargoDetail() {
         <div className="fixed inset-0 z-50 flex items-center justify-end bg-black/20">
           <StartNegotiationSidebar match={selectedMatch} onClose={() => setSelectedMatch(null)} offeredMatches={offeredMatches} setOfferedMatches={setOfferedMatches} />
         </div>
+      )}
+
+      {/* Negotiation Sidebar */}
+      {selectedNegotiationId && (
+        <NegotiationDialog
+          negotiationId={selectedNegotiationId}
+          onClose={() => setSelectedNegotiationId(null)}
+        />
       )}
 
       {/* Conversation dialog */}
