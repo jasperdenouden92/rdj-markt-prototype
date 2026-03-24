@@ -183,6 +183,7 @@ export default function Sidebar() {
     { label: "Markt aanbod", path: "/markt/inbox/ladingen" },
     { label: "Eigen aanbod", path: "/markt/bevrachting/ladingen" },
     { label: "Onderhandelingen", path: "/markt/onderhandelingen/ladingen" },
+    { label: "Bevrachters", path: "/markt/bevrachters" },
   ];
 
   const crmMenuItems = [

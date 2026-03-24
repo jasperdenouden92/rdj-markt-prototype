@@ -9,6 +9,9 @@ import ActivityFeed from "../components/ActivityFeed";
 import RelatieDetailSidebar from "../components/RelatieDetailSidebar";
 import RelatieOverzichtTab from "../components/RelatieOverzichtTab";
 import RelatieFormDialog from "../components/RelatieFormDialog";
+import SectionHeader from "../components/SectionHeader";
+import Table from "../components/Table";
+import type { Column, RowData } from "../components/Table";
 import { mockRelaties, mockContactPersonen, mockRelatieLadingen, mockRelatieVaartuigen, mockMailConversaties, mockGespreksverslagen, VAARTUIG_STATUS_MAP } from "../data/mock-relatie-data";
 import type { Gespreksverslag } from "../data/mock-relatie-data";
 import { mockContracten, CONTRACT_STATUS_LABELS, CONTRACT_STATUS_VARIANT_MAP } from "../data/mock-contract-data";
@@ -219,144 +222,130 @@ export default function RelatieDetail() {
                       />
                     )}
 
-                    {activeTab === "ladingen" && (
-                      <div className="w-full px-[24px] pb-[32px]">
-                        {relatieLadingen.length === 0 ? (
-                          <div className="py-[48px] text-center">
-                            <p className="font-sans font-normal text-[14px] text-rdj-text-tertiary">
-                              Nog geen ladingen gekoppeld aan deze relatie.
-                            </p>
-                          </div>
-                        ) : (
-                          <div className="border border-rdj-border-secondary rounded-[8px] overflow-hidden">
-                            <table className="w-full">
-                              <thead>
-                                <tr className="border-b border-rdj-border-secondary bg-[#f9fafb]">
-                                  <th className="text-left px-[12px] py-[8px] font-sans font-bold text-[12px] text-rdj-text-secondary">Lading</th>
-                                  <th className="text-left px-[12px] py-[8px] font-sans font-bold text-[12px] text-rdj-text-secondary">Route</th>
-                                  <th className="text-left px-[12px] py-[8px] font-sans font-bold text-[12px] text-rdj-text-secondary">Tonnage</th>
-                                  <th className="text-left px-[12px] py-[8px] font-sans font-bold text-[12px] text-rdj-text-secondary">Laaddatum</th>
-                                  <th className="text-left px-[12px] py-[8px] font-sans font-bold text-[12px] text-rdj-text-secondary">Matches</th>
-                                  <th className="text-left px-[12px] py-[8px] font-sans font-bold text-[12px] text-rdj-text-secondary">Status</th>
-                                </tr>
-                              </thead>
-                              <tbody>
-                                {relatieLadingen.map((l) => {
-                                  const s = ladingStatusMap[l.status] || { label: l.status, variant: "grey" as const };
-                                  return (
-                                    <tr
-                                      key={l.id}
-                                      className="border-b border-rdj-border-secondary last:border-b-0 hover:bg-[#f9fafb] cursor-pointer transition-colors"
-                                      onClick={() => navigate(`/crm/relatie/${id}/lading/${l.id}`)}
-                                    >
-                                      <td className="px-[12px] py-[10px]">
-                                        <p className="font-sans font-bold text-[14px] text-rdj-text-primary">{l.titel}</p>
-                                        <p className="font-sans font-normal text-[12px] text-rdj-text-secondary">{l.product}</p>
-                                      </td>
-                                      <td className="px-[12px] py-[10px] font-sans font-normal text-[14px] text-rdj-text-primary">{l.laadhaven} → {l.loshaven}</td>
-                                      <td className="px-[12px] py-[10px] font-sans font-normal text-[14px] text-rdj-text-primary">{l.tonnage}</td>
-                                      <td className="px-[12px] py-[10px] font-sans font-normal text-[14px] text-rdj-text-primary">{formatDate(l.laaddatum)}</td>
-                                      <td className="px-[12px] py-[10px]">
-                                        {l.matches > 0 ? (
-                                          <span className="inline-flex items-center gap-[4px] font-sans font-bold text-[13px] text-rdj-text-brand">
-                                            {l.matches} match{l.matches !== 1 ? "es" : ""}
-                                          </span>
-                                        ) : (
-                                          <span className="font-sans font-normal text-[13px] text-rdj-text-tertiary">—</span>
-                                        )}
-                                      </td>
-                                      <td className="px-[12px] py-[10px]">
-                                        <Badge label={s.label} variant={s.variant} dot />
-                                      </td>
-                                    </tr>
-                                  );
-                                })}
-                              </tbody>
-                            </table>
-                          </div>
-                        )}
-                      </div>
-                    )}
+                    {activeTab === "ladingen" && (() => {
+                      const ladingenColumns: Column[] = [
+                        { key: "titel", header: "Lading", type: "leading-text", subtextKey: "product" },
+                        { key: "route", header: "Route", type: "text", width: "w-[200px]" },
+                        { key: "tonnage", header: "Tonnage", type: "text", width: "w-[120px]" },
+                        { key: "laaddatum", header: "Laaddatum", type: "text", width: "w-[140px]" },
+                        { key: "matches", header: "Matches", type: "text", width: "w-[120px]" },
+                        { key: "statusLabel", header: "Status", type: "status", variantKey: "statusVariant", defaultVariant: "grey", width: "w-[120px]" },
+                      ];
+                      const ladingenData: RowData[] = relatieLadingen.map((l) => {
+                        const s = ladingStatusMap[l.status] || { label: l.status, variant: "grey" };
+                        return {
+                          id: l.id,
+                          titel: l.titel,
+                          product: l.product,
+                          route: `${l.laadhaven} → ${l.loshaven}`,
+                          tonnage: String(l.tonnage),
+                          laaddatum: formatDate(l.laaddatum),
+                          matches: l.matches > 0 ? `${l.matches} match${l.matches !== 1 ? "es" : ""}` : "—",
+                          statusLabel: s.label,
+                          statusVariant: s.variant,
+                        };
+                      });
+                      return (
+                        <div className="w-full pb-[32px]">
+                          <SectionHeader title="Ladingen" />
+                          {relatieLadingen.length === 0 ? (
+                            <div className="py-[48px] text-center">
+                              <p className="font-sans font-normal text-[14px] text-rdj-text-tertiary">
+                                Nog geen ladingen gekoppeld aan deze relatie.
+                              </p>
+                            </div>
+                          ) : (
+                            <Table
+                              columns={ladingenColumns}
+                              data={ladingenData}
+                              onRowClick={(row) => navigate(`/crm/relatie/${id}/lading/${row.id}`)}
+                            />
+                          )}
+                        </div>
+                      );
+                    })()}
 
-                    {activeTab === "vaartuigen" && (
-                      <div className="w-full px-[24px] pb-[32px]">
-                        {relatieVaartuigen.length === 0 ? (
-                          <div className="py-[48px] text-center">
-                            <p className="font-sans font-normal text-[14px] text-rdj-text-tertiary">
-                              Nog geen vaartuigen gekoppeld aan deze relatie.
-                            </p>
-                          </div>
-                        ) : (
-                          <div className="border border-rdj-border-secondary rounded-[8px] overflow-hidden">
-                            <table className="w-full">
-                              <thead>
-                                <tr className="border-b border-rdj-border-secondary bg-[#f9fafb]">
-                                  <th className="text-left px-[12px] py-[8px] font-sans font-bold text-[12px] text-rdj-text-secondary">Vaartuig</th>
-                                  <th className="text-left px-[12px] py-[8px] font-sans font-bold text-[12px] text-rdj-text-secondary">Type</th>
-                                  <th className="text-left px-[12px] py-[8px] font-sans font-bold text-[12px] text-rdj-text-secondary">Capaciteit</th>
-                                  <th className="text-left px-[12px] py-[8px] font-sans font-bold text-[12px] text-rdj-text-secondary">Locatie</th>
-                                  <th className="text-left px-[12px] py-[8px] font-sans font-bold text-[12px] text-rdj-text-secondary">Matches</th>
-                                  <th className="text-left px-[12px] py-[8px] font-sans font-bold text-[12px] text-rdj-text-secondary">Status</th>
-                                </tr>
-                              </thead>
-                              <tbody>
-                                {relatieVaartuigen.map((v) => {
-                                  const s = vaartuigStatusMap[v.status] || { label: v.status, variant: "grey" as const };
-                                  return (
-                                    <tr
-                                      key={v.id}
-                                      className="border-b border-rdj-border-secondary last:border-b-0 hover:bg-[#f9fafb] cursor-pointer transition-colors"
-                                      onClick={() => navigate(`/crm/relatie/${id}/vaartuig/${v.id}`)}
-                                    >
-                                      <td className="px-[12px] py-[10px] font-sans font-bold text-[14px] text-rdj-text-primary">{v.naam}</td>
-                                      <td className="px-[12px] py-[10px] font-sans font-normal text-[14px] text-rdj-text-secondary">{v.type}</td>
-                                      <td className="px-[12px] py-[10px] font-sans font-normal text-[14px] text-rdj-text-primary">{v.capaciteit}</td>
-                                      <td className="px-[12px] py-[10px] font-sans font-normal text-[14px] text-rdj-text-primary">{v.locatie}</td>
-                                      <td className="px-[12px] py-[10px]">
-                                        {v.matches > 0 ? (
-                                          <span className="inline-flex items-center gap-[4px] font-sans font-bold text-[13px] text-rdj-text-brand">
-                                            {v.matches} match{v.matches !== 1 ? "es" : ""}
-                                          </span>
-                                        ) : (
-                                          <span className="font-sans font-normal text-[13px] text-rdj-text-tertiary">—</span>
-                                        )}
-                                      </td>
-                                      <td className="px-[12px] py-[10px]">
-                                        <Badge label={s.label} variant={s.variant} dot />
-                                      </td>
-                                    </tr>
-                                  );
-                                })}
-                              </tbody>
-                            </table>
-                          </div>
-                        )}
-                      </div>
-                    )}
+                    {activeTab === "vaartuigen" && (() => {
+                      const vaartuigenColumns: Column[] = [
+                        { key: "naam", header: "Vaartuig", type: "leading-text" },
+                        { key: "type", header: "Type", type: "text", width: "w-[160px]" },
+                        { key: "capaciteit", header: "Capaciteit", type: "text", width: "w-[120px]" },
+                        { key: "locatie", header: "Locatie", type: "text", width: "w-[160px]" },
+                        { key: "matches", header: "Matches", type: "text", width: "w-[120px]" },
+                        { key: "statusLabel", header: "Status", type: "status", variantKey: "statusVariant", defaultVariant: "grey", width: "w-[120px]" },
+                      ];
+                      const vaartuigenData: RowData[] = relatieVaartuigen.map((v) => {
+                        const s = vaartuigStatusMap[v.status] || { label: v.status, variant: "grey" };
+                        return {
+                          id: v.id,
+                          naam: v.naam,
+                          type: v.type,
+                          capaciteit: v.capaciteit,
+                          locatie: v.locatie,
+                          matches: v.matches > 0 ? `${v.matches} match${v.matches !== 1 ? "es" : ""}` : "—",
+                          statusLabel: s.label,
+                          statusVariant: s.variant,
+                        };
+                      });
+                      return (
+                        <div className="w-full pb-[32px]">
+                          <SectionHeader title="Vaartuigen" />
+                          {relatieVaartuigen.length === 0 ? (
+                            <div className="py-[48px] text-center">
+                              <p className="font-sans font-normal text-[14px] text-rdj-text-tertiary">
+                                Nog geen vaartuigen gekoppeld aan deze relatie.
+                              </p>
+                            </div>
+                          ) : (
+                            <Table
+                              columns={vaartuigenColumns}
+                              data={vaartuigenData}
+                              onRowClick={(row) => navigate(`/crm/relatie/${id}/vaartuig/${row.id}`)}
+                            />
+                          )}
+                        </div>
+                      );
+                    })()}
 
                     {activeTab === "deals" && (() => {
+                      const filterLabels: Record<string, string> = { alle: "Alles", spot: "Spot", contract: "Contract" };
                       const filteredDeals = dealFilter === "alle"
                         ? relatieAllDeals
                         : relatieAllDeals.filter((c) => c.type === dealFilter);
+                      const dealsColumns: Column[] = [
+                        { key: "titel", header: "Titel", type: "leading-text", subtextKey: "subtitel" },
+                        ...(dealFilter === "alle" ? [{ key: "typeLabel", header: "Type", type: "status" as const, variantKey: "typeVariant", defaultVariant: "grey" as const, width: "w-[120px]" }] : []),
+                        { key: "routePeriode", header: "Route / Periode", type: "text", width: "w-[220px]" },
+                        { key: "statusLabel", header: "Status", type: "status", variantKey: "statusVariant", defaultVariant: "grey", width: "w-[140px]" },
+                        { key: "waarde", header: "Waarde", type: "text", width: "w-[120px]" },
+                      ];
+                      const dealsData: RowData[] = filteredDeals.map((c) => ({
+                        id: c.id,
+                        titel: c.titel,
+                        subtitel: c.type === "contract" && c.routes && c.routes.length > 0
+                          ? `${c.routes.length} route${c.routes.length > 1 ? "s" : ""}`
+                          : undefined,
+                        typeLabel: c.type === "spot" ? "Spot" : "Contract",
+                        typeVariant: c.type === "spot" ? "grey" : "brand",
+                        routePeriode: c.type === "spot"
+                          ? ([c.laadhavenNaam, c.loshavenNaam].filter(Boolean).join(" → ") || "—")
+                          : (c.startDatum && c.eindDatum ? `${formatDate(c.startDatum)} – ${formatDate(c.eindDatum)}` : "—"),
+                        statusLabel: CONTRACT_STATUS_LABELS[c.status] || "—",
+                        statusVariant: (CONTRACT_STATUS_VARIANT_MAP[c.status] || "grey"),
+                        waarde: c.waarde ? new Intl.NumberFormat("nl-NL", { style: "currency", currency: "EUR", maximumFractionDigits: 0 }).format(c.waarde) : "—",
+                      }));
                       return (
-                        <div className="w-full px-[24px] pb-[32px]">
-                          {/* Filter */}
-                          <div className="flex items-center gap-[4px] mb-[16px]">
-                            {(["alle", "spot", "contract"] as const).map((f) => (
-                              <button
-                                key={f}
-                                onClick={() => setDealFilter(f)}
-                                className={`px-[12px] py-[6px] rounded-[6px] font-sans font-bold text-[13px] transition-colors ${
-                                  dealFilter === f
-                                    ? "bg-[#e3effb] text-[#1567A4]"
-                                    : "text-rdj-text-secondary hover:bg-[#f9fafb]"
-                                }`}
-                              >
-                                {f === "alle" ? `Alles (${relatieAllDeals.length})` : f === "spot" ? `Spot (${relatieAllDeals.filter((c) => c.type === "spot").length})` : `Contract (${relatieAllDeals.filter((c) => c.type === "contract").length})`}
-                              </button>
-                            ))}
-                          </div>
-
+                        <div className="w-full pb-[32px]">
+                          <SectionHeader
+                            title="Deals"
+                            filterLabel={filterLabels[dealFilter]}
+                            filterOptions={["Alles", "Spot", "Contract"]}
+                            filterValue={filterLabels[dealFilter]}
+                            onFilterChange={(v) => {
+                              const key = v === "Alles" ? "alle" : v.toLowerCase();
+                              setDealFilter(key as "alle" | "spot" | "contract");
+                            }}
+                          />
                           {filteredDeals.length === 0 ? (
                             <div className="py-[48px] text-center">
                               <p className="font-sans font-normal text-[14px] text-rdj-text-tertiary">
@@ -364,59 +353,11 @@ export default function RelatieDetail() {
                               </p>
                             </div>
                           ) : (
-                            <div className="border border-rdj-border-secondary rounded-[8px] overflow-hidden">
-                              <table className="w-full">
-                                <thead>
-                                  <tr className="border-b border-rdj-border-secondary bg-[#f9fafb]">
-                                    <th className="text-left px-[12px] py-[8px] font-sans font-bold text-[12px] text-rdj-text-secondary">Titel</th>
-                                    <th className="text-left px-[12px] py-[8px] font-sans font-bold text-[12px] text-rdj-text-secondary">Type</th>
-                                    <th className="text-left px-[12px] py-[8px] font-sans font-bold text-[12px] text-rdj-text-secondary">Route / Periode</th>
-                                    <th className="text-left px-[12px] py-[8px] font-sans font-bold text-[12px] text-rdj-text-secondary">Status</th>
-                                    <th className="text-right px-[12px] py-[8px] font-sans font-bold text-[12px] text-rdj-text-secondary">Waarde</th>
-                                  </tr>
-                                </thead>
-                                <tbody>
-                                  {filteredDeals.map((c) => (
-                                    <tr
-                                      key={c.id}
-                                      className="border-b border-rdj-border-secondary last:border-b-0 hover:bg-[#f9fafb] cursor-pointer transition-colors"
-                                      onClick={() => navigate(`/crm/deal/${c.id}`)}
-                                    >
-                                      <td className="px-[12px] py-[10px]">
-                                        <p className="font-sans font-bold text-[14px] text-rdj-text-primary">{c.titel}</p>
-                                        {c.type === "contract" && c.routes && c.routes.length > 0 && (
-                                          <p className="font-sans font-normal text-[12px] text-rdj-text-secondary">
-                                            {c.routes.length} route{c.routes.length > 1 ? "s" : ""}
-                                          </p>
-                                        )}
-                                      </td>
-                                      <td className="px-[12px] py-[10px]">
-                                        <Badge
-                                          label={c.type === "spot" ? "Spot" : "Contract"}
-                                          variant={c.type === "spot" ? "grey" : "brand"}
-                                        />
-                                      </td>
-                                      <td className="px-[12px] py-[10px] font-sans font-normal text-[14px] text-rdj-text-primary">
-                                        {c.type === "spot"
-                                          ? ([c.laadhavenNaam, c.loshavenNaam].filter(Boolean).join(" → ") || "—")
-                                          : (c.startDatum && c.eindDatum ? `${formatDate(c.startDatum)} – ${formatDate(c.eindDatum)}` : "—")
-                                        }
-                                      </td>
-                                      <td className="px-[12px] py-[10px]">
-                                        <Badge
-                                          label={CONTRACT_STATUS_LABELS[c.status] || "—"}
-                                          variant={(CONTRACT_STATUS_VARIANT_MAP[c.status] || "grey") as "success" | "warning" | "error" | "brand" | "grey"}
-                                          dot
-                                        />
-                                      </td>
-                                      <td className="px-[12px] py-[10px] font-sans font-normal text-[14px] text-rdj-text-primary text-right">
-                                        {c.waarde ? new Intl.NumberFormat("nl-NL", { style: "currency", currency: "EUR", maximumFractionDigits: 0 }).format(c.waarde) : "—"}
-                                      </td>
-                                    </tr>
-                                  ))}
-                                </tbody>
-                              </table>
-                            </div>
+                            <Table
+                              columns={dealsColumns}
+                              data={dealsData}
+                              onRowClick={(row) => navigate(`/crm/deal/${row.id}`)}
+                            />
                           )}
                         </div>
                       );
