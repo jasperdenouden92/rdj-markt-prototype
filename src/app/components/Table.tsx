@@ -103,6 +103,10 @@ export interface LeadingTextColumn extends BaseColumn {
   actionCompletedKey?: string;
   /** Optional max-width class, e.g. "max-w-[480px]" */
   maxWidth?: string;
+  /** Optional min-width class, e.g. "min-w-[640px]". Defaults to "min-w-[400px]" */
+  minWidth?: string;
+  /** Row key for extra action buttons (ReactNode) shown alongside the action button on hover */
+  extraActionsKey?: string;
 }
 
 export interface TextColumn extends BaseColumn {
@@ -255,6 +259,7 @@ function CellLeadingText({
   const hasDotKey = !!col.dotKey;
   const actionLabel = col.actionLabel ?? "Openen";
   const actionCompleted = col.actionCompletedKey ? row[col.actionCompletedKey] as string | undefined : undefined;
+  const extraActions = col.extraActionsKey ? row[col.extraActionsKey] as ReactNode | undefined : undefined;
 
   const badgeLabel = col.badgeKey ? row[col.badgeKey] : undefined;
   const badgeStyle = col.badgeStyleKey ? row[col.badgeStyleKey] as React.CSSProperties | undefined : undefined;
@@ -310,17 +315,20 @@ function CellLeadingText({
             {actionCompleted}
           </p>
         </div>
-      ) : onAction ? (
-        <div className="shrink-0 opacity-0 group-hover/row:opacity-100 transition-opacity">
-          <Button
-            variant="secondary"
-            size="sm"
-            label={actionLabel}
-            onClick={(e) => {
-              e.stopPropagation();
-              onAction();
-            }}
-          />
+      ) : (onAction || extraActions) ? (
+        <div className="shrink-0 opacity-0 group-hover/row:opacity-100 transition-opacity flex items-center gap-[6px]">
+          {extraActions}
+          {onAction && (
+            <Button
+              variant="secondary"
+              size="sm"
+              label={actionLabel}
+              onClick={(e) => {
+                e.stopPropagation();
+                onAction();
+              }}
+            />
+          )}
         </div>
       ) : null}
     </div>
@@ -706,7 +714,7 @@ export default function Table({
           {columns.map((col) => {
             const isLeading = col.type === "leading-text";
             const widthCls = isLeading
-              ? `flex-1 min-w-[400px]${(col as LeadingTextColumn).maxWidth ? ` ${(col as LeadingTextColumn).maxWidth}` : ''}`
+              ? `flex-1 ${(col as LeadingTextColumn).minWidth ?? 'min-w-[400px]'}${(col as LeadingTextColumn).maxWidth ? ` ${(col as LeadingTextColumn).maxWidth}` : ''}`
               : `${col.width ?? "w-[120px]"} shrink-0`;
             // When a leading-text column has a dotKey, offset the header
             // to align with the text content (past the dot + gap space)
@@ -759,7 +767,7 @@ export default function Table({
             {columns.map((col) => {
               const isLeading = col.type === "leading-text";
               const widthCls = isLeading
-                ? `flex-1 min-w-[400px]${(col as LeadingTextColumn).maxWidth ? ` ${(col as LeadingTextColumn).maxWidth}` : ''}`
+                ? `flex-1 ${(col as LeadingTextColumn).minWidth ?? 'min-w-[400px]'}${(col as LeadingTextColumn).maxWidth ? ` ${(col as LeadingTextColumn).maxWidth}` : ''}`
                 : `${col.width ?? "w-[120px]"} shrink-0`;
 
               const actionHandler = onRowAction ?? onRowClick;

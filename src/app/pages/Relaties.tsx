@@ -100,6 +100,7 @@ export default function Relaties() {
       type: "leading-text",
       subtextKey: "plaatsLabel",
       actionLabel: "Openen",
+      minWidth: "min-w-[480px]",
     },
     {
       key: "statusLabel",

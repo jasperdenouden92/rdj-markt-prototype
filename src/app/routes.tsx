@@ -132,6 +132,10 @@ export const router = createBrowserRouter([
         Component: Bevrachters,
       },
       {
+        path: "markt/bevrachters/:id",
+        Component: RelatieDetail,
+      },
+      {
         path: "markt/database",
         Component: DatabaseAdmin,
       },

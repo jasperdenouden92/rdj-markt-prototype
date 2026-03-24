@@ -6,11 +6,10 @@ import Table from "../components/Table";
 import type { Column, RowData } from "../components/Table";
 import Pagination from "../components/Pagination";
 import FilterDropdown from "../components/FilterDropdown";
-import GespreksverslagQuickDialog from "../components/GespreksverslagQuickDialog";
-import { mockRelaties, mockContactPersonen, mockGebruikers, LADINGGROEP_SUGGESTIES, SOORT_RELATIE_OPTIES, mockRelatieCounts, mockGespreksverslagen } from "../data/mock-relatie-data";
-import type { Gespreksverslag } from "../data/mock-relatie-data";
+import Button from "../components/Button";
+import ConversationDialog from "../components/ConversationDialog";
+import { mockRelaties, mockContactPersonen, mockGebruikers, LADINGGROEP_SUGGESTIES, SOORT_RELATIE_OPTIES, mockRelatieCounts } from "../data/mock-relatie-data";
 import { mockTaken } from "../data/mock-taken-data";
-import type { Relatie } from "../data/api";
 
 function getInitials(name: string): string {
   return name
@@ -43,7 +42,7 @@ export default function Bevrachters() {
   const [currentPage, setCurrentPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(25);
   const [hoveredRow, setHoveredRow] = useState<string | null>(null);
-  const [verslagRelatieId, setVerslagRelatieId] = useState<string | null>(null);
+  const [conversationRelatie, setConversationRelatie] = useState<{ id: string; naam: string } | null>(null);
 
   // Pre-filter: only active bevrachters
   const bevrachters = useMemo(
@@ -77,6 +76,26 @@ export default function Bevrachters() {
     return filtered.slice(start, start + rowsPerPage);
   }, [filtered, currentPage, rowsPerPage]);
 
+  const onderhandelingIcon = (
+    <svg className="size-[16px]" fill="none" viewBox="0 0 20 20">
+      <path
+        d="M4 4C3.44772 4 3 4.44772 3 5V13C3 13.5523 3.44772 14 4 14H6V16.5L9.5 14H16C16.5523 14 17 13.5523 17 13V5C17 4.44772 16.5523 4 16 4H4Z"
+        stroke="currentColor"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        fill="none"
+      />
+      <path
+        d="M10 7V11M8 9H12"
+        stroke="currentColor"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+
   const columns: Column[] = [
     {
       key: "naam",
@@ -84,8 +103,10 @@ export default function Bevrachters() {
       type: "leading-text",
       subtextKey: "plaatsLabel",
       actionLabel: "Openen",
+      extraActionsKey: "extraActions",
+      minWidth: "min-w-[480px]",
     },
-{
+    {
       key: "ladingGroepen",
       header: "Ladinggroepen",
       type: "badges",
@@ -136,42 +157,6 @@ export default function Bevrachters() {
       expiredKey: "contactExpired",
       width: "w-[140px]",
     },
-    {
-      key: "verslagAction",
-      header: "",
-      type: "custom" as const,
-      width: "w-[48px]",
-      render: (row: RowData) => (
-        <div className="flex items-center justify-center opacity-0 group-hover/row:opacity-100 transition-opacity">
-          <button
-            onClick={(e) => {
-              e.stopPropagation();
-              setVerslagRelatieId(row.id);
-            }}
-            className="size-[32px] rounded-full flex items-center justify-center bg-[#1567a4] hover:bg-[#125a8f] transition-colors text-white shadow-sm"
-            title="Gespreksverslag toevoegen"
-          >
-            <svg className="size-[18px]" fill="none" viewBox="0 0 20 20">
-              <path
-                d="M4 4C3.44772 4 3 4.44772 3 5V13C3 13.5523 3.44772 14 4 14H6V16.5L9.5 14H16C16.5523 14 17 13.5523 17 13V5C17 4.44772 16.5523 4 16 4H4Z"
-                stroke="currentColor"
-                strokeWidth="1.5"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                fill="none"
-              />
-              <path
-                d="M10 7V11M8 9H12"
-                stroke="currentColor"
-                strokeWidth="1.5"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-            </svg>
-          </button>
-        </div>
-      ),
-    },
   ];
 
   const tableData: RowData[] = paged.map((r) => {
@@ -183,6 +168,18 @@ export default function Bevrachters() {
       id: r.id,
       naam: r.naam,
       plaatsLabel: [r.plaats, r.land].filter(Boolean).join(", ") || "—",
+      extraActions: (
+        <Button
+          variant="secondary"
+          size="sm"
+          icon={onderhandelingIcon}
+          title="Gesprek starten"
+          onClick={(e) => {
+            e.stopPropagation();
+            setConversationRelatie({ id: r.id, naam: r.naam });
+          }}
+        />
+      ),
       soortRelatieLabel: (r.soortRelatie || []).map((v) => SOORT_RELATIE_OPTIES.find((o) => o.value === v)?.label).filter(Boolean).join(", ") || "—",
       ladingGroepen: r.ladingGroepen || [],
       contactCount: String(contactCount),
@@ -255,30 +252,17 @@ export default function Bevrachters() {
           data={tableData}
           hoveredRowId={hoveredRow}
           onRowHover={setHoveredRow}
-          onRowClick={(row) => navigate(`/crm/relatie/${row.id}`)}
+          onRowClick={(row) => navigate(`/markt/bevrachters/${row.id}`)}
         />
       </div>
 
-      {verslagRelatieId && (() => {
-        const relatie = bevrachters.find((r) => r.id === verslagRelatieId);
-        const cpList = mockContactPersonen.filter((cp) => relatie?.contactPersoonIds?.includes(cp.id));
-        return (
-          <GespreksverslagQuickDialog
-            relatieId={verslagRelatieId}
-            relatieNaam={relatie?.naam || ""}
-            contactPersonen={cpList}
-            onSave={(verslag) => {
-              const newVerslag: Gespreksverslag = {
-                ...verslag,
-                id: `gv-${Date.now()}`,
-                aanmaakDatum: new Date().toISOString(),
-              };
-              mockGespreksverslagen.push(newVerslag);
-            }}
-            onClose={() => setVerslagRelatieId(null)}
-          />
-        );
-      })()}
+      {conversationRelatie && (
+        <ConversationDialog
+          relatieId={conversationRelatie.id}
+          relatieName={conversationRelatie.naam}
+          onClose={() => setConversationRelatie(null)}
+        />
+      )}
     </div>
   );
 }

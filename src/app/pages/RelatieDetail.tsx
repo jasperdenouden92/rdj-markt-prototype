@@ -1,5 +1,5 @@
 import { useState, useMemo, useCallback } from "react";
-import { useParams, Link, useNavigate } from "react-router";
+import { useParams, useLocation, Link, useNavigate } from "react-router";
 import Sidebar from "../components/Sidebar";
 import PageHeader from "../components/PageHeader";
 import type { PageTab } from "../components/PageHeader";
@@ -53,7 +53,12 @@ const chevronSvg = (
 
 export default function RelatieDetail() {
   const { id } = useParams();
+  const location = useLocation();
   const navigate = useNavigate();
+  const isBevrachterContext = location.pathname.startsWith("/markt/bevrachters");
+  const backPath = isBevrachterContext ? "/markt/bevrachters" : "/crm/relaties";
+  const backModule = isBevrachterContext ? "Markt" : "CRM";
+  const backSection = isBevrachterContext ? "Bevrachters" : "Relaties";
   const [activeTab, setActiveTab] = useState<"overzicht" | "ladingen" | "vaartuigen" | "deals" | "mail" | "gesprekken" | "activiteit">("overzicht");
   const [dealFilter, setDealFilter] = useState<"alle" | "spot" | "contract">("alle");
   const [showEditDialog, setShowEditDialog] = useState(false);
@@ -111,7 +116,7 @@ export default function RelatieDetail() {
         <div className="flex-1 flex items-center justify-center">
           <div className="text-center">
             <p className="font-sans font-bold text-[20px] text-rdj-text-primary">Relatie niet gevonden</p>
-            <Link to="/crm/relaties" className="font-sans text-[14px] text-rdj-text-brand hover:underline mt-2 block">
+            <Link to={backPath} className="font-sans text-[14px] text-rdj-text-brand hover:underline mt-2 block">
               Terug naar overzicht
             </Link>
           </div>
@@ -125,16 +130,16 @@ export default function RelatieDetail() {
       <div className="content-stretch flex gap-[20px] items-start relative shrink-0 w-full">
         <div className="content-stretch flex items-center pl-[24px] relative shrink-0">
           <div className="content-stretch flex gap-[8px] items-center relative shrink-0">
-            <Link to="/crm/relaties" className="content-stretch flex items-center justify-center p-[4px] relative rounded-[6px] shrink-0 hover:bg-rdj-bg-primary-hover">
-              <p className="font-sans font-bold leading-[20px] relative shrink-0 text-[#475467] text-[14px] whitespace-nowrap">CRM</p>
+            <Link to={backPath} className="content-stretch flex items-center justify-center p-[4px] relative rounded-[6px] shrink-0 hover:bg-rdj-bg-primary-hover">
+              <p className="font-sans font-bold leading-[20px] relative shrink-0 text-[#475467] text-[14px] whitespace-nowrap">{backModule}</p>
             </Link>
             <div className="overflow-clip relative shrink-0 size-[16px]">
               <div className="absolute bottom-1/4 left-[37.5%] right-[37.5%] top-1/4">
                 <div className="absolute inset-[-8.33%_-16.67%]">{chevronSvg}</div>
               </div>
             </div>
-            <Link to="/crm/relaties" className="content-stretch flex items-center justify-center px-[8px] py-[4px] relative rounded-[6px] shrink-0 hover:bg-rdj-bg-primary-hover">
-              <p className="font-sans font-bold leading-[20px] relative shrink-0 text-[#475467] text-[14px] whitespace-nowrap">Relaties</p>
+            <Link to={backPath} className="content-stretch flex items-center justify-center px-[8px] py-[4px] relative rounded-[6px] shrink-0 hover:bg-rdj-bg-primary-hover">
+              <p className="font-sans font-bold leading-[20px] relative shrink-0 text-[#475467] text-[14px] whitespace-nowrap">{backSection}</p>
             </Link>
             <div className="overflow-clip relative shrink-0 size-[16px]">
               <div className="absolute bottom-1/4 left-[37.5%] right-[37.5%] top-1/4">
