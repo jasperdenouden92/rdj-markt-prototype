@@ -35,7 +35,7 @@ const chevronSvg = (
 export default function CrmVaartuigDetail() {
   const { id, relatieId } = useParams();
   const navigate = useNavigate();
-  const [activeTab, setActiveTab] = useState<"matches" | "onderhandelingen" | "activiteit">("matches");
+  const [activeTab, setActiveTab] = useState<"matches" | "onderhandelingen" | "activiteit">("onderhandelingen");
   const [hoveredRow, setHoveredRow] = useState<string | null>(null);
   const [matchPage, setMatchPage] = useState(1);
   const [matchRowsPerPage, setMatchRowsPerPage] = useState(50);
@@ -97,8 +97,8 @@ export default function CrmVaartuigDetail() {
   const subtitle = `${vaartuig.type} · ${vaartuig.capaciteit} · ${vaartuig.locatie}`;
 
   const tabs: PageTab[] = [
-    { label: "Matches", path: "#matches", isActive: activeTab === "matches", badge: String(matches.length) },
     { label: "Onderhandelingen", path: "#onderhandelingen", isActive: activeTab === "onderhandelingen", badge: String(vaartuig.onderhandelingen) },
+    { label: "Matches", path: "#matches", isActive: activeTab === "matches", badge: String(matches.length) },
     { label: "Activiteit", path: "#activiteit", isActive: activeTab === "activiteit" },
   ];
 

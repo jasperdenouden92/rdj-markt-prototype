@@ -35,7 +35,7 @@ const chevronSvg = (
 export default function CrmLadingDetail() {
   const { id, relatieId } = useParams();
   const navigate = useNavigate();
-  const [activeTab, setActiveTab] = useState<"matches" | "onderhandelingen" | "activiteit">("matches");
+  const [activeTab, setActiveTab] = useState<"matches" | "onderhandelingen" | "activiteit">("onderhandelingen");
   const [hoveredRow, setHoveredRow] = useState<string | null>(null);
   const [matchPage, setMatchPage] = useState(1);
   const [matchRowsPerPage, setMatchRowsPerPage] = useState(50);
@@ -97,8 +97,8 @@ export default function CrmLadingDetail() {
   const subtitle = `${lading.tonnage} ${lading.product} vanuit ${lading.laadhaven} naar ${lading.loshaven}`;
 
   const tabs: PageTab[] = [
-    { label: "Matches", path: "#matches", isActive: activeTab === "matches", badge: String(matches.length) },
     { label: "Onderhandelingen", path: "#onderhandelingen", isActive: activeTab === "onderhandelingen", badge: String(lading.onderhandelingen) },
+    { label: "Matches", path: "#matches", isActive: activeTab === "matches", badge: String(matches.length) },
     { label: "Activiteit", path: "#activiteit", isActive: activeTab === "activiteit" },
   ];
 

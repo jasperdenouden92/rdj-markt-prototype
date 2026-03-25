@@ -84,7 +84,7 @@ function BreadcrumbChevron() {
 export default function InboxCargoDetail() {
   const { id } = useParams();
   const navigate = useNavigate();
-  const [activeTab, setActiveTabRaw] = useState<'matches' | 'onderhandelingen' | 'activiteit'>('matches');
+  const [activeTab, setActiveTabRaw] = useState<'matches' | 'onderhandelingen' | 'activiteit'>('onderhandelingen');
   const [selectedMatch, setSelectedMatch] = useState<any>(null);
   const [offeredMatches, setOfferedMatches] = useState<Set<string>>(new Set());
   const [selectedNegotiation, setSelectedNegotiation] = useState<{ id: string; status: string; bron: string; relatieName?: string } | null>(null);
@@ -152,8 +152,8 @@ export default function InboxCargoDetail() {
 
   /* ── Tabs ── */
   const tabs: PageTab[] = [
-    { label: 'Matches', path: '#matches', isActive: activeTab === 'matches', badge: String(matchRows.length) },
     { label: 'Onderhandelingen', path: '#onderhandelingen', isActive: activeTab === 'onderhandelingen', badge: String(mockNegotiations.length) },
+    { label: 'Matches', path: '#matches', isActive: activeTab === 'matches', badge: String(matchRows.length) },
     { label: 'Activiteit', path: '#activiteit', isActive: activeTab === 'activiteit' },
   ];
 
