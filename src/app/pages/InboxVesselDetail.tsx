@@ -82,7 +82,7 @@ function BreadcrumbChevron() {
 export default function InboxVesselDetail() {
   const { id } = useParams();
   const navigate = useNavigate();
-  const [activeTab, setActiveTabRaw] = useState<'matches' | 'onderhandelingen' | 'activiteit'>('matches');
+  const [activeTab, setActiveTabRaw] = useState<'matches' | 'onderhandelingen' | 'activiteit'>('onderhandelingen');
   const [hoveredRow, setHoveredRow] = useState<string | null>(null);
   const [selectedNegotiation, setSelectedNegotiation] = useState<{ id: string; status: string; bron: string; relatieName?: string } | null>(null);
   const setActiveTab = (tab: typeof activeTab) => { setActiveTabRaw(tab); setSelectedNegotiation(null); };
@@ -148,8 +148,8 @@ export default function InboxVesselDetail() {
 
   /* ── Tabs ── */
   const tabs: PageTab[] = [
-    { label: 'Matches', path: '#matches', isActive: activeTab === 'matches', badge: String(matchRows.length) },
     { label: 'Onderhandelingen', path: '#onderhandelingen', isActive: activeTab === 'onderhandelingen', badge: String(vesselNegotiations.length) },
+    { label: 'Matches', path: '#matches', isActive: activeTab === 'matches', badge: String(matchRows.length) },
     { label: 'Activiteit', path: '#activiteit', isActive: activeTab === 'activiteit' },
   ];
 
