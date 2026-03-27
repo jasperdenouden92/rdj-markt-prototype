@@ -3,6 +3,7 @@ import { useNavigate } from "react-router";
 import DetailsSidebar, { DetailsSidebarSection } from "./DetailsSidebar";
 import DetailRow from "./DetailRow";
 import { useLadingMarktDetail } from "../data/useDetailData";
+import * as api from "../data/api";
 
 /**
  * LadingMarktSidebar — detail sidebar for a markt-lading.
@@ -51,19 +52,6 @@ function parseNum(s: string): number | null {
 
 type ConditiesField = "prijs" | "laadtijd" | "liggeldLaden" | "lostijd" | "liggeldLossen";
 
-interface Overrides {
-  inkoopPrijs?: number | null;
-  inkoopLaadtijd?: number | null;
-  inkoopLiggeldLaden?: number | null;
-  inkoopLostijd?: number | null;
-  inkoopLiggeldLossen?: number | null;
-  zoekcriteriaPrijs?: number | null;
-  zoekcriteriaLaadtijd?: number | null;
-  zoekcriteriaLiggeldLaden?: number | null;
-  zoekcriteriaLostijd?: number | null;
-  zoekcriteriaLiggeldLossen?: number | null;
-}
-
 const fieldLabels: Record<ConditiesField, string> = {
   prijs: "Prijs",
   laadtijd: "Laadtijd",
@@ -79,14 +67,11 @@ interface LadingMarktSidebarProps {
 
 export default function LadingMarktSidebar({ id, onEdit }: LadingMarktSidebarProps) {
   const navigate = useNavigate();
-  const { data, loading, error } = useLadingMarktDetail(id);
+  const { data, loading, error, refetch } = useLadingMarktDetail(id);
   const [activeTab, setActiveTab] = useState<string>("details");
-  const [overrides, setOverrides] = useState<Overrides>({});
   const [overig, setOverig] = useState("");
 
   const getVal = (section: "inkoop" | "zoekcriteria", field: ConditiesField): number | null => {
-    const key = `${section}${field.charAt(0).toUpperCase()}${field.slice(1)}` as keyof Overrides;
-    if (key in overrides) return overrides[key] ?? null;
     if (!data) return null;
     const rawKey = `raw${section.charAt(0).toUpperCase()}${section.slice(1)}${field.charAt(0).toUpperCase()}${field.slice(1)}` as keyof typeof data;
     const val = (data[rawKey] as number | null) ?? null;
@@ -98,10 +83,14 @@ export default function LadingMarktSidebar({ id, onEdit }: LadingMarktSidebarPro
     return val;
   };
 
-  const saveField = (section: "inkoop" | "zoekcriteria", field: ConditiesField, input: string) => {
+  const saveField = async (section: "inkoop" | "zoekcriteria", field: ConditiesField, input: string) => {
     const num = parseNum(input);
-    const key = `${section}${field.charAt(0).toUpperCase()}${field.slice(1)}` as keyof Overrides;
-    setOverrides(prev => ({ ...prev, [key]: num }));
+    if (section === "inkoop") {
+      await api.patch("lading_markt", id, { [field]: num });
+    } else if (data?.eigenLadingId) {
+      await api.patch("lading_eigen", data.eigenLadingId, { [field]: num });
+    }
+    refetch();
   };
 
   const fmt = (field: ConditiesField, n: number | null): string => {
