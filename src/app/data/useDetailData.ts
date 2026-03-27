@@ -108,6 +108,7 @@ export interface ResolvedLadingMarkt {
   contactpersoon: string;
   eigenaar: string;
   eigenaarInitials: string;
+  eigenaarFoto: string;
   prioriteit: number;
   // Condities inkoop
   inkoopPrijs: string;
@@ -159,6 +160,7 @@ export interface ResolvedLadingEigen {
   opdrachtgeverContact: string;
   eigenaar: string;
   eigenaarInitials: string;
+  eigenaarFoto: string;
   deadline: string;
   // Condities eigen
   eigenPrijs: string;
@@ -209,6 +211,7 @@ export interface ResolvedVaartuigMarkt {
   contactpersoon: string;
   eigenaar: string;
   eigenaarInitials: string;
+  eigenaarFoto: string;
   prioriteit: number;
 }
 
@@ -232,6 +235,7 @@ export interface ResolvedVaartuigEigen {
   contactpersoon: string;
   eigenaar: string;
   eigenaarInitials: string;
+  eigenaarFoto: string;
   deadline: string;
 }
 
@@ -308,6 +312,7 @@ export function useLadingMarktDetail(id: string | undefined) {
           contactpersoon: contact?.naam || "—",
           eigenaar: eigenaar?.naam || "—",
           eigenaarInitials: eigenaar ? getInitials(eigenaar.naam) : "",
+          eigenaarFoto: eigenaar?.profielfoto || "",
           prioriteit: item.prioriteit,
           inkoopPrijs: fmtPrice(item.prijs),
           inkoopLaadtijd: fmtHours(item.laadtijd),
@@ -418,6 +423,7 @@ export function useLadingEigenDetail(id: string | undefined) {
           opdrachtgeverContact: contact?.naam || "—",
           eigenaar: eigenaar?.naam || "—",
           eigenaarInitials: eigenaar ? getInitials(eigenaar.naam) : "",
+          eigenaarFoto: eigenaar?.profielfoto || "",
           deadline: item.deadline || "—",
           eigenPrijs: fmtPrice(item.prijs),
           eigenLaadtijd: fmtHours(item.laadtijd),
@@ -510,6 +516,7 @@ export function useVaartuigMarktDetail(id: string | undefined) {
           contactpersoon: contact?.naam || "—",
           eigenaar: eigenaar?.naam || "—",
           eigenaarInitials: eigenaar ? getInitials(eigenaar.naam) : "",
+          eigenaarFoto: eigenaar?.profielfoto || "",
           prioriteit: item.prioriteit,
         };
 
@@ -574,6 +581,7 @@ export function useVaartuigEigenDetail(id: string | undefined) {
           contactpersoon: maps.contactPersonen.get(maps.relaties.get(item.relatieId)?.contactPersoonIds?.[0] || "")?.naam || "—",
           eigenaar: eigenaar?.naam || "—",
           eigenaarInitials: eigenaar ? getInitials(eigenaar.naam) : "",
+          eigenaarFoto: eigenaar?.profielfoto || "",
           deadline: item.deadline || "—",
         };
 

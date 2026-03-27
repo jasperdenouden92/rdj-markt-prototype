@@ -79,7 +79,7 @@ export default function VaartuigMarktSidebar({ id, onEdit, onResetToBron }: Vaar
       <div className="w-full h-px bg-rdj-border-secondary shrink-0 -mt-[8px]" />
 
       <DetailsSidebarSection>
-        <DetailRow label="Eigenaar" type="user" value={data.eigenaar} avatarInitials={data.eigenaarInitials} />
+        <DetailRow label="Eigenaar" type="user" value={data.eigenaar} avatarSrc={data.eigenaarFoto} avatarInitials={data.eigenaarInitials} />
         <DetailRow
           label="Prioriteit"
           value={stars.map((filled) => filled ? "★" : "☆").join("")}

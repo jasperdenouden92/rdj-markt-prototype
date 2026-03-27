@@ -2,7 +2,7 @@ import { useState, useRef, useEffect, useCallback, useMemo } from "react";
 import { Link, useLocation } from "react-router";
 import { Search } from "lucide-react";
 import svgPaths from "../../imports/svg-5lxjaeghl9";
-import imgAvatar from "../../assets/a2737d3b5b234fc04041650cb9f114889c6859da.png";
+import imgAvatar from "../../assets/e7809035038b3816de2a1d67c5de86ebeed325d0.png";
 import svgPathsMenu from "../../imports/svg-80ushx2b4a";
 import { mockTaken } from "../data/mock-taken-data";
 import GlobalSearchDialog from "./GlobalSearchDialog";

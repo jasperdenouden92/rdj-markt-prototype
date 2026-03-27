@@ -192,6 +192,7 @@ export default function Contracten() {
       key: "eigenaarNaam",
       header: "Eigenaar",
       type: "text",
+      avatarSrcKey: "eigenaarFoto",
       avatarInitialsKey: "eigenaarInitials",
       width: "w-[160px]",
     },
@@ -220,6 +221,7 @@ export default function Contracten() {
       waardeLabel: formatCurrency(c.waarde),
       eigenaarNaam: eigenaar?.naam || "—",
       eigenaarInitials: eigenaar ? getInitials(eigenaar.naam) : undefined,
+      eigenaarFoto: eigenaar?.profielfoto || undefined,
       laatsteUpdateLabel: formatDate(c.laatsteUpdate),
       updateExpired: isDateExpired(c.laatsteUpdate),
     };

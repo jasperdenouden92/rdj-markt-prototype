@@ -387,7 +387,7 @@ export const mockNegotiations: Negotiation[] = [
     deadlineExpired: true,
     status: 'Via werklijst',
     contact: {
-      name: 'Erick Nieuwkoop',
+      name: 'Eric Nieuwkoop',
       date: 'Ma 9 Mrt 07:28',
     },
     freightPrice: '€3,50 per ton',
@@ -401,7 +401,7 @@ export const mockNegotiations: Negotiation[] = [
     deadlineExpired: true,
     status: 'Via werklijst',
     contact: {
-      name: 'Michiel den Hond',
+      name: 'Pelger de Jong',
       date: 'Di 10 Mrt 19:53',
     },
     freightPrice: '€3,00 per ton',
@@ -427,7 +427,7 @@ export const mockNegotiations: Negotiation[] = [
     deadline: 'Morgen, 11:00',
     status: 'Bod ontvangen',
     contact: {
-      name: 'Erick Nieuwkoop',
+      name: 'Eric Nieuwkoop',
       date: 'Za 7 Mrt 18:39',
     },
     price: '€3.00 per ton',
@@ -441,7 +441,7 @@ export const mockNegotiations: Negotiation[] = [
     deadline: 'Do 19 Mrt, 11:15',
     status: 'Via werklijst',
     contact: {
-      name: 'Michiel den Hond',
+      name: 'Pelger de Jong',
       date: 'Vr 6 Mrt 11:47',
     },
     freightPrice: '€3,25 per ton',
@@ -480,7 +480,7 @@ export const mockNegotiations: Negotiation[] = [
     deadline: 'Za 21 Mrt',
     status: 'Via werklijst',
     contact: {
-      name: 'Erick Nieuwkoop',
+      name: 'Eric Nieuwkoop',
       date: 'Do 5 Mrt 14:50',
     },
     freightPrice: '€3,40 per ton',
@@ -493,7 +493,7 @@ export const mockNegotiations: Negotiation[] = [
     deadline: '',
     status: 'Afgekeurd',
     contact: {
-      name: 'Erick Nieuwkoop',
+      name: 'Eric Nieuwkoop',
       date: 'Wo 11 Mrt 12:04',
     },
   },

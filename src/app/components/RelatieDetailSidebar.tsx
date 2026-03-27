@@ -120,7 +120,7 @@ export default function RelatieDetailSidebar({ relatie, contactPersonen }: Relat
               <DetailRow label="Soort relatie" value={(relatie.soortRelatie || []).map((v) => SOORT_RELATIE_OPTIES.find((o) => o.value === v)?.label).filter(Boolean).join(", ") || undefined} labelWidth="w-[120px]" />
               <DetailRow label="Ladinggroepen" type="badges" badges={relatie.ladingGroepen} labelWidth="w-[120px]" />
               <DetailRow label="Status" value={relatie.status ? relatie.status.charAt(0).toUpperCase() + relatie.status.slice(1) : undefined} labelWidth="w-[120px]" />
-              <DetailRow label="Eigenaar" type="user" value={eigenaar?.naam} labelWidth="w-[120px]" />
+              <DetailRow label="Eigenaar" type="user" value={eigenaar?.naam} avatarSrc={eigenaar?.profielfoto} labelWidth="w-[120px]" />
               <DetailRow label="Frequentie" value={frequentieLabels[relatie.contactFrequentie || ""] || "—"} labelWidth="w-[120px]" />
               <DetailRow label="Laatste contact" value={formatDate(relatie.laatsteContact)} labelWidth="w-[120px]" />
             </div>

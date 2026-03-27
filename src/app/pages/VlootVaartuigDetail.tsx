@@ -452,7 +452,7 @@ export default function VlootVaartuigDetail() {
                       <p className="font-sans font-bold text-rdj-text-primary text-[12px]">EN</p>
                     </div>
                     <div>
-                      <p className="font-sans font-bold text-[14px] text-rdj-text-primary">Erick Nieuwkoop</p>
+                      <p className="font-sans font-bold text-[14px] text-rdj-text-primary">Eric Nieuwkoop</p>
                       <p className="font-sans font-normal text-[13px] text-rdj-text-secondary">Planner</p>
                     </div>
                   </div>

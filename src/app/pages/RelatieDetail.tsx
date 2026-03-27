@@ -59,7 +59,8 @@ export default function RelatieDetail() {
   const backPath = isBevrachterContext ? "/markt/bevrachters" : "/crm/relaties";
   const backModule = isBevrachterContext ? "Markt" : "CRM";
   const backSection = isBevrachterContext ? "Bevrachters" : "Relaties";
-  const [activeTab, setActiveTab] = useState<"overzicht" | "ladingen" | "vaartuigen" | "deals" | "mail" | "gesprekken" | "activiteit">("overzicht");
+  const initialTab = (location.hash.replace("#", "") || "overzicht") as "overzicht" | "ladingen" | "vaartuigen" | "deals" | "mail" | "gesprekken" | "activiteit";
+  const [activeTab, setActiveTab] = useState<"overzicht" | "ladingen" | "vaartuigen" | "deals" | "mail" | "gesprekken" | "activiteit">(initialTab);
   const [dealFilter, setDealFilter] = useState<"alle" | "spot" | "contract">("alle");
   const [showEditDialog, setShowEditDialog] = useState(false);
   const [relaties, setRelaties] = useState<Relatie[]>(mockRelaties);

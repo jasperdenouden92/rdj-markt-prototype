@@ -1,4 +1,8 @@
 import { useState } from "react";
+import imgEricNieuwkoop from "../../assets/a2737d3b5b234fc04041650cb9f114889c6859da.png";
+import imgKhoaNguyen from "../../assets/3627de284acb374a4d9313b3c2dbaeeb87a48224.png";
+import imgPelgerDeJong from "../../assets/e7809035038b3816de2a1d67c5de86ebeed325d0.png";
+import imgJanWillemVdKraan from "../../assets/9e45f45f537bea4bf653bc0307471e5ff5545f63.png";
 
 /**
  * ActivityFeed — shared component for activity timeline and comment input.
@@ -9,6 +13,7 @@ interface ActivityEvent {
   id: string;
   user: string;
   initials: string;
+  avatar: string;
   action: string;
   timestamp: string;
   detail?: string;
@@ -29,8 +34,9 @@ export default function ActivityFeed({ compact, filter = "all" }: ActivityFeedPr
   const mockEvents: ActivityEvent[] = [
     {
       id: "1",
-      user: "Erick Nieuwkoop",
+      user: "Eric Nieuwkoop",
       initials: "EN",
+      avatar: imgEricNieuwkoop,
       action: "heeft de status gewijzigd naar \"In de markt\"",
       timestamp: "Vandaag, 09:15",
     },
@@ -38,21 +44,24 @@ export default function ActivityFeed({ compact, filter = "all" }: ActivityFeedPr
       id: "2",
       user: "Khoa Nguyen",
       initials: "KN",
+      avatar: imgKhoaNguyen,
       action: "heeft een opmerking geplaatst",
       timestamp: "Gisteren, 16:32",
       detail: "Partij klaargelegd bij terminal 3. Contact opnemen met schipper voor ETA.",
     },
     {
       id: "3",
-      user: "Michiel den Hond",
-      initials: "MH",
+      user: "Pelger de Jong",
+      initials: "PJ",
+      avatar: imgPelgerDeJong,
       action: "heeft de eigenaar gewijzigd",
       timestamp: "Ma 3 Mrt, 11:04",
     },
     {
       id: "4",
-      user: "Lisa Aelbrechtse",
-      initials: "LA",
+      user: "Jan-Willem van der Kraan",
+      initials: "JK",
+      avatar: imgJanWillemVdKraan,
       action: "heeft dit item aangemaakt",
       timestamp: "Vr 28 Feb, 08:47",
     },
@@ -68,10 +77,8 @@ export default function ActivityFeed({ compact, filter = "all" }: ActivityFeedPr
       {/* Comment input */}
       <div className="bg-white border border-rdj-border-secondary rounded-[12px] p-[16px] w-full">
         <div className="flex gap-[8px] items-start">
-          <div className="relative rounded-full shrink-0 size-[32px] bg-rdj-bg-secondary flex items-center justify-center">
-            <p className="font-sans font-bold text-rdj-text-primary text-[12px]">
-              KN
-            </p>
+          <div className="relative rounded-full shrink-0 size-[32px] bg-rdj-bg-secondary overflow-hidden">
+            <img alt="" src={imgKhoaNguyen} className="absolute inset-0 size-full object-cover rounded-full" />
           </div>
           <div className="flex-1 flex flex-col gap-[8px]">
             <input
@@ -95,10 +102,8 @@ export default function ActivityFeed({ compact, filter = "all" }: ActivityFeedPr
             )}
 
             {/* Avatar */}
-            <div className="relative rounded-full shrink-0 size-[32px] bg-rdj-bg-secondary flex items-center justify-center z-[1]">
-              <p className="font-sans font-bold text-rdj-text-primary text-[12px]">
-                {event.initials}
-              </p>
+            <div className="relative rounded-full shrink-0 size-[32px] bg-rdj-bg-secondary overflow-hidden z-[1]">
+              <img alt="" src={event.avatar} className="absolute inset-0 size-full object-cover rounded-full" />
             </div>
 
             {/* Content */}
