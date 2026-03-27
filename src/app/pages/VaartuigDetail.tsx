@@ -17,6 +17,7 @@ import OnderhandelingSidepanel from "../components/OnderhandelingSidepanel";
 import ConversationDialog from "../components/ConversationDialog";
 import { useBevrachtingVaartuigSummary } from "../data/useDetailData";
 import { mockRelaties } from "../data/mock-relatie-data";
+import LastActivityButton from "../components/LastActivityButton";
 import svgPaths from "../../imports/svg-62fj7rjvas";
 import imgAvatar from "../../assets/a2737d3b5b234fc04041650cb9f114889c6859da.png";
 import imgAvatar1 from "../../assets/3627de284acb374a4d9313b3c2dbaeeb87a48224.png";
@@ -90,8 +91,8 @@ export default function VaartuigDetail() {
   /* ── Breadcrumb ── */
   const breadcrumb = (
     <div className="content-stretch flex flex-col gap-[20px] items-start pt-[24px] relative shrink-0 w-full">
-      <div className="content-stretch flex gap-[20px] items-start relative shrink-0 w-full">
-        <div className="content-stretch flex items-center pl-[24px] relative shrink-0">
+      <div className="content-stretch flex gap-[20px] items-center justify-between relative shrink-0 w-full px-[24px]">
+        <div className="content-stretch flex items-center relative shrink-0">
           <div className="content-stretch flex gap-[8px] items-center relative shrink-0">
             <Link to="/markt/bevrachting" className="content-stretch flex items-center justify-center p-[4px] relative rounded-[6px] shrink-0 hover:bg-rdj-bg-primary-hover">
               <p className="font-sans font-bold leading-[20px] relative shrink-0 text-[#475467] text-[14px] whitespace-nowrap">Markt</p>
@@ -124,6 +125,7 @@ export default function VaartuigDetail() {
             </div>
           </div>
         </div>
+        <LastActivityButton maxAvatars={3} />
       </div>
       <div className="h-px relative shrink-0 w-full bg-rdj-border-secondary" />
     </div>

@@ -1,5 +1,4 @@
 import { useState, useEffect, useRef, forwardRef } from "react";
-import { useNavigate } from "react-router";
 import SegmentedButtonGroup from "./SegmentedButtonGroup";
 import Button from "./Button";
 import { Tooltip, TooltipTrigger, TooltipContent } from "./ui/tooltip";
@@ -11,10 +10,7 @@ import {
   mockRelatieLadingMatches,
   mockRelatieVaartuigMatches,
 } from "../data/mock-relatie-data";
-import imgEricNieuwkoop from "../../assets/a2737d3b5b234fc04041650cb9f114889c6859da.png";
-import imgKhoaNguyen from "../../assets/3627de284acb374a4d9313b3c2dbaeeb87a48224.png";
-import imgPelgerDeJong from "../../assets/e7809035038b3816de2a1d67c5de86ebeed325d0.png";
-import imgJanWillemVdKraan from "../../assets/9e45f45f537bea4bf653bc0307471e5ff5545f63.png";
+import LastActivityButton from "./LastActivityButton";
 
 /* ── Types ── */
 
@@ -65,54 +61,6 @@ const CONDITION_DEFS: { key: ConditionKey; label: string; placeholder: string; f
   { key: "overig", label: "Overig", placeholder: "vrije tekst", format: v => v },
 ];
 
-/* ── Activity log helpers ── */
-
-function formatRelativeDatum(dateStr: string): string {
-  const d = new Date(dateStr);
-  const now = new Date();
-  const diffMs = now.getTime() - d.getTime();
-  const diffMins = Math.floor(diffMs / (1000 * 60));
-  const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
-  const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
-
-  if (diffMins < 1) return "Zojuist";
-  if (diffMins < 60) return `${diffMins} min geleden`;
-  if (diffHours < 24) return `${diffHours} uur geleden`;
-  if (diffDays === 1) return "Gisteren";
-  if (diffDays < 7) return `${diffDays} dagen geleden`;
-  return d.toLocaleDateString("nl-NL", { day: "numeric", month: "short" });
-}
-
-function formatDatumFull(dateStr: string): string {
-  const d = new Date(dateStr);
-  const now = new Date();
-  const diffDays = Math.floor((now.getTime() - d.getTime()) / (1000 * 60 * 60 * 24));
-  if (diffDays === 0) return `Vandaag, ${d.toLocaleTimeString("nl-NL", { hour: "2-digit", minute: "2-digit" })}`;
-  if (diffDays === 1) return `Gisteren, ${d.toLocaleTimeString("nl-NL", { hour: "2-digit", minute: "2-digit" })}`;
-  return d.toLocaleDateString("nl-NL", { day: "numeric", month: "short", year: "numeric", hour: "2-digit", minute: "2-digit" });
-}
-
-function getInitials(naam: string): string {
-  return naam.split(" ").map(w => w[0]).filter(Boolean).slice(0, 2).join("").toUpperCase();
-}
-
-interface ActivityLogEntry {
-  id: string;
-  user: string;
-  initials: string;
-  avatar: string;
-  action: string;
-  timestamp: string;
-  detail?: string;
-}
-
-const MOCK_CONVERSATION_ACTIVITY: ActivityLogEntry[] = [
-  { id: "ca-1", user: "Jan-Willem van der Kraan", initials: "JK", avatar: imgJanWillemVdKraan, action: "heeft gebeld met contactpersoon", timestamp: "2026-03-27T09:15:00" },
-  { id: "ca-2", user: "Khoa Nguyen", initials: "KN", avatar: imgKhoaNguyen, action: "heeft condities aangepast", timestamp: "2026-03-26T16:32:00", detail: "Prijs gewijzigd naar €4,50 per ton" },
-  { id: "ca-3", user: "Eric Nieuwkoop", initials: "EN", avatar: imgEricNieuwkoop, action: "heeft lading aangeboden", timestamp: "2026-03-25T11:04:00" },
-  { id: "ca-4", user: "Pelger de Jong", initials: "PJ", avatar: imgPelgerDeJong, action: "heeft gesprek gestart", timestamp: "2026-03-24T08:47:00" },
-];
-
 interface ConversationDialogProps {
   relatieId: string;
   relatieName: string;
@@ -138,22 +86,6 @@ export default function ConversationDialog({
   onClose,
   onSave,
 }: ConversationDialogProps) {
-  const navigate = useNavigate();
-  const [showActivityLog, setShowActivityLog] = useState(false);
-  const activityRef = useRef<HTMLDivElement>(null);
-
-  // Close activity log on outside click
-  useEffect(() => {
-    if (!showActivityLog) return;
-    function handleClick(e: MouseEvent) {
-      if (activityRef.current && !activityRef.current.contains(e.target as Node)) {
-        setShowActivityLog(false);
-      }
-    }
-    document.addEventListener("mousedown", handleClick);
-    return () => document.removeEventListener("mousedown", handleClick);
-  }, [showActivityLog]);
-
   const getInitialTab = (): TabValue => {
     if (preSelectedItemType === "lading") return "eigen-ladingen";
     if (preSelectedItemType === "vaartuig") return "eigen-vaartuigen";
@@ -780,73 +712,7 @@ export default function ConversationDialog({
               </p>
             </div>
             <div className="flex items-center gap-[8px] shrink-0">
-              {/* Last activity button + avatar */}
-              <div className="relative" ref={activityRef}>
-                <div className="flex items-center gap-[8px]">
-                  <Button
-                    variant="tertiary-gray"
-                    size="xs"
-                    onClick={() => setShowActivityLog(!showActivityLog)}
-                  >
-                    {formatRelativeDatum(MOCK_CONVERSATION_ACTIVITY[0].timestamp)}
-                  </Button>
-                  <div className="size-[28px] rounded-full bg-[#f2f4f7] overflow-hidden">
-                    <img alt="" src={MOCK_CONVERSATION_ACTIVITY[0].avatar} className="size-full object-cover rounded-full" />
-                  </div>
-                </div>
-
-                {/* Activity log popover */}
-                {showActivityLog && (
-                  <div className="absolute right-0 top-full mt-[8px] z-50 bg-white border border-rdj-border-secondary rounded-[12px] shadow-[0px_12px_16px_-4px_rgba(16,24,40,0.08),0px_4px_6px_-2px_rgba(16,24,40,0.03)] w-[380px]">
-                    <div className="px-[16px] pt-[16px] pb-[12px] border-b border-rdj-border-secondary">
-                      <p className="font-sans font-bold text-[14px] leading-[20px] text-rdj-text-primary">Activiteit</p>
-                    </div>
-                    <div className="px-[16px] py-[12px] max-h-[320px] overflow-y-auto">
-                      <div className="flex flex-col">
-                        {MOCK_CONVERSATION_ACTIVITY.map((event, index) => (
-                          <div key={event.id} className="flex gap-[10px] relative">
-                            {index < MOCK_CONVERSATION_ACTIVITY.length - 1 && (
-                              <div className="absolute left-[13px] top-[32px] bottom-0 w-px bg-rdj-border-secondary" />
-                            )}
-                            <div className="relative rounded-full shrink-0 size-[28px] bg-[#f2f4f7] overflow-hidden z-[1]">
-                              <img alt="" src={event.avatar} className="absolute inset-0 size-full object-cover rounded-full" />
-                            </div>
-                            <div className="flex-1 pb-[16px]">
-                              <p className="font-sans font-normal leading-[18px] text-rdj-text-secondary text-[13px]">
-                                <span className="font-bold text-rdj-text-primary">{event.user}</span>{" "}
-                                {event.action}
-                              </p>
-                              <p className="font-sans font-normal text-rdj-text-tertiary text-[12px] mt-[2px]">
-                                {formatDatumFull(event.timestamp)}
-                              </p>
-                              {event.detail && (
-                                <div className="mt-[6px] bg-rdj-bg-secondary rounded-[6px] px-[10px] py-[6px]">
-                                  <p className="font-sans font-normal text-rdj-text-secondary text-[13px]">
-                                    {event.detail}
-                                  </p>
-                                </div>
-                              )}
-                            </div>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                    <div className="px-[16px] py-[12px] border-t border-rdj-border-secondary">
-                      <Button
-                        variant="tertiary-gray"
-                        size="sm"
-                        onClick={() => {
-                          setShowActivityLog(false);
-                          onClose();
-                          navigate(`/markt/bevrachters/${relatieId}#activiteit`);
-                        }}
-                      >
-                        Meer details
-                      </Button>
-                    </div>
-                  </div>
-                )}
-              </div>
+              <LastActivityButton relatieId={relatieId} onNavigateAway={onClose} />
 
               {/* Close button */}
               <button

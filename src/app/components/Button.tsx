@@ -8,8 +8,8 @@ interface ButtonProps extends Omit<ButtonHTMLAttributes<HTMLButtonElement>, "chi
   variant?: ButtonVariant;
   /** Size */
   size?: ButtonSize;
-  /** Text label — omit for icon-only buttons */
-  label?: string;
+  /** Text label — omit for icon-only buttons. Also accepts children. */
+  label?: ReactNode;
   /** Leading icon (before label) */
   leadingIcon?: ReactNode;
   /** Trailing icon (after label) */
@@ -18,6 +18,8 @@ interface ButtonProps extends Omit<ButtonHTMLAttributes<HTMLButtonElement>, "chi
   icon?: ReactNode;
   /** Full width */
   fullWidth?: boolean;
+  /** Children as alternative to label */
+  children?: ReactNode;
 }
 
 const sizeConfig = {
@@ -37,10 +39,12 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button({
   fullWidth = false,
   className = "",
   disabled,
+  children,
   ...rest
 }, ref) {
+  const resolvedLabel = label ?? children;
   const s = sizeConfig[size];
-  const isIconOnly = !!icon && !label;
+  const isIconOnly = !!icon && !resolvedLabel;
 
   // --- Variant styles ---
   const variantStyles: Record<ButtonVariant, { outer: string; text: string; iconColor: string; border: string | null }> = {
@@ -80,13 +84,13 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button({
         "absolute border border-[#d0d5dd] border-solid inset-0 pointer-events-none rounded-[6px] shadow-[0px_1px_2px_0px_rgba(16,24,40,0.05)]",
     },
     tertiary: {
-      outer: "",
+      outer: "hover:bg-rdj-bg-primary-hover rounded-[6px] transition-colors",
       text: "text-[#344054]",
       iconColor: "[&_svg_path]:stroke-[#1567a4] [&_svg_circle]:stroke-[#1567a4] [&_svg_rect]:stroke-[#1567a4] [&_svg_line]:stroke-[#1567a4]",
       border: null,
     },
     "tertiary-gray": {
-      outer: "",
+      outer: "hover:bg-rdj-bg-primary-hover rounded-[6px] transition-colors",
       text: "text-rdj-text-secondary dark:text-[#98a2b3]",
       iconColor: "[&_svg_path]:stroke-rdj-text-secondary [&_svg_circle]:stroke-rdj-text-secondary [&_svg_rect]:stroke-rdj-text-secondary [&_svg_line]:stroke-rdj-text-secondary",
       border: null,
@@ -151,11 +155,11 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button({
         )}
 
         {/* Label */}
-        {label && (
+        {resolvedLabel && (
           <p
             className={`font-sans font-bold relative shrink-0 whitespace-nowrap ${s.textSize} ${v.text}`}
           >
-            {label}
+            {resolvedLabel}
           </p>
         )}
 

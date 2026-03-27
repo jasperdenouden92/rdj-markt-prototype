@@ -15,6 +15,7 @@ import ConversationDialog from "../components/ConversationDialog";
 import BrokerDialog from "../components/BrokerDialog";
 import ActivityFeed from "../components/ActivityFeed";
 import SectionHeader from "../components/SectionHeader";
+import LastActivityButton from "../components/LastActivityButton";
 import { useInboxVaartuigSummary } from "../data/useDetailData";
 import { mockRelaties } from "../data/mock-relatie-data";
 import imgAvatar from "../../assets/a2737d3b5b234fc04041650cb9f114889c6859da.png";
@@ -217,11 +218,10 @@ export default function InboxVesselDetail() {
       <div className="flex min-h-screen bg-white">
         <Sidebar />
 
-        <div className="flex-1 overflow-auto flex">
-          {/* Main content area */}
-          <div className="flex-1 overflow-auto">
-            {/* Breadcrumbs */}
-            <div className="flex items-center gap-[8px] px-[24px] pt-[24px] pb-[20px] border-b border-rdj-border-secondary">
+        <div className="flex-1 overflow-auto">
+          {/* Breadcrumbs */}
+          <div className="flex items-center justify-between gap-[8px] px-[24px] pt-[24px] pb-[20px] border-b border-rdj-border-secondary">
+            <div className="flex items-center gap-[8px]">
               <button onClick={() => navigate("/markt/inbox/vaartuigen")} className="flex items-center justify-center p-[4px] rounded-[6px] shrink-0 hover:bg-rdj-bg-primary-hover">
                 <p className="font-sans font-bold leading-[20px] text-rdj-text-secondary text-[14px] whitespace-nowrap">Markt</p>
               </button>
@@ -236,7 +236,12 @@ export default function InboxVesselDetail() {
                 </p>
               </div>
             </div>
+            <LastActivityButton maxAvatars={3} />
+          </div>
 
+          <div className="flex items-stretch w-full min-h-[calc(100vh-65px)]">
+          {/* Main content area */}
+          <div className="flex-1 overflow-auto">
             {/* Page content with max width */}
             <div className="flex flex-col items-center size-full">
               <div className="flex flex-col items-center py-[24px] w-full">
@@ -364,6 +369,7 @@ export default function InboxVesselDetail() {
 
           {/* Right sidebar */}
           <VaartuigMarktSidebar id={id!} />
+          </div>
         </div>
       </div>
 
