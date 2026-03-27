@@ -1,7 +1,7 @@
-import { type ReactNode, type ButtonHTMLAttributes } from "react";
+import { forwardRef, type ReactNode, type ButtonHTMLAttributes } from "react";
 
-type ButtonVariant = "primary" | "secondary" | "secondary-destructive" | "tertiary" | "tertiary-gray" | "text";
-type ButtonSize = "sm" | "md" | "lg";
+type ButtonVariant = "primary" | "primary-success" | "primary-destructive" | "secondary" | "secondary-destructive" | "tertiary" | "tertiary-gray" | "text";
+type ButtonSize = "xs" | "sm" | "md" | "lg";
 
 interface ButtonProps extends Omit<ButtonHTMLAttributes<HTMLButtonElement>, "children"> {
   /** Visual variant */
@@ -21,12 +21,13 @@ interface ButtonProps extends Omit<ButtonHTMLAttributes<HTMLButtonElement>, "chi
 }
 
 const sizeConfig = {
-  sm: { px: "px-[12px]", py: "py-[8px]", iconPx: "p-[10px]", gap: "gap-[4px]", iconSize: "size-[16px]" },
-  md: { px: "px-[14px]", py: "py-[10px]", iconPx: "p-[10px]", gap: "gap-[4px]", iconSize: "size-[20px]" },
-  lg: { px: "px-[18px]", py: "py-[10px]", iconPx: "p-[12px]", gap: "gap-[6px]", iconSize: "size-[20px]" },
+  xs: { px: "px-[8px]", py: "py-[4px]", iconPx: "p-[6px]", gap: "gap-[4px]", iconSize: "size-[14px]", textSize: "text-[12px] leading-[16px]" },
+  sm: { px: "px-[12px]", py: "py-[8px]", iconPx: "p-[10px]", gap: "gap-[4px]", iconSize: "size-[16px]", textSize: "text-[14px] leading-[20px]" },
+  md: { px: "px-[14px]", py: "py-[10px]", iconPx: "p-[10px]", gap: "gap-[4px]", iconSize: "size-[20px]", textSize: "text-[14px] leading-[20px]" },
+  lg: { px: "px-[18px]", py: "py-[10px]", iconPx: "p-[12px]", gap: "gap-[6px]", iconSize: "size-[20px]", textSize: "text-[14px] leading-[20px]" },
 };
 
-export default function Button({
+const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button({
   variant = "primary",
   size = "md",
   label,
@@ -37,7 +38,7 @@ export default function Button({
   className = "",
   disabled,
   ...rest
-}: ButtonProps) {
+}, ref) {
   const s = sizeConfig[size];
   const isIconOnly = !!icon && !label;
 
@@ -49,6 +50,20 @@ export default function Button({
       iconColor: "[&_svg_path]:stroke-white [&_svg_circle]:stroke-white [&_svg_rect]:stroke-white [&_svg_line]:stroke-white",
       border:
         "absolute border border-[#1567a4] border-solid inset-0 pointer-events-none rounded-[6px] shadow-[0px_1px_2px_0px_rgba(16,24,40,0.05)]",
+    },
+    "primary-success": {
+      outer: "bg-[#067647]",
+      text: "text-white",
+      iconColor: "[&_svg_path]:stroke-white [&_svg_circle]:stroke-white [&_svg_rect]:stroke-white [&_svg_line]:stroke-white",
+      border:
+        "absolute border border-[#067647] border-solid inset-0 pointer-events-none rounded-[6px] shadow-[0px_1px_2px_0px_rgba(16,24,40,0.05)]",
+    },
+    "primary-destructive": {
+      outer: "bg-[#D92D20]",
+      text: "text-white",
+      iconColor: "[&_svg_path]:stroke-white [&_svg_circle]:stroke-white [&_svg_rect]:stroke-white [&_svg_line]:stroke-white",
+      border:
+        "absolute border border-[#D92D20] border-solid inset-0 pointer-events-none rounded-[6px] shadow-[0px_1px_2px_0px_rgba(16,24,40,0.05)]",
     },
     secondary: {
       outer: "bg-white dark:bg-[#1d2939]",
@@ -107,10 +122,11 @@ export default function Button({
 
   return (
     <button
+      ref={ref}
       disabled={disabled}
       className={[
         v.outer,
-        variant === "primary" || variant === "secondary" || variant === "secondary-destructive" ? `relative rounded-[6px] ${fullWidth ? "" : "shrink-0"}` : fullWidth ? "" : "shrink-0",
+        v.border ? `relative rounded-[6px] ${fullWidth ? "" : "shrink-0"}` : fullWidth ? "" : "shrink-0",
         fullWidth ? "w-full min-w-0" : "",
         disabled ? "opacity-50 cursor-not-allowed" : "cursor-pointer hover:opacity-90",
         className,
@@ -137,7 +153,7 @@ export default function Button({
         {/* Label */}
         {label && (
           <p
-            className={`font-sans font-bold leading-[20px] relative shrink-0 text-[14px] whitespace-nowrap ${v.text}`}
+            className={`font-sans font-bold relative shrink-0 whitespace-nowrap ${s.textSize} ${v.text}`}
           >
             {label}
           </p>
@@ -155,4 +171,6 @@ export default function Button({
       {v.border && <div aria-hidden="true" className={v.border} />}
     </button>
   );
-}
+});
+
+export default Button;

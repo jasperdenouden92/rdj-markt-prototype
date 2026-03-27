@@ -124,11 +124,11 @@ export default function DetailRow({
 
   const valueContent = (
     <>
-      {type === "default" && <DefaultValue value={value} subtext={subtext} subtextColor={subtextColor} subtextTooltip={subtextTooltip} />}
+      {type === "default" && <DefaultValue value={value} subtext={subtext} subtextColor={subtextColor} subtextTooltip={subtextTooltip} editable={editable} />}
       {type === "linked" && (
         <LinkedValue value={value} subtext={subtext} subtextColor={subtextColor} subtextTooltip={subtextTooltip} onClick={onClick} />
       )}
-      {type === "badges" && <BadgesValue badges={badges} />}
+      {type === "badges" && <BadgesValue badges={badges} editable={editable} />}
       {type === "user" && (
         <UserValue
           value={value}
@@ -231,18 +231,21 @@ function DefaultValue({
   subtext,
   subtextColor,
   subtextTooltip,
+  editable,
 }: {
   value?: string;
   subtext?: string;
   subtextColor?: string;
   subtextTooltip?: string;
+  editable?: boolean;
 }) {
+  const isEmpty = !value || value === "—";
   return (
     <div className="bg-white relative rounded-[6px] shrink-0 w-full">
       <div className="flex flex-row items-center size-full">
         <div className="content-stretch flex flex-col justify-center pl-[12px] pr-[6px] py-[8px] relative w-full">
-          <p className="font-sans font-bold leading-[20px] text-rdj-text-primary text-[14px]">
-            {value || "—"}
+          <p className={`font-sans leading-[20px] text-[14px] ${isEmpty && editable ? "font-normal text-rdj-text-tertiary" : "font-bold text-rdj-text-primary"}`}>
+            {isEmpty && editable ? "Voeg toe" : (value || "—")}
           </p>
           {subtext && (
             <SubtextWithTooltip subtext={subtext} subtextColor={subtextColor} subtextTooltip={subtextTooltip} />
@@ -284,12 +287,12 @@ function LinkedValue({
   );
 }
 
-function BadgesValue({ badges }: { badges?: string[] }) {
+function BadgesValue({ badges, editable }: { badges?: string[]; editable?: boolean }) {
   if (!badges || badges.length === 0) {
     return (
       <div className="px-[12px] py-[8px]">
         <p className="font-sans font-normal leading-[20px] text-rdj-text-tertiary text-[14px]">
-          —
+          {editable ? "Voeg toe" : "—"}
         </p>
       </div>
     );

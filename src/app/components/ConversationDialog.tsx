@@ -1,5 +1,7 @@
 import { useState, useEffect, useRef, forwardRef } from "react";
 import SegmentedButtonGroup from "./SegmentedButtonGroup";
+import Button from "./Button";
+import { Tooltip, TooltipTrigger, TooltipContent } from "./ui/tooltip";
 import * as api from "../data/api";
 import type { LadingEigen, VaartuigEigen, LadingMarkt, VaartuigMarkt, Partij, Subpartij } from "../data/api";
 import {
@@ -31,7 +33,7 @@ interface MatchDisplayItem extends DisplayItem {
   matchPercentage: number;
 }
 
-type ConditionKey = "prijs" | "laadtijd" | "liggeldLaden" | "lostijd" | "liggeldLossen" | "overig";
+type ConditionKey = "prijs" | "laadtijd" | "liggeldLaden" | "lostijd" | "liggeldLossen" | "deadline" | "overig";
 
 interface ConditionValues {
   prijs?: string;
@@ -39,15 +41,22 @@ interface ConditionValues {
   liggeldLaden?: string;
   lostijd?: string;
   liggeldLossen?: string;
+  deadline?: string;
   overig?: string;
 }
+
+const fmtLiggeld = (v: string, label: string): string => {
+  if (v.toUpperCase() === "NLW") return `NLW ${label}`;
+  return `€${v} ${label}`;
+};
 
 const CONDITION_DEFS: { key: ConditionKey; label: string; placeholder: string; format: (v: string) => string }[] = [
   { key: "prijs", label: "Prijs", placeholder: "bijv. 4,00", format: v => `€${v} /ton` },
   { key: "laadtijd", label: "Laadtijd", placeholder: "bijv. 12", format: v => `${v} uur laden` },
-  { key: "liggeldLaden", label: "Liggeld laden", placeholder: "bijv. 25", format: v => `€${v} liggeld laden` },
+  { key: "liggeldLaden", label: "Liggeld laden", placeholder: "bijv. 25 of NLW", format: v => fmtLiggeld(v, "liggeld laden") },
   { key: "lostijd", label: "Lostijd", placeholder: "bijv. 8", format: v => `${v} uur lossen` },
-  { key: "liggeldLossen", label: "Liggeld lossen", placeholder: "bijv. 25", format: v => `€${v} liggeld lossen` },
+  { key: "liggeldLossen", label: "Liggeld lossen", placeholder: "bijv. 25 of NLW", format: v => fmtLiggeld(v, "liggeld lossen") },
+  { key: "deadline", label: "Deadline", placeholder: "bijv. 21-03", format: v => `deadline ${v}` },
   { key: "overig", label: "Overig", placeholder: "vrije tekst", format: v => v },
 ];
 
@@ -203,6 +212,41 @@ export default function ConversationDialog({
           };
         })
     );
+
+    // Prefill "onze condities" from zoekcriteria stored on lading_eigen only
+    if (preSelectedItemId && preSelectedItemType === "lading") {
+      const selectedLading = allLadingenEigen.find(le => le.id === preSelectedItemId);
+      if (selectedLading) {
+        const fmtNum = (v: number | null | undefined): string | undefined => {
+          if (v == null) return undefined;
+          return v.toLocaleString("nl-NL", { minimumFractionDigits: 2, maximumFractionDigits: 2 }).replace(/,00$/, "");
+        };
+
+        const fmtZoekLiggeld = (v: string | number | null | undefined): string | undefined => {
+          if (v == null) return undefined;
+          if (typeof v === "string") return v.toUpperCase() === "NLW" ? "NLW" : v;
+          return fmtNum(v);
+        };
+
+        const conditions: ConditionValues = {};
+        const p = fmtNum(selectedLading.zoekPrijs);
+        if (p) conditions.prijs = p;
+        if (selectedLading.zoekLaadtijd != null) conditions.laadtijd = String(selectedLading.zoekLaadtijd);
+        const ll = fmtZoekLiggeld(selectedLading.zoekLiggeldLaden);
+        if (ll && ll !== "0") conditions.liggeldLaden = ll;
+        if (selectedLading.zoekLostijd != null) conditions.lostijd = String(selectedLading.zoekLostijd);
+        const lol = fmtZoekLiggeld(selectedLading.zoekLiggeldLossen);
+        if (lol && lol !== "0") conditions.liggeldLossen = lol;
+        if (selectedLading.zoekDeadline) conditions.deadline = selectedLading.zoekDeadline;
+        if (Object.keys(conditions).length > 0) {
+          setItemConditions(prev => {
+            const next = new Map(prev);
+            next.set(preSelectedItemId, conditions);
+            return next;
+          });
+        }
+      }
+    }
 
     // Markt vaartuigen (from other relaties)
     const allVaartuigenMarkt = await api.list<VaartuigMarkt & { status?: string }>("vaartuig_markt");
@@ -565,6 +609,17 @@ export default function ConversationDialog({
       }
       return next;
     });
+    // Persist to lading_eigen zoekcriteria if this is an eigen lading
+    if (eigenLadingen.some(l => l.id === itemId) && key !== "overig") {
+      const zoekKey = `zoek${key.charAt(0).toUpperCase()}${key.slice(1)}`;
+      // Liggeld and deadline support string values (NLW, dates)
+      if (key === "deadline" || (value && value.toUpperCase() === "NLW")) {
+        api.patch("lading_eigen", itemId, { [zoekKey]: value || null });
+      } else {
+        const num = value ? parseFloat(value.replace(",", ".")) : null;
+        api.patch("lading_eigen", itemId, { [zoekKey]: isNaN(num as number) ? null : num });
+      }
+    }
   };
 
   const setBidConditionValue = (itemId: string, key: ConditionKey, value: string) => {
@@ -1046,17 +1101,17 @@ function ItemRow({
         <div className="shrink-0 flex items-center gap-[4px]" onClick={e => e.stopPropagation()}>
           {isRelatieLading && (
             <>
-              {!conditionsExpanded && (
-                <button
-                  onClick={onToggleConditions}
-                  className="inline-flex items-center gap-[4px] rounded-full border border-[#d0d5dd] bg-white px-[8px] py-[3px] font-sans font-bold text-[12px] leading-[16px] text-[#344054] hover:bg-[#f9fafb] transition-colors"
-                >
-                  Condities
-                  {filledConditions > 0 && (
-                    <span className="text-[#067647] font-normal">({filledConditions})</span>
-                  )}
-                </button>
-              )}
+              <Button
+                variant="tertiary-gray"
+                size="xs"
+                label={filledConditions > 0 ? `Condities (${filledConditions})` : "Condities"}
+                trailingIcon={
+                  <svg width="12" height="12" viewBox="0 0 12 12" fill="none" className={`transition-transform ${conditionsExpanded ? "rotate-180" : ""}`}>
+                    <path d="M3 4.5L6 7.5L9 4.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                  </svg>
+                }
+                onClick={onToggleConditions}
+              />
               <LadingActionButton
                 type="bod"
                 active={status === "aangeboden"}
@@ -1066,17 +1121,17 @@ function ItemRow({
           )}
           {isEigenLading && (
             <>
-              {!conditionsExpanded && (
-                <button
-                  onClick={onToggleConditions}
-                  className="inline-flex items-center gap-[4px] rounded-full border border-[#d0d5dd] bg-white px-[8px] py-[3px] font-sans font-bold text-[12px] leading-[16px] text-[#344054] hover:bg-[#f9fafb] transition-colors"
-                >
-                  Condities
-                  {filledConditions > 0 && (
-                    <span className="text-[#067647] font-normal">({filledConditions})</span>
-                  )}
-                </button>
-              )}
+              <Button
+                variant="tertiary-gray"
+                size="xs"
+                label={filledConditions > 0 ? `Condities (${filledConditions})` : "Condities"}
+                trailingIcon={
+                  <svg width="12" height="12" viewBox="0 0 12 12" fill="none" className={`transition-transform ${conditionsExpanded ? "rotate-180" : ""}`}>
+                    <path d="M3 4.5L6 7.5L9 4.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                  </svg>
+                }
+                onClick={onToggleConditions}
+              />
               <LadingActionButton
                 type="bod"
                 active={status === "aangeboden"}
@@ -1106,11 +1161,11 @@ function ItemRow({
           conditions={conditions}
           bidConditions={bidConditions}
           showBid={status === "aangeboden"}
-          primaryLabel="Hun condities"
-          secondaryLabel="Ons bod"
+          primaryLabel="Hun"
+          secondaryLabel="Ons"
           onConditionChange={onConditionChange}
           onBidConditionChange={onBidConditionChange}
-          onCollapse={onToggleConditions}
+
         />
       )}
 
@@ -1120,11 +1175,11 @@ function ItemRow({
           conditions={conditions}
           bidConditions={bidConditions}
           showBid={status === "interesse"}
-          primaryLabel="Onze condities"
-          secondaryLabel="Hun bod"
+          primaryLabel="Ons"
+          secondaryLabel="Hun"
           onConditionChange={onConditionChange}
           onBidConditionChange={onBidConditionChange}
-          onCollapse={onToggleConditions}
+
         />
       )}
 
@@ -1134,11 +1189,11 @@ function ItemRow({
           conditions={conditions}
           bidConditions={bidConditions}
           showBid={false}
-          primaryLabel="Onze condities"
-          secondaryLabel="Hun bod"
+          primaryLabel="Ons"
+          secondaryLabel="Hun"
           onConditionChange={onConditionChange}
           onBidConditionChange={onBidConditionChange}
-          onCollapse={onToggleConditions}
+
         />
       )}
     </div>
@@ -1175,8 +1230,8 @@ function MatchRow({
   const filledConditions = conditions ? Object.keys(conditions).length : 0;
   const showButtons = mode !== "no-buttons" && isLading;
   const isEigenMode = mode === "eigen-lading";
-  const primaryLabel = isEigenMode ? "Onze condities" : "Hun condities";
-  const secondaryLabel = isEigenMode ? "Hun bod" : "Ons bod";
+  const primaryLabel = isEigenMode ? "Ons" : "Hun";
+  const secondaryLabel = isEigenMode ? "Hun" : "Ons";
 
   return (
     <div className="px-[16px] py-[10px] hover:bg-[#f9fafb] transition-colors">
@@ -1219,17 +1274,17 @@ function MatchRow({
         <div className="shrink-0 flex items-center gap-[4px]">
           {showButtons && (
             <>
-              {!conditionsExpanded && (
-                <button
-                  onClick={onToggleConditions}
-                  className="inline-flex items-center gap-[4px] rounded-full border border-[#d0d5dd] bg-white px-[8px] py-[3px] font-sans font-bold text-[12px] leading-[16px] text-[#344054] hover:bg-[#f9fafb] transition-colors"
-                >
-                  Condities
-                  {filledConditions > 0 && (
-                    <span className="text-[#067647] font-normal">({filledConditions})</span>
-                  )}
-                </button>
-              )}
+              <Button
+                variant="tertiary-gray"
+                size="xs"
+                label={filledConditions > 0 ? `Condities (${filledConditions})` : "Condities"}
+                trailingIcon={
+                  <svg width="12" height="12" viewBox="0 0 12 12" fill="none" className={`transition-transform ${conditionsExpanded ? "rotate-180" : ""}`}>
+                    <path d="M3 4.5L6 7.5L9 4.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                  </svg>
+                }
+                onClick={onToggleConditions}
+              />
               <LadingActionButton
                 type="bod"
                 active={status === "aangeboden"}
@@ -1264,7 +1319,7 @@ function MatchRow({
           secondaryLabel={secondaryLabel}
           onConditionChange={onConditionChange}
           onBidConditionChange={onBidConditionChange}
-          onCollapse={onToggleConditions}
+
         />
       )}
     </div>
@@ -1284,32 +1339,34 @@ function LadingActionButton({
 }) {
   const config = {
     bod: {
-      title: "Bod doen",
-      activeClass: "bg-[#eff8ff] border-[#b2ddff] text-[#175cd3]",
+      tooltip: "Aangeboden",
+      activeVariant: "primary" as const,
       icon: <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M12.25 1.75L6.417 7.583M12.25 1.75l-3.5 10.5-2.333-4.667L1.75 5.25l10.5-3.5Z" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round"/></svg>,
     },
     interesse: {
-      title: "Interesse",
-      activeClass: "bg-[#ecfdf3] border-[#abefc6] text-[#067647]",
+      tooltip: "Interesse",
+      activeVariant: "primary-success" as const,
       icon: <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M11.667 3.5L5.25 9.917 2.333 7" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round"/></svg>,
     },
     "geen-interesse": {
-      title: "Geen interesse",
-      activeClass: "bg-[#fef3f2] border-[#fecdca] text-[#b42318]",
+      tooltip: "Geen interesse",
+      activeVariant: "primary-destructive" as const,
       icon: <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M10.5 3.5l-7 7M3.5 3.5l7 7" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round"/></svg>,
     },
   }[type];
 
   return (
-    <button
-      title={config.title}
-      onClick={onClick}
-      className={`inline-flex items-center justify-center size-[28px] rounded-full border transition-colors ${
-        active ? config.activeClass : "border-[#d0d5dd] bg-white text-[#667085] hover:bg-[#f9fafb]"
-      }`}
-    >
-      {config.icon}
-    </button>
+    <Tooltip>
+      <TooltipTrigger asChild>
+        <Button
+          variant={active ? config.activeVariant : "secondary"}
+          size="xs"
+          icon={config.icon}
+          onClick={onClick}
+        />
+      </TooltipTrigger>
+      <TooltipContent side="bottom">{config.tooltip}</TooltipContent>
+    </Tooltip>
   );
 }
 
@@ -1323,7 +1380,6 @@ function LadingConditionsSection({
   secondaryLabel,
   onConditionChange,
   onBidConditionChange,
-  onCollapse,
 }: {
   conditions?: ConditionValues;
   bidConditions?: ConditionValues;
@@ -1332,13 +1388,12 @@ function LadingConditionsSection({
   secondaryLabel: string;
   onConditionChange: (key: ConditionKey, value: string) => void;
   onBidConditionChange: (key: ConditionKey, value: string) => void;
-  onCollapse: () => void;
 }) {
   return (
-    <div className="mt-[8px] ml-[66px]" onClick={e => e.stopPropagation()}>
+    <div className="mt-[8px] ml-[30px]" onClick={e => e.stopPropagation()}>
       {/* Primary conditions */}
       <div className="flex items-start gap-[6px] mb-[6px]">
-        <span className="font-sans font-bold text-[11px] leading-[22px] text-rdj-text-tertiary uppercase tracking-wide w-[90px] shrink-0">
+        <span className="font-sans font-bold text-[11px] leading-[22px] text-rdj-text-tertiary uppercase tracking-wide w-[32px] shrink-0">
           {primaryLabel}
         </span>
         <div className="flex items-center gap-[4px] flex-wrap">
@@ -1356,7 +1411,7 @@ function LadingConditionsSection({
       {/* Secondary (bid) conditions */}
       {showBid && (
         <div className="flex items-start gap-[6px] mb-[6px]">
-          <span className="font-sans font-bold text-[11px] leading-[22px] text-[#175cd3] uppercase tracking-wide w-[90px] shrink-0">
+          <span className="font-sans font-bold text-[11px] leading-[22px] text-[#175cd3] uppercase tracking-wide w-[32px] shrink-0">
             {secondaryLabel}
           </span>
           <div className="flex items-center gap-[4px] flex-wrap">
@@ -1373,12 +1428,6 @@ function LadingConditionsSection({
         </div>
       )}
 
-      <button
-        onClick={onCollapse}
-        className="inline-flex items-center rounded-full border border-transparent px-[6px] py-[3px] font-sans font-normal text-[12px] leading-[16px] text-rdj-text-tertiary hover:text-rdj-text-secondary transition-colors"
-      >
-        Inklappen
-      </button>
     </div>
   );
 }
@@ -1501,26 +1550,28 @@ function MatchBadge({ percentage }: { percentage: number }) {
   const trackColor = "#F2F4F7";
 
   return (
-    <div className="shrink-0 flex items-center gap-[6px]">
-      <svg
-        className="shrink-0"
-        width={size}
-        height={size}
-        viewBox={`0 0 ${size} ${size}`}
-        fill="none"
-      >
-        <circle cx={size / 2} cy={size / 2} r={radius} stroke={trackColor} strokeWidth={strokeWidth} fill="none" />
-        <circle
-          cx={size / 2} cy={size / 2} r={radius}
-          stroke={color} strokeWidth={strokeWidth} fill="none"
-          strokeLinecap="round" strokeDasharray={circumference} strokeDashoffset={dashOffset}
-          transform={`rotate(-90 ${size / 2} ${size / 2})`}
-        />
-      </svg>
-      <p className="font-sans font-bold text-[13px] leading-[18px] text-rdj-text-primary whitespace-nowrap">
-        {percentage}%
-      </p>
-    </div>
+    <Tooltip>
+      <TooltipTrigger asChild>
+        <div className="shrink-0 flex items-center cursor-default">
+          <svg
+            className="shrink-0"
+            width={size}
+            height={size}
+            viewBox={`0 0 ${size} ${size}`}
+            fill="none"
+          >
+            <circle cx={size / 2} cy={size / 2} r={radius} stroke={trackColor} strokeWidth={strokeWidth} fill="none" />
+            <circle
+              cx={size / 2} cy={size / 2} r={radius}
+              stroke={color} strokeWidth={strokeWidth} fill="none"
+              strokeLinecap="round" strokeDasharray={circumference} strokeDashoffset={dashOffset}
+              transform={`rotate(-90 ${size / 2} ${size / 2})`}
+            />
+          </svg>
+        </div>
+      </TooltipTrigger>
+      <TooltipContent side="bottom">{percentage}% match</TooltipContent>
+    </Tooltip>
   );
 }
 
@@ -1533,44 +1584,42 @@ function StatusSelector({
   value?: ItemStatus;
   onChange: (status: ItemStatus) => void;
 }) {
-  const options: { val: ItemStatus; title: string; activeClass: string; icon: React.ReactNode }[] = [
+  const options: { val: ItemStatus; tooltip: string; activeVariant: "primary" | "primary-success" | "primary-destructive"; icon: React.ReactNode }[] = [
     {
       val: "aangeboden",
-      title: "Aangeboden",
-      activeClass: "bg-[#eff8ff] border-[#b2ddff] text-[#175cd3]",
+      tooltip: "Aangeboden",
+      activeVariant: "primary",
       icon: <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M12.25 1.75L6.417 7.583M12.25 1.75l-3.5 10.5-2.333-4.667L1.75 5.25l10.5-3.5Z" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round"/></svg>,
     },
     {
       val: "interesse",
-      title: "Interesse",
-      activeClass: "bg-[#ecfdf3] border-[#abefc6] text-[#067647]",
+      tooltip: "Interesse",
+      activeVariant: "primary-success",
       icon: <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M11.667 3.5L5.25 9.917 2.333 7" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round"/></svg>,
     },
     {
       val: "geen-interesse",
-      title: "Geen interesse",
-      activeClass: "bg-[#fef3f2] border-[#fecdca] text-[#b42318]",
+      tooltip: "Geen interesse",
+      activeVariant: "primary-destructive",
       icon: <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M10.5 3.5l-7 7M3.5 3.5l7 7" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round"/></svg>,
     },
   ];
 
   return (
     <div className="flex items-center gap-[4px]">
-      {options.map(opt => {
-        const isActive = value === opt.val;
-        return (
-          <button
-            key={opt.val}
-            title={opt.title}
-            onClick={() => onChange(opt.val)}
-            className={`inline-flex items-center justify-center size-[28px] rounded-full border transition-colors ${
-              isActive ? opt.activeClass : "border-[#d0d5dd] bg-white text-[#667085] hover:bg-[#f9fafb]"
-            }`}
-          >
-            {opt.icon}
-          </button>
-        );
-      })}
+      {options.map(opt => (
+        <Tooltip key={opt.val}>
+          <TooltipTrigger asChild>
+            <Button
+              variant={value === opt.val ? opt.activeVariant : "secondary"}
+              size="xs"
+              icon={opt.icon}
+              onClick={() => onChange(opt.val)}
+            />
+          </TooltipTrigger>
+          <TooltipContent side="bottom">{opt.tooltip}</TooltipContent>
+        </Tooltip>
+      ))}
     </div>
   );
 }

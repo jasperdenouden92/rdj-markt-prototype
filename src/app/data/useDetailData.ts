@@ -78,6 +78,13 @@ function fmtCurrency(n: number | null | undefined): string {
   return `€${n.toFixed(2).replace(".", ",")} per uur`;
 }
 
+function fmtLiggeld(v: string | number | null | undefined): string {
+  if (v == null || v === 0) return "—";
+  if (typeof v === "string" && v.toUpperCase() === "NLW") return "Nederlands Wettelijk";
+  if (typeof v === "number") return fmtCurrency(v);
+  return v;
+}
+
 // ── Resolved detail shapes ──
 
 export interface ResolvedLadingMarkt {
@@ -114,6 +121,8 @@ export interface ResolvedLadingMarkt {
   zoekcriteriaLiggeldLaden: string;
   zoekcriteriaLostijd: string;
   zoekcriteriaLiggeldLossen: string;
+  // ID of related lading_eigen (for patching zoekcriteria)
+  eigenLadingId: string | null;
   // Raw numeric values for percentage diff
   rawInkoopPrijs: number | null;
   rawInkoopLaadtijd: number | null;
@@ -163,17 +172,19 @@ export interface ResolvedLadingEigen {
   marktLiggeldLaden: string;
   marktLostijd: string;
   marktLiggeldLossen: string;
+  // ID of related lading_markt (for patching zoekcriteria)
+  marktLadingId: string | null;
   // Raw numeric values for percentage diff calculation
   rawEigenPrijs: number | null;
   rawEigenLaadtijd: number | null;
-  rawEigenLiggeldLaden: number;
+  rawEigenLiggeldLaden: string | number | null;
   rawEigenLostijd: number | null;
-  rawEigenLiggeldLossen: number;
+  rawEigenLiggeldLossen: string | number | null;
   rawMarktPrijs: number | null;
   rawMarktLaadtijd: number | null;
-  rawMarktLiggeldLaden: number;
+  rawMarktLiggeldLaden: string | number | null;
   rawMarktLostijd: number | null;
-  rawMarktLiggeldLossen: number;
+  rawMarktLiggeldLossen: string | number | null;
 }
 
 export interface ResolvedVaartuigMarkt {
@@ -235,6 +246,8 @@ export function useLadingMarktDetail(id: string | undefined) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const mountedRef = useRef(true);
+  const [refreshKey, setRefreshKey] = useState(0);
+  const refetch = () => setRefreshKey(k => k + 1);
 
   useEffect(() => {
     mountedRef.current = true;
@@ -298,14 +311,15 @@ export function useLadingMarktDetail(id: string | undefined) {
           prioriteit: item.prioriteit,
           inkoopPrijs: fmtPrice(item.prijs),
           inkoopLaadtijd: fmtHours(item.laadtijd),
-          inkoopLiggeldLaden: fmtCurrency(item.liggeldLaden),
+          inkoopLiggeldLaden: fmtLiggeld(item.liggeldLaden),
           inkoopLostijd: fmtHours(item.lostijd),
-          inkoopLiggeldLossen: fmtCurrency(item.liggeldLossen),
+          inkoopLiggeldLossen: fmtLiggeld(item.liggeldLossen),
+          eigenLadingId: eigenLading?.id ?? null,
           zoekcriteriaPrijs: eigenLading ? fmtPrice(eigenLading.prijs) : "—",
           zoekcriteriaLaadtijd: eigenLading ? fmtHours(eigenLading.laadtijd) : "—",
-          zoekcriteriaLiggeldLaden: eigenLading ? fmtCurrency(eigenLading.liggeldLaden) : "—",
+          zoekcriteriaLiggeldLaden: eigenLading ? fmtLiggeld(eigenLading.liggeldLaden) : "—",
           zoekcriteriaLostijd: eigenLading ? fmtHours(eigenLading.lostijd) : "—",
-          zoekcriteriaLiggeldLossen: eigenLading ? fmtCurrency(eigenLading.liggeldLossen) : "—",
+          zoekcriteriaLiggeldLossen: eigenLading ? fmtLiggeld(eigenLading.liggeldLossen) : "—",
           rawInkoopPrijs: item.prijs,
           rawInkoopLaadtijd: item.laadtijd,
           rawInkoopLiggeldLaden: item.liggeldLaden,
@@ -328,9 +342,9 @@ export function useLadingMarktDetail(id: string | undefined) {
     })();
 
     return () => { mountedRef.current = false; };
-  }, [id]);
+  }, [id, refreshKey]);
 
-  return { data, loading, error };
+  return { data, loading, error, refetch };
 }
 
 export function useLadingEigenDetail(id: string | undefined) {
@@ -407,24 +421,25 @@ export function useLadingEigenDetail(id: string | undefined) {
           deadline: item.deadline || "—",
           eigenPrijs: fmtPrice(item.prijs),
           eigenLaadtijd: fmtHours(item.laadtijd),
-          eigenLiggeldLaden: fmtCurrency(item.liggeldLaden),
+          eigenLiggeldLaden: fmtLiggeld(item.liggeldLaden),
           eigenLostijd: fmtHours(item.lostijd),
-          eigenLiggeldLossen: fmtCurrency(item.liggeldLossen),
-          marktPrijs: marktLading ? fmtPrice(marktLading.prijs) : "—",
-          marktLaadtijd: marktLading ? fmtHours(marktLading.laadtijd) : "—",
-          marktLiggeldLaden: marktLading ? fmtCurrency(marktLading.liggeldLaden) : "—",
-          marktLostijd: marktLading ? fmtHours(marktLading.lostijd) : "—",
-          marktLiggeldLossen: marktLading ? fmtCurrency(marktLading.liggeldLossen) : "—",
+          eigenLiggeldLossen: fmtLiggeld(item.liggeldLossen),
+          marktLadingId: marktLading?.id ?? null,
+          marktPrijs: fmtPrice(item.zoekPrijs ?? marktLading?.prijs ?? null),
+          marktLaadtijd: fmtHours(item.zoekLaadtijd ?? marktLading?.laadtijd ?? null),
+          marktLiggeldLaden: fmtLiggeld(item.zoekLiggeldLaden ?? marktLading?.liggeldLaden ?? null),
+          marktLostijd: fmtHours(item.zoekLostijd ?? marktLading?.lostijd ?? null),
+          marktLiggeldLossen: fmtLiggeld(item.zoekLiggeldLossen ?? marktLading?.liggeldLossen ?? null),
           rawEigenPrijs: item.prijs,
           rawEigenLaadtijd: item.laadtijd,
           rawEigenLiggeldLaden: item.liggeldLaden,
           rawEigenLostijd: item.lostijd,
           rawEigenLiggeldLossen: item.liggeldLossen,
-          rawMarktPrijs: marktLading?.prijs ?? null,
-          rawMarktLaadtijd: marktLading?.laadtijd ?? null,
-          rawMarktLiggeldLaden: marktLading?.liggeldLaden ?? null,
-          rawMarktLostijd: marktLading?.lostijd ?? null,
-          rawMarktLiggeldLossen: marktLading?.liggeldLossen ?? null,
+          rawMarktPrijs: item.zoekPrijs ?? marktLading?.prijs ?? null,
+          rawMarktLaadtijd: item.zoekLaadtijd ?? marktLading?.laadtijd ?? null,
+          rawMarktLiggeldLaden: item.zoekLiggeldLaden ?? marktLading?.liggeldLaden ?? null,
+          rawMarktLostijd: item.zoekLostijd ?? marktLading?.lostijd ?? null,
+          rawMarktLiggeldLossen: item.zoekLiggeldLossen ?? marktLading?.liggeldLossen ?? null,
         };
 
         if (mountedRef.current) setData(resolved);

@@ -3,6 +3,7 @@ import { useNavigate } from "react-router";
 import DetailsSidebar, { DetailsSidebarSection } from "./DetailsSidebar";
 import DetailRow from "./DetailRow";
 import { useLadingEigenDetail } from "../data/useDetailData";
+import * as api from "../data/api";
 
 /**
  * LadingEigenSidebar — detail sidebar for an eigen-lading.
@@ -39,6 +40,19 @@ function fmtCurrency(n: number | null): string {
   return `€${n.toFixed(2).replace(".", ",")} per uur`;
 }
 
+function fmtLiggeld(v: string | number | null): string {
+  if (v == null || v === 0) return "—";
+  if (typeof v === "string" && v.toUpperCase() === "NLW") return "Nederlands Wettelijk";
+  if (typeof v === "number") return fmtCurrency(v);
+  return v;
+}
+
+function rawLiggeldStr(v: string | number | null): string {
+  if (v == null) return "";
+  if (typeof v === "string") return v;
+  return String(v).replace(".", ",");
+}
+
 function rawStr(n: number | null): string {
   if (n == null) return "";
   return String(n).replace(".", ",");
@@ -49,20 +63,7 @@ function parseNum(s: string): number | null {
   return isNaN(n) ? null : n;
 }
 
-type ConditiesField = "prijs" | "laadtijd" | "liggeldLaden" | "lostijd" | "liggeldLossen";
-
-interface Overrides {
-  eigenPrijs?: number | null;
-  eigenLaadtijd?: number | null;
-  eigenLiggeldLaden?: number | null;
-  eigenLostijd?: number | null;
-  eigenLiggeldLossen?: number | null;
-  marktPrijs?: number | null;
-  marktLaadtijd?: number | null;
-  marktLiggeldLaden?: number | null;
-  marktLostijd?: number | null;
-  marktLiggeldLossen?: number | null;
-}
+type ConditiesField = "prijs" | "laadtijd" | "liggeldLaden" | "lostijd" | "liggeldLossen" | "deadline";
 
 interface LadingEigenSidebarProps {
   id: string;
@@ -71,29 +72,46 @@ interface LadingEigenSidebarProps {
 
 export default function LadingEigenSidebar({ id, onEdit }: LadingEigenSidebarProps) {
   const navigate = useNavigate();
-  const { data, loading, error } = useLadingEigenDetail(id);
+  const { data, loading, error, refetch } = useLadingEigenDetail(id);
   const [activeTab, setActiveTab] = useState<string>("details");
-  const [overrides, setOverrides] = useState<Overrides>({});
   const [overig, setOverig] = useState("");
 
-  const getVal = (section: "eigen" | "markt", field: ConditiesField): number | null => {
-    const key = `${section}${field.charAt(0).toUpperCase()}${field.slice(1)}` as keyof Overrides;
-    if (key in overrides) return overrides[key] ?? null;
+  const getVal = (section: "eigen" | "markt", field: ConditiesField): string | number | null => {
     if (!data) return null;
+    if (field === "deadline") {
+      if (section === "eigen") return data.deadline !== "—" ? data.deadline : null;
+      // Zoekcriteria deadline stored on raw
+      return (data.raw as any).zoekDeadline ?? null;
+    }
     const rawKey = `raw${section.charAt(0).toUpperCase()}${section.slice(1)}${field.charAt(0).toUpperCase()}${field.slice(1)}` as keyof typeof data;
-    return (data[rawKey] as number | null) ?? null;
+    return (data[rawKey] as string | number | null) ?? null;
   };
 
-  const saveField = (section: "eigen" | "markt", field: ConditiesField, input: string) => {
-    const num = parseNum(input);
-    const key = `${section}${field.charAt(0).toUpperCase()}${field.slice(1)}` as keyof Overrides;
-    setOverrides(prev => ({ ...prev, [key]: num }));
+  const saveField = async (section: "eigen" | "markt", field: ConditiesField, input: string) => {
+    const isNlw = input.toUpperCase() === "NLW";
+    const isStringField = field === "deadline" || isNlw;
+    const value = isStringField ? (input || null) : parseNum(input);
+    if (section === "eigen") {
+      await api.patch("lading_eigen", id, { [field]: value });
+    } else {
+      const zoekKey = `zoek${field.charAt(0).toUpperCase()}${field.slice(1)}`;
+      await api.patch("lading_eigen", id, { [zoekKey]: value });
+    }
+    refetch();
   };
 
-  const fmt = (field: ConditiesField, n: number | null): string => {
-    if (field === "prijs") return fmtPrice(n);
-    if (field === "laadtijd" || field === "lostijd") return fmtHours(n);
-    return fmtCurrency(n);
+  const fmtField = (field: ConditiesField, v: string | number | null): string => {
+    if (field === "prijs") return fmtPrice(v as number | null);
+    if (field === "laadtijd" || field === "lostijd") return fmtHours(v as number | null);
+    if (field === "liggeldLaden" || field === "liggeldLossen") return fmtLiggeld(v);
+    if (field === "deadline") return v ? String(v) : "—";
+    return fmtCurrency(v as number | null);
+  };
+
+  const rawFieldStr = (field: ConditiesField, v: string | number | null): string => {
+    if (field === "liggeldLaden" || field === "liggeldLossen") return rawLiggeldStr(v);
+    if (field === "deadline") return v ? String(v) : "";
+    return rawStr(v as number | null);
   };
 
   if (loading) {
@@ -175,22 +193,25 @@ export default function LadingEigenSidebar({ id, onEdit }: LadingEigenSidebarPro
 
       {activeTab === "condities" && (
         <>
-          {(["prijs", "laadtijd", "liggeldLaden", "lostijd", "liggeldLossen"] as ConditiesField[]).map(field => {
-            const label = field === "prijs" ? "Prijs" : field === "laadtijd" ? "Laadtijd" : field === "liggeldLaden" ? "Liggeld laden" : field === "lostijd" ? "Lostijd" : "Liggeld lossen";
-            const diff = calcPctDiff(getVal("markt", field), getVal("eigen", field));
+          {(["prijs", "laadtijd", "liggeldLaden", "lostijd", "liggeldLossen", "deadline"] as ConditiesField[]).map(field => {
+            const label = field === "prijs" ? "Prijs" : field === "laadtijd" ? "Laadtijd" : field === "liggeldLaden" ? "Liggeld laden" : field === "lostijd" ? "Lostijd" : field === "liggeldLossen" ? "Liggeld lossen" : "Deadline";
+            const eigenVal = getVal("eigen", field);
+            const marktVal = getVal("markt", field);
+            const canDiff = typeof eigenVal === "number" && typeof marktVal === "number";
+            const diff = canDiff ? calcPctDiff(marktVal as number, eigenVal as number) : undefined;
             return (
               <DetailsSidebarSection key={field} title={label}>
                 <DetailRow
                   label="Verkoop"
-                  value={fmt(field, getVal("eigen", field))}
-                  editValue={rawStr(getVal("eigen", field))}
+                  value={fmtField(field, eigenVal)}
+                  editValue={rawFieldStr(field, eigenVal)}
                   editable
                   onSave={(v) => saveField("eigen", field, v)}
                 />
                 <DetailRow
                   label="Zoekcriteria"
-                  value={fmt(field, getVal("markt", field))}
-                  editValue={rawStr(getVal("markt", field))}
+                  value={fmtField(field, marktVal)}
+                  editValue={rawFieldStr(field, marktVal)}
                   subtext={diff?.text}
                   subtextColor={diff?.color}
                   subtextTooltip={diff ? "Vergeleken met verkoop" : undefined}

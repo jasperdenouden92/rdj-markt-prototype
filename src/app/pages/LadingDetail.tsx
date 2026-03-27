@@ -60,6 +60,7 @@ export default function LadingDetail() {
   const [selectedNegotiation, setSelectedNegotiation] = useState<{ id: string; status: string; bron: string; relatieName?: string } | null>(null);
   const setActiveTab = (tab: typeof activeTab) => { setActiveTabRaw(tab); setSelectedNegotiation(null); };
   const [conversationDialog, setConversationDialog] = useState<{ relatieId: string; relatieName: string; matchName?: string } | null>(null);
+  const [sidebarKey, setSidebarKey] = useState(0);
   const [matchFilter, setMatchFilter] = useState("Alles");
   const [negFilter, setNegFilter] = useState("Actief");
   const [activityFilter, setActivityFilter] = useState("Alle activiteit");
@@ -358,7 +359,7 @@ export default function LadingDetail() {
           </div>
 
           {/* Right Sidebar */}
-          <LadingEigenSidebar id={id!} />
+          <LadingEigenSidebar key={sidebarKey} id={id!} />
         </div>
       </div>
 
@@ -382,7 +383,7 @@ export default function LadingDetail() {
           preSelectedMatchName={conversationDialog.matchName}
           preSelectedItemId={id}
           preSelectedItemType="lading"
-          onClose={() => setConversationDialog(null)}
+          onClose={() => { setConversationDialog(null); setSidebarKey(k => k + 1); }}
         />
       )}
     </div>

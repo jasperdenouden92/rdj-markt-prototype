@@ -156,6 +156,13 @@ export interface LadingEigen {
   liggeldLaden: number;
   lostijd: number | null;
   liggeldLossen: number;
+  // Zoekcriteria (stored directly, with fallback to matched lading_markt)
+  zoekPrijs?: number | null;
+  zoekLaadtijd?: number | null;
+  zoekLiggeldLaden?: string | number | null;
+  zoekLostijd?: number | null;
+  zoekLiggeldLossen?: string | number | null;
+  zoekDeadline?: string | null;
 }
 
 export interface VaartuigMarkt {
