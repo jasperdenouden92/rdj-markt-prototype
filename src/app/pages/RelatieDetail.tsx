@@ -1,5 +1,6 @@
 import { useState, useMemo, useCallback } from "react";
 import { useParams, useLocation, Link, useNavigate } from "react-router";
+import { Send, MailOpen, Check, X } from "lucide-react";
 import Sidebar from "../components/Sidebar";
 import PageHeader from "../components/PageHeader";
 import type { PageTab } from "../components/PageHeader";
@@ -12,7 +13,9 @@ import RelatieFormDialog from "../components/RelatieFormDialog";
 import SectionHeader from "../components/SectionHeader";
 import Table from "../components/Table";
 import type { Column, RowData } from "../components/Table";
-import { mockRelaties, mockContactPersonen, mockRelatieLadingen, mockRelatieVaartuigen, mockMailConversaties, mockGespreksverslagen, VAARTUIG_STATUS_MAP } from "../data/mock-relatie-data";
+import Pagination from "../components/Pagination";
+import OnderhandelingSidepanel from "../components/OnderhandelingSidepanel";
+import { mockRelaties, mockContactPersonen, mockRelatieLadingen, mockRelatieVaartuigen, mockMailConversaties, mockGespreksverslagen, mockRelatieOnderhandelingen, mockGebruikers, VAARTUIG_STATUS_MAP } from "../data/mock-relatie-data";
 import type { Gespreksverslag } from "../data/mock-relatie-data";
 import { mockContracten, CONTRACT_STATUS_LABELS, CONTRACT_STATUS_VARIANT_MAP } from "../data/mock-contract-data";
 import MailConversaties from "../components/MailConversaties";
@@ -39,6 +42,35 @@ const vaartuigStatusMap: Record<string, { label: string; variant: "success" | "w
   in_onderhoud: { label: "In onderhoud", variant: "grey" },
 };
 
+const negotiationStatusVariantMap: Record<string, string> = {
+  "Via werklijst": "brand",
+  "Bod verstuurd": "brand",
+  "Bod ontvangen": "brand",
+  "Goedgekeurd": "success",
+  "Afgewezen": "error",
+  "Afgekeurd": "error",
+};
+
+const negotiationStatusIconMap: Record<string, React.ReactNode | null> = {
+  "Via werklijst": null,
+  "Bod verstuurd": <Send strokeWidth={2.5} />,
+  "Bod ontvangen": <MailOpen strokeWidth={2.5} />,
+  "Goedgekeurd": <Check strokeWidth={2.5} />,
+  "Afgewezen": <X strokeWidth={2.5} />,
+  "Afgekeurd": <X strokeWidth={2.5} />,
+};
+
+const negotiationStatusTypeMap: Record<string, "default" | "color"> = {
+  "Via werklijst": "default",
+  "Bod verstuurd": "color",
+  "Bod ontvangen": "color",
+  "Goedgekeurd": "color",
+  "Afgewezen": "color",
+  "Afgekeurd": "color",
+};
+
+const activeNegStatuses = ["Via werklijst", "Bod verstuurd", "Bod ontvangen"];
+
 function formatDate(dateStr?: string): string {
   if (!dateStr) return "—";
   const d = new Date(dateStr);
@@ -59,9 +91,16 @@ export default function RelatieDetail() {
   const backPath = isBevrachterContext ? "/markt/bevrachters" : "/crm/relaties";
   const backModule = isBevrachterContext ? "Markt" : "CRM";
   const backSection = isBevrachterContext ? "Bevrachters" : "Relaties";
-  const initialTab = (location.hash.replace("#", "") || "overzicht") as "overzicht" | "ladingen" | "vaartuigen" | "deals" | "mail" | "gesprekken" | "activiteit";
-  const [activeTab, setActiveTab] = useState<"overzicht" | "ladingen" | "vaartuigen" | "deals" | "mail" | "gesprekken" | "activiteit">(initialTab);
+  type TabKey = "overzicht" | "onderhandelingen" | "ladingen" | "vaartuigen" | "deals" | "mail" | "gesprekken" | "activiteit";
+  const defaultTab: TabKey = isBevrachterContext ? "onderhandelingen" : "overzicht";
+  const initialTab = (location.hash.replace("#", "") || defaultTab) as TabKey;
+  const [activeTab, setActiveTabRaw] = useState<TabKey>(initialTab);
+  const [selectedNegotiation, setSelectedNegotiation] = useState<{ id: string; status: string; relatieName?: string; subtitle?: string } | null>(null);
+  const setActiveTab = (tab: TabKey) => { setActiveTabRaw(tab); setSelectedNegotiation(null); };
   const [dealFilter, setDealFilter] = useState<"alle" | "spot" | "contract">("alle");
+  const [negFilter, setNegFilter] = useState("Actief");
+  const [negPage, setNegPage] = useState(1);
+  const [negRowsPerPage, setNegRowsPerPage] = useState(50);
   const [showEditDialog, setShowEditDialog] = useState(false);
   const [relaties, setRelaties] = useState<Relatie[]>(mockRelaties);
 
@@ -96,6 +135,11 @@ export default function RelatieDetail() {
       return updated;
     });
   }, []);
+
+  const relatieOnderhandelingen = useMemo(
+    () => mockRelatieOnderhandelingen.filter((o) => o.relatieId === id),
+    [id]
+  );
 
   const [verslagen, setVerslagen] = useState(
     () => mockGespreksverslagen.filter((v) => v.relatieId === id)
@@ -173,10 +217,11 @@ export default function RelatieDetail() {
     .join(", ");
 
   const tabs: PageTab[] = [
+    ...(isBevrachterContext ? [{ label: "Onderhandelingen", path: "#onderhandelingen", isActive: activeTab === "onderhandelingen", badge: String(relatieOnderhandelingen.length) }] : []),
     { label: "Overzicht", path: "#overzicht", isActive: activeTab === "overzicht" },
     { label: "Ladingen", path: "#ladingen", isActive: activeTab === "ladingen", badge: String(relatieLadingen.length) },
     { label: "Vaartuigen", path: "#vaartuigen", isActive: activeTab === "vaartuigen", badge: String(relatieVaartuigen.length) },
-    { label: "Deals", path: "#deals", isActive: activeTab === "deals", badge: String(relatieAllDeals.length) },
+    ...(!isBevrachterContext ? [{ label: "Deals", path: "#deals", isActive: activeTab === "deals", badge: String(relatieAllDeals.length) }] : []),
     { label: "Mail", path: "#mail", isActive: activeTab === "mail", badge: String(relatieMail.length) },
     { label: "Gesprekken", path: "#gesprekken", isActive: activeTab === "gesprekken", badge: String(verslagen.length) },
     { label: "Activiteit", path: "#activiteit", isActive: activeTab === "activiteit" },
@@ -215,12 +260,94 @@ export default function RelatieDetail() {
                     actions={actions}
                     tabs={tabs}
                     onTabClick={(tab: PageTab) => {
-                      const tabKey = tab.path.replace("#", "") as typeof activeTab;
+                      const tabKey = tab.path.replace("#", "") as TabKey;
                       setActiveTab(tabKey);
                     }}
                   />
 
                   <div className="w-full pt-[20px]">
+                    {activeTab === "onderhandelingen" && (() => {
+                      const negColumns: Column[] = [
+                        { key: "lading", header: "Lading", type: "leading-text", subtextKey: "route", actionLabel: "Openen" },
+                        { key: "vaartuig", header: "Vaartuig", type: "text", width: "w-[160px]" },
+                        { key: "vrachtprijs", header: "Vrachtprijs", type: "text", subtextKey: "vrachtprijsDiff", subtextColorKey: "vrachtprijsDiffColor", subtextTooltipKey: "vrachtprijsDiffTooltip", align: "right", width: "w-[160px]" },
+                        { key: "tonnage", header: "Tonnage", type: "text", align: "right", width: "w-[120px]" },
+                        { key: "deadline", header: "Deadline", type: "deadline", expiredKey: "deadlineExpired", editable: true, width: "w-[160px]" },
+                        { key: "status", header: "Status", type: "status", variantKey: "statusVariant", iconKey: "statusIcon", typeKey: "statusType", width: "w-[160px]" },
+                        { key: "contactName", header: "Laatste update", type: "text", subtextKey: "contactDate", avatarSrcKey: "contactAvatar", width: "w-[200px]" },
+                      ];
+
+                      const negData: RowData[] = relatieOnderhandelingen.map((neg) => {
+                        const gebruiker = mockGebruikers.find((g) => g.id === neg.contact.gebruikerId);
+                        return {
+                          id: neg.id,
+                          lading: neg.lading,
+                          route: neg.route,
+                          vaartuig: neg.vaartuig,
+                          vrachtprijs: neg.vrachtprijs || "—",
+                          vrachtprijsDiff: neg.vrachtprijsDiff || "",
+                          vrachtprijsDiffColor: neg.vrachtprijsDiff?.startsWith("+") ? "#F79009" : undefined,
+                          vrachtprijsDiffTooltip: neg.vrachtprijsDiff && neg.vrachtprijsDiff !== "" && neg.vrachtprijsDiff !== "0,0%" && neg.vrachtprijsDiff !== "+0,0%" ? "Vergeleken met verkoop" : undefined,
+                          tonnage: neg.tonnage,
+                          deadline: neg.deadline,
+                          deadlineExpired: neg.deadlineExpired,
+                          status: neg.status,
+                          statusVariant: negotiationStatusVariantMap[neg.status] || "grey",
+                          statusIcon: negotiationStatusIconMap[neg.status] || null,
+                          statusType: negotiationStatusTypeMap[neg.status] || "default",
+                          contactName: neg.contact.naam,
+                          contactDate: neg.contact.datum,
+                          contactAvatar: gebruiker?.profielfoto,
+                        };
+                      });
+
+                      const filteredNegData = negFilter === "Alles"
+                        ? negData
+                        : negFilter === "Actief"
+                          ? negData.filter((row) => activeNegStatuses.includes(row.status as string))
+                          : negFilter === "Goedgekeurd"
+                            ? negData.filter((row) => row.status === "Goedgekeurd")
+                            : negData.filter((row) => row.status === "Afgewezen" || row.status === "Afgekeurd");
+
+                      return (
+                        <>
+                          <SectionHeader
+                            title="Onderhandelingen"
+                            filterLabel={negFilter}
+                            filterOptions={["Alles", "Actief", "Goedgekeurd", "Afgewezen"]}
+                            filterValue={negFilter}
+                            onFilterChange={setNegFilter}
+                          />
+                          <Pagination
+                            currentPage={negPage}
+                            totalItems={filteredNegData.length}
+                            rowsPerPage={negRowsPerPage}
+                            onPageChange={setNegPage}
+                            onRowsPerPageChange={setNegRowsPerPage}
+                          />
+                          {filteredNegData.length === 0 ? (
+                            <div className="py-[48px] text-center">
+                              <p className="font-sans font-normal text-[14px] text-rdj-text-tertiary">
+                                Geen onderhandelingen gevonden.
+                              </p>
+                            </div>
+                          ) : (
+                            <Table
+                              columns={negColumns}
+                              data={filteredNegData}
+                              activeRowId={selectedNegotiation?.id ?? null}
+                              onRowClick={(row) => setSelectedNegotiation({
+                                id: row.id,
+                                status: row.status as string,
+                                relatieName: relatie.naam,
+                                subtitle: `${row.tonnage} · ${row.vaartuig}`,
+                              })}
+                            />
+                          )}
+                        </>
+                      );
+                    })()}
+
                     {activeTab === "overzicht" && (
                       <RelatieOverzichtTab
                         relatie={relatie}
@@ -397,6 +524,18 @@ export default function RelatieDetail() {
           relatie={relatie}
           onSave={handleSaveRelatie}
           onClose={() => setShowEditDialog(false)}
+        />
+      )}
+
+      {selectedNegotiation && (
+        <OnderhandelingSidepanel
+          negotiationId={selectedNegotiation.id}
+          status={selectedNegotiation.status as any}
+          bron="eigen"
+          soort="lading"
+          relatieName={selectedNegotiation.relatieName}
+          subtitle={selectedNegotiation.subtitle}
+          onClose={() => setSelectedNegotiation(null)}
         />
       )}
     </div>
