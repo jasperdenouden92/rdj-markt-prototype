@@ -157,6 +157,7 @@ export default function Relaties() {
       key: "eigenaarNaam",
       header: "Eigenaar",
       type: "text",
+      avatarSrcKey: "eigenaarFoto",
       avatarInitialsKey: "eigenaarInitials",
       width: "w-[160px]",
     },
@@ -227,6 +228,7 @@ export default function Relaties() {
       takenCount: openTakenCount > 0 ? String(openTakenCount) : "—",
       eigenaarNaam: eigenaar?.naam || "—",
       eigenaarInitials: eigenaar ? getInitials(eigenaar.naam) : undefined,
+      eigenaarFoto: eigenaar?.profielfoto || undefined,
       laatsteContactLabel: formatDate(r.laatsteContact),
       contactExpired: isDateExpired(r.laatsteContact),
     };

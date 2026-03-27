@@ -185,7 +185,7 @@ export default function LadingEigenSidebar({ id, onEdit }: LadingEigenSidebarPro
           <div className="w-full h-px bg-rdj-border-secondary shrink-0 -mt-[8px]" />
 
           <DetailsSidebarSection>
-            <DetailRow label="Eigenaar" type="user" value={data.eigenaar} avatarInitials={data.eigenaarInitials} />
+            <DetailRow label="Eigenaar" type="user" value={data.eigenaar} avatarSrc={data.eigenaarFoto} avatarInitials={data.eigenaarInitials} />
             <DetailRow label="Deadline" value={data.deadline} editable onEdit={() => onEdit?.("deadline")} />
           </DetailsSidebarSection>
         </>

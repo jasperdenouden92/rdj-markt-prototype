@@ -10,6 +10,7 @@ import {
   mockRelatieLadingMatches,
   mockRelatieVaartuigMatches,
 } from "../data/mock-relatie-data";
+import LastActivityButton from "./LastActivityButton";
 
 /* ── Types ── */
 
@@ -710,14 +711,19 @@ export default function ConversationDialog({
                 Markeer items als aangeboden, interessant of niet relevant.
               </p>
             </div>
-            <button
-              onClick={onClose}
-              className="p-[8px] rounded-[8px] hover:bg-rdj-bg-primary-hover transition-colors shrink-0"
-            >
-              <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-                <path d="M15 5L5 15M5 5l10 10" stroke="#667085" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-              </svg>
-            </button>
+            <div className="flex items-center gap-[8px] shrink-0">
+              <LastActivityButton relatieId={relatieId} onNavigateAway={onClose} />
+
+              {/* Close button */}
+              <button
+                onClick={onClose}
+                className="p-[8px] rounded-[8px] hover:bg-rdj-bg-primary-hover transition-colors shrink-0"
+              >
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                  <path d="M15 5L5 15M5 5l10 10" stroke="#667085" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+              </button>
+            </div>
           </div>
           <div className="mt-[16px] flex">
             <SegmentedButtonGroup

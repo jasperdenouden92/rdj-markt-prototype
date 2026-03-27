@@ -33,8 +33,8 @@ const vesselMatches = [
 
 /* ── Mock negotiations ── */
 const vesselNegotiations = [
-  { id: 'VN001', company: 'Provaart Logistics BV', cargo: '2.000 ton Houtpellets (DSIT)', price: '€3,50 per ton', laadHaven: 'Salzgitter Stichkanal', laadDatum: 'Ma 12 Jan 10:00', losHaven: 'Hamburg Veddelkanal', losDatum: 'Vr 16 Jan 14:00', deadline: 'Za 14 Feb, 16:00', deadlineExpired: true, status: 'Bod ontvangen', contact: { name: 'Erick Nieuwkoop', date: 'Ma 9 Feb 07:28' } },
-  { id: 'VN002', company: 'Janlow B.V.', cargo: '3.000 ton Houtpellets', price: '€3,00 per ton', laadHaven: 'Rotterdam Europoort', laadDatum: 'Do 15 Jan 08:00', losHaven: 'Mannheim', losDatum: 'Af te stemmen', deadline: 'Morgen, 10:00', deadlineExpired: false, status: 'Via werklijst', contact: { name: 'Michiel den Hond', date: 'Di 10 Feb 19:53' } },
+  { id: 'VN001', company: 'Provaart Logistics BV', cargo: '2.000 ton Houtpellets (DSIT)', price: '€3,50 per ton', laadHaven: 'Salzgitter Stichkanal', laadDatum: 'Ma 12 Jan 10:00', losHaven: 'Hamburg Veddelkanal', losDatum: 'Vr 16 Jan 14:00', deadline: 'Za 14 Feb, 16:00', deadlineExpired: true, status: 'Bod ontvangen', contact: { name: 'Eric Nieuwkoop', date: 'Ma 9 Feb 07:28' } },
+  { id: 'VN002', company: 'Janlow B.V.', cargo: '3.000 ton Houtpellets', price: '€3,00 per ton', laadHaven: 'Rotterdam Europoort', laadDatum: 'Do 15 Jan 08:00', losHaven: 'Mannheim', losDatum: 'Af te stemmen', deadline: 'Morgen, 10:00', deadlineExpired: false, status: 'Via werklijst', contact: { name: 'Pelger de Jong', date: 'Di 10 Feb 19:53' } },
   { id: 'VN003', company: 'Cargill N.V.', cargo: '2.000 ton Koolraapzaad', price: '', laadHaven: 'Bremerhaven', laadDatum: 'Ma 19 Jan', losHaven: 'Duisburg', losDatum: 'Wo 21 Jan', deadline: 'Do 19 Feb, 11:15', deadlineExpired: false, status: 'Via werklijst', contact: { name: 'Khoa Nguyen', date: 'Zo 8 Feb 01:31' } },
 ];
 
@@ -360,7 +360,7 @@ function VaartuigEigenSidebarContent({ id }: { id: string }) {
       </DetailsSidebarSection>
       <div className="w-full h-px bg-rdj-border-secondary shrink-0" />
       <DetailsSidebarSection>
-        <DetailRow label="Eigenaar" type="user" value={data.eigenaar} avatarInitials={data.eigenaarInitials} />
+        <DetailRow label="Eigenaar" type="user" value={data.eigenaar} avatarSrc={data.eigenaarFoto} avatarInitials={data.eigenaarInitials} />
         <DetailRow label="Deadline" value={data.deadline} editable />
       </DetailsSidebarSection>
     </div>
@@ -410,7 +410,7 @@ function VaartuigMarktSidebarContent({ id }: { id: string }) {
       </DetailsSidebarSection>
       <div className="w-full h-px bg-rdj-border-secondary shrink-0" />
       <DetailsSidebarSection>
-        <DetailRow label="Eigenaar" type="user" value={data.eigenaar} avatarInitials={data.eigenaarInitials} />
+        <DetailRow label="Eigenaar" type="user" value={data.eigenaar} avatarSrc={data.eigenaarFoto} avatarInitials={data.eigenaarInitials} />
         <DetailRow label="Prioriteit" value={stars.map((filled) => filled ? "★" : "☆").join("")} editable />
       </DetailsSidebarSection>
     </div>

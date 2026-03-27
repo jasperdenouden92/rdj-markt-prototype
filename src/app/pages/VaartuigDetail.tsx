@@ -17,6 +17,7 @@ import OnderhandelingSidepanel from "../components/OnderhandelingSidepanel";
 import ConversationDialog from "../components/ConversationDialog";
 import { useBevrachtingVaartuigSummary } from "../data/useDetailData";
 import { mockRelaties } from "../data/mock-relatie-data";
+import LastActivityButton from "../components/LastActivityButton";
 import svgPaths from "../../imports/svg-62fj7rjvas";
 import imgAvatar from "../../assets/a2737d3b5b234fc04041650cb9f114889c6859da.png";
 import imgAvatar1 from "../../assets/3627de284acb374a4d9313b3c2dbaeeb87a48224.png";
@@ -34,8 +35,8 @@ const vesselMatches = [
 
 /* ── Mock onderhandelingen ── */
 const vesselNegotiations = [
-  { id: 'VN001', company: 'Provaart Logistics BV', cargo: '2.000 ton Houtpellets (DSIT)', price: '€3,50 per ton', priceDiff: '+4,2%', laadHaven: 'Salzgitter Stichkanal', laadDatum: 'Ma 12 Jan 10:00', losHaven: 'Hamburg Veddelkanal', losDatum: 'Vr 16 Jan 14:00', deadline: 'Za 14 Feb, 16:00', deadlineExpired: true, status: 'Bod ontvangen', contact: { name: 'Erick Nieuwkoop', date: 'Ma 9 Feb 07:28' } },
-  { id: 'VN002', company: 'Janlow B.V.', cargo: '3.000 ton Houtpellets', price: '€3,00 per ton', priceDiff: '-2,1%', laadHaven: 'Rotterdam Europoort', laadDatum: 'Do 15 Jan 08:00', losHaven: 'Mannheim', losDatum: 'Af te stemmen', deadline: 'Morgen, 10:00', deadlineExpired: false, status: 'Via werklijst', contact: { name: 'Michiel den Hond', date: 'Di 10 Feb 19:53' } },
+  { id: 'VN001', company: 'Provaart Logistics BV', cargo: '2.000 ton Houtpellets (DSIT)', price: '€3,50 per ton', priceDiff: '+4,2%', laadHaven: 'Salzgitter Stichkanal', laadDatum: 'Ma 12 Jan 10:00', losHaven: 'Hamburg Veddelkanal', losDatum: 'Vr 16 Jan 14:00', deadline: 'Za 14 Feb, 16:00', deadlineExpired: true, status: 'Bod ontvangen', contact: { name: 'Eric Nieuwkoop', date: 'Ma 9 Feb 07:28' } },
+  { id: 'VN002', company: 'Janlow B.V.', cargo: '3.000 ton Houtpellets', price: '€3,00 per ton', priceDiff: '-2,1%', laadHaven: 'Rotterdam Europoort', laadDatum: 'Do 15 Jan 08:00', losHaven: 'Mannheim', losDatum: 'Af te stemmen', deadline: 'Morgen, 10:00', deadlineExpired: false, status: 'Via werklijst', contact: { name: 'Pelger de Jong', date: 'Di 10 Feb 19:53' } },
   { id: 'VN003', company: 'Cargill N.V.', cargo: '2.000 ton Koolraapzaad', price: '', priceDiff: '', laadHaven: 'Bremerhaven', laadDatum: 'Ma 19 Jan', losHaven: 'Duisburg', losDatum: 'Wo 21 Jan', deadline: 'Do 19 Feb, 11:15', deadlineExpired: false, status: 'Via werklijst', contact: { name: 'Khoa Nguyen', date: 'Zo 8 Feb 01:31' } },
 ];
 
@@ -90,8 +91,8 @@ export default function VaartuigDetail() {
   /* ── Breadcrumb ── */
   const breadcrumb = (
     <div className="content-stretch flex flex-col gap-[20px] items-start pt-[24px] relative shrink-0 w-full">
-      <div className="content-stretch flex gap-[20px] items-start relative shrink-0 w-full">
-        <div className="content-stretch flex items-center pl-[24px] relative shrink-0">
+      <div className="content-stretch flex gap-[20px] items-center justify-between relative shrink-0 w-full px-[24px]">
+        <div className="content-stretch flex items-center relative shrink-0">
           <div className="content-stretch flex gap-[8px] items-center relative shrink-0">
             <Link to="/markt/bevrachting" className="content-stretch flex items-center justify-center p-[4px] relative rounded-[6px] shrink-0 hover:bg-rdj-bg-primary-hover">
               <p className="font-sans font-bold leading-[20px] relative shrink-0 text-[#475467] text-[14px] whitespace-nowrap">Markt</p>
@@ -124,6 +125,7 @@ export default function VaartuigDetail() {
             </div>
           </div>
         </div>
+        <LastActivityButton maxAvatars={3} />
       </div>
       <div className="h-px relative shrink-0 w-full bg-rdj-border-secondary" />
     </div>

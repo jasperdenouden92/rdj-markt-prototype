@@ -15,6 +15,7 @@ import ConversationDialog from "../components/ConversationDialog";
 import BrokerDialog from "../components/BrokerDialog";
 import ActivityFeed from "../components/ActivityFeed";
 import SectionHeader from "../components/SectionHeader";
+import LastActivityButton from "../components/LastActivityButton";
 import { useInboxVaartuigSummary } from "../data/useDetailData";
 import { mockRelaties } from "../data/mock-relatie-data";
 import imgAvatar from "../../assets/a2737d3b5b234fc04041650cb9f114889c6859da.png";
@@ -139,11 +140,11 @@ export default function InboxVesselDetail() {
 
   /* ── Vessel-specific negotiations with cargo info ── */
   const vesselNegotiations = [
-    { id: 'N001', aanbod: 'Houtpellets Salzgitter', aanbodSubtext: '2.000 ton Houtpellets', bron: 'eigen' as const, company: 'Provaart Logistics BV', freightPrice: '€3,50/ton', freightPriceDiff: '+12,5%', tonnage: '2.000 ton', deadline: 'Za 14 Mrt, 16:00', deadlineExpired: true, status: 'Bod verstuurd', contact: { name: 'Erick Nieuwkoop', date: 'Ma 9 Mrt 07:28' } },
-    { id: 'N002', aanbod: 'Staal Dordrecht', aanbodSubtext: '3.000 ton Staal', bron: 'markt' as const, company: 'Janlow B.V.', ladingRelatie: 'Janlow B.V.', freightPrice: '€3,00/ton', freightPriceDiff: '-3,2%', tonnage: '3.000 ton', deadline: 'Morgen, 9:00', deadlineExpired: true, status: 'Bod verstuurd', contact: { name: 'Michiel den Hond', date: 'Di 10 Mrt 19:53' } },
+    { id: 'N001', aanbod: 'Houtpellets Salzgitter', aanbodSubtext: '2.000 ton Houtpellets', bron: 'eigen' as const, company: 'Provaart Logistics BV', freightPrice: '€3,50/ton', freightPriceDiff: '+12,5%', tonnage: '2.000 ton', deadline: 'Za 14 Mrt, 16:00', deadlineExpired: true, status: 'Bod verstuurd', contact: { name: 'Eric Nieuwkoop', date: 'Ma 9 Mrt 07:28' } },
+    { id: 'N002', aanbod: 'Staal Dordrecht', aanbodSubtext: '3.000 ton Staal', bron: 'markt' as const, company: 'Janlow B.V.', ladingRelatie: 'Janlow B.V.', freightPrice: '€3,00/ton', freightPriceDiff: '-3,2%', tonnage: '3.000 ton', deadline: 'Morgen, 9:00', deadlineExpired: true, status: 'Bod verstuurd', contact: { name: 'Pelger de Jong', date: 'Di 10 Mrt 19:53' } },
     { id: 'N003', aanbod: 'Grind Amsterdam', aanbodSubtext: '1.200 ton Grind', bron: 'eigen' as const, company: 'Rederij Alfa', freightPrice: '€2,80/ton', freightPriceDiff: '-9,7%', tonnage: '1.200 ton', deadline: 'Morgen, 10:00', status: 'Bod verstuurd', contact: { name: 'Khoa Nguyen', date: 'Zo 8 Mrt 01:31' } },
-    { id: 'N004', aanbod: 'Sojabonen Rotterdam', aanbodSubtext: '3.500 ton Sojabonen', bron: 'markt' as const, company: 'Cargill N.V.', ladingRelatie: 'Cargill N.V.', freightPrice: '€3,00/ton', freightPriceDiff: '0,0%', tonnage: '3.500 ton', deadline: 'Morgen, 11:00', status: 'Bod ontvangen', contact: { name: 'Erick Nieuwkoop', date: 'Za 7 Mrt 18:39' } },
-    { id: 'N005', aanbod: 'Kunstmest Terneuzen', aanbodSubtext: '2.500 ton Kunstmest', bron: 'eigen' as const, company: 'Cargill N.V.', freightPrice: '€3,25/ton', freightPriceDiff: '+4,8%', tonnage: '2.500 ton', deadline: 'Do 19 Mrt, 11:15', status: 'Goedgekeurd', contact: { name: 'Michiel den Hond', date: 'Vr 6 Mrt 11:47' } },
+    { id: 'N004', aanbod: 'Sojabonen Rotterdam', aanbodSubtext: '3.500 ton Sojabonen', bron: 'markt' as const, company: 'Cargill N.V.', ladingRelatie: 'Cargill N.V.', freightPrice: '€3,00/ton', freightPriceDiff: '0,0%', tonnage: '3.500 ton', deadline: 'Morgen, 11:00', status: 'Bod ontvangen', contact: { name: 'Eric Nieuwkoop', date: 'Za 7 Mrt 18:39' } },
+    { id: 'N005', aanbod: 'Kunstmest Terneuzen', aanbodSubtext: '2.500 ton Kunstmest', bron: 'eigen' as const, company: 'Cargill N.V.', freightPrice: '€3,25/ton', freightPriceDiff: '+4,8%', tonnage: '2.500 ton', deadline: 'Do 19 Mrt, 11:15', status: 'Goedgekeurd', contact: { name: 'Pelger de Jong', date: 'Vr 6 Mrt 11:47' } },
   ];
 
   /* ── Tabs ── */
@@ -217,11 +218,10 @@ export default function InboxVesselDetail() {
       <div className="flex min-h-screen bg-white">
         <Sidebar />
 
-        <div className="flex-1 overflow-auto flex">
-          {/* Main content area */}
-          <div className="flex-1 overflow-auto">
-            {/* Breadcrumbs */}
-            <div className="flex items-center gap-[8px] px-[24px] pt-[24px] pb-[20px] border-b border-rdj-border-secondary">
+        <div className="flex-1 overflow-auto">
+          {/* Breadcrumbs */}
+          <div className="flex items-center justify-between gap-[8px] px-[24px] pt-[24px] pb-[20px] border-b border-rdj-border-secondary">
+            <div className="flex items-center gap-[8px]">
               <button onClick={() => navigate("/markt/inbox/vaartuigen")} className="flex items-center justify-center p-[4px] rounded-[6px] shrink-0 hover:bg-rdj-bg-primary-hover">
                 <p className="font-sans font-bold leading-[20px] text-rdj-text-secondary text-[14px] whitespace-nowrap">Markt</p>
               </button>
@@ -236,7 +236,12 @@ export default function InboxVesselDetail() {
                 </p>
               </div>
             </div>
+            <LastActivityButton maxAvatars={3} />
+          </div>
 
+          <div className="flex items-stretch w-full min-h-[calc(100vh-65px)]">
+          {/* Main content area */}
+          <div className="flex-1 overflow-auto">
             {/* Page content with max width */}
             <div className="flex flex-col items-center size-full">
               <div className="flex flex-col items-center py-[24px] w-full">
@@ -364,6 +369,7 @@ export default function InboxVesselDetail() {
 
           {/* Right sidebar */}
           <VaartuigMarktSidebar id={id!} />
+          </div>
         </div>
       </div>
 

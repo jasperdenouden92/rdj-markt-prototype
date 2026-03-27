@@ -371,7 +371,7 @@ function LadingEigenSidebarContent({ id }: { id: string }) {
           </DetailsSidebarSection>
           <div className="w-full h-px bg-rdj-border-secondary shrink-0" />
           <DetailsSidebarSection>
-            <DetailRow label="Eigenaar" type="user" value={data.eigenaar} avatarInitials={data.eigenaarInitials} />
+            <DetailRow label="Eigenaar" type="user" value={data.eigenaar} avatarSrc={data.eigenaarFoto} avatarInitials={data.eigenaarInitials} />
             <DetailRow label="Deadline" value={data.deadline} editable />
           </DetailsSidebarSection>
         </>
@@ -397,7 +397,7 @@ function LadingEigenSidebarContent({ id }: { id: string }) {
           </DetailsSidebarSection>
           <div className="w-full h-px bg-rdj-border-secondary shrink-0" />
           <DetailsSidebarSection>
-            <DetailRow label="Eigenaar" type="user" value={marktData.eigenaar} avatarInitials={marktData.eigenaarInitials} />
+            <DetailRow label="Eigenaar" type="user" value={marktData.eigenaar} avatarSrc={marktData.eigenaarFoto} avatarInitials={marktData.eigenaarInitials} />
           </DetailsSidebarSection>
         </>
       )}

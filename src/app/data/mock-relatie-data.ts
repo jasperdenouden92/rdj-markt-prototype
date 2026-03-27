@@ -1,5 +1,10 @@
 import type { Relatie, ContactPersoon, SoortRelatie } from "./api";
 
+import imgEricNieuwkoop from "../../assets/a2737d3b5b234fc04041650cb9f114889c6859da.png";
+import imgKhoaNguyen from "../../assets/3627de284acb374a4d9313b3c2dbaeeb87a48224.png";
+import imgPelgerDeJong from "../../assets/e7809035038b3816de2a1d67c5de86ebeed325d0.png";
+import imgJanWillemVdKraan from "../../assets/9e45f45f537bea4bf653bc0307471e5ff5545f63.png";
+
 export const SOORT_RELATIE_OPTIES: { value: SoortRelatie; label: string }[] = [
   { value: "lading-eigenaar", label: "Lading-eigenaar" },
   { value: "bevrachter", label: "Bevrachter" },
@@ -450,9 +455,10 @@ export const mockRelatieVaartuigMatches: RelatieVaartuigMatch[] = [
 
 /** Mock gebruikers (eigenaren) — supplement existing API data */
 export const mockGebruikers = [
-  { id: "usr-001", naam: "Erick Nieuwkoop", profielfoto: "" },
-  { id: "usr-002", naam: "Khoa Nguyen", profielfoto: "" },
-  { id: "usr-003", naam: "Michiel den Hond", profielfoto: "" },
+  { id: "usr-001", naam: "Eric Nieuwkoop", profielfoto: imgEricNieuwkoop },
+  { id: "usr-002", naam: "Khoa Nguyen", profielfoto: imgKhoaNguyen },
+  { id: "usr-003", naam: "Pelger de Jong", profielfoto: imgPelgerDeJong },
+  { id: "usr-004", naam: "Jan-Willem van der Kraan", profielfoto: imgJanWillemVdKraan },
 ];
 
 /** Mail conversaties — gekoppeld via Outlook plugin aan relaties en/of deals */
@@ -483,11 +489,11 @@ export let mockMailConversaties: MailConversatie[] = [
     contractId: "ctr-001",
     onderwerp: "Re: Offerte graan transport Rotterdam–Krefeld Q2",
     van: { naam: "Jan de Vries", email: "j.devries@provaart.nl" },
-    aan: [{ naam: "Erick Nieuwkoop", email: "e.nieuwkoop@rdj.nl" }],
+    aan: [{ naam: "Eric Nieuwkoop", email: "e.nieuwkoop@rdj.nl" }],
     berichten: [
-      { id: "mb-001a", van: { naam: "Erick Nieuwkoop", email: "e.nieuwkoop@rdj.nl" }, datum: "2026-03-10T09:15:00", inhoud: "Beste Jan,\n\nHierbij onze offerte voor het graan transport Rotterdam–Krefeld voor Q2. We kunnen 3.500 ton per reis doen tegen het eerder besproken tarief.\n\nLaat me weten of de voorwaarden akkoord zijn.\n\nMet vriendelijke groet,\nErick" },
-      { id: "mb-001b", van: { naam: "Jan de Vries", email: "j.devries@provaart.nl" }, datum: "2026-03-10T14:32:00", inhoud: "Hoi Erick,\n\nBedankt voor de offerte. Het tarief is akkoord, maar we willen graag de laadtijd verlengen van 12 naar 24 uur i.v.m. de kraanbeschikbaarheid bij terminal 3.\n\nKun je dat aanpassen?\n\nGroet,\nJan" },
-      { id: "mb-001c", van: { naam: "Erick Nieuwkoop", email: "e.nieuwkoop@rdj.nl" }, datum: "2026-03-11T08:45:00", inhoud: "Jan,\n\n24 uur laadtijd is geen probleem. Ik pas de offerte aan en stuur een herziene versie.\n\nGr. Erick" },
+      { id: "mb-001a", van: { naam: "Eric Nieuwkoop", email: "e.nieuwkoop@rdj.nl" }, datum: "2026-03-10T09:15:00", inhoud: "Beste Jan,\n\nHierbij onze offerte voor het graan transport Rotterdam–Krefeld voor Q2. We kunnen 3.500 ton per reis doen tegen het eerder besproken tarief.\n\nLaat me weten of de voorwaarden akkoord zijn.\n\nMet vriendelijke groet,\nEric" },
+      { id: "mb-001b", van: { naam: "Jan de Vries", email: "j.devries@provaart.nl" }, datum: "2026-03-10T14:32:00", inhoud: "Hoi Eric,\n\nBedankt voor de offerte. Het tarief is akkoord, maar we willen graag de laadtijd verlengen van 12 naar 24 uur i.v.m. de kraanbeschikbaarheid bij terminal 3.\n\nKun je dat aanpassen?\n\nGroet,\nJan" },
+      { id: "mb-001c", van: { naam: "Eric Nieuwkoop", email: "e.nieuwkoop@rdj.nl" }, datum: "2026-03-11T08:45:00", inhoud: "Jan,\n\n24 uur laadtijd is geen probleem. Ik pas de offerte aan en stuur een herziene versie.\n\nGr. Eric" },
     ],
     laatsteDatum: "2026-03-11T08:45:00",
     gelezen: true,
@@ -510,7 +516,7 @@ export let mockMailConversaties: MailConversatie[] = [
     relatieId: "rel-001",
     onderwerp: "Factuur #2026-0847 – betaling ontvangen",
     van: { naam: "Administratie Provaart", email: "admin@provaart.nl" },
-    aan: [{ naam: "Erick Nieuwkoop", email: "e.nieuwkoop@rdj.nl" }],
+    aan: [{ naam: "Eric Nieuwkoop", email: "e.nieuwkoop@rdj.nl" }],
     berichten: [
       { id: "mb-003a", van: { naam: "Administratie Provaart", email: "admin@provaart.nl" }, datum: "2026-03-07T09:00:00", inhoud: "Geachte heer Nieuwkoop,\n\nHierbij bevestigen wij de ontvangst van de betaling voor factuur #2026-0847 (€ 45.500,00).\n\nMet vriendelijke groet,\nAdministratie Provaart Logistics BV" },
     ],
@@ -523,10 +529,10 @@ export let mockMailConversaties: MailConversatie[] = [
     contractId: "ctr-002",
     onderwerp: "Re: Staal transport Dordrecht–Antwerpen – laadschema",
     van: { naam: "Pieter Jansen", email: "p.jansen@janlow.nl" },
-    aan: [{ naam: "Erick Nieuwkoop", email: "e.nieuwkoop@rdj.nl" }],
+    aan: [{ naam: "Eric Nieuwkoop", email: "e.nieuwkoop@rdj.nl" }],
     berichten: [
-      { id: "mb-004a", van: { naam: "Erick Nieuwkoop", email: "e.nieuwkoop@rdj.nl" }, datum: "2026-03-09T10:00:00", inhoud: "Pieter,\n\nHierbij het laadschema voor de staalpartij volgende week. We laden op dinsdag en woensdag, elke dag 1.500 ton.\n\nGraag jullie bevestiging.\n\nGr. Erick", bijlagen: [{ naam: "Laadschema_staal_wk12.xlsx", grootte: "89 KB" }] },
-      { id: "mb-004b", van: { naam: "Pieter Jansen", email: "p.jansen@janlow.nl" }, datum: "2026-03-09T16:45:00", inhoud: "Erick,\n\nSchema is akkoord. Onze kraanmachinist is beide dagen beschikbaar. Wel graag uiterlijk 07:00 aanmelden bij de poort.\n\nPieter" },
+      { id: "mb-004a", van: { naam: "Eric Nieuwkoop", email: "e.nieuwkoop@rdj.nl" }, datum: "2026-03-09T10:00:00", inhoud: "Pieter,\n\nHierbij het laadschema voor de staalpartij volgende week. We laden op dinsdag en woensdag, elke dag 1.500 ton.\n\nGraag jullie bevestiging.\n\nGr. Eric", bijlagen: [{ naam: "Laadschema_staal_wk12.xlsx", grootte: "89 KB" }] },
+      { id: "mb-004b", van: { naam: "Pieter Jansen", email: "p.jansen@janlow.nl" }, datum: "2026-03-09T16:45:00", inhoud: "Eric,\n\nSchema is akkoord. Onze kraanmachinist is beide dagen beschikbaar. Wel graag uiterlijk 07:00 aanmelden bij de poort.\n\nPieter" },
     ],
     laatsteDatum: "2026-03-09T16:45:00",
     gelezen: true,
@@ -536,10 +542,10 @@ export let mockMailConversaties: MailConversatie[] = [
     relatieId: "rel-003",
     onderwerp: "Nieuwe mogelijkheid: sojabonen Basel – Q2",
     van: { naam: "Sophie van Dam", email: "s.vandam@cargill.com" },
-    aan: [{ naam: "Michiel den Hond", email: "m.denhond@rdj.nl" }],
+    aan: [{ naam: "Pelger de Jong", email: "p.dejong@rdj.nl" }],
     berichten: [
-      { id: "mb-005a", van: { naam: "Sophie van Dam", email: "s.vandam@cargill.com" }, datum: "2026-03-06T13:30:00", inhoud: "Beste Michiel,\n\nWe hebben voor Q2 een extra partij sojabonen van 3.500 ton die naar Basel moet. Kunnen jullie hiervoor een offerte uitbrengen?\n\nGraag inclusief de optie voor inspectie onderweg.\n\nMvg,\nSophie" },
-      { id: "mb-005b", van: { naam: "Michiel den Hond", email: "m.denhond@rdj.nl" }, datum: "2026-03-07T09:15:00", inhoud: "Sophie,\n\nDank voor de aanvraag. Ik werk een offerte uit en heb die uiterlijk vrijdag bij je. De inspectie-optie nemen we mee.\n\nGr. Michiel" },
+      { id: "mb-005a", van: { naam: "Sophie van Dam", email: "s.vandam@cargill.com" }, datum: "2026-03-06T13:30:00", inhoud: "Beste Pelger,\n\nWe hebben voor Q2 een extra partij sojabonen van 3.500 ton die naar Basel moet. Kunnen jullie hiervoor een offerte uitbrengen?\n\nGraag inclusief de optie voor inspectie onderweg.\n\nMvg,\nSophie" },
+      { id: "mb-005b", van: { naam: "Pelger de Jong", email: "p.dejong@rdj.nl" }, datum: "2026-03-07T09:15:00", inhoud: "Sophie,\n\nDank voor de aanvraag. Ik werk een offerte uit en heb die uiterlijk vrijdag bij je. De inspectie-optie nemen we mee.\n\nGr. Pelger" },
       { id: "mb-005c", van: { naam: "Sophie van Dam", email: "s.vandam@cargill.com" }, datum: "2026-03-07T10:02:00", inhoud: "Prima, ik kijk ernaar uit.\n\nSophie" },
     ],
     laatsteDatum: "2026-03-07T10:02:00",
@@ -550,10 +556,10 @@ export let mockMailConversaties: MailConversatie[] = [
     relatieId: "rel-002",
     onderwerp: "Beschadiging lading staal – melding",
     van: { naam: "Pieter Jansen", email: "p.jansen@janlow.nl" },
-    aan: [{ naam: "Erick Nieuwkoop", email: "e.nieuwkoop@rdj.nl" }, { naam: "Khoa Nguyen", email: "k.nguyen@rdj.nl" }],
+    aan: [{ naam: "Eric Nieuwkoop", email: "e.nieuwkoop@rdj.nl" }, { naam: "Khoa Nguyen", email: "k.nguyen@rdj.nl" }],
     berichten: [
-      { id: "mb-006a", van: { naam: "Pieter Jansen", email: "p.jansen@janlow.nl" }, datum: "2026-03-05T08:10:00", inhoud: "Erick, Khoa,\n\nBij het lossen in Antwerpen is geconstateerd dat een deel van de staalplaten lichte waterschade heeft. Het gaat om ca. 200 ton van de 3.000 ton partij.\n\nKunnen jullie dit melden bij de verzekeraar? Foto's bijgevoegd.\n\nPieter", bijlagen: [{ naam: "Schade_foto_1.jpg", grootte: "2.4 MB" }, { naam: "Schade_foto_2.jpg", grootte: "1.8 MB" }, { naam: "Schade_rapport.pdf", grootte: "520 KB" }] },
-      { id: "mb-006b", van: { naam: "Erick Nieuwkoop", email: "e.nieuwkoop@rdj.nl" }, datum: "2026-03-05T09:30:00", inhoud: "Pieter,\n\nVervelend om te horen. We nemen het direct op met de verzekeraar. Khoa gaat het rapport doornemen en komt bij je terug.\n\nErick" },
+      { id: "mb-006a", van: { naam: "Pieter Jansen", email: "p.jansen@janlow.nl" }, datum: "2026-03-05T08:10:00", inhoud: "Eric, Khoa,\n\nBij het lossen in Antwerpen is geconstateerd dat een deel van de staalplaten lichte waterschade heeft. Het gaat om ca. 200 ton van de 3.000 ton partij.\n\nKunnen jullie dit melden bij de verzekeraar? Foto's bijgevoegd.\n\nPieter", bijlagen: [{ naam: "Schade_foto_1.jpg", grootte: "2.4 MB" }, { naam: "Schade_foto_2.jpg", grootte: "1.8 MB" }, { naam: "Schade_rapport.pdf", grootte: "520 KB" }] },
+      { id: "mb-006b", van: { naam: "Eric Nieuwkoop", email: "e.nieuwkoop@rdj.nl" }, datum: "2026-03-05T09:30:00", inhoud: "Pieter,\n\nVervelend om te horen. We nemen het direct op met de verzekeraar. Khoa gaat het rapport doornemen en komt bij je terug.\n\nEric" },
     ],
     laatsteDatum: "2026-03-05T09:30:00",
     gelezen: true,

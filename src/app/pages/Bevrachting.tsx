@@ -17,6 +17,10 @@ import Pagination from "../components/Pagination";
 import { mockCargos, mockVessels, Cargo, Vessel } from "../data/mock-data";
 import { splitColors } from "../utils/splitColors";
 import { mockRelaties } from "../data/mock-relatie-data";
+import imgEricNieuwkoop from "../../assets/a2737d3b5b234fc04041650cb9f114889c6859da.png";
+import imgKhoaNguyen from "../../assets/3627de284acb374a4d9313b3c2dbaeeb87a48224.png";
+import imgPelgerDeJong from "../../assets/e7809035038b3816de2a1d67c5de86ebeed325d0.png";
+import imgJanWillemVdKraan from "../../assets/9e45f45f537bea4bf653bc0307471e5ff5545f63.png";
 import svgPaths from "../../imports/svg-5lxjaeghl9";
 import FloatingActionBar from "../components/FloatingActionBar";
 import { useBevrachtingData, type BevrachtingCargo, type BevrachtingVessel } from "../data/useMarktData";
@@ -221,7 +225,7 @@ export default function Bevrachting() {
     { key: 'biedingenBadges', header: 'Biedingen', type: 'badges', width: 'w-[100px]' },
     { key: 'matchesBadges', header: 'Matches', type: 'badges', width: 'w-[100px]' },
     { key: 'deadline', header: 'Deadline', type: 'text', width: 'w-[140px]' },
-    { key: 'eigenaarLabel', header: 'Eigenaar', type: 'text', width: 'w-[60px]', avatarInitialsKey: 'eigenaarInitials' },
+    { key: 'eigenaarLabel', header: 'Eigenaar', type: 'text', width: 'w-[60px]', avatarSrcKey: 'eigenaarFoto', avatarInitialsKey: 'eigenaarInitials' },
   ];
 
   const vesselTableColumns: Column[] = [
@@ -236,7 +240,7 @@ export default function Bevrachting() {
     { key: 'biedingenBadges', header: 'Biedingen', type: 'badges', width: 'w-[100px]' },
     { key: 'matchesBadges', header: 'Matches', type: 'badges', width: 'w-[100px]' },
     { key: 'deadline', header: 'Deadline', type: 'text', width: 'w-[140px]' },
-    { key: 'eigenaarLabel', header: 'Eigenaar', type: 'text', width: 'w-[60px]', avatarInitialsKey: 'eigenaarInitials' },
+    { key: 'eigenaarLabel', header: 'Eigenaar', type: 'text', width: 'w-[60px]', avatarSrcKey: 'eigenaarFoto', avatarInitialsKey: 'eigenaarInitials' },
   ];
 
   const tableData = cargos.map(c => {
@@ -265,9 +269,16 @@ export default function Bevrachting() {
       gesloten: 'Verlopen',
     };
 
-    // Mock owner initials
-    const ownerInitials = ['KN', 'PJ', 'MH', '', 'EN', 'FJ'];
-    const ownerIdx = parseInt(c.id.replace(/\D/g, ''), 10) % ownerInitials.length;
+    // Mock owner data
+    const owners = [
+      { initials: 'KN', foto: imgKhoaNguyen },
+      { initials: 'PJ', foto: imgPelgerDeJong },
+      { initials: 'JK', foto: imgJanWillemVdKraan },
+      { initials: '', foto: '' },
+      { initials: 'EN', foto: imgEricNieuwkoop },
+      { initials: 'PJ', foto: imgPelgerDeJong },
+    ];
+    const ownerIdx = parseInt(c.id.replace(/\D/g, ''), 10) % owners.length;
 
     return {
       id: c.id,
@@ -289,7 +300,8 @@ export default function Bevrachting() {
       matchesBadges: c.matches != null ? [`${c.matches}`] : [],
       deadline: deadlineMap[c.status] ?? '',
       eigenaarLabel: '',
-      eigenaarInitials: ownerInitials[ownerIdx] || undefined,
+      eigenaarInitials: owners[ownerIdx].initials || undefined,
+      eigenaarFoto: owners[ownerIdx].foto || undefined,
       leadingBadge: c.splitIndex != null ? `#${c.splitIndex}` : (c.status === 'markt' ? 'Markt' : undefined),
       leadingBadgeStyle: c.splitIndex != null && c.splitColorIndex != null ? (() => {
         const color = splitColors[c.splitColorIndex % splitColors.length];
@@ -307,8 +319,13 @@ export default function Bevrachting() {
       markt: 'Morgen, 12:00',
       gesloten: 'Verlopen',
     };
-    const ownerInitials = ['KN', 'PJ', 'MH', 'EN'];
-    const ownerIdx = idx % ownerInitials.length;
+    const vesselOwners = [
+      { initials: 'KN', foto: imgKhoaNguyen },
+      { initials: 'PJ', foto: imgPelgerDeJong },
+      { initials: 'JK', foto: imgJanWillemVdKraan },
+      { initials: 'EN', foto: imgEricNieuwkoop },
+    ];
+    const ownerIdx = idx % vesselOwners.length;
     const tonMatch = v.weight.match(/([\d.]+)/);
     const tonnageNum = tonMatch ? tonMatch[1] : v.weight;
     const capacityMap: Record<string, string> = { 'VSL001': '4.200 m³', 'VSL002': '3.500 m³', 'VSL003': '4.200 m³', 'VSL004': '4.200 m³' };
@@ -330,7 +347,8 @@ export default function Bevrachting() {
       matchesBadges: v.matches != null ? [`${v.matches}`] : [],
       deadline: deadlineMap[v.status] ?? '',
       eigenaarLabel: '',
-      eigenaarInitials: ownerInitials[ownerIdx],
+      eigenaarInitials: vesselOwners[ownerIdx].initials,
+      eigenaarFoto: vesselOwners[ownerIdx].foto,
       leadingBadge: v.status === 'markt' ? 'Markt' : undefined,
     };
   });

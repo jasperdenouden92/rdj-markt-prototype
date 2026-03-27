@@ -8,6 +8,10 @@ import DetailRow from "./DetailRow";
 import FeaturedIcon from "./FeaturedIcon";
 import Button from "./Button";
 import Badge, { type BadgeVariant, type BadgeType } from "./Badge";
+import imgEricNieuwkoop from "../../assets/a2737d3b5b234fc04041650cb9f114889c6859da.png";
+import imgKhoaNguyen from "../../assets/3627de284acb374a4d9313b3c2dbaeeb87a48224.png";
+import imgPelgerDeJong from "../../assets/e7809035038b3816de2a1d67c5de86ebeed325d0.png";
+import imgJanWillemVdKraan from "../../assets/9e45f45f537bea4bf653bc0307471e5ff5545f63.png";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "./ui/dialog";
 import { Input } from "./ui/input";
 import { Label } from "./ui/label";
@@ -43,6 +47,7 @@ const mockNegotiationMeta = {
   deadline: "17 jan 2026",
   eigenaar: "Khoa Nguyen",
   eigenaarInitials: "KN",
+  eigenaarFoto: imgKhoaNguyen,
 };
 
 /* ── Mock vaartuig data ── */
@@ -64,6 +69,7 @@ const mockVaartuig = {
   contactpersoon: "Jan de Vries",
   eigenaar: "Khoa Nguyen",
   eigenaarInitials: "KN",
+  eigenaarFoto: imgKhoaNguyen,
 };
 
 /* ── Mock lading data ── */
@@ -85,8 +91,9 @@ const mockLading = {
   opdrachtgever: "Rederij de Jong",
   opdrachtgeverId: "rel-2",
   opdrachtgeverContact: "Pieter Jansen",
-  eigenaar: "Erick Nieuwkoop",
+  eigenaar: "Eric Nieuwkoop",
   eigenaarInitials: "EN",
+  eigenaarFoto: imgEricNieuwkoop,
   deadline: "17 jan 2026",
 };
 
@@ -101,6 +108,7 @@ interface ActivityEvent {
   id: string;
   user: string;
   initials: string;
+  avatar?: string;
   title: string;
   timestamp: string;
   message?: string;
@@ -112,6 +120,7 @@ const mockActiviteit: ActivityEvent[] = [
     id: "1",
     user: "Khoa Nguyen",
     initials: "KN",
+    avatar: imgKhoaNguyen,
     title: "Bod bijgewerkt",
     timestamp: "Vandaag, 14:22",
     message: "Lading aangepast.",
@@ -121,8 +130,9 @@ const mockActiviteit: ActivityEvent[] = [
   },
   {
     id: "2",
-    user: "Erick Nieuwkoop",
+    user: "Eric Nieuwkoop",
     initials: "EN",
+    avatar: imgEricNieuwkoop,
     title: "Bod ontvangen",
     timestamp: "Vandaag, 09:15",
     message: "Lading toegevoegd.",
@@ -134,6 +144,7 @@ const mockActiviteit: ActivityEvent[] = [
     id: "3",
     user: "Khoa Nguyen",
     initials: "KN",
+    avatar: imgKhoaNguyen,
     title: "Bod verstuurd",
     timestamp: "Gisteren, 16:32",
     message: "Voor het eerst gesproken.",
@@ -146,8 +157,9 @@ const mockActiviteit: ActivityEvent[] = [
   },
   {
     id: "4",
-    user: "Erick Nieuwkoop",
+    user: "Eric Nieuwkoop",
     initials: "EN",
+    avatar: imgEricNieuwkoop,
     title: "Via werklijst",
     timestamp: "Ma 20 Jan, 11:04",
     message: "Ik bijgevoegd beschikbare vaartuigen en lading van dinsdag 27 januari. Bij interesse, neem contact op met bevrachting@rederijdejong.nl of bel +31 (0)10-2311510.",
@@ -272,6 +284,7 @@ export default function OnderhandelingSidepanel({ negotiationId, status: initial
       id: `evt-${Date.now()}`,
       user: mockNegotiationMeta.eigenaar,
       initials: mockNegotiationMeta.eigenaarInitials,
+      avatar: mockNegotiationMeta.eigenaarFoto,
       title: "Onderhandeling goedgekeurd",
       timestamp: "Zojuist",
     }, ...prev]);
@@ -285,6 +298,7 @@ export default function OnderhandelingSidepanel({ negotiationId, status: initial
       id: `evt-${Date.now()}`,
       user: mockNegotiationMeta.eigenaar,
       initials: mockNegotiationMeta.eigenaarInitials,
+      avatar: mockNegotiationMeta.eigenaarFoto,
       title: "Onderhandeling afgewezen",
       timestamp: "Zojuist",
     }, ...prev]);
@@ -310,6 +324,7 @@ export default function OnderhandelingSidepanel({ negotiationId, status: initial
       id: `evt-${Date.now()}`,
       user: mockNegotiationMeta.eigenaar,
       initials: mockNegotiationMeta.eigenaarInitials,
+      avatar: mockNegotiationMeta.eigenaarFoto,
       title: "Bod bijgewerkt",
       timestamp: "Zojuist",
       message: opmerking || undefined,
@@ -346,10 +361,8 @@ export default function OnderhandelingSidepanel({ negotiationId, status: initial
               </p>
             </div>
             <div className="flex items-center gap-[6px]">
-              <div className="relative rounded-full shrink-0 size-[20px] bg-rdj-bg-secondary flex items-center justify-center">
-                <p className="font-sans font-bold text-rdj-text-secondary text-[8px]">
-                  {mockNegotiationMeta.eigenaarInitials}
-                </p>
+              <div className="relative rounded-full shrink-0 size-[20px] bg-rdj-bg-secondary overflow-hidden">
+                <img alt="" src={mockNegotiationMeta.eigenaarFoto} className="absolute inset-0 size-full object-cover rounded-full" />
               </div>
               <p className="font-sans font-normal leading-[20px] text-rdj-text-secondary text-[14px]">
                 {mockNegotiationMeta.eigenaar}
@@ -748,7 +761,7 @@ function VaartuigTab() {
       <div className="w-full h-px bg-rdj-border-secondary shrink-0" />
 
       <DetailsSidebarSection>
-        <DetailRow label="Eigenaar" type="user" value={mockVaartuig.eigenaar} avatarInitials={mockVaartuig.eigenaarInitials} />
+        <DetailRow label="Eigenaar" type="user" value={mockVaartuig.eigenaar} avatarSrc={mockVaartuig.eigenaarFoto} avatarInitials={mockVaartuig.eigenaarInitials} />
       </DetailsSidebarSection>
     </>
   );
@@ -779,7 +792,7 @@ function LadingTab() {
       <div className="w-full h-px bg-rdj-border-secondary shrink-0" />
 
       <DetailsSidebarSection>
-        <DetailRow label="Eigenaar" type="user" value={mockLading.eigenaar} avatarInitials={mockLading.eigenaarInitials} />
+        <DetailRow label="Eigenaar" type="user" value={mockLading.eigenaar} avatarSrc={mockLading.eigenaarFoto} avatarInitials={mockLading.eigenaarInitials} />
         <DetailRow label="Deadline" value={mockLading.deadline} />
       </DetailsSidebarSection>
     </>
@@ -825,10 +838,14 @@ function ActiviteitTab({ events }: { events: ActivityEvent[] }) {
                 {event.timestamp}
               </p>
               {/* Avatar */}
-              <div className="relative rounded-full shrink-0 size-[28px] bg-rdj-bg-secondary flex items-center justify-center">
-                <p className="font-sans font-bold text-rdj-text-primary text-[10px]">
-                  {event.initials}
-                </p>
+              <div className="relative rounded-full shrink-0 size-[28px] bg-rdj-bg-secondary overflow-hidden">
+                {event.avatar ? (
+                  <img alt="" src={event.avatar} className="absolute inset-0 size-full object-cover rounded-full" />
+                ) : (
+                  <div className="flex items-center justify-center size-full">
+                    <p className="font-sans font-bold text-rdj-text-primary text-[10px]">{event.initials}</p>
+                  </div>
+                )}
               </div>
             </div>
 
