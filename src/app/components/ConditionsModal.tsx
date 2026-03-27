@@ -123,8 +123,8 @@ export default function ConditionsModal({ cargo, onClose, onSave }: ConditionsMo
           <div className="px-[24px] py-[20px] space-y-[20px]">
             {/* Tonnage */}
             <div className="content-stretch flex flex-col gap-[6px] items-start relative shrink-0 w-full">
-              <div className="flex items-center gap-[12px]">
-                <p className="font-sans font-bold leading-[20px] text-[#344054] text-[14px] whitespace-nowrap">Tonnage</p>
+              <p className="font-sans font-bold leading-[20px] text-[#344054] text-[14px] whitespace-nowrap">Tonnage</p>
+              <div className="flex gap-[8px] w-full">
                 <Checkbox
                   checked={isRange}
                   onChange={(checked) => setIsRange(checked)}
