@@ -1,3 +1,4 @@
+import { type ReactNode } from "react";
 import { useDrop } from "react-dnd";
 import { Cargo, Vessel } from "../data/mock-data";
 import CargoCard from "./CargoCard";
@@ -18,9 +19,11 @@ interface DroppableColumnProps {
   items: (Cargo | Vessel)[];
   onDrop: (itemId: string, newStatus: 'intake' | 'werklijst' | 'markt' | 'gesloten') => void;
   type: 'cargo' | 'vessel';
+  /** Optional wrapper for individual cards, e.g. to add an AnnotationMarker */
+  wrapCard?: (itemId: string, card: ReactNode) => ReactNode;
 }
 
-export default function DroppableColumn({ title, status, items, onDrop, type }: DroppableColumnProps) {
+export default function DroppableColumn({ title, status, items, onDrop, type, wrapCard }: DroppableColumnProps) {
   const [{ isOver }, drop] = useDrop({
     accept: type === 'cargo' ? 'CARGO' : 'VESSEL',
     drop: (item: { id: string }) => {
@@ -55,13 +58,12 @@ export default function DroppableColumn({ title, status, items, onDrop, type }: 
 
       {/* Cards */}
       <div className="flex flex-col gap-[12px] flex-1">
-        {items.map(item => (
-          type === 'cargo' ? (
-            <CargoCard key={item.id} cargo={item as Cargo} />
-          ) : (
-            <VesselCard key={item.id} vessel={item as Vessel} />
-          )
-        ))}
+        {items.map(item => {
+          const card = type === 'cargo'
+            ? <CargoCard key={item.id} cargo={item as Cargo} />
+            : <VesselCard key={item.id} vessel={item as Vessel} />;
+          return wrapCard ? <span key={item.id}>{wrapCard(item.id, card)}</span> : card;
+        })}
       </div>
 
       {/* Add button */}
