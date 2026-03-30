@@ -255,6 +255,12 @@ export default function ConversationDialog({
             next.set(preSelectedItemId, conditions);
             return next;
           });
+          // Also prefill "Hun" bid conditions from zoekcriteria
+          setItemBidConditions(prev => {
+            const next = new Map(prev);
+            next.set(preSelectedItemId, { ...conditions });
+            return next;
+          });
         }
       }
     }
@@ -648,6 +654,16 @@ export default function ConversationDialog({
       }
       return next;
     });
+    // Prefill "Hun" bid conditions from "Ons" if not yet manually set
+    if (value) {
+      setItemBidConditions(prev => {
+        const existing = prev.get(itemId) || {};
+        if (existing[key]) return prev; // already has a value, don't overwrite
+        const next = new Map(prev);
+        next.set(itemId, { ...existing, [key]: value });
+        return next;
+      });
+    }
     // Persist to lading_eigen zoekcriteria if this is an eigen lading
     if (eigenLadingen.some(l => l.id === itemId) && key !== "overig") {
       const zoekKey = `zoek${key.charAt(0).toUpperCase()}${key.slice(1)}`;
