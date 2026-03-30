@@ -19,7 +19,9 @@ import CrmLadingDetail from "./pages/CrmLadingDetail";
 import CrmVaartuigDetail from "./pages/CrmVaartuigDetail";
 import Bevrachters from "./pages/Bevrachters";
 import Ladingen from "./pages/Ladingen";
+import Subpartijen from "./pages/Subpartijen";
 import LadingModuleDetail from "./pages/LadingModuleDetail";
+import SubpartijDetail from "./pages/SubpartijDetail";
 import Vloot from "./pages/Vloot";
 import VlootVaartuigDetail from "./pages/VlootVaartuigDetail";
 
@@ -162,11 +164,23 @@ export const router = createBrowserRouter([
       },
       {
         path: "lading",
+        element: <Navigate to="/lading/partijen" replace />,
+      },
+      {
+        path: "lading/partijen",
         Component: Ladingen,
       },
       {
-        path: "lading/:id",
+        path: "lading/subpartijen",
+        Component: Subpartijen,
+      },
+      {
+        path: "lading/partij/:id",
         Component: LadingModuleDetail,
+      },
+      {
+        path: "lading/subpartij/:id",
+        Component: SubpartijDetail,
       },
       {
         path: "crm/taken",

@@ -139,7 +139,7 @@ export default function Ladingen() {
       <div className="flex-1 flex flex-col overflow-auto">
         <div className="pt-[32px] pb-[8px]">
           <PageHeader
-            title="Ladingen"
+            title="Partijen"
             actions={
               <Button
                 variant="primary"
@@ -203,7 +203,7 @@ export default function Ladingen() {
           hoveredRowId={hoveredRow}
           onRowHover={setHoveredRow}
           onRowClick={(row) => {
-            navigate(`/lading/${row.id}`);
+            navigate(`/lading/partij/${row.id}`);
           }}
         />
       </div>

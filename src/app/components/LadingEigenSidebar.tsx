@@ -1,9 +1,14 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { useNavigate } from "react-router";
 import DetailsSidebar, { DetailsSidebarSection } from "./DetailsSidebar";
 import DetailRow from "./DetailRow";
+import { HoverCard, HoverCardTrigger, HoverCardContent } from "./ui/hover-card";
 import { useLadingEigenDetail } from "../data/useDetailData";
 import * as api from "../data/api";
+import { partijen, subpartijen, exen } from "../data/entities/partijen";
+import { ladingenEigen } from "../data/entities/ladingen-eigen";
+import { havens } from "../data/entities/havens";
+import { mockLadingSoorten, mockBijzonderheden } from "../data/mock-contract-data";
 
 /**
  * LadingEigenSidebar — detail sidebar for an eigen-lading.
@@ -72,9 +77,79 @@ interface LadingEigenSidebarProps {
 
 export default function LadingEigenSidebar({ id, onEdit }: LadingEigenSidebarProps) {
   const navigate = useNavigate();
+  // Split IDs (e.g. "le-001-2", "le-001-rest") don't exist in the store; use base ID for API calls.
+  const baseId = id.replace(/-(rest|\d+)$/, '');
   const { data, loading, error, refetch } = useLadingEigenDetail(id);
   const [activeTab, setActiveTab] = useState<string>("details");
   const [overig, setOverig] = useState("");
+
+  // Resolve partij/subpartij data from lading module entities
+  const partijData = useMemo(() => {
+    if (!data) return null;
+    const p = partijen.find((x) => x.id === data.raw.partijId);
+    if (!p) return null;
+    const ex = p.exId ? exen.find((e) => e.id === p.exId) : null;
+    const laadhaven = havens.find((h) => h.id === p.laadhavenId);
+    const ladingSoort = mockLadingSoorten.find((ls) => ls.id === p.ladingSoortId);
+    const subs = subpartijen.filter((s) => p.subpartijIds.includes(s.id));
+    return { partij: p, ex, laadhaven, ladingSoort, subpartijen: subs };
+  }, [data]);
+
+  const subpartijData = useMemo(() => {
+    if (!data) return null;
+    const s = subpartijen.find((x) => x.id === data.raw.subpartijId);
+    if (!s) return null;
+    const parentPartij = partijen.find((p) => p.id === s.partijId);
+    const laadhaven = parentPartij ? havens.find((h) => h.id === parentPartij.laadhavenId) : null;
+    const loshaven = havens.find((h) => h.id === s.loshavenId);
+    const bijz = s.bijzonderheidIds
+      .map((bid) => mockBijzonderheden.find((b) => b.id === bid))
+      .filter(Boolean)
+      .map((b) => b!.naam);
+    return { subpartij: s, laadhaven, loshaven, bijzonderheden: bijz };
+  }, [data]);
+
+  // Derive lot status
+  const lotStatus = useMemo(() => {
+    const statusMap: Record<string, { label: string; variant: string }> = {
+      intake: { label: "Intake", variant: "brand" },
+      werklijst: { label: "Werklijst", variant: "warning" },
+      markt: { label: "In de markt", variant: "success" },
+      gesloten: { label: "Gesloten", variant: "grey" },
+    };
+    const s = (data?.raw as any)?.status || "intake";
+    return statusMap[s] || statusMap.intake;
+  }, [data]);
+
+  // Find sibling lots: other lading_eigen items with the same partijId
+  const siblingLots = useMemo(() => {
+    if (!data) return [];
+    const currentPartijId = data.raw.partijId;
+    return ladingenEigen
+      .filter((le) => le.partijId === currentPartijId && le.id !== id)
+      .map((le) => {
+        const sub = subpartijen.find((s) => s.id === le.subpartijId);
+        const parentPartij = partijen.find((p) => p.id === le.partijId);
+        const laadhaven = parentPartij ? havens.find((h) => h.id === parentPartij.laadhavenId) : null;
+        const loshaven = sub ? havens.find((h) => h.id === sub.loshavenId) : null;
+        const bijz = sub?.bijzonderheidIds
+          .map((bid) => mockBijzonderheden.find((b) => b.id === bid))
+          .filter(Boolean)
+          .map((b) => b!.naam) || [];
+        return {
+          id: le.id,
+          subpartijId: le.subpartijId,
+          naam: sub?.naam || le.id,
+          tonnage: le.tonnage ? `${le.tonnage.toLocaleString("nl-NL")} t` : "—",
+          laadhaven: laadhaven?.naam || "—",
+          loshaven: loshaven?.naam || "—",
+          laaddatum: sub?.laaddatum || null,
+          losdatum: sub?.losdatum || null,
+          bijzonderheden: bijz,
+          status: ((le as any).status || "intake") as string,
+        };
+      });
+  }, [data, id]);
 
   const getVal = (section: "eigen" | "markt", field: ConditiesField): string | number | null => {
     if (!data) return null;
@@ -92,10 +167,10 @@ export default function LadingEigenSidebar({ id, onEdit }: LadingEigenSidebarPro
     const isStringField = field === "deadline" || isNlw;
     const value = isStringField ? (input || null) : parseNum(input);
     if (section === "eigen") {
-      await api.patch("lading_eigen", id, { [field]: value });
+      await api.patch("lading_eigen", baseId, { [field]: value });
     } else {
       const zoekKey = `zoek${field.charAt(0).toUpperCase()}${field.slice(1)}`;
-      await api.patch("lading_eigen", id, { [zoekKey]: value });
+      await api.patch("lading_eigen", baseId, { [zoekKey]: value });
     }
     refetch();
   };
@@ -163,22 +238,102 @@ export default function LadingEigenSidebar({ id, onEdit }: LadingEigenSidebarPro
     >
       {activeTab === "details" && (
         <>
+          {/* References: Partij, Subpartij, Overige lots */}
           <DetailsSidebarSection>
-            <DetailRow label="Partij" type="linked" value={data.partij} />
-            <DetailRow label="Subpartij" type="linked" value={data.subpartij} />
-            <DetailRow label="Opdrachtgever" type="linked" value={data.opdrachtgever} onClick={() => navigate(`/crm/relatie/${data.relatieId}`)} />
-            <DetailRow label="Contactpersoon" value={data.opdrachtgeverContact} />
-            <DetailRow label="Tonnage" value={data.tonnage} editable onEdit={() => onEdit?.("tonnage")} />
-            <DetailRow label="Ex." value={data.ex} subtext={data.exType} />
-            <DetailRow label="Lading" value={data.lading} editable onEdit={() => onEdit?.("lading")} />
-            <DetailRow label="Subsoort" value={data.subsoort} editable onEdit={() => onEdit?.("subsoort")} />
-            <DetailRow label="Soortelijk gewicht" value={data.soortelijkGewicht} editable onEdit={() => onEdit?.("soortelijkGewicht")} />
-            <DetailRow label="Inhoud" value={data.inhoud} editable onEdit={() => onEdit?.("inhoud")} />
-            <DetailRow label="Bijzonderheden" type="badges" badges={data.bijzonderheden} editable onEdit={() => onEdit?.("bijzonderheden")} />
-            <DetailRow label="Laadhaven" value={data.laadhaven} editable onEdit={() => onEdit?.("laadhaven")} />
-            <DetailRow label="Laaddatum" value={data.laaddatum} editable onEdit={() => onEdit?.("laaddatum")} />
-            <DetailRow label="Loshaven" value={data.loshaven} editable onEdit={() => onEdit?.("loshaven")} />
-            <DetailRow label="Losdatum" value={data.losdatum} editable onEdit={() => onEdit?.("losdatum")} />
+            <DetailRow
+              label="Partij"
+              type="linked"
+              value={data.partij}
+              onClick={() => navigate(`/lading/partij/${data.raw.partijId}`)}
+              hoverContent={partijData ? (
+                <PartijHoverCard
+                  title={partijData.partij.naam}
+                  ladingSoort={partijData.ladingSoort?.naam || "—"}
+                  laadhaven={partijData.laadhaven?.naam || "—"}
+                  exNaam={partijData.ex?.naam}
+                  exType={partijData.ex?.type}
+                  subpartijen={partijData.subpartijen.map((s) => s.naam)}
+                />
+              ) : undefined}
+            />
+            <DetailRow
+              label="Subpartij"
+              type="linked"
+              value={data.subpartij}
+              onClick={() => navigate(`/lading/subpartij/${data.raw.subpartijId}`)}
+              hoverContent={subpartijData ? (
+                <SubpartijHoverCard
+                  title={subpartijData.subpartij.naam}
+                  status={((ladingenEigen.find((le) => le.subpartijId === data.raw.subpartijId) as any)?.status || "intake")}
+                  laadhaven={subpartijData.laadhaven?.naam || "—"}
+                  loshaven={subpartijData.loshaven?.naam || "—"}
+                  laaddatum={subpartijData.subpartij.laaddatum}
+                  losdatum={subpartijData.subpartij.losdatum}
+                  bijzonderheden={subpartijData.bijzonderheden}
+                />
+              ) : undefined}
+            />
+            {siblingLots.length > 0 && (
+              <div className="content-stretch flex gap-[16px] items-start relative shrink-0 w-full">
+                <div className="bg-white content-stretch flex items-center py-[8px] relative rounded-[6px] shrink-0 w-[144px]">
+                  <p className="flex-[1_0_0] font-sans font-normal leading-[20px] min-h-px min-w-px relative text-rdj-text-secondary text-[14px]">
+                    Overige lots
+                  </p>
+                </div>
+                <div className="content-stretch flex flex-[1_0_0] flex-col items-start min-h-px min-w-px relative">
+                  {siblingLots.map((lot) => (
+                    <HoverCard key={lot.id} openDelay={300} closeDelay={100}>
+                      <HoverCardTrigger asChild>
+                        <div className="px-[12px] py-[8px] w-full">
+                          <button
+                            type="button"
+                            className="content-stretch flex items-center gap-[6px] overflow-clip relative shrink-0 w-full group"
+                            onClick={() => navigate(`/markt/bevrachting/lading/${lot.id}`)}
+                          >
+                            <p className="flex-[1_0_0] font-sans font-bold leading-[20px] min-h-px min-w-px overflow-hidden relative text-rdj-text-brand text-[14px] text-ellipsis text-left whitespace-nowrap group-hover:underline">
+                              {lot.naam}
+                            </p>
+                          </button>
+                        </div>
+                      </HoverCardTrigger>
+                      <HoverCardContent side="left" align="start" sideOffset={8} className="w-[280px] p-0 border-rdj-border-secondary">
+                        <SubpartijHoverCard
+                          title={lot.naam}
+                          status={lot.status}
+                          laadhaven={lot.laadhaven}
+                          loshaven={lot.loshaven}
+                          laaddatum={lot.laaddatum}
+                          losdatum={lot.losdatum}
+                          bijzonderheden={lot.bijzonderheden}
+                        />
+                      </HoverCardContent>
+                    </HoverCard>
+                  ))}
+                </div>
+              </div>
+            )}
+          </DetailsSidebarSection>
+
+          {/* Divider */}
+          <div className="w-full h-px bg-rdj-border-secondary shrink-0 -mt-[8px]" />
+
+          {/* Lot data — matches bevrachting table columns */}
+          <DetailsSidebarSection>
+            <DetailRow label="Status" type="badges" badges={[lotStatus.label]} />
+            <DetailRow label="Lading" value={data.lading} subtext={data.subsoort !== "—" ? data.subsoort : undefined} />
+            <DetailRow
+              label="Tonnage"
+              value={data.tonnage}
+              editValue={data.raw.tonnage ? String(data.raw.tonnage) : ""}
+              editable
+              onSave={async (v) => {
+                const n = parseNum(v);
+                if (n != null) { await api.patch("lading_eigen", baseId, { tonnage: n }); refetch(); }
+              }}
+            />
+            <DetailRow label="Laden" value={data.laadhaven} subtext={data.laaddatum} />
+            <DetailRow label="Lossen" value={data.loshaven} subtext={data.losdatum} />
+            <DetailRow label="Relatie" type="linked" value={data.opdrachtgever} onClick={() => navigate(`/crm/relatie/${data.relatieId}`)} />
           </DetailsSidebarSection>
 
           {/* Divider */}
@@ -186,7 +341,16 @@ export default function LadingEigenSidebar({ id, onEdit }: LadingEigenSidebarPro
 
           <DetailsSidebarSection>
             <DetailRow label="Eigenaar" type="user" value={data.eigenaar} avatarSrc={data.eigenaarFoto} avatarInitials={data.eigenaarInitials} />
-            <DetailRow label="Deadline" value={data.deadline} editable onEdit={() => onEdit?.("deadline")} />
+            <DetailRow
+              label="Deadline"
+              value={data.deadline}
+              editValue={data.raw.deadline || ""}
+              editable
+              onSave={async (v) => {
+                await api.patch("lading_eigen", baseId, { deadline: v || null });
+                refetch();
+              }}
+            />
           </DetailsSidebarSection>
         </>
       )}
@@ -235,5 +399,126 @@ export default function LadingEigenSidebar({ id, onEdit }: LadingEigenSidebarPro
         </>
       )}
     </DetailsSidebar>
+  );
+}
+
+/* ── Hover card components ── */
+
+function formatShortDate(dateStr: string | null): string {
+  if (!dateStr) return "—";
+  const d = new Date(dateStr);
+  return d.toLocaleDateString("nl-NL", { day: "numeric", month: "short" });
+}
+
+function PartijHoverCard({ title, ladingSoort, laadhaven, exNaam, exType, subpartijen: subs }: {
+  title: string;
+  ladingSoort: string;
+  laadhaven: string;
+  exNaam?: string;
+  exType?: string;
+  subpartijen: string[];
+}) {
+  return (
+    <div className="p-[16px]">
+      {/* Header */}
+      <div className="mb-[12px]">
+        <div className="flex items-center gap-[4px]">
+          {exType && (
+            exType === "opslag" ? (
+              <svg className="shrink-0 size-[14px] text-rdj-text-tertiary" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M8 14v3m4-3v3m4-3v3M3 21h18M3 10h18M3 7l9-4 9 4M4 10h16v11H4V10z" /></svg>
+            ) : (
+              <svg className="shrink-0 size-[14px] text-rdj-text-tertiary" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M3 17h1m0 0h16m-16 0v-4m16 4v-4m0 0H4m16 0 1.28-5.12a1 1 0 0 0-.97-1.22H6.69a1 1 0 0 0-.97 1.22L7 13M4 13l-1-6h2" /></svg>
+            )
+          )}
+          <p className="font-sans font-bold leading-[20px] text-rdj-text-primary text-[14px]">{title}</p>
+        </div>
+        <p className="font-sans font-normal leading-[18px] text-rdj-text-secondary text-[12px] mt-[2px]">
+          {ladingSoort}{exNaam ? ` · ${exNaam}` : ""}
+        </p>
+      </div>
+
+      {/* Laadhaven */}
+      <div className="flex items-center gap-[6px] mb-[8px]">
+        <div className="shrink-0 w-[14px] flex items-center justify-center">
+          <div className="w-[6px] h-[6px] rounded-full border-[1.5px] border-[#667085]" />
+        </div>
+        <p className="font-sans font-normal leading-[18px] text-[#344054] text-[12px]">{laadhaven}</p>
+      </div>
+
+      {/* Subpartijen */}
+      {subs.length > 0 && (
+        <div className="pt-[8px] border-t border-rdj-border-secondary">
+          <p className="font-sans font-normal leading-[18px] text-rdj-text-tertiary text-[12px] mb-[4px]">
+            {subs.length} {subs.length === 1 ? "subpartij" : "subpartijen"}
+          </p>
+          <div className="space-y-[2px]">
+            {subs.map((s, i) => (
+              <p key={i} className="font-sans font-normal leading-[18px] text-[#344054] text-[12px] truncate">{s}</p>
+            ))}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+const statusConfig: Record<string, { label: string; bg: string; text: string }> = {
+  intake: { label: "Intake", bg: "bg-[#EFF8FF]", text: "text-[#175CD3]" },
+  werklijst: { label: "Werklijst", bg: "bg-[#FFFAEB]", text: "text-[#B54708]" },
+  markt: { label: "In de markt", bg: "bg-[#ECFDF3]", text: "text-[#027A48]" },
+  gesloten: { label: "Gesloten", bg: "bg-[#F2F4F7]", text: "text-[#344054]" },
+};
+
+function SubpartijHoverCard({ title, status, laadhaven, loshaven, laaddatum, losdatum, bijzonderheden }: {
+  title: string;
+  status: string;
+  laadhaven: string;
+  loshaven: string;
+  laaddatum: string | null;
+  losdatum: string | null;
+  bijzonderheden: string[];
+}) {
+  const sc = statusConfig[status] || statusConfig.intake;
+  return (
+    <div className="p-[16px]">
+      {/* Header */}
+      <div className="mb-[12px]">
+        <div className="flex items-center justify-between gap-[8px]">
+          <p className="font-sans font-bold leading-[20px] text-rdj-text-primary text-[14px] truncate min-w-0">{title}</p>
+          <span className={`shrink-0 inline-flex items-center rounded-[4px] px-[6px] py-[1px] font-sans font-bold text-[11px] leading-[16px] ${sc.bg} ${sc.text}`}>
+            {sc.label}
+          </span>
+        </div>
+      </div>
+
+      {/* Route: laadhaven (van partij) → loshaven (van subpartij) */}
+      <div className="space-y-[6px]">
+        <div className="flex items-center gap-[6px]">
+          <div className="shrink-0 w-[14px] flex items-center justify-center">
+            <div className="w-[6px] h-[6px] rounded-full border-[1.5px] border-[#667085]" />
+          </div>
+          <p className="font-sans font-normal leading-[18px] text-[#344054] text-[12px] flex-1 min-w-0 truncate">{laadhaven}</p>
+          <p className="font-sans font-normal leading-[18px] text-rdj-text-tertiary text-[12px] shrink-0">{formatShortDate(laaddatum)}</p>
+        </div>
+        <div className="flex items-center gap-[6px]">
+          <div className="shrink-0 w-[14px] flex items-center justify-center">
+            <div className="w-[6px] h-[6px] rounded-full bg-[#667085]" />
+          </div>
+          <p className="font-sans font-normal leading-[18px] text-[#344054] text-[12px] flex-1 min-w-0 truncate">{loshaven}</p>
+          <p className="font-sans font-normal leading-[18px] text-rdj-text-tertiary text-[12px] shrink-0">{formatShortDate(losdatum)}</p>
+        </div>
+      </div>
+
+      {/* Bijzonderheden */}
+      {bijzonderheden.length > 0 && (
+        <div className="flex flex-wrap gap-[4px] mt-[8px] pt-[8px] border-t border-rdj-border-secondary">
+          {bijzonderheden.map((b, i) => (
+            <span key={i} className="inline-flex items-center bg-[#f2f4f7] rounded-[4px] px-[6px] py-[2px] font-sans font-bold text-[11px] text-rdj-text-primary">
+              {b}
+            </span>
+          ))}
+        </div>
+      )}
+    </div>
   );
 }

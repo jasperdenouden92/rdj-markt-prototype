@@ -5,6 +5,9 @@ import Button from "../components/Button";
 import ActivityFeed from "../components/ActivityFeed";
 import { mockRelaties, mockContactPersonen, mockRelatieLadingen } from "../data/mock-relatie-data";
 import { mockContracten, mockLadingSoorten, mockLadingSubsoorten, mockBijzonderheden } from "../data/mock-contract-data";
+import { partijen, subpartijen, exen } from "../data/entities/partijen";
+import { havens } from "../data/entities/havens";
+import { ladingenEigen } from "../data/entities/ladingen-eigen";
 
 function formatDate(dateStr?: string): string {
   if (!dateStr) return "—";
@@ -22,14 +25,48 @@ export default function LadingModuleDetail() {
   const { id } = useParams();
   const [sidebarTab, setSidebarTab] = useState<"details" | "logistiek" | "tijden">("details");
 
-  const lading = useMemo(() => mockRelatieLadingen.find((l) => l.id === id), [id]);
+  // Try mockRelatieLadingen first, fall back to partij entity
+  const rlLading = useMemo(() => mockRelatieLadingen.find((l) => l.id === id), [id]);
+  const partij = useMemo(() => !rlLading ? partijen.find((p) => p.id === id) : undefined, [id, rlLading]);
+
+  // Build a unified "lading" view from whichever source matched
+  const lading = useMemo(() => {
+    if (rlLading) return rlLading;
+    if (!partij) return undefined;
+    // Build lading-like object from partij data
+    const le = ladingenEigen.find((l) => l.partijId === partij.id);
+    const subs = subpartijen.filter((s) => s.partijId === partij.id);
+    const laadhaven = havens.find((h) => h.id === partij.laadhavenId);
+    const loshaven = subs[0] ? havens.find((h) => h.id === subs[0].loshavenId) : undefined;
+    const ex = partij.exId ? exen.find((e) => e.id === partij.exId) : undefined;
+    return {
+      id: partij.id,
+      relatieId: le?.relatieId || "",
+      titel: partij.naam,
+      ladingSoortId: partij.ladingSoortId,
+      subsoortId: partij.subsoortId,
+      laadhaven: laadhaven?.naam || "—",
+      loshaven: loshaven?.naam || "—",
+      tonnage: le ? `${le.tonnage.toLocaleString("nl-NL")} ton` : "—",
+      product: "",
+      laaddatum: subs[0]?.laaddatum || undefined,
+      losdatum: subs[0]?.losdatum || undefined,
+      status: le?.status || "intake",
+      matches: 0,
+      onderhandelingen: 0,
+      exNaam: ex ? `m/v ${ex.naam}` : undefined,
+      exType: ex?.type,
+      bijzonderheidIds: subs.flatMap((s) => s.bijzonderheidIds),
+      _subpartijen: subs,
+    } as typeof rlLading & { _subpartijen?: typeof subs };
+  }, [rlLading, partij]);
+
   const relatie = useMemo(() => lading ? mockRelaties.find((r) => r.id === lading.relatieId) : undefined, [lading]);
   const contract = useMemo(() => lading?.contractId ? mockContracten.find((c) => c.id === lading.contractId) : undefined, [lading]);
   const ladingSoort = useMemo(() => lading?.ladingSoortId ? mockLadingSoorten.find((ls) => ls.id === lading.ladingSoortId) : undefined, [lading]);
   const subsoort = useMemo(() => lading?.subsoortId ? mockLadingSubsoorten.find((s) => s.id === lading.subsoortId) : undefined, [lading]);
   const contactPersoon = useMemo(() => {
     if (!lading?.contactPersoonId) {
-      // Fall back to first contact person of the relatie
       return relatie ? mockContactPersonen.find((cp) => cp.relatieId === relatie.id) : undefined;
     }
     return mockContactPersonen.find((cp) => cp.id === lading.contactPersoonId);
@@ -51,7 +88,7 @@ export default function LadingModuleDetail() {
         <div className="flex-1 flex items-center justify-center">
           <div className="text-center">
             <p className="font-sans font-bold text-[20px] text-rdj-text-primary">Lading niet gevonden</p>
-            <Link to="/lading" className="font-sans text-[14px] text-rdj-text-brand hover:underline mt-2 block">
+            <Link to="/lading/partijen" className="font-sans text-[14px] text-rdj-text-brand hover:underline mt-2 block">
               Terug naar overzicht
             </Link>
           </div>
@@ -74,7 +111,7 @@ export default function LadingModuleDetail() {
         {/* Breadcrumb */}
         <div className="flex flex-col gap-[20px] items-start pt-[24px] w-full">
           <div className="flex items-center gap-[8px] pl-[24px]">
-            <Link to="/lading" className="flex items-center justify-center p-[4px] rounded-[6px] hover:bg-rdj-bg-primary-hover">
+            <Link to="/lading/partijen" className="flex items-center justify-center p-[4px] rounded-[6px] hover:bg-rdj-bg-primary-hover">
               <p className="font-sans font-bold leading-[20px] text-[#475467] text-[14px] whitespace-nowrap">Lading</p>
             </Link>
             <div className="overflow-clip shrink-0 size-[16px]"><div className="absolute bottom-1/4 left-[37.5%] right-[37.5%] top-1/4 relative"><div className="absolute inset-[-8.33%_-16.67%]">{chevronSvg}</div></div></div>
@@ -173,14 +210,31 @@ export default function LadingModuleDetail() {
 
                 {/* Table header */}
                 <div className="border-b border-rdj-border-secondary">
-                  <div className="grid grid-cols-[1fr_80px_100px_80px_100px_100px_120px_100px] gap-[8px] px-[12px] py-[10px]">
-                    {["Subpartij", "Gepland", "Laadgewicht", "Regie", "Start laden", "Einde laden", "Loshaven", "Bijz. locatie"].map((h) => (
+                  <div className="grid grid-cols-[1fr_100px_100px_120px] gap-[8px] px-[12px] py-[10px]">
+                    {["Subpartij", "Laaddatum", "Losdatum", "Loshaven"].map((h) => (
                       <p key={h} className="font-sans font-bold text-[12px] text-rdj-text-secondary uppercase tracking-[0.04em]">{h}</p>
                     ))}
                   </div>
                 </div>
 
-                {/* Empty state + add button */}
+                {/* Subpartij rows from partij data */}
+                {(lading as any)?._subpartijen?.map((sub: any) => {
+                  const loshavenNaam = havens.find((h) => h.id === sub.loshavenId)?.naam || "—";
+                  return (
+                    <Link
+                      key={sub.id}
+                      to={`/lading/subpartij/${sub.id}`}
+                      className="grid grid-cols-[1fr_100px_100px_120px] gap-[8px] px-[12px] py-[10px] border-b border-rdj-border-secondary hover:bg-rdj-bg-primary-hover transition-colors"
+                    >
+                      <p className="font-sans font-bold text-[14px] text-rdj-text-brand hover:underline truncate">{sub.naam}</p>
+                      <p className="font-sans font-normal text-[14px] text-rdj-text-primary">{sub.laaddatum ? formatDate(sub.laaddatum) : "—"}</p>
+                      <p className="font-sans font-normal text-[14px] text-rdj-text-primary">{sub.losdatum ? formatDate(sub.losdatum) : "—"}</p>
+                      <p className="font-sans font-normal text-[14px] text-rdj-text-primary">{loshavenNaam}</p>
+                    </Link>
+                  );
+                })}
+
+                {/* Add button */}
                 <div className="py-[16px] px-[12px]">
                   <button className="flex items-center gap-[6px] text-rdj-text-brand font-sans font-bold text-[14px] hover:underline">
                     <svg className="size-[14px]" fill="none" viewBox="0 0 16 16">

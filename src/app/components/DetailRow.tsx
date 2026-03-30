@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect, type ReactNode } from "react";
 import StarRating from "./StarRating";
 import { Tooltip, TooltipTrigger, TooltipContent } from "./ui/tooltip";
+import { HoverCard, HoverCardTrigger, HoverCardContent } from "./ui/hover-card";
 
 /**
  * DetailRow — a label + value row for detail sidebars.
@@ -65,6 +66,9 @@ export interface DetailRowProps {
 
   /** Optional tooltip shown on hover of the subtext */
   subtextTooltip?: string;
+
+  /** Optional hover card content shown on hover of linked rows */
+  hoverContent?: ReactNode;
 }
 
 export default function DetailRow({
@@ -85,6 +89,7 @@ export default function DetailRow({
   editValue: editValueProp,
   subtextColor,
   subtextTooltip,
+  hoverContent,
 }: DetailRowProps) {
   const [editing, setEditing] = useState(false);
   const [editValue, setEditValue] = useState("");
@@ -126,7 +131,20 @@ export default function DetailRow({
     <>
       {type === "default" && <DefaultValue value={value} subtext={subtext} subtextColor={subtextColor} subtextTooltip={subtextTooltip} editable={editable} />}
       {type === "linked" && (
-        <LinkedValue value={value} subtext={subtext} subtextColor={subtextColor} subtextTooltip={subtextTooltip} onClick={onClick} />
+        hoverContent ? (
+          <HoverCard openDelay={300} closeDelay={100}>
+            <HoverCardTrigger asChild>
+              <div>
+                <LinkedValue value={value} subtext={subtext} subtextColor={subtextColor} subtextTooltip={subtextTooltip} onClick={onClick} />
+              </div>
+            </HoverCardTrigger>
+            <HoverCardContent side="left" align="start" sideOffset={8} className="w-[280px] p-0 border-rdj-border-secondary">
+              {hoverContent}
+            </HoverCardContent>
+          </HoverCard>
+        ) : (
+          <LinkedValue value={value} subtext={subtext} subtextColor={subtextColor} subtextTooltip={subtextTooltip} onClick={onClick} />
+        )
       )}
       {type === "badges" && <BadgesValue badges={badges} editable={editable} />}
       {type === "user" && (
