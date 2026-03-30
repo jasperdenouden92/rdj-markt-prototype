@@ -1,6 +1,6 @@
 import { useState, useMemo, useCallback } from "react";
 import { useParams, useLocation, Link, useNavigate } from "react-router";
-import { Send, MailOpen, Check, X } from "lucide-react";
+import { Send, MailOpen, Check, X, MessageSquare } from "lucide-react";
 import Sidebar from "../components/Sidebar";
 import PageHeader from "../components/PageHeader";
 import type { PageTab } from "../components/PageHeader";
@@ -15,6 +15,7 @@ import Table from "../components/Table";
 import type { Column, RowData } from "../components/Table";
 import Pagination from "../components/Pagination";
 import OnderhandelingSidepanel from "../components/OnderhandelingSidepanel";
+import ConversationDialog from "../components/ConversationDialog";
 import { mockRelaties, mockContactPersonen, mockRelatieLadingen, mockRelatieVaartuigen, mockMailConversaties, mockGespreksverslagen, mockRelatieOnderhandelingen, mockGebruikers, VAARTUIG_STATUS_MAP } from "../data/mock-relatie-data";
 import type { Gespreksverslag } from "../data/mock-relatie-data";
 import { mockContracten, CONTRACT_STATUS_LABELS, CONTRACT_STATUS_VARIANT_MAP } from "../data/mock-contract-data";
@@ -92,7 +93,7 @@ export default function RelatieDetail() {
   const backModule = isBevrachterContext ? "Markt" : "CRM";
   const backSection = isBevrachterContext ? "Bevrachters" : "Relaties";
   type TabKey = "overzicht" | "onderhandelingen" | "ladingen" | "vaartuigen" | "deals" | "mail" | "gesprekken" | "activiteit";
-  const defaultTab: TabKey = isBevrachterContext ? "onderhandelingen" : "overzicht";
+  const defaultTab: TabKey = "overzicht";
   const initialTab = (location.hash.replace("#", "") || defaultTab) as TabKey;
   const [activeTab, setActiveTabRaw] = useState<TabKey>(initialTab);
   const [selectedNegotiation, setSelectedNegotiation] = useState<{ id: string; status: string; relatieName?: string; subtitle?: string } | null>(null);
@@ -102,6 +103,7 @@ export default function RelatieDetail() {
   const [negPage, setNegPage] = useState(1);
   const [negRowsPerPage, setNegRowsPerPage] = useState(50);
   const [showEditDialog, setShowEditDialog] = useState(false);
+  const [conversationDialog, setConversationDialog] = useState<{ relatieId: string; relatieName: string; itemId?: string; itemType?: "lading" | "vaartuig" } | null>(null);
   const [relaties, setRelaties] = useState<Relatie[]>(mockRelaties);
 
   const relatie = useMemo(() => relaties.find((r) => r.id === id), [relaties, id]);
@@ -217,11 +219,11 @@ export default function RelatieDetail() {
     .join(", ");
 
   const tabs: PageTab[] = [
-    ...(isBevrachterContext ? [{ label: "Onderhandelingen", path: "#onderhandelingen", isActive: activeTab === "onderhandelingen", badge: String(relatieOnderhandelingen.length) }] : []),
     { label: "Overzicht", path: "#overzicht", isActive: activeTab === "overzicht" },
+    { label: "Onderhandelingen", path: "#onderhandelingen", isActive: activeTab === "onderhandelingen", badge: String(relatieOnderhandelingen.length) },
     { label: "Ladingen", path: "#ladingen", isActive: activeTab === "ladingen", badge: String(relatieLadingen.length) },
     { label: "Vaartuigen", path: "#vaartuigen", isActive: activeTab === "vaartuigen", badge: String(relatieVaartuigen.length) },
-    ...(!isBevrachterContext ? [{ label: "Deals", path: "#deals", isActive: activeTab === "deals", badge: String(relatieAllDeals.length) }] : []),
+    { label: "Deals", path: "#deals", isActive: activeTab === "deals", badge: String(relatieAllDeals.length) },
     { label: "Mail", path: "#mail", isActive: activeTab === "mail", badge: String(relatieMail.length) },
     { label: "Gesprekken", path: "#gesprekken", isActive: activeTab === "gesprekken", badge: String(verslagen.length) },
     { label: "Activiteit", path: "#activiteit", isActive: activeTab === "activiteit" },
@@ -317,6 +319,8 @@ export default function RelatieDetail() {
                             filterOptions={["Alles", "Actief", "Goedgekeurd", "Afgewezen"]}
                             filterValue={negFilter}
                             onFilterChange={setNegFilter}
+                            onAdd={() => setConversationDialog({ relatieId: id!, relatieName: relatie.naam })}
+                            addTooltip="Onderhandeling starten"
                           />
                           <Pagination
                             currentPage={negPage}
@@ -357,7 +361,7 @@ export default function RelatieDetail() {
 
                     {activeTab === "ladingen" && (() => {
                       const ladingenColumns: Column[] = [
-                        { key: "titel", header: "Lading", type: "leading-text", subtextKey: "product" },
+                        { key: "titel", header: "Lading", type: "leading-text", subtextKey: "product", actionLabel: "Openen", extraActionsKey: "extraActions" },
                         { key: "route", header: "Route", type: "text", width: "w-[200px]" },
                         { key: "tonnage", header: "Tonnage", type: "text", width: "w-[120px]" },
                         { key: "laaddatum", header: "Laaddatum", type: "text", width: "w-[140px]" },
@@ -376,11 +380,22 @@ export default function RelatieDetail() {
                           matches: l.matches > 0 ? `${l.matches} match${l.matches !== 1 ? "es" : ""}` : "—",
                           statusLabel: s.label,
                           statusVariant: s.variant,
+                          extraActions: (
+                            <Button
+                              variant="secondary"
+                              size="sm"
+                              leadingIcon={<MessageSquare size={14} strokeWidth={2.5} />}
+                              onClick={(e: React.MouseEvent) => {
+                                e.stopPropagation();
+                                setConversationDialog({ relatieId: id!, relatieName: relatie.naam, itemId: l.id, itemType: "lading" });
+                              }}
+                            />
+                          ),
                         };
                       });
                       return (
                         <div className="w-full pb-[32px]">
-                          <SectionHeader title="Ladingen" />
+                          <SectionHeader title="Ladingen" onAdd={() => {}} addTooltip="Lading toevoegen" />
                           {relatieLadingen.length === 0 ? (
                             <div className="py-[48px] text-center">
                               <p className="font-sans font-normal text-[14px] text-rdj-text-tertiary">
@@ -400,7 +415,7 @@ export default function RelatieDetail() {
 
                     {activeTab === "vaartuigen" && (() => {
                       const vaartuigenColumns: Column[] = [
-                        { key: "naam", header: "Vaartuig", type: "leading-text" },
+                        { key: "naam", header: "Vaartuig", type: "leading-text", actionLabel: "Openen", extraActionsKey: "extraActions" },
                         { key: "type", header: "Type", type: "text", width: "w-[160px]" },
                         { key: "capaciteit", header: "Capaciteit", type: "text", width: "w-[120px]" },
                         { key: "locatie", header: "Locatie", type: "text", width: "w-[160px]" },
@@ -418,11 +433,22 @@ export default function RelatieDetail() {
                           matches: v.matches > 0 ? `${v.matches} match${v.matches !== 1 ? "es" : ""}` : "—",
                           statusLabel: s.label,
                           statusVariant: s.variant,
+                          extraActions: (
+                            <Button
+                              variant="secondary"
+                              size="sm"
+                              leadingIcon={<MessageSquare size={14} strokeWidth={2.5} />}
+                              onClick={(e: React.MouseEvent) => {
+                                e.stopPropagation();
+                                setConversationDialog({ relatieId: id!, relatieName: relatie.naam, itemId: v.id, itemType: "vaartuig" });
+                              }}
+                            />
+                          ),
                         };
                       });
                       return (
                         <div className="w-full pb-[32px]">
-                          <SectionHeader title="Vaartuigen" />
+                          <SectionHeader title="Vaartuigen" onAdd={() => {}} addTooltip="Vaartuig toevoegen" />
                           {relatieVaartuigen.length === 0 ? (
                             <div className="py-[48px] text-center">
                               <p className="font-sans font-normal text-[14px] text-rdj-text-tertiary">
@@ -478,6 +504,8 @@ export default function RelatieDetail() {
                               const key = v === "Alles" ? "alle" : v.toLowerCase();
                               setDealFilter(key as "alle" | "spot" | "contract");
                             }}
+                            onAdd={() => {}}
+                            addTooltip="Deal toevoegen"
                           />
                           {filteredDeals.length === 0 ? (
                             <div className="py-[48px] text-center">
@@ -536,6 +564,16 @@ export default function RelatieDetail() {
           relatieName={selectedNegotiation.relatieName}
           subtitle={selectedNegotiation.subtitle}
           onClose={() => setSelectedNegotiation(null)}
+        />
+      )}
+
+      {conversationDialog && (
+        <ConversationDialog
+          relatieId={conversationDialog.relatieId}
+          relatieName={conversationDialog.relatieName}
+          preSelectedItemId={conversationDialog.itemId}
+          preSelectedItemType={conversationDialog.itemType}
+          onClose={() => setConversationDialog(null)}
         />
       )}
     </div>

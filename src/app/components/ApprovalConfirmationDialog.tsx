@@ -17,9 +17,10 @@ interface ApprovalConfirmationDialogProps {
   onClose: () => void;
   onConfirm: (options: ApprovalOptions) => void;
   relatieName?: string;
+  hideRemoveFromMarket?: boolean;
 }
 
-export default function ApprovalConfirmationDialog({ open, onClose, onConfirm, relatieName }: ApprovalConfirmationDialogProps) {
+export default function ApprovalConfirmationDialog({ open, onClose, onConfirm, relatieName, hideRemoveFromMarket }: ApprovalConfirmationDialogProps) {
   const [generateCharter, setGenerateCharter] = useState(true);
   const [sendToLoadPlanning, setSendToLoadPlanning] = useState(true);
   const [removeFromMarket, setRemoveFromMarket] = useState(true);
@@ -80,11 +81,13 @@ export default function ApprovalConfirmationDialog({ open, onClose, onConfirm, r
               onChange={setSendToLoadPlanning}
               label="Lading doorsturen naar laadplanning"
             />
-            <Checkbox
-              checked={removeFromMarket}
-              onChange={setRemoveFromMarket}
-              label="Partij uit de markt halen"
-            />
+            {!hideRemoveFromMarket && (
+              <Checkbox
+                checked={removeFromMarket}
+                onChange={setRemoveFromMarket}
+                label="Partij uit de markt halen"
+              />
+            )}
             <div className="flex flex-col gap-[8px]">
               <Checkbox
                 checked={rejectOtherBids}

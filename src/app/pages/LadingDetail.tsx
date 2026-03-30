@@ -58,7 +58,7 @@ export default function LadingDetail() {
   const navigate = useNavigate();
   const [activeTab, setActiveTabRaw] = useState<'matches' | 'onderhandelingen' | 'activiteit'>('onderhandelingen');
   const [hoveredRow, setHoveredRow] = useState<string | null>(null);
-  const [selectedNegotiation, setSelectedNegotiation] = useState<{ id: string; status: string; bron: string; relatieName?: string } | null>(null);
+  const [selectedNegotiation, setSelectedNegotiation] = useState<{ id: string; status: string; bron: string; relatieName?: string; bemiddeling?: { inkoopRelatie: string; verkoopRelatie: string } } | null>(null);
   const setActiveTab = (tab: typeof activeTab) => { setActiveTabRaw(tab); setSelectedNegotiation(null); };
   const [conversationDialog, setConversationDialog] = useState<{ relatieId: string; relatieName: string; matchName?: string } | null>(null);
   const [sidebarKey, setSidebarKey] = useState(0);
@@ -179,7 +179,7 @@ export default function LadingDetail() {
 
   /* ── Negotiations table ── */
   const negColumns: Column[] = [
-    { key: 'company', header: 'Relatie', type: 'leading-text', actionLabel: 'Openen' },
+    { key: 'company', header: 'Relatie', type: 'leading-text', subtextKey: 'companySubtext', badgeKey: 'bemiddelingBadge', badgeStyleKey: 'bemiddelingBadgeStyle', actionLabel: 'Openen' },
     { key: 'freightPrice', header: 'Vrachtprijs', type: 'text', subtextKey: 'freightPriceDiff', subtextColorKey: 'freightPriceDiffColor', subtextTooltipKey: 'freightPriceDiffTooltip', align: 'right', width: 'w-[160px]' },
     { key: 'tonnage', header: 'Tonnage', type: 'text', align: 'right', width: 'w-[120px]' },
     { key: 'deadline', header: 'Deadline', type: 'deadline', expiredKey: 'deadlineExpired', editable: true, width: 'w-[160px]' },
@@ -204,6 +204,9 @@ export default function LadingDetail() {
     contactName: neg.contact.name,
     contactDate: neg.contact.date,
     contactAvatar: avatars[idx % avatars.length],
+    companySubtext: neg.bemiddeling ? `Bemiddeling met ${neg.bemiddeling.inkoopRelatie} en ${neg.bemiddeling.verkoopRelatie}` : undefined,
+    bemiddelingBadge: neg.bemiddeling ? 'Bemiddeling' : undefined,
+    bemiddelingBadgeStyle: neg.bemiddeling ? { backgroundColor: '#EFF8FF', color: '#175CD3', borderColor: '#B2DDFF' } : undefined,
   }));
 
   const filteredMatchData = matchFilter === "Alles"
@@ -335,7 +338,10 @@ export default function LadingDetail() {
                           hoveredRowId={hoveredRow}
                           onRowHover={setHoveredRow}
                           activeRowId={selectedNegotiation?.id ?? null}
-                          onRowClick={(row) => setSelectedNegotiation({ id: row.id, status: row.status as string, bron: "eigen", relatieName: row.company as string })}
+                          onRowClick={(row) => {
+                            const neg = mockNegotiations.find(n => n.id === row.id);
+                            setSelectedNegotiation({ id: row.id, status: row.status as string, bron: "eigen", relatieName: row.company as string, bemiddeling: neg?.bemiddeling });
+                          }}
                         />
                       </>
                     )}
@@ -373,6 +379,7 @@ export default function LadingDetail() {
           bron={selectedNegotiation.bron as any}
           soort="lading"
           relatieName={selectedNegotiation.relatieName}
+          bemiddeling={selectedNegotiation.bemiddeling}
           onClose={() => setSelectedNegotiation(null)}
         />
       )}

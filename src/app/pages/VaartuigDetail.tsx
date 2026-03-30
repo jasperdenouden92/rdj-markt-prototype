@@ -35,9 +35,9 @@ const vesselMatches = [
 
 /* ── Mock onderhandelingen ── */
 const vesselNegotiations = [
-  { id: 'VN001', company: 'Provaart Logistics BV', cargo: '2.000 ton Houtpellets (DSIT)', price: '€3,50 per ton', priceDiff: '+4,2%', laadHaven: 'Salzgitter Stichkanal', laadDatum: 'Ma 12 Jan 10:00', losHaven: 'Hamburg Veddelkanal', losDatum: 'Vr 16 Jan 14:00', deadline: 'Za 14 Feb, 16:00', deadlineExpired: true, status: 'Bod ontvangen', contact: { name: 'Eric Nieuwkoop', date: 'Ma 9 Feb 07:28' } },
+  { id: 'VN001', company: 'Provaart Logistics BV', cargo: '2.000 ton Houtpellets (DSIT)', price: '€3,50 per ton', priceDiff: '+4,2%', laadHaven: 'Salzgitter Stichkanal', laadDatum: 'Ma 12 Jan 10:00', losHaven: 'Hamburg Veddelkanal', losDatum: 'Vr 16 Jan 14:00', deadline: 'Za 14 Feb, 16:00', deadlineExpired: true, status: 'Bod ontvangen', contact: { name: 'Eric Nieuwkoop', date: 'Ma 9 Feb 07:28' }, bemiddeling: { inkoopRelatie: 'Provaart Logistics BV', verkoopRelatie: 'Rederij van Dam' } as const },
   { id: 'VN002', company: 'Janlow B.V.', cargo: '3.000 ton Houtpellets', price: '€3,00 per ton', priceDiff: '-2,1%', laadHaven: 'Rotterdam Europoort', laadDatum: 'Do 15 Jan 08:00', losHaven: 'Mannheim', losDatum: 'Af te stemmen', deadline: 'Morgen, 10:00', deadlineExpired: false, status: 'Via werklijst', contact: { name: 'Pelger de Jong', date: 'Di 10 Feb 19:53' } },
-  { id: 'VN003', company: 'Cargill N.V.', cargo: '2.000 ton Koolraapzaad', price: '', priceDiff: '', laadHaven: 'Bremerhaven', laadDatum: 'Ma 19 Jan', losHaven: 'Duisburg', losDatum: 'Wo 21 Jan', deadline: 'Do 19 Feb, 11:15', deadlineExpired: false, status: 'Via werklijst', contact: { name: 'Khoa Nguyen', date: 'Zo 8 Feb 01:31' } },
+  { id: 'VN003', company: 'Cargill N.V.', cargo: '2.000 ton Koolraapzaad', price: '', priceDiff: '', laadHaven: 'Bremerhaven', laadDatum: 'Ma 19 Jan', losHaven: 'Duisburg', losDatum: 'Wo 21 Jan', deadline: 'Do 19 Feb, 11:15', deadlineExpired: false, status: 'Via werklijst', contact: { name: 'Khoa Nguyen', date: 'Zo 8 Feb 01:31' }, bemiddeling: { inkoopRelatie: 'Cargill N.V.', verkoopRelatie: 'Rederij Alfa' } as const },
 ];
 
 const statusVariantMap: Record<string, string> = {
@@ -72,7 +72,7 @@ export default function VaartuigDetail() {
   const navigate = useNavigate();
   const [activeTab, setActiveTabRaw] = useState<'matches' | 'onderhandelingen' | 'activiteit'>('onderhandelingen');
   const [hoveredRow, setHoveredRow] = useState<string | null>(null);
-  const [selectedNegotiation, setSelectedNegotiation] = useState<{ id: string; status: string; bron: string; relatieName?: string } | null>(null);
+  const [selectedNegotiation, setSelectedNegotiation] = useState<{ id: string; status: string; bron: string; relatieName?: string; bemiddeling?: { inkoopRelatie: string; verkoopRelatie: string } } | null>(null);
   const setActiveTab = (tab: typeof activeTab) => { setActiveTabRaw(tab); setSelectedNegotiation(null); };
   const [conversationDialog, setConversationDialog] = useState<{ relatieId: string; relatieName: string; matchName?: string } | null>(null);
   const [matchFilter, setMatchFilter] = useState("Alles");
@@ -197,7 +197,7 @@ export default function VaartuigDetail() {
 
   /* ── Onderhandelingen table columns ── */
   const negColumns: Column[] = [
-    { key: 'company', header: 'Relatie', type: 'leading-text', subtextKey: 'cargo', actionLabel: 'Openen' },
+    { key: 'company', header: 'Relatie', type: 'leading-text', subtextKey: 'cargo', badgeKey: 'bemiddelingBadge', badgeStyleKey: 'bemiddelingBadgeStyle', actionLabel: 'Openen' },
     { key: 'freightPrice', header: 'Vrachtprijs', type: 'text', width: 'w-[140px]', subtextKey: 'priceDiff', subtextColorKey: 'priceDiffColor', subtextTooltipKey: 'priceDiffTooltip', align: 'right' },
     { key: 'laadHaven', header: 'Laden', type: 'text', subtextKey: 'laadDatum', width: 'w-[180px]' },
     { key: 'losHaven', header: 'Lossen', type: 'text', subtextKey: 'losDatum', width: 'w-[180px]' },
@@ -209,7 +209,9 @@ export default function VaartuigDetail() {
   const negTableData: RowData[] = vesselNegotiations.map((b, idx) => ({
     id: b.id,
     company: b.company,
-    cargo: b.cargo,
+    cargo: 'bemiddeling' in b && b.bemiddeling ? `Bemiddeling met ${b.bemiddeling.verkoopRelatie}` : b.cargo,
+    bemiddelingBadge: 'bemiddeling' in b && b.bemiddeling ? 'Bemiddeling' : undefined,
+    bemiddelingBadgeStyle: 'bemiddeling' in b && b.bemiddeling ? 'brand-color' : undefined,
     freightPrice: b.price || '—',
     priceDiff: b.priceDiff,
     priceDiffColor: b.priceDiff?.startsWith('+') ? '#F79009' : undefined,
@@ -351,7 +353,16 @@ export default function VaartuigDetail() {
                           hoveredRowId={hoveredRow}
                           onRowHover={setHoveredRow}
                           activeRowId={selectedNegotiation?.id ?? null}
-                          onRowClick={(row) => setSelectedNegotiation({ id: row.id, status: row.status as string, bron: "eigen", relatieName: row.company as string })}
+                          onRowClick={(row) => {
+                            const neg = vesselNegotiations.find(n => n.id === row.id);
+                            setSelectedNegotiation({
+                              id: row.id,
+                              status: row.status as string,
+                              bron: "eigen",
+                              relatieName: row.company as string,
+                              bemiddeling: neg && 'bemiddeling' in neg ? neg.bemiddeling as { inkoopRelatie: string; verkoopRelatie: string } : undefined,
+                            });
+                          }}
                         />
                       </>
                     )}
@@ -392,6 +403,7 @@ export default function VaartuigDetail() {
           bron={selectedNegotiation.bron as any}
           soort="vaartuig"
           relatieName={selectedNegotiation.relatieName}
+          bemiddeling={selectedNegotiation.bemiddeling}
           onClose={() => setSelectedNegotiation(null)}
         />
       )}

@@ -95,6 +95,10 @@ export interface Negotiation {
   price?: string;
   freightPrice?: string;
   freightPriceDiff?: string;
+  bemiddeling?: {
+    inkoopRelatie: string;
+    verkoopRelatie: string;
+  };
 }
 
 export const mockCargos: Cargo[] = [
@@ -392,6 +396,10 @@ export const mockNegotiations: Negotiation[] = [
     },
     freightPrice: '€3,50 per ton',
     freightPriceDiff: '+12,5%',
+    bemiddeling: {
+      inkoopRelatie: 'Rederij van Dam',
+      verkoopRelatie: 'Provaart Logistics BV',
+    },
   },
   {
     id: 'N002',
@@ -419,6 +427,10 @@ export const mockNegotiations: Negotiation[] = [
     },
     freightPrice: '€2,80 per ton',
     freightPriceDiff: '-9,7%',
+    bemiddeling: {
+      inkoopRelatie: 'Rederij Alfa',
+      verkoopRelatie: 'Cargill N.V.',
+    },
   },
   {
     id: 'N004',
