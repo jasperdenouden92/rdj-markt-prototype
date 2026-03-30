@@ -47,7 +47,7 @@ export default function LadingModuleDetail() {
       subsoortId: partij.subsoortId,
       laadhaven: laadhaven?.naam || "—",
       loshaven: loshaven?.naam || "—",
-      tonnage: le ? `${le.tonnage.toLocaleString("nl-NL")} ton` : "—",
+      tonnage: `${partij.tonnage.toLocaleString("nl-NL")} ton`,
       product: "",
       laaddatum: subs[0]?.laaddatum || undefined,
       losdatum: subs[0]?.losdatum || undefined,

@@ -307,6 +307,10 @@ export interface BevrachtingCargo {
   bids?: number;
   priceInfo?: string;
   conditions?: any;
+  splitIndex?: number;
+  splitOriginId?: string;
+  splitColorIndex?: number;
+  splitTotalWeight?: string;
 }
 
 export interface BevrachtingVessel {
@@ -343,6 +347,22 @@ export function useBevrachtingData() {
         getLookups(),
       ]);
 
+      // Group by subpartijId to detect lots sharing the same subpartij
+      const subpartijCounts = new Map<string, number>();
+      const subpartijColorIndex = new Map<string, number>();
+      let colorIdx = 0;
+      for (const item of eigenLadingen) {
+        subpartijCounts.set(item.subpartijId, (subpartijCounts.get(item.subpartijId) || 0) + 1);
+      }
+      // Assign color indices to subpartijen that have multiple lots
+      for (const [subId, count] of subpartijCounts) {
+        if (count > 1) {
+          subpartijColorIndex.set(subId, colorIdx++);
+        }
+      }
+      // Track per-subpartij split index
+      const subpartijSplitIdx = new Map<string, number>();
+
       // Transform eigen ladingen to bevrachting format
       const cargoRows: BevrachtingCargo[] = eigenLadingen.map(item => {
         const partij = maps.partijen.get(item.partijId);
@@ -361,6 +381,12 @@ export function useBevrachtingData() {
         const status: "intake" | "werklijst" | "markt" | "gesloten" =
           (item as any).status || "intake";
 
+        // Lot numbering for subpartijen with multiple lots
+        const lotCount = subpartijCounts.get(item.subpartijId) || 1;
+        const currentSplitIdx = (subpartijSplitIdx.get(item.subpartijId) || 0) + 1;
+        subpartijSplitIdx.set(item.subpartijId, currentSplitIdx);
+        const hasMultipleLots = lotCount > 1;
+
         return {
           id: item.id,
           title: ex ? (ex.type === "opslag" ? ex.naam : `m/v ${ex.naam}`) : subpartij?.naam || item.id,
@@ -376,6 +402,10 @@ export function useBevrachtingData() {
           toDate: subpartij?.losdatum ? formatDate(subpartij.losdatum) : "",
           matches: 0,
           bids: 0,
+          ...(hasMultipleLots ? {
+            splitIndex: currentSplitIdx,
+            splitColorIndex: subpartijColorIndex.get(item.subpartijId) ?? 0,
+          } : {}),
         };
       });
 
