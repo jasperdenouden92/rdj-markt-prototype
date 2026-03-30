@@ -113,6 +113,8 @@ export interface TextColumn extends BaseColumn {
   type: "text";
   subtextKey?: string;
   align?: "left" | "right";
+  /** Row key for a badge label shown next to the primary text */
+  badgeKey?: string;
   /** Optional leading icon: row key for a ReactNode */
   iconKey?: string;
   /** Optional leading featured icon: row key for icon ReactNode */
@@ -351,6 +353,7 @@ function CellText({ row, col }: { row: RowData; col: TextColumn }) {
   const avatarSrc = col.avatarSrcKey ? row[col.avatarSrcKey] : undefined;
   const avatarInitials =
     col.avatarInitialsKey ? row[col.avatarInitialsKey] : undefined;
+  const badgeLabel = col.badgeKey ? row[col.badgeKey] : undefined;
   const textColor = col.textColor ?? "text-rdj-text-primary";
   const subtextColor = col.subtextColorKey ? (row[col.subtextColorKey] as string | undefined) : undefined;
   const subtextTooltip = col.subtextTooltipKey ? (row[col.subtextTooltipKey] as string | undefined) : undefined;
@@ -420,19 +423,26 @@ function CellText({ row, col }: { row: RowData; col: TextColumn }) {
         {hasText && (
           <div className={`min-w-0 ${alignCls}`}>
             {text != null && String(text) !== "" && (
-              onCellClick ? (
-                <button
-                  type="button"
-                  className={`${fontCls} leading-[20px] ${textColor} text-[14px] truncate text-left hover:underline cursor-pointer`}
-                  onClick={(e) => { e.stopPropagation(); onCellClick(); }}
-                >
-                  {String(text)}
-                </button>
-              ) : (
-                <p className={`${fontCls} leading-[20px] ${textColor} text-[14px] truncate`}>
-                  {String(text)}
-                </p>
-              )
+              <div className="flex items-center gap-[6px] min-w-0">
+                {onCellClick ? (
+                  <button
+                    type="button"
+                    className={`${fontCls} leading-[20px] ${textColor} text-[14px] truncate text-left hover:underline cursor-pointer`}
+                    onClick={(e) => { e.stopPropagation(); onCellClick(); }}
+                  >
+                    {String(text)}
+                  </button>
+                ) : (
+                  <p className={`${fontCls} leading-[20px] ${textColor} text-[14px] truncate`}>
+                    {String(text)}
+                  </p>
+                )}
+                {badgeLabel && (
+                  <span className="shrink-0 inline-flex items-center rounded-[4px] px-[4px] py-[0px] font-sans font-bold leading-[16px] text-[11px] whitespace-nowrap border border-rdj-border-secondary text-rdj-text-primary">
+                    {badgeLabel}
+                  </span>
+                )}
+              </div>
             )}
             {subtextEl}
           </div>
@@ -443,19 +453,26 @@ function CellText({ row, col }: { row: RowData; col: TextColumn }) {
 
   // No leading visual — plain text layout
   const textEl = text != null && String(text) !== "" ? (
-    onCellClick ? (
-      <button
-        type="button"
-        className={`${fontCls} leading-[20px] ${textColor} text-[14px] truncate text-left hover:underline cursor-pointer`}
-        onClick={(e) => { e.stopPropagation(); onCellClick(); }}
-      >
-        {String(text)}
-      </button>
-    ) : (
-      <p className={`${fontCls} leading-[20px] ${textColor} text-[14px] truncate`}>
-        {String(text)}
-      </p>
-    )
+    <div className="flex items-center gap-[6px] min-w-0">
+      {onCellClick ? (
+        <button
+          type="button"
+          className={`${fontCls} leading-[20px] ${textColor} text-[14px] truncate text-left hover:underline cursor-pointer`}
+          onClick={(e) => { e.stopPropagation(); onCellClick(); }}
+        >
+          {String(text)}
+        </button>
+      ) : (
+        <p className={`${fontCls} leading-[20px] ${textColor} text-[14px] truncate`}>
+          {String(text)}
+        </p>
+      )}
+      {badgeLabel && (
+        <span className="shrink-0 inline-flex items-center rounded-[4px] px-[4px] py-[0px] font-sans font-bold leading-[16px] text-[11px] whitespace-nowrap border border-rdj-border-secondary text-rdj-text-primary">
+          {badgeLabel}
+        </span>
+      )}
+    </div>
   ) : null;
 
   return (
