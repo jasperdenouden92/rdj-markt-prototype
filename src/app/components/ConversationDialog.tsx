@@ -209,7 +209,7 @@ export default function ConversationDialog({
           return {
             id: lm.id,
             title: soort || `${lm.tonnage.toLocaleString("nl-NL")} ton`,
-            subtitle: relNaam,
+            subtitle: `${lm.tonnage.toLocaleString("nl-NL")} ton`,
             meta: "",
             source: "markt" as const,
             kind: "lading" as const,
@@ -274,7 +274,7 @@ export default function ConversationDialog({
           id: vm.id,
           title: vm.naam,
           subtitle: `${vm.groottonnage.toLocaleString("nl-NL")} mt · ${vm.inhoud.toLocaleString("nl-NL")} m³`,
-          meta: `${havenMap.get(vm.huidigeLocatieId)?.naam || ""} · ${relatieMap.get(vm.relatieId)?.naam || ""}`,
+          meta: havenMap.get(vm.huidigeLocatieId)?.naam || "",
           source: "markt" as const,
           kind: "vaartuig" as const,
           relatieName: relatieMap.get(vm.relatieId)?.naam || undefined,
@@ -1250,8 +1250,14 @@ function ItemRow({
             </p>
           </div>
 
+          {item.relatieName && (
+            <p className="mt-[2px] font-sans font-normal text-[12px] leading-[16px] text-rdj-text-tertiary">
+              {item.relatieName}
+            </p>
+          )}
+
           {hasLocation && (
-            <div className="flex items-center gap-[6px] mt-[4px] font-sans font-normal text-[12px] leading-[16px] text-rdj-text-tertiary">
+            <div className="flex items-center gap-[6px] mt-[2px] font-sans font-normal text-[12px] leading-[16px] text-rdj-text-tertiary">
               {item.laadlocatie && (
                 <span>{item.laadlocatie}{item.laaddatum ? ` ${item.laaddatum}` : ""}</span>
               )}
@@ -1262,7 +1268,7 @@ function ItemRow({
             </div>
           )}
 
-          {!hasLocation && item.meta && (
+          {!hasLocation && !item.relatieName && item.meta && (
             <p className="mt-[2px] font-sans font-normal text-[12px] leading-[16px] text-rdj-text-tertiary">
               {item.meta}
             </p>
