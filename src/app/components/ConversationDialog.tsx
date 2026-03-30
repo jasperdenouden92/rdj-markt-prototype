@@ -11,6 +11,7 @@ import {
   mockRelatieVaartuigMatches,
 } from "../data/mock-relatie-data";
 import LastActivityButton from "./LastActivityButton";
+import DatePickerPopover, { formatDatePickerValue, type DatePickerValue } from "./DatePickerPopover";
 
 /* ── Types ── */
 
@@ -34,13 +35,15 @@ interface MatchDisplayItem extends DisplayItem {
   matchPercentage: number;
 }
 
-type ConditionKey = "prijs" | "laadtijd" | "liggeldLaden" | "lostijd" | "liggeldLossen" | "deadline" | "overig";
+type ConditionKey = "prijs" | "laadtijd" | "laadgereed" | "liggeldLaden" | "lostijd" | "losgereed" | "liggeldLossen" | "deadline" | "overig";
 
 interface ConditionValues {
   prijs?: string;
   laadtijd?: string;
+  laadgereed?: string;
   liggeldLaden?: string;
   lostijd?: string;
+  losgereed?: string;
   liggeldLossen?: string;
   deadline?: string;
   overig?: string;
@@ -51,11 +54,13 @@ const fmtLiggeld = (v: string, label: string): string => {
   return `€${v} ${label}`;
 };
 
-const CONDITION_DEFS: { key: ConditionKey; label: string; placeholder: string; format: (v: string) => string }[] = [
+const CONDITION_DEFS: { key: ConditionKey; label: string; placeholder: string; format: (v: string) => string; isDate?: boolean }[] = [
   { key: "prijs", label: "Prijs", placeholder: "bijv. 4,00", format: v => `€${v} /ton` },
   { key: "laadtijd", label: "Laadtijd", placeholder: "bijv. 12", format: v => `${v} uur laden` },
+  { key: "laadgereed", label: "Laadgereed", placeholder: "datum", format: v => `laadgereed ${v}`, isDate: true },
   { key: "liggeldLaden", label: "Liggeld laden", placeholder: "bijv. 25 of NLW", format: v => fmtLiggeld(v, "liggeld laden") },
   { key: "lostijd", label: "Lostijd", placeholder: "bijv. 8", format: v => `${v} uur lossen` },
+  { key: "losgereed", label: "Losgereed", placeholder: "datum", format: v => `losgereed ${v}`, isDate: true },
   { key: "liggeldLossen", label: "Liggeld lossen", placeholder: "bijv. 25 of NLW", format: v => fmtLiggeld(v, "liggeld lossen") },
   { key: "deadline", label: "Deadline", placeholder: "bijv. 21-03", format: v => `deadline ${v}` },
   { key: "overig", label: "Overig", placeholder: "vrije tekst", format: v => v },
@@ -238,6 +243,8 @@ export default function ConversationDialog({
         if (selectedLading.zoekLostijd != null) conditions.lostijd = String(selectedLading.zoekLostijd);
         const lol = fmtZoekLiggeld(selectedLading.zoekLiggeldLossen);
         if (lol && lol !== "0") conditions.liggeldLossen = lol;
+        if (selectedLading.zoekLaadgereed) conditions.laadgereed = selectedLading.zoekLaadgereed;
+        if (selectedLading.zoekLosgereed) conditions.losgereed = selectedLading.zoekLosgereed;
         if (selectedLading.zoekDeadline) conditions.deadline = selectedLading.zoekDeadline;
         if (Object.keys(conditions).length > 0) {
           setItemConditions(prev => {
@@ -613,8 +620,8 @@ export default function ConversationDialog({
     // Persist to lading_eigen zoekcriteria if this is an eigen lading
     if (eigenLadingen.some(l => l.id === itemId) && key !== "overig") {
       const zoekKey = `zoek${key.charAt(0).toUpperCase()}${key.slice(1)}`;
-      // Liggeld and deadline support string values (NLW, dates)
-      if (key === "deadline" || (value && value.toUpperCase() === "NLW")) {
+      // Liggeld, date, and deadline fields support string values (NLW, dates)
+      if (key === "laadgereed" || key === "losgereed" || key === "deadline" || (value && value.toUpperCase() === "NLW")) {
         api.patch("lading_eigen", itemId, { [zoekKey]: value || null });
       } else {
         const num = value ? parseFloat(value.replace(",", ".")) : null;
@@ -1016,6 +1023,54 @@ function ConditionPill({
   );
 }
 
+/* ── Date Condition Pill (with DatePickerPopover) ── */
+
+function DateConditionPill({
+  def,
+  value,
+  onChange,
+  variant = "primary",
+}: {
+  def: (typeof CONDITION_DEFS)[number];
+  value?: string;
+  onChange: (value: string) => void;
+  variant?: "primary" | "bid";
+}) {
+  const [pickerValue, setPickerValue] = useState<DatePickerValue | undefined>(undefined);
+
+  const handleDateChange = (val: DatePickerValue) => {
+    setPickerValue(val);
+    const formatted = formatDatePickerValue(val);
+    if (formatted) onChange(formatted);
+  };
+
+  const filledClass = variant === "bid"
+    ? "border-[#b2ddff] bg-[#eff8ff] text-[#175cd3] hover:bg-[#d1e9ff]"
+    : "border-[#abefc6] bg-[#ecfdf3] text-[#067647] hover:bg-[#d1fadf]";
+
+  if (value) {
+    return (
+      <DatePickerPopover value={pickerValue} onChange={handleDateChange}>
+        <button
+          className={`inline-flex items-center rounded-full border px-[10px] py-[3px] font-sans font-bold text-[12px] leading-[16px] transition-colors ${filledClass}`}
+        >
+          {def.format(value)}
+        </button>
+      </DatePickerPopover>
+    );
+  }
+
+  return (
+    <DatePickerPopover value={pickerValue} onChange={handleDateChange}>
+      <button
+        className="inline-flex items-center rounded-full border border-dashed border-[#d0d5dd] bg-white px-[10px] py-[3px] font-sans font-normal text-[12px] leading-[16px] text-rdj-text-tertiary hover:border-[#98a2b3] hover:text-[#344054] transition-colors"
+      >
+        {def.label}
+      </button>
+    </DatePickerPopover>
+  );
+}
+
 /* ── Item Row (left panel) ── */
 
 function ItemRow({
@@ -1403,14 +1458,23 @@ function LadingConditionsSection({
           {primaryLabel}
         </span>
         <div className="flex items-center gap-[4px] flex-wrap">
-          {CONDITION_DEFS.map(def => (
-            <ConditionPill
-              key={def.key}
-              def={def}
-              value={conditions?.[def.key]}
-              onChange={value => onConditionChange(def.key, value)}
-            />
-          ))}
+          {CONDITION_DEFS.map(def =>
+            def.isDate ? (
+              <DateConditionPill
+                key={def.key}
+                def={def}
+                value={conditions?.[def.key]}
+                onChange={value => onConditionChange(def.key, value)}
+              />
+            ) : (
+              <ConditionPill
+                key={def.key}
+                def={def}
+                value={conditions?.[def.key]}
+                onChange={value => onConditionChange(def.key, value)}
+              />
+            )
+          )}
         </div>
       </div>
 
@@ -1421,15 +1485,25 @@ function LadingConditionsSection({
             {secondaryLabel}
           </span>
           <div className="flex items-center gap-[4px] flex-wrap">
-            {CONDITION_DEFS.map(def => (
-              <BidConditionPill
-                key={def.key}
-                def={def}
-                value={bidConditions?.[def.key]}
-                theirValue={conditions?.[def.key]}
-                onChange={value => onBidConditionChange(def.key, value)}
-              />
-            ))}
+            {CONDITION_DEFS.map(def =>
+              def.isDate ? (
+                <DateConditionPill
+                  key={def.key}
+                  def={def}
+                  value={bidConditions?.[def.key]}
+                  onChange={value => onBidConditionChange(def.key, value)}
+                  variant="bid"
+                />
+              ) : (
+                <BidConditionPill
+                  key={def.key}
+                  def={def}
+                  value={bidConditions?.[def.key]}
+                  theirValue={conditions?.[def.key]}
+                  onChange={value => onBidConditionChange(def.key, value)}
+                />
+              )
+            )}
           </div>
         </div>
       )}

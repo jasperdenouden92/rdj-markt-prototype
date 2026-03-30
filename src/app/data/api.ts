@@ -162,6 +162,8 @@ export interface LadingEigen {
   zoekLiggeldLaden?: string | number | null;
   zoekLostijd?: number | null;
   zoekLiggeldLossen?: string | number | null;
+  zoekLaadgereed?: string | null;
+  zoekLosgereed?: string | null;
   zoekDeadline?: string | null;
 }
 
