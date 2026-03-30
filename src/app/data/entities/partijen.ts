@@ -17,6 +17,7 @@ export const partijen: Partij[] = [
     subsoortId: "lss-001",
     exId: "ex-001",
     laadhavenId: "hav-003",
+    tonnage: 7000,
     subpartijIds: ["sub-001", "sub-007", "sub-008"],
   },
   {
@@ -26,6 +27,7 @@ export const partijen: Partij[] = [
     subsoortId: "lss-006",
     exId: "ex-002",
     laadhavenId: "hav-001",
+    tonnage: 2000,
     subpartijIds: ["sub-002"],
   },
   {
@@ -35,6 +37,7 @@ export const partijen: Partij[] = [
     subsoortId: "lss-008",
     exId: "ex-003",
     laadhavenId: "hav-007",
+    tonnage: 3000,
     subpartijIds: ["sub-003"],
   },
   {
@@ -44,6 +47,7 @@ export const partijen: Partij[] = [
     subsoortId: "",
     exId: "ex-004",
     laadhavenId: "hav-009",
+    tonnage: 3500,
     subpartijIds: ["sub-004"],
   },
   {
@@ -53,6 +57,7 @@ export const partijen: Partij[] = [
     subsoortId: "lss-003",
     exId: "ex-005",
     laadhavenId: "hav-003",
+    tonnage: 1800,
     subpartijIds: ["sub-005"],
   },
   {
@@ -62,6 +67,7 @@ export const partijen: Partij[] = [
     subsoortId: "lss-002",
     exId: "ex-006",
     laadhavenId: "hav-009",
+    tonnage: 2500,
     subpartijIds: ["sub-006"],
   },
 ];

@@ -370,7 +370,7 @@ export function useLadingEigenDetail(id: string | undefined) {
       try {
         // Split IDs (e.g. "le-001-2", "le-001-rest") don't exist in the store;
         // fall back to the base entity ID by stripping the split suffix.
-        const baseId = id.replace(/-(rest|\d+)$/, '');
+        const baseId = id.replace(/-(rest|[1-9]\d*)$/, '');
         const maps = await getLookups();
         let item: LadingEigen;
         try {
@@ -755,7 +755,7 @@ export function useBevrachtingLadingSummary(id: string | undefined) {
 
         // Try lading_eigen first, then fall back to lading_markt
         // Split IDs (e.g. "le-001-2") don't exist in the store; strip suffix to get base ID.
-        const baseId = id.replace(/-(rest|\d+)$/, '');
+        const baseId = id.replace(/-(rest|[1-9]\d*)$/, '');
         try {
           let item: LadingEigen & { status?: string };
           try {

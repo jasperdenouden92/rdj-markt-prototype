@@ -123,6 +123,7 @@ export interface Partij {
   subsoortId: string;
   exId: string;
   laadhavenId: string;
+  tonnage: number;
   subpartijIds: string[];
 }
 

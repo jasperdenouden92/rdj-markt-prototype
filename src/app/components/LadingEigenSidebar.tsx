@@ -78,7 +78,7 @@ interface LadingEigenSidebarProps {
 export default function LadingEigenSidebar({ id, onEdit }: LadingEigenSidebarProps) {
   const navigate = useNavigate();
   // Split IDs (e.g. "le-001-2", "le-001-rest") don't exist in the store; use base ID for API calls.
-  const baseId = id.replace(/-(rest|\d+)$/, '');
+  const baseId = id.replace(/-(rest|[1-9]\d*)$/, '');
   const { data, loading, error, refetch } = useLadingEigenDetail(id);
   const [activeTab, setActiveTab] = useState<string>("details");
   const [overig, setOverig] = useState("");
@@ -121,13 +121,18 @@ export default function LadingEigenSidebar({ id, onEdit }: LadingEigenSidebarPro
     return statusMap[s] || statusMap.intake;
   }, [data]);
 
-  // Find sibling lots: other lading_eigen items with the same partijId
+  // Find sibling lots: other lading_eigen items with the same subpartijId (same subpartij, different lots)
   const siblingLots = useMemo(() => {
     if (!data) return [];
-    const currentPartijId = data.raw.partijId;
-    return ladingenEigen
-      .filter((le) => le.partijId === currentPartijId && le.id !== id)
+    const currentSubpartijId = data.raw.subpartijId;
+    // Exclude both the current ID and the base ID (for split items like le-001-2 → le-001)
+    const excludeIds = new Set([id, baseId]);
+    // All lots for this subpartij (including current) — used for numbering
+    const allLots = ladingenEigen.filter((le) => le.subpartijId === currentSubpartijId);
+    return allLots
+      .filter((le) => !excludeIds.has(le.id))
       .map((le) => {
+        const lotIndex = allLots.findIndex((l) => l.id === le.id) + 1;
         const sub = subpartijen.find((s) => s.id === le.subpartijId);
         const parentPartij = partijen.find((p) => p.id === le.partijId);
         const laadhaven = parentPartij ? havens.find((h) => h.id === parentPartij.laadhavenId) : null;
@@ -140,6 +145,7 @@ export default function LadingEigenSidebar({ id, onEdit }: LadingEigenSidebarPro
           id: le.id,
           subpartijId: le.subpartijId,
           naam: sub?.naam || le.id,
+          lotIndex,
           tonnage: le.tonnage ? `${le.tonnage.toLocaleString("nl-NL")} t` : "—",
           laadhaven: laadhaven?.naam || "—",
           loshaven: loshaven?.naam || "—",
@@ -149,7 +155,7 @@ export default function LadingEigenSidebar({ id, onEdit }: LadingEigenSidebarPro
           status: ((le as any).status || "intake") as string,
         };
       });
-  }, [data, id]);
+  }, [data, id, baseId]);
 
   const getVal = (section: "eigen" | "markt", field: ConditiesField): string | number | null => {
     if (!data) return null;
@@ -249,6 +255,7 @@ export default function LadingEigenSidebar({ id, onEdit }: LadingEigenSidebarPro
                 <PartijHoverCard
                   title={partijData.partij.naam}
                   ladingSoort={partijData.ladingSoort?.naam || "—"}
+                  tonnage={partijData.partij.tonnage}
                   laadhaven={partijData.laadhaven?.naam || "—"}
                   exNaam={partijData.ex?.naam}
                   exType={partijData.ex?.type}
@@ -290,9 +297,15 @@ export default function LadingEigenSidebar({ id, onEdit }: LadingEigenSidebarPro
                             className="content-stretch flex items-center gap-[6px] overflow-clip relative shrink-0 w-full group"
                             onClick={() => navigate(`/markt/bevrachting/lading/${lot.id}`)}
                           >
-                            <p className="flex-[1_0_0] font-sans font-bold leading-[20px] min-h-px min-w-px overflow-hidden relative text-rdj-text-brand text-[14px] text-ellipsis text-left whitespace-nowrap group-hover:underline">
-                              {lot.naam}
+                            <span className="inline-flex items-center justify-center px-[5px] py-[1px] rounded-[4px] font-sans font-bold text-[10px] leading-[14px] whitespace-nowrap bg-[#EFF8FF] text-[#175CD3] border border-[#B2DDFF]">
+                              #{lot.lotIndex}
+                            </span>
+                            <p className="font-sans font-bold leading-[20px] min-w-0 overflow-hidden text-rdj-text-brand text-[14px] text-ellipsis text-left whitespace-nowrap group-hover:underline">
+                              {lot.tonnage}
                             </p>
+                            <span className="font-sans font-normal leading-[20px] text-rdj-text-tertiary text-[12px] shrink-0">
+                              {lot.status === "intake" ? "Intake" : lot.status === "werklijst" ? "Werklijst" : lot.status === "markt" ? "In de markt" : "Gesloten"}
+                            </span>
                           </button>
                         </div>
                       </HoverCardTrigger>
@@ -410,9 +423,10 @@ function formatShortDate(dateStr: string | null): string {
   return d.toLocaleDateString("nl-NL", { day: "numeric", month: "short" });
 }
 
-function PartijHoverCard({ title, ladingSoort, laadhaven, exNaam, exType, subpartijen: subs }: {
+function PartijHoverCard({ title, ladingSoort, tonnage, laadhaven, exNaam, exType, subpartijen: subs }: {
   title: string;
   ladingSoort: string;
+  tonnage: number;
   laadhaven: string;
   exNaam?: string;
   exType?: string;
@@ -433,7 +447,7 @@ function PartijHoverCard({ title, ladingSoort, laadhaven, exNaam, exType, subpar
           <p className="font-sans font-bold leading-[20px] text-rdj-text-primary text-[14px]">{title}</p>
         </div>
         <p className="font-sans font-normal leading-[18px] text-rdj-text-secondary text-[12px] mt-[2px]">
-          {ladingSoort}{exNaam ? ` · ${exNaam}` : ""}
+          {tonnage.toLocaleString("nl-NL")} t {ladingSoort}{exNaam ? ` · ${exNaam}` : ""}
         </p>
       </div>
 
