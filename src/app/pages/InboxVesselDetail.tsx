@@ -85,7 +85,7 @@ export default function InboxVesselDetail() {
   const navigate = useNavigate();
   const [activeTab, setActiveTabRaw] = useState<'matches' | 'onderhandelingen' | 'activiteit'>('onderhandelingen');
   const [hoveredRow, setHoveredRow] = useState<string | null>(null);
-  const [selectedNegotiation, setSelectedNegotiation] = useState<{ id: string; status: string; bron: string; relatieName?: string } | null>(null);
+  const [selectedNegotiation, setSelectedNegotiation] = useState<{ id: string; status: string; bron: string; relatieName?: string; bemiddeling?: { inkoopRelatie: string; verkoopRelatie: string } } | null>(null);
   const setActiveTab = (tab: typeof activeTab) => { setActiveTabRaw(tab); setSelectedNegotiation(null); };
   const [conversationDialog, setConversationDialog] = useState<{ relatieId: string; relatieName: string; matchName?: string; itemType?: "lading" | "vaartuig" | "relatie-vaartuig" | "relatie-lading"; rightName?: string } | null>(null);
   const [brokerDialog, setBrokerDialog] = useState<{ relatieA: { id: string; name: string }; vesselName: string; vesselSubtitle: string; relatieB: { id: string; name: string }; cargoName: string; cargoSubtitle: string } | null>(null);
@@ -141,7 +141,7 @@ export default function InboxVesselDetail() {
   /* ── Vessel-specific negotiations with cargo info ── */
   const vesselNegotiations = [
     { id: 'N001', aanbod: 'Houtpellets Salzgitter', aanbodSubtext: '2.000 ton Houtpellets', bron: 'eigen' as const, company: 'Provaart Logistics BV', freightPrice: '€3,50/ton', freightPriceDiff: '+12,5%', tonnage: '2.000 ton', deadline: 'Za 14 Mrt, 16:00', deadlineExpired: true, status: 'Bod verstuurd', contact: { name: 'Eric Nieuwkoop', date: 'Ma 9 Mrt 07:28' } },
-    { id: 'N002', aanbod: 'Staal Dordrecht', aanbodSubtext: '3.000 ton Staal', bron: 'markt' as const, company: 'Janlow B.V.', ladingRelatie: 'Janlow B.V.', freightPrice: '€3,00/ton', freightPriceDiff: '-3,2%', tonnage: '3.000 ton', deadline: 'Morgen, 9:00', deadlineExpired: true, status: 'Bod verstuurd', contact: { name: 'Pelger de Jong', date: 'Di 10 Mrt 19:53' } },
+    { id: 'N002', aanbod: 'Staal Dordrecht', aanbodSubtext: '3.000 ton Staal', bron: 'markt' as const, company: 'Janlow B.V.', ladingRelatie: 'Janlow B.V.', freightPrice: '€3,00/ton', freightPriceDiff: '-3,2%', tonnage: '3.000 ton', deadline: 'Morgen, 9:00', deadlineExpired: true, status: 'Bod verstuurd', contact: { name: 'Pelger de Jong', date: 'Di 10 Mrt 19:53' }, bemiddeling: { inkoopRelatie: 'Janlow B.V.', verkoopRelatie: 'Provaart Logistics BV' } as const },
     { id: 'N003', aanbod: 'Grind Amsterdam', aanbodSubtext: '1.200 ton Grind', bron: 'eigen' as const, company: 'Rederij Alfa', freightPrice: '€2,80/ton', freightPriceDiff: '-9,7%', tonnage: '1.200 ton', deadline: 'Morgen, 10:00', status: 'Bod verstuurd', contact: { name: 'Khoa Nguyen', date: 'Zo 8 Mrt 01:31' } },
     { id: 'N004', aanbod: 'Sojabonen Rotterdam', aanbodSubtext: '3.500 ton Sojabonen', bron: 'markt' as const, company: 'Cargill N.V.', ladingRelatie: 'Cargill N.V.', freightPrice: '€3,00/ton', freightPriceDiff: '0,0%', tonnage: '3.500 ton', deadline: 'Morgen, 11:00', status: 'Bod ontvangen', contact: { name: 'Eric Nieuwkoop', date: 'Za 7 Mrt 18:39' } },
     { id: 'N005', aanbod: 'Kunstmest Terneuzen', aanbodSubtext: '2.500 ton Kunstmest', bron: 'eigen' as const, company: 'Cargill N.V.', freightPrice: '€3,25/ton', freightPriceDiff: '+4,8%', tonnage: '2.500 ton', deadline: 'Do 19 Mrt, 11:15', status: 'Goedgekeurd', contact: { name: 'Pelger de Jong', date: 'Vr 6 Mrt 11:47' } },
@@ -156,7 +156,7 @@ export default function InboxVesselDetail() {
 
   /* ── Negotiations table ── */
   const negColumns: Column[] = [
-    { key: 'aanbod', header: 'Aanbod', type: 'leading-text', actionLabel: 'Openen', subtextKey: 'aanbodSubtext', badgeKey: 'aanbodBadge' },
+    { key: 'aanbod', header: 'Aanbod', type: 'leading-text', actionLabel: 'Openen', subtextKey: 'aanbodSubtext', badgeKey: 'aanbodBadge', badgeStyleKey: 'aanbodBadgeStyle' },
     { key: 'freightPrice', header: 'Vrachtprijs', type: 'text', subtextKey: 'freightPriceDiff', subtextColorKey: 'freightPriceDiffColor', subtextTooltipKey: 'freightPriceDiffTooltip', width: 'w-[140px]' },
     { key: 'tonnage', header: 'Tonnage', type: 'text', align: 'right', width: 'w-[120px]' },
     { key: 'deadline', header: 'Deadline', type: 'deadline', expiredKey: 'deadlineExpired', editable: true, width: 'w-[160px]' },
@@ -167,7 +167,9 @@ export default function InboxVesselDetail() {
   const negTableData: RowData[] = vesselNegotiations.map((neg, idx) => ({
     id: neg.id,
     aanbod: neg.aanbod,
-    aanbodSubtext: neg.bron === 'markt' && neg.ladingRelatie ? (
+    aanbodSubtext: ('bemiddeling' in neg && neg.bemiddeling) ? (
+      <>{neg.aanbodSubtext} · Bemiddeling met {neg.bemiddeling.verkoopRelatie}</>
+    ) : neg.bron === 'markt' && neg.ladingRelatie ? (
       <>{neg.aanbodSubtext} · <span
         className="text-rdj-text-brand cursor-pointer hover:underline"
         onClick={(e: React.MouseEvent) => {
@@ -177,7 +179,8 @@ export default function InboxVesselDetail() {
         }}
       >{neg.ladingRelatie}</span></>
     ) : neg.aanbodSubtext,
-    aanbodBadge: neg.bron === 'markt' ? 'Marktlading' : undefined,
+    aanbodBadge: ('bemiddeling' in neg && neg.bemiddeling) ? 'Bemiddeling' : neg.bron === 'markt' ? 'Marktlading' : undefined,
+    aanbodBadgeStyle: ('bemiddeling' in neg && neg.bemiddeling) ? { backgroundColor: '#EFF8FF', color: '#175CD3', borderColor: '#B2DDFF' } : undefined,
     company: neg.company,
     bron: neg.bron,
     freightPrice: neg.freightPrice || '—',
@@ -194,6 +197,8 @@ export default function InboxVesselDetail() {
     contactName: neg.contact.name,
     contactDate: neg.contact.date,
     contactAvatar: avatars[idx % avatars.length],
+    bemiddelingBadge: ('bemiddeling' in neg && neg.bemiddeling) ? 'Bemiddeling' : undefined,
+    bemiddelingBadgeStyle: ('bemiddeling' in neg && neg.bemiddeling) ? { backgroundColor: '#EFF8FF', color: '#175CD3', borderColor: '#B2DDFF' } : undefined,
   }));
 
   const activeNegStatuses = ["In onderhandeling"];
@@ -342,7 +347,10 @@ export default function InboxVesselDetail() {
                           hoveredRowId={hoveredRow}
                           onRowHover={setHoveredRow}
                           activeRowId={selectedNegotiation?.id ?? null}
-                          onRowClick={(row) => setSelectedNegotiation({ id: row.id, status: row.status as string, bron: "markt", relatieName: summary?.relatieName })}
+                          onRowClick={(row) => {
+                            const neg = vesselNegotiations.find(n => n.id === row.id);
+                            setSelectedNegotiation({ id: row.id, status: row.status as string, bron: "markt", relatieName: summary?.relatieName, bemiddeling: ('bemiddeling' in (neg || {}) && (neg as any)?.bemiddeling) ? (neg as any).bemiddeling : undefined });
+                          }}
                         />
                       </>
                     )}
@@ -381,6 +389,7 @@ export default function InboxVesselDetail() {
           bron={selectedNegotiation.bron as any}
           soort="vaartuig"
           relatieName={selectedNegotiation.relatieName}
+          bemiddeling={selectedNegotiation.bemiddeling}
           onClose={() => setSelectedNegotiation(null)}
         />
       )}

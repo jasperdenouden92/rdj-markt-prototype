@@ -234,6 +234,11 @@ interface OnderhandelingSidepanelProps {
   subtitle?: string;
   /** Initial sidebar tab (defaults to "activiteit") */
   initialSideTab?: SideTab;
+  /** Bemiddeling mode with two relatie names */
+  bemiddeling?: {
+    inkoopRelatie: string;
+    verkoopRelatie: string;
+  };
   onClose: () => void;
   onStatusChange?: (id: string, newStatus: string) => void;
 }
@@ -247,7 +252,16 @@ const approvalActionConfig: { key: ApprovalAction; label: string; icon: React.Re
   { key: "rejectOtherBids", label: "Andere biedingen afwijzen", icon: <UserX size={16} strokeWidth={2.5} />, toastMsg: () => "Andere biedingen afgewezen" },
 ];
 
-export default function OnderhandelingSidepanel({ negotiationId, status: initialStatus, bron, soort, relatieName, subtitle: subtitleText, initialSideTab, onClose, onStatusChange }: OnderhandelingSidepanelProps) {
+type BemiddelingStatus = "Aangeboden" | "Goedgekeurd" | "Afgewezen";
+const bemiddelingStatusOptions: BemiddelingStatus[] = ["Aangeboden", "Goedgekeurd", "Afgewezen"];
+const bemiddelingStatusConfig: Record<BemiddelingStatus, { variant: BadgeVariant; type: BadgeType }> = {
+  Aangeboden: { variant: "brand", type: "color" },
+  Goedgekeurd: { variant: "success", type: "color" },
+  Afgewezen: { variant: "error", type: "color" },
+};
+
+export default function OnderhandelingSidepanel({ negotiationId, status: initialStatus, bron, soort, relatieName, subtitle: subtitleText, initialSideTab, bemiddeling, onClose, onStatusChange }: OnderhandelingSidepanelProps) {
+  const isBemiddeling = !!bemiddeling;
   const [sideTab, setSideTab] = useState<SideTab>(initialSideTab || "activiteit");
   const [overig, setOverig] = useState("");
   const [currentStatus, setCurrentStatus] = useState<NegotiationStatus>(initialStatus);
@@ -261,11 +275,17 @@ export default function OnderhandelingSidepanel({ negotiationId, status: initial
   const allEvents = [...extraEvents, ...mockActiviteit];
   const [showApprovalDialog, setShowApprovalDialog] = useState(false);
   const [completedActions, setCompletedActions] = useState<Set<ApprovalAction>>(new Set());
+  const [bemiddelingInkoopStatus, setBemiddelingInkoopStatus] = useState<BemiddelingStatus>("Aangeboden");
+  const [bemiddelingVerkoopStatus, setBemiddelingVerkoopStatus] = useState<BemiddelingStatus>("Aangeboden");
+  const bothApproved = isBemiddeling && bemiddelingInkoopStatus === "Goedgekeurd" && bemiddelingVerkoopStatus === "Goedgekeurd";
+  const [dealBevestigd, setDealBevestigd] = useState(false);
+  const filteredApprovalActions = bron === "markt" ? approvalActionConfig.filter(a => a.key !== "removeFromMarket") : approvalActionConfig;
 
   const handleApprove = (options: ApprovalOptions) => {
     setShowApprovalDialog(false);
     setCurrentStatus("Goedgekeurd");
     onStatusChange?.(negotiationId, "Goedgekeurd");
+    if (isBemiddeling) setDealBevestigd(true);
 
     const completed = new Set<ApprovalAction>();
     if (options.generateCharter) {
@@ -350,7 +370,7 @@ export default function OnderhandelingSidepanel({ negotiationId, status: initial
     <ModelessPanel
       initialWidth={600}
       resizable
-      title={`Onderhandeling met ${relatieName || "Rederij Alfa"}`}
+      title={isBemiddeling ? `Bemiddeling met ${bemiddeling.inkoopRelatie} en ${bemiddeling.verkoopRelatie}` : `Onderhandeling met ${relatieName || "Rederij Alfa"}`}
       subtitle={
         <div className="flex flex-col gap-[8px]">
           <span>{subtitleText || "1.200 t Grind · MS Adriana"}</span>
@@ -404,7 +424,45 @@ export default function OnderhandelingSidepanel({ negotiationId, status: initial
       }
       onClose={onClose}
       footer={
-        isActive ? (
+        dealBevestigd ? (
+          <div className="border-t border-rdj-border-secondary px-[24px] py-[16px] flex flex-col gap-[8px]">
+            {filteredApprovalActions.map(action => {
+              const done = completedActions.has(action.key);
+              return done ? (
+                <div key={action.key} className="flex items-center gap-[8px] px-[12px] py-[8px] rounded-[6px] bg-rdj-bg-secondary">
+                  <Check size={16} strokeWidth={2.5} className="text-[#17B26A] shrink-0" />
+                  <span className="font-sans font-normal text-rdj-text-tertiary text-[14px] leading-[20px]">{action.label}</span>
+                </div>
+              ) : (
+                <Button
+                  key={action.key}
+                  variant="secondary"
+                  label={action.label}
+                  leadingIcon={action.icon}
+                  fullWidth
+                  onClick={() => handlePostApprovalAction(action)}
+                />
+              );
+            })}
+          </div>
+        ) : bothApproved ? (
+          <div className="border-t border-rdj-border-secondary px-[24px] py-[16px] flex gap-[12px]">
+            <Button
+              variant="secondary-destructive"
+              label="Deal afwijzen"
+              leadingIcon={<X strokeWidth={2.5} />}
+              fullWidth
+              onClick={handleReject}
+            />
+            <Button
+              variant="primary"
+              label="Deal bevestigen"
+              leadingIcon={<Check strokeWidth={2.5} />}
+              fullWidth
+              onClick={() => setShowApprovalDialog(true)}
+            />
+          </div>
+        ) : isBemiddeling ? undefined : isActive ? (
           <div className="border-t border-rdj-border-secondary px-[24px] py-[16px] flex gap-[12px]">
             <Button
               variant="secondary-destructive"
@@ -423,7 +481,7 @@ export default function OnderhandelingSidepanel({ negotiationId, status: initial
           </div>
         ) : currentStatus === "Goedgekeurd" ? (
           <div className="border-t border-rdj-border-secondary px-[24px] py-[16px] flex flex-col gap-[8px]">
-            {approvalActionConfig.map(action => {
+            {filteredApprovalActions.map(action => {
               const done = completedActions.has(action.key);
               return done ? (
                 <div key={action.key} className="flex items-center gap-[8px] px-[12px] py-[8px] rounded-[6px] bg-rdj-bg-secondary">
@@ -485,7 +543,7 @@ export default function OnderhandelingSidepanel({ negotiationId, status: initial
     >
       {/* Main section: Condities */}
       <div className="flex flex-col gap-[16px] p-[24px]">
-        <ConditiesTab bron={bron} soort={soort} overig={overig} onOverigChange={setOverig} overrides={conditiesOverrides} onEditSave={handleConditiesSave} />
+        <ConditiesTab bron={bron} soort={soort} overig={overig} onOverigChange={setOverig} overrides={conditiesOverrides} onEditSave={handleConditiesSave} bemiddeling={bemiddeling} inkoopStatus={bemiddelingInkoopStatus} verkoopStatus={bemiddelingVerkoopStatus} onInkoopStatusChange={setBemiddelingInkoopStatus} onVerkoopStatusChange={setBemiddelingVerkoopStatus} />
       </div>
     </ModelessPanel>
     <ApprovalConfirmationDialog
@@ -493,6 +551,7 @@ export default function OnderhandelingSidepanel({ negotiationId, status: initial
       onClose={() => setShowApprovalDialog(false)}
       onConfirm={handleApprove}
       relatieName={relatieName}
+      hideRemoveFromMarket={bron === "markt"}
     />
   </>
   );
@@ -500,33 +559,183 @@ export default function OnderhandelingSidepanel({ negotiationId, status: initial
 
 /* ── Condities content ── */
 /**
- * Three modes based on bron + soort:
+ * Four modes based on bron + soort + bemiddeling:
  *   Mode A (eigen lading): Verkoop · Zoekcriteria · Inkoop (focus)
  *   Mode B (markt vaartuig): Verkoop · Inkoop (focus)
  *   Mode C (eigen vaartuig / markt lading): Zoekcriteria · Verkoop (focus)
+ *   Mode D (bemiddeling): Verkoop · Inkoop (both editable, with relatie names + per-column status)
  */
-function ConditiesTab({ bron, soort, overig, onOverigChange, overrides, onEditSave }: { bron: NegotiationBron; soort: NegotiationSoort; overig: string; onOverigChange: (v: string) => void; overrides: Partial<Record<ConditiesField, number | null>>; onEditSave: (updates: Partial<Record<ConditiesField, number | null>>, opmerking: string) => void }) {
-  const modeA = bron === "eigen" && soort === "lading";
-  const modeB = bron === "markt" && soort === "vaartuig";
-  // modeC = everything else (eigen vaartuig / markt lading)
+
+function ConditiesTab({ bron, soort, overig, onOverigChange, overrides, onEditSave, bemiddeling, inkoopStatus, verkoopStatus, onInkoopStatusChange, onVerkoopStatusChange }: { bron: NegotiationBron; soort: NegotiationSoort; overig: string; onOverigChange: (v: string) => void; overrides: Partial<Record<ConditiesField, number | null>>; onEditSave: (updates: Partial<Record<ConditiesField, number | null>>, opmerking: string) => void; bemiddeling?: { inkoopRelatie: string; verkoopRelatie: string }; inkoopStatus?: BemiddelingStatus; verkoopStatus?: BemiddelingStatus; onInkoopStatusChange?: (s: BemiddelingStatus) => void; onVerkoopStatusChange?: (s: BemiddelingStatus) => void }) {
+  const isBemiddeling = !!bemiddeling;
+  const modeA = !isBemiddeling && bron === "eigen" && soort === "lading";
+  const modeB = !isBemiddeling && bron === "markt" && soort === "vaartuig";
+  // modeC = everything else (eigen vaartuig / markt lading), not bemiddeling
   const focusIsInkoop = modeA || modeB;
   const [editOpen, setEditOpen] = useState(false);
+  const [editColumn, setEditColumn] = useState<"inkoop" | "verkoop">("inkoop");
+
+  // Date state for laadgereed/losgereed
+  const [laadgereedInkoop, setLaadgereedInkoop] = useState(mockNegotiationMeta.laadgereed);
+  const [losgereedInkoop, setLosgereedInkoop] = useState(mockNegotiationMeta.losgereed);
+  const [laadgereedVerkoop, setLaadgereedVerkoop] = useState(mockNegotiationMeta.laadgereed);
+  const [losgereedVerkoop, setLosgereedVerkoop] = useState(mockNegotiationMeta.losgereed);
+  const [laadgereedZoek, setLaadgereedZoek] = useState(mockNegotiationMeta.laadgereed);
+  const [losgereedZoek, setLosgereedZoek] = useState(mockNegotiationMeta.losgereed);
+  const [laadgereedPickerInkoop, setLaadgereedPickerInkoop] = useState<DatePickerValue | undefined>();
+  const [losgereedPickerInkoop, setLosgereedPickerInkoop] = useState<DatePickerValue | undefined>();
+  const [laadgereedPickerVerkoop, setLaadgereedPickerVerkoop] = useState<DatePickerValue | undefined>();
+  const [losgereedPickerVerkoop, setLosgereedPickerVerkoop] = useState<DatePickerValue | undefined>();
+  const [laadgereedPickerZoek, setLaadgereedPickerZoek] = useState<DatePickerValue | undefined>();
+  const [losgereedPickerZoek, setLosgereedPickerZoek] = useState<DatePickerValue | undefined>();
 
   const fields: ConditiesField[] = ["prijs", "laadtijd", "liggeldLaden", "lostijd", "liggeldLossen"];
 
   // Get value with overrides applied
   const getVal = (field: ConditiesField, key: "inkoop" | "verkoop" | "zoekcriteria"): number | null => {
-    if (key === "inkoop" && focusIsInkoop && field in overrides) return overrides[field] ?? mockCondities[field].inkoop;
-    if (key === "verkoop" && !focusIsInkoop && field in overrides) return overrides[field] ?? mockCondities[field].verkoop;
+    if (key === "inkoop" && (focusIsInkoop || isBemiddeling) && field in overrides) return overrides[field] ?? mockCondities[field].inkoop;
+    if (key === "verkoop" && (!focusIsInkoop || isBemiddeling) && field in overrides) return overrides[field] ?? mockCondities[field].verkoop;
     return mockCondities[field][key];
   };
 
-  const gridCols = modeA ? "grid-cols-[1fr_1fr_1fr_1fr]" : "grid-cols-[1fr_1fr_1fr]";
+  const gridCols = (modeA) ? "grid-cols-[1fr_1fr_1fr_1fr]" : "grid-cols-[1fr_1fr_1fr]";
 
   // Focus column position: always the last column
   const focusLeft = modeA ? "left-[75%]" : "left-[66.67%]";
   const focusWidth = modeA ? "w-[25%]" : "w-[33.33%]";
 
+  // Helper: date picker cell
+  const DateCell = ({ value, pickerValue, onPickerChange, onValueChange, px }: { value: string; pickerValue: DatePickerValue | undefined; onPickerChange: (v: DatePickerValue) => void; onValueChange: (v: string) => void; px?: boolean }) => (
+    <DatePickerPopover value={pickerValue} onChange={(val) => { onPickerChange(val); onValueChange(formatDatePickerValue(val)); }}>
+      <button className={`font-sans font-bold leading-[20px] text-rdj-text-primary text-[14px] hover:text-rdj-text-brand transition-colors ${px ? "px-[8px]" : ""}`}>
+        {value}
+      </button>
+    </DatePickerPopover>
+  );
+
+  // Bemiddeling mode (Mode D)
+  if (isBemiddeling) {
+    return (
+      <>
+        <div className="relative">
+          {/* Blue background for both Verkoop and Inkoop columns */}
+          <div className="absolute left-[33.33%] w-[33.33%] top-0 bottom-0 bg-rdj-bg-brand rounded-l-[8px]" />
+          <div className="absolute left-[66.67%] w-[33.33%] top-0 bottom-0 bg-rdj-bg-brand rounded-r-[8px]" />
+
+          {/* Column headers */}
+          <div className="relative grid grid-cols-[1fr_1fr_1fr] gap-[8px] px-[4px] py-[4px]">
+            <div />
+            <div className="px-[8px]">
+              <div className="flex items-center gap-[4px]">
+                <p className="font-sans font-normal leading-[20px] text-rdj-text-tertiary text-[12px]">Verkoop</p>
+                <button onClick={() => { setEditColumn("verkoop"); setEditOpen(true); }} className="text-rdj-text-tertiary hover:text-rdj-text-brand transition-colors">
+                  <Pencil size={12} strokeWidth={2} />
+                </button>
+              </div>
+              <p className="font-sans font-normal leading-[16px] text-rdj-text-tertiary text-[11px] truncate">{bemiddeling.verkoopRelatie}</p>
+            </div>
+            <div className="px-[8px]">
+              <div className="flex items-center gap-[4px]">
+                <p className="font-sans font-normal leading-[20px] text-rdj-text-tertiary text-[12px]">Inkoop</p>
+                <button onClick={() => { setEditColumn("inkoop"); setEditOpen(true); }} className="text-rdj-text-tertiary hover:text-rdj-text-brand transition-colors">
+                  <Pencil size={12} strokeWidth={2} />
+                </button>
+              </div>
+              <p className="font-sans font-normal leading-[16px] text-rdj-text-tertiary text-[11px] truncate">{bemiddeling.inkoopRelatie}</p>
+            </div>
+          </div>
+
+          <div className="relative w-full h-px bg-rdj-border-secondary" />
+
+          {/* Value rows */}
+          {fields.map((field) => {
+            const verkoopVal = getVal(field, "verkoop");
+            const inkoopVal = getVal(field, "inkoop");
+            const diffInkoop = field === "prijs" ? calcPctDiff(inkoopVal, verkoopVal) : undefined;
+            return (
+              <div key={field} className="relative grid grid-cols-[1fr_1fr_1fr] gap-[8px] py-[8px] px-[4px]">
+                <p className="font-sans font-normal leading-[20px] text-rdj-text-secondary text-[14px]">
+                  {fieldLabels[field]}
+                </p>
+                <div className="px-[8px]">
+                  <p className="font-sans font-bold leading-[20px] text-rdj-text-primary text-[14px]">
+                    {fmt(field, verkoopVal)}
+                  </p>
+                </div>
+                <div className="px-[8px]">
+                  <p className="font-sans font-bold leading-[20px] text-rdj-text-primary text-[14px]">
+                    {fmt(field, inkoopVal)}
+                  </p>
+                  {diffInkoop && (
+                    <p className="font-sans font-normal leading-[18px] text-[12px]" style={diffInkoop.color ? { color: diffInkoop.color } : undefined}>
+                      {diffInkoop.text}
+                    </p>
+                  )}
+                </div>
+              </div>
+            );
+          })}
+
+          {/* Laadgereed row */}
+          <div className="relative grid grid-cols-[1fr_1fr_1fr] gap-[8px] py-[8px] px-[4px]">
+            <p className="font-sans font-normal leading-[20px] text-rdj-text-secondary text-[14px]">Laadgereed</p>
+            <div className="px-[8px]"><DateCell value={laadgereedVerkoop} pickerValue={laadgereedPickerVerkoop} onPickerChange={setLaadgereedPickerVerkoop} onValueChange={setLaadgereedVerkoop} /></div>
+            <div className="px-[8px]"><DateCell value={laadgereedInkoop} pickerValue={laadgereedPickerInkoop} onPickerChange={setLaadgereedPickerInkoop} onValueChange={setLaadgereedInkoop} /></div>
+          </div>
+
+          {/* Losgereed row */}
+          <div className="relative grid grid-cols-[1fr_1fr_1fr] gap-[8px] py-[8px] px-[4px]">
+            <p className="font-sans font-normal leading-[20px] text-rdj-text-secondary text-[14px]">Losgereed</p>
+            <div className="px-[8px]"><DateCell value={losgereedVerkoop} pickerValue={losgereedPickerVerkoop} onPickerChange={setLosgereedPickerVerkoop} onValueChange={setLosgereedVerkoop} /></div>
+            <div className="px-[8px]"><DateCell value={losgereedInkoop} pickerValue={losgereedPickerInkoop} onPickerChange={setLosgereedPickerInkoop} onValueChange={setLosgereedInkoop} /></div>
+          </div>
+
+          {/* Status row */}
+          <div className="relative w-full h-px bg-rdj-border-secondary my-[4px]" />
+          <div className="relative grid grid-cols-[1fr_1fr_1fr] gap-[8px] py-[8px] px-[4px]">
+            <p className="font-sans font-normal leading-[20px] text-rdj-text-secondary text-[14px]">Status</p>
+            <div className="px-[8px]">
+              <StatusDropdown value={verkoopStatus!} onChange={onVerkoopStatusChange!} />
+            </div>
+            <div className="px-[8px]">
+              <StatusDropdown value={inkoopStatus!} onChange={onInkoopStatusChange!} />
+            </div>
+          </div>
+        </div>
+
+        <div className="w-full h-px bg-rdj-border-secondary" />
+
+        <DetailsSidebarSection title="Overig">
+          <textarea
+            value={overig}
+            onChange={(e) => onOverigChange(e.target.value)}
+            placeholder="Voeg opmerkingen toe..."
+            rows={3}
+            className="w-full px-[12px] py-[8px] font-sans font-normal leading-[20px] text-rdj-text-primary text-[14px] bg-transparent border border-transparent rounded-[6px] outline-none resize-none transition-all hover:border-rdj-border-primary hover:bg-rdj-bg-secondary-hover focus:border-rdj-border-brand focus:bg-white placeholder:text-rdj-text-tertiary"
+          />
+        </DetailsSidebarSection>
+
+        {editOpen && (
+          <EditConditiesDialog
+            fields={fields}
+            focusLabel={editColumn === "inkoop" ? "Inkoop" : "Verkoop"}
+            currentValues={Object.fromEntries(fields.map(f => [f, getVal(f, editColumn)])) as Record<ConditiesField, number | null>}
+            laadgereedValue={editColumn === "inkoop" ? laadgereedInkoop : laadgereedVerkoop}
+            losgereedValue={editColumn === "inkoop" ? losgereedInkoop : losgereedVerkoop}
+            onSave={(updates, opmerking, dateUpdates) => {
+              onEditSave(updates, opmerking);
+              if (dateUpdates?.laadgereed) { if (editColumn === "inkoop") setLaadgereedInkoop(dateUpdates.laadgereed); else setLaadgereedVerkoop(dateUpdates.laadgereed); }
+              if (dateUpdates?.losgereed) { if (editColumn === "inkoop") setLosgereedInkoop(dateUpdates.losgereed); else setLosgereedVerkoop(dateUpdates.losgereed); }
+              setEditOpen(false);
+            }}
+            onClose={() => setEditOpen(false)}
+          />
+        )}
+      </>
+    );
+  }
+
+  // Regular modes (A, B, C)
   return (
     <>
       {/* Condities table with focus column background */}
@@ -662,6 +871,50 @@ function ConditiesTab({ bron, soort, overig, onOverigChange, overrides, onEditSa
             );
           }
         })}
+
+        {/* Laadgereed / Losgereed date rows */}
+        {modeA ? (
+          <>
+            <div className={`relative grid ${gridCols} gap-[8px] py-[8px] px-[4px]`}>
+              <p className="font-sans font-normal leading-[20px] text-rdj-text-secondary text-[14px]">Laadgereed</p>
+              <p className="font-sans font-bold leading-[20px] text-rdj-text-primary text-[14px]">{laadgereedVerkoop}</p>
+              <p className="font-sans font-bold leading-[20px] text-rdj-text-primary text-[14px]">{laadgereedZoek}</p>
+              <DateCell value={laadgereedInkoop} pickerValue={laadgereedPickerInkoop} onPickerChange={setLaadgereedPickerInkoop} onValueChange={setLaadgereedInkoop} px />
+            </div>
+            <div className={`relative grid ${gridCols} gap-[8px] py-[8px] px-[4px]`}>
+              <p className="font-sans font-normal leading-[20px] text-rdj-text-secondary text-[14px]">Losgereed</p>
+              <p className="font-sans font-bold leading-[20px] text-rdj-text-primary text-[14px]">{losgereedVerkoop}</p>
+              <p className="font-sans font-bold leading-[20px] text-rdj-text-primary text-[14px]">{losgereedZoek}</p>
+              <DateCell value={losgereedInkoop} pickerValue={losgereedPickerInkoop} onPickerChange={setLosgereedPickerInkoop} onValueChange={setLosgereedInkoop} px />
+            </div>
+          </>
+        ) : modeB ? (
+          <>
+            <div className={`relative grid ${gridCols} gap-[8px] py-[8px] px-[4px]`}>
+              <p className="font-sans font-normal leading-[20px] text-rdj-text-secondary text-[14px]">Laadgereed</p>
+              <p className="font-sans font-bold leading-[20px] text-rdj-text-primary text-[14px]">{laadgereedVerkoop}</p>
+              <DateCell value={laadgereedInkoop} pickerValue={laadgereedPickerInkoop} onPickerChange={setLaadgereedPickerInkoop} onValueChange={setLaadgereedInkoop} px />
+            </div>
+            <div className={`relative grid ${gridCols} gap-[8px] py-[8px] px-[4px]`}>
+              <p className="font-sans font-normal leading-[20px] text-rdj-text-secondary text-[14px]">Losgereed</p>
+              <p className="font-sans font-bold leading-[20px] text-rdj-text-primary text-[14px]">{losgereedVerkoop}</p>
+              <DateCell value={losgereedInkoop} pickerValue={losgereedPickerInkoop} onPickerChange={setLosgereedPickerInkoop} onValueChange={setLosgereedInkoop} px />
+            </div>
+          </>
+        ) : (
+          <>
+            <div className={`relative grid ${gridCols} gap-[8px] py-[8px] px-[4px]`}>
+              <p className="font-sans font-normal leading-[20px] text-rdj-text-secondary text-[14px]">Laadgereed</p>
+              <p className="font-sans font-bold leading-[20px] text-rdj-text-primary text-[14px]">{laadgereedZoek}</p>
+              <DateCell value={laadgereedVerkoop} pickerValue={laadgereedPickerVerkoop} onPickerChange={setLaadgereedPickerVerkoop} onValueChange={setLaadgereedVerkoop} px />
+            </div>
+            <div className={`relative grid ${gridCols} gap-[8px] py-[8px] px-[4px]`}>
+              <p className="font-sans font-normal leading-[20px] text-rdj-text-secondary text-[14px]">Losgereed</p>
+              <p className="font-sans font-bold leading-[20px] text-rdj-text-primary text-[14px]">{losgereedZoek}</p>
+              <DateCell value={losgereedVerkoop} pickerValue={losgereedPickerVerkoop} onPickerChange={setLosgereedPickerVerkoop} onValueChange={setLosgereedVerkoop} px />
+            </div>
+          </>
+        )}
       </div>
 
       {/* Divider before overig */}
@@ -683,7 +936,14 @@ function ConditiesTab({ bron, soort, overig, onOverigChange, overrides, onEditSa
           fields={fields}
           focusLabel={focusIsInkoop ? "Inkoop" : "Verkoop"}
           currentValues={Object.fromEntries(fields.map(f => [f, focusIsInkoop ? getVal(f, "inkoop") : getVal(f, "verkoop")])) as Record<ConditiesField, number | null>}
-          onSave={(updates, opmerking) => { onEditSave(updates, opmerking); setEditOpen(false); }}
+          laadgereedValue={focusIsInkoop ? laadgereedInkoop : laadgereedVerkoop}
+          losgereedValue={focusIsInkoop ? losgereedInkoop : losgereedVerkoop}
+          onSave={(updates, opmerking, dateUpdates) => {
+            onEditSave(updates, opmerking);
+            if (dateUpdates?.laadgereed) { if (focusIsInkoop) setLaadgereedInkoop(dateUpdates.laadgereed); else setLaadgereedVerkoop(dateUpdates.laadgereed); }
+            if (dateUpdates?.losgereed) { if (focusIsInkoop) setLosgereedInkoop(dateUpdates.losgereed); else setLosgereedVerkoop(dateUpdates.losgereed); }
+            setEditOpen(false);
+          }}
           onClose={() => setEditOpen(false)}
         />
       )}
@@ -691,18 +951,45 @@ function ConditiesTab({ bron, soort, overig, onOverigChange, overrides, onEditSa
   );
 }
 
+/* ── Status Dropdown for Bemiddeling ── */
+function StatusDropdown({ value, onChange }: { value: BemiddelingStatus; onChange: (v: BemiddelingStatus) => void }) {
+  const cfg = bemiddelingStatusConfig[value];
+  return (
+    <select
+      value={value}
+      onChange={(e) => onChange(e.target.value as BemiddelingStatus)}
+      className="appearance-none cursor-pointer rounded-full border px-[8px] py-[2px] font-sans font-bold text-[12px] leading-[18px] outline-none transition-colors"
+      style={{
+        backgroundColor: cfg.variant === "brand" ? "#EFF8FF" : cfg.variant === "success" ? "#ECFDF3" : "#FEF3F2",
+        color: cfg.variant === "brand" ? "#175CD3" : cfg.variant === "success" ? "#067647" : "#B42318",
+        borderColor: cfg.variant === "brand" ? "#B2DDFF" : cfg.variant === "success" ? "#ABEFC6" : "#FECDCA",
+      }}
+    >
+      {bemiddelingStatusOptions.map(opt => (
+        <option key={opt} value={opt}>{opt}</option>
+      ))}
+    </select>
+  );
+}
+
 /* ── Edit Condities Dialog ── */
-function EditConditiesDialog({ fields, focusLabel, currentValues, onSave, onClose }: {
+function EditConditiesDialog({ fields, focusLabel, currentValues, laadgereedValue, losgereedValue, onSave, onClose }: {
   fields: ConditiesField[];
   focusLabel: string;
   currentValues: Record<ConditiesField, number | null>;
-  onSave: (updates: Partial<Record<ConditiesField, number | null>>, opmerking: string) => void;
+  laadgereedValue?: string;
+  losgereedValue?: string;
+  onSave: (updates: Partial<Record<ConditiesField, number | null>>, opmerking: string, dateUpdates?: { laadgereed?: string; losgereed?: string }) => void;
   onClose: () => void;
 }) {
   const [values, setValues] = useState<Record<ConditiesField, string>>(
     Object.fromEntries(fields.map(f => [f, currentValues[f] != null ? String(currentValues[f]) : ""])) as Record<ConditiesField, string>
   );
   const [opmerking, setOpmerking] = useState("");
+  const [laadgereedPicker, setLaadgereedPicker] = useState<DatePickerValue | undefined>();
+  const [losgereedPicker, setLosgereedPicker] = useState<DatePickerValue | undefined>();
+  const [laadgereedText, setLaadgereedText] = useState(laadgereedValue || "");
+  const [losgereedText, setLosgereedText] = useState(losgereedValue || "");
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -714,7 +1001,10 @@ function EditConditiesDialog({ fields, focusLabel, currentValues, onSave, onClos
         updates[field] = isNaN(num as number) ? null : num;
       }
     }
-    onSave(updates, opmerking.trim());
+    const dateUpdates: { laadgereed?: string; losgereed?: string } = {};
+    if (laadgereedText !== (laadgereedValue || "")) dateUpdates.laadgereed = laadgereedText;
+    if (losgereedText !== (losgereedValue || "")) dateUpdates.losgereed = losgereedText;
+    onSave(updates, opmerking.trim(), Object.keys(dateUpdates).length > 0 ? dateUpdates : undefined);
   };
 
   return (
@@ -739,6 +1029,26 @@ function EditConditiesDialog({ fields, focusLabel, currentValues, onSave, onClos
               />
             </div>
           ))}
+
+          {/* Laadgereed */}
+          <div className="flex flex-col gap-[4px]">
+            <Label className="font-sans font-bold text-[13px] text-[#344054]">Laadgereed</Label>
+            <DatePickerPopover value={laadgereedPicker} onChange={(val) => { setLaadgereedPicker(val); setLaadgereedText(formatDatePickerValue(val)); }}>
+              <button type="button" className="w-full text-left px-[12px] py-[8px] font-sans font-normal leading-[20px] text-rdj-text-primary text-[14px] border border-[#d0d5dd] rounded-[8px] hover:border-[#98a2b3] transition-colors">
+                {laadgereedText || "Selecteer datum"}
+              </button>
+            </DatePickerPopover>
+          </div>
+
+          {/* Losgereed */}
+          <div className="flex flex-col gap-[4px]">
+            <Label className="font-sans font-bold text-[13px] text-[#344054]">Losgereed</Label>
+            <DatePickerPopover value={losgereedPicker} onChange={(val) => { setLosgereedPicker(val); setLosgereedText(formatDatePickerValue(val)); }}>
+              <button type="button" className="w-full text-left px-[12px] py-[8px] font-sans font-normal leading-[20px] text-rdj-text-primary text-[14px] border border-[#d0d5dd] rounded-[8px] hover:border-[#98a2b3] transition-colors">
+                {losgereedText || "Selecteer datum"}
+              </button>
+            </DatePickerPopover>
+          </div>
 
           {/* Divider */}
           <div className="w-full h-px bg-rdj-border-secondary" />

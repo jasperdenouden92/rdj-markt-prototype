@@ -88,7 +88,7 @@ export default function InboxCargoDetail() {
   const [activeTab, setActiveTabRaw] = useState<'matches' | 'onderhandelingen' | 'activiteit'>('onderhandelingen');
   const [selectedMatch, setSelectedMatch] = useState<any>(null);
   const [offeredMatches, setOfferedMatches] = useState<Set<string>>(new Set());
-  const [selectedNegotiation, setSelectedNegotiation] = useState<{ id: string; status: string; bron: string; relatieName?: string } | null>(null);
+  const [selectedNegotiation, setSelectedNegotiation] = useState<{ id: string; status: string; bron: string; relatieName?: string; bemiddeling?: { inkoopRelatie: string; verkoopRelatie: string } } | null>(null);
   const setActiveTab = (tab: typeof activeTab) => { setActiveTabRaw(tab); setSelectedNegotiation(null); };
   const [conversationDialog, setConversationDialog] = useState<{ relatieId: string; relatieName: string; matchName?: string; itemType?: "lading" | "vaartuig" | "relatie-vaartuig" | "relatie-lading"; rightName?: string } | null>(null);
   const [brokerDialog, setBrokerDialog] = useState<{ relatieA: { id: string; name: string }; vesselName: string; vesselSubtitle: string; relatieB: { id: string; name: string }; cargoName: string; cargoSubtitle: string } | null>(null);
@@ -160,7 +160,7 @@ export default function InboxCargoDetail() {
 
   /* ── Negotiations table ── */
   const negColumns: Column[] = [
-    { key: 'freightPrice', header: 'Vrachtprijs', type: 'leading-text', actionLabel: 'Openen', subtextKey: 'freightPriceDiff', subtextColorKey: 'freightPriceDiffColor', subtextTooltipKey: 'freightPriceDiffTooltip' },
+    { key: 'freightPrice', header: 'Vrachtprijs', type: 'leading-text', actionLabel: 'Openen', subtextKey: 'freightPriceDiff', subtextColorKey: 'freightPriceDiffColor', subtextTooltipKey: 'freightPriceDiffTooltip', badgeKey: 'bemiddelingBadge', badgeStyleKey: 'bemiddelingBadgeStyle' },
     { key: 'tonnage', header: 'Tonnage', type: 'text', align: 'right', width: 'w-[120px]' },
     { key: 'deadline', header: 'Deadline', type: 'deadline', expiredKey: 'deadlineExpired', editable: true, width: 'w-[160px]' },
     { key: 'status', header: 'Status', type: 'status', variantKey: 'statusVariant', iconKey: 'statusIcon', typeKey: 'statusType', width: 'w-[160px]' },
@@ -171,9 +171,9 @@ export default function InboxCargoDetail() {
     id: neg.id,
     company: neg.company,
     freightPrice: neg.freightPrice || '—',
-    freightPriceDiff: neg.freightPriceDiff || '',
-    freightPriceDiffColor: neg.freightPriceDiff?.startsWith('+') ? '#F79009' : undefined,
-    freightPriceDiffTooltip: neg.freightPriceDiff && neg.freightPriceDiff !== '' && neg.freightPriceDiff !== '0,0%' && neg.freightPriceDiff !== '+0,0%' ? 'Vergeleken met verkoop' : undefined,
+    freightPriceDiff: neg.bemiddeling ? `Bemiddeling met ${neg.bemiddeling.inkoopRelatie}` : (neg.freightPriceDiff || ''),
+    freightPriceDiffColor: neg.bemiddeling ? undefined : (neg.freightPriceDiff?.startsWith('+') ? '#F79009' : undefined),
+    freightPriceDiffTooltip: neg.bemiddeling ? undefined : (neg.freightPriceDiff && neg.freightPriceDiff !== '' && neg.freightPriceDiff !== '0,0%' && neg.freightPriceDiff !== '+0,0%' ? 'Vergeleken met verkoop' : undefined),
     tonnage: neg.tonnage,
     deadline: neg.deadline,
     deadlineExpired: neg.deadlineExpired,
@@ -184,6 +184,8 @@ export default function InboxCargoDetail() {
     contactName: neg.contact.name,
     contactDate: neg.contact.date,
     contactAvatar: avatars[idx % avatars.length],
+    bemiddelingBadge: neg.bemiddeling ? 'Bemiddeling' : undefined,
+    bemiddelingBadgeStyle: neg.bemiddeling ? { backgroundColor: '#EFF8FF', color: '#175CD3', borderColor: '#B2DDFF' } : undefined,
   }));
 
   const activeNegStatuses = ["In onderhandeling"];
@@ -334,7 +336,10 @@ export default function InboxCargoDetail() {
                           hoveredRowId={hoveredRow}
                           onRowHover={setHoveredRow}
                           activeRowId={selectedNegotiation?.id ?? null}
-                          onRowClick={(row) => setSelectedNegotiation({ id: row.id, status: row.status as string, bron: "markt", relatieName: summary?.relatieName })}
+                          onRowClick={(row) => {
+                            const neg = mockNegotiations.find(n => n.id === row.id);
+                            setSelectedNegotiation({ id: row.id, status: row.status as string, bron: "markt", relatieName: summary?.relatieName, bemiddeling: neg?.bemiddeling });
+                          }}
                         />
                       </>
                     )}
@@ -380,6 +385,7 @@ export default function InboxCargoDetail() {
           bron={selectedNegotiation.bron as any}
           soort="lading"
           relatieName={selectedNegotiation.relatieName}
+          bemiddeling={selectedNegotiation.bemiddeling}
           onClose={() => setSelectedNegotiation(null)}
         />
       )}
