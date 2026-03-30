@@ -368,10 +368,16 @@ export function useLadingEigenDetail(id: string | undefined) {
       setLoading(true);
       setError(null);
       try {
-        const [item, maps] = await Promise.all([
-          api.get<LadingEigen>("lading_eigen", id),
-          getLookups(),
-        ]);
+        // Split IDs (e.g. "le-001-2", "le-001-rest") don't exist in the store;
+        // fall back to the base entity ID by stripping the split suffix.
+        const baseId = id.replace(/-(rest|\d+)$/, '');
+        const maps = await getLookups();
+        let item: LadingEigen;
+        try {
+          item = await api.get<LadingEigen>("lading_eigen", id);
+        } catch {
+          item = await api.get<LadingEigen>("lading_eigen", baseId);
+        }
 
         const partij = maps.partijen.get(item.partijId);
         const subpartij = maps.subpartijen.get(item.subpartijId);
@@ -748,8 +754,15 @@ export function useBevrachtingLadingSummary(id: string | undefined) {
         let resolved: BevrachtingLadingSummary;
 
         // Try lading_eigen first, then fall back to lading_markt
+        // Split IDs (e.g. "le-001-2") don't exist in the store; strip suffix to get base ID.
+        const baseId = id.replace(/-(rest|\d+)$/, '');
         try {
-          const item = await api.get<LadingEigen & { status?: string }>("lading_eigen", id);
+          let item: LadingEigen & { status?: string };
+          try {
+            item = await api.get<LadingEigen & { status?: string }>("lading_eigen", id);
+          } catch {
+            item = await api.get<LadingEigen & { status?: string }>("lading_eigen", baseId);
+          }
 
           const partij = maps.partijen.get(item.partijId);
           const subpartij = maps.subpartijen.get(item.subpartijId);

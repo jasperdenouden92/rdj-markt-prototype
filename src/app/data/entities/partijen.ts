@@ -17,7 +17,7 @@ export const partijen: Partij[] = [
     subsoortId: "lss-001",
     exId: "ex-001",
     laadhavenId: "hav-003",
-    subpartijIds: ["sub-001"],
+    subpartijIds: ["sub-001", "sub-007", "sub-008"],
   },
   {
     id: "par-002",
@@ -120,5 +120,23 @@ export const subpartijen: Subpartij[] = [
     loshavenId: "hav-006",
     laaddatum: "2026-03-19",
     losdatum: "2026-03-22",
+  },
+  {
+    id: "sub-007",
+    naam: "Graan Rotterdam–Duisburg #2",
+    partijId: "par-001",
+    bijzonderheidIds: ["bh-001"],
+    loshavenId: "hav-005",
+    laaddatum: "2026-03-19",
+    losdatum: "2026-03-22",
+  },
+  {
+    id: "sub-008",
+    naam: "Graan Rotterdam–Antwerpen #3",
+    partijId: "par-001",
+    bijzonderheidIds: ["bh-002"],
+    loshavenId: "hav-008",
+    laaddatum: "2026-03-20",
+    losdatum: "2026-03-23",
   },
 ];

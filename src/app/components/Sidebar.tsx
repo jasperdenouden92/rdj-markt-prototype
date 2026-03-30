@@ -11,16 +11,22 @@ export default function Sidebar() {
   const [showSearch, setShowSearch] = useState(false);
   const [showMarktMenu, setShowMarktMenu] = useState(false);
   const [showCrmMenu, setShowCrmMenu] = useState(false);
+  const [showLadingMenu, setShowLadingMenu] = useState(false);
   const [menuTop, setMenuTop] = useState(0);
   const [crmMenuTop, setCrmMenuTop] = useState(0);
+  const [ladingMenuTop, setLadingMenuTop] = useState(0);
   const marktButtonRef = useRef<HTMLDivElement>(null);
   const crmButtonRef = useRef<HTMLDivElement>(null);
+  const ladingButtonRef = useRef<HTMLDivElement>(null);
   const menuRef = useRef<HTMLDivElement>(null);
   const crmMenuRef = useRef<HTMLDivElement>(null);
+  const ladingMenuRef = useRef<HTMLDivElement>(null);
   const hoverZoneRef = useRef<HTMLDivElement>(null);
   const crmHoverZoneRef = useRef<HTMLDivElement>(null);
+  const ladingHoverZoneRef = useRef<HTMLDivElement>(null);
   const closeTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const crmCloseTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const ladingCloseTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const mousePositionRef = useRef<{ x: number; y: number }>({ x: 0, y: 0 });
   const location = useLocation();
 
@@ -101,6 +107,7 @@ export default function Sidebar() {
     return () => {
       if (closeTimeoutRef.current) clearTimeout(closeTimeoutRef.current);
       if (crmCloseTimeoutRef.current) clearTimeout(crmCloseTimeoutRef.current);
+      if (ladingCloseTimeoutRef.current) clearTimeout(ladingCloseTimeoutRef.current);
     };
   }, []);
 
@@ -179,6 +186,41 @@ export default function Sidebar() {
     }
   }, [showMarktMenu, scheduleClose]);
 
+  // Lading menu handlers
+  const cancelLadingClose = useCallback(() => {
+    if (ladingCloseTimeoutRef.current) {
+      clearTimeout(ladingCloseTimeoutRef.current);
+      ladingCloseTimeoutRef.current = null;
+    }
+  }, []);
+
+  const scheduleLadingClose = useCallback((delay = 100) => {
+    cancelLadingClose();
+    ladingCloseTimeoutRef.current = setTimeout(() => {
+      setShowLadingMenu(false);
+    }, delay);
+  }, [cancelLadingClose]);
+
+  const handleLadingMouseEnter = useCallback(() => {
+    cancelLadingClose();
+    if (ladingButtonRef.current) {
+      const buttonRect = ladingButtonRef.current.getBoundingClientRect();
+      const buttonCenterY = buttonRect.top + buttonRect.height / 2;
+      const estimatedMenuHeight = 90;
+      setLadingMenuTop(buttonCenterY - estimatedMenuHeight / 2);
+    }
+    setShowLadingMenu(true);
+  }, [cancelLadingClose]);
+
+  const handleLadingMouseLeave = useCallback(() => {
+    scheduleLadingClose(150);
+  }, [scheduleLadingClose]);
+
+  const ladingMenuItems = [
+    { label: "Partijen", path: "/lading/partijen" },
+    { label: "Subpartijen", path: "/lading/subpartijen" },
+  ];
+
   const marktMenuItems = [
     { label: "Markt aanbod", path: "/markt/inbox/ladingen" },
     { label: "Eigen aanbod", path: "/markt/bevrachting/ladingen" },
@@ -241,8 +283,14 @@ export default function Sidebar() {
                   </div>
 
                   {/* Lading */}
-                  <Link to="/lading" className="content-stretch flex flex-col gap-[4px] items-center relative shrink-0 group" data-name="Item">
-                    <div className={`content-stretch flex items-center justify-center overflow-clip p-[8px] relative rounded-[4px] shrink-0 size-[40px] ${isLadingPage ? 'bg-[#e3effb]' : 'group-hover:bg-rdj-bg-secondary-hover'}`} data-name="_Nav item button">
+                  <div className="content-stretch flex flex-col gap-[4px] items-center relative shrink-0 group" data-name="Item">
+                    <div
+                      className={`content-stretch flex items-center justify-center overflow-clip p-[8px] relative rounded-[4px] shrink-0 size-[40px] cursor-pointer ${isLadingPage ? 'bg-[#e3effb]' : 'group-hover:bg-rdj-bg-secondary-hover'}`}
+                      data-name="_Nav item button"
+                      ref={ladingButtonRef}
+                      onMouseEnter={handleLadingMouseEnter}
+                      onMouseLeave={handleLadingMouseLeave}
+                    >
                       <div className="overflow-clip relative shrink-0 size-[24px]" data-name="container">
                         <div className="absolute inset-[8.93%_12.5%]" data-name="Icon">
                           <div className="absolute inset-[-5.07%_-5.56%]">
@@ -254,7 +302,7 @@ export default function Sidebar() {
                       </div>
                     </div>
                     <p className="font-sans font-normal leading-[18px] relative shrink-0 text-[#344054] text-[12px] whitespace-nowrap">Lading</p>
-                  </Link>
+                  </div>
                   
                   {/* Vloot */}
                   <Link to="/vloot" className="content-stretch flex flex-col gap-[4px] items-center relative shrink-0 group" data-name="Item">
@@ -465,6 +513,78 @@ export default function Sidebar() {
                         <Link
                           to={item.path}
                           onClick={() => setShowCrmMenu(false)}
+                          className={`flex-[1_0_0] min-h-px min-w-px relative rounded-[4px] ${
+                            isActive ? 'bg-rdj-bg-secondary' : 'hover:bg-rdj-bg-secondary'
+                          } transition-colors duration-150`}
+                        >
+                          <div className="flex flex-row items-center size-full">
+                            <div className="content-stretch flex items-center px-[8px] py-[9px] relative w-full">
+                              <p className={`flex-[1_0_0] font-sans font-bold leading-[20px] min-h-px min-w-px relative text-[14px] ${
+                                isActive ? 'text-[#182230]' : 'text-[#344054]'
+                              }`}>
+                                {item.label}
+                              </p>
+                            </div>
+                          </div>
+                        </Link>
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+          <div aria-hidden="true" className="absolute border border-rdj-border-secondary border-solid inset-0 pointer-events-none rounded-[6px] shadow-[0px_12px_16px_-4px_rgba(16,24,40,0.08),0px_4px_6px_-2px_rgba(16,24,40,0.03)]" />
+        </div>
+      )}
+
+      {/* Lading Safety triangle hover zone */}
+      {showLadingMenu && (
+        <div
+          ref={ladingHoverZoneRef}
+          className="fixed inset-0 z-[60]"
+          style={{ pointerEvents: 'none' }}
+        >
+          <div
+            className="absolute"
+            style={{
+              left: '72px',
+              top: `${ladingMenuTop - 20}px`,
+              width: '20px',
+              height: ladingMenuRef.current ? `${ladingMenuRef.current.getBoundingClientRect().height + 40}px` : '120px',
+              pointerEvents: 'auto',
+            }}
+            onMouseMove={() => {
+              if (!showLadingMenu) return;
+              cancelLadingClose();
+            }}
+            onMouseLeave={() => {
+              if (showLadingMenu) scheduleLadingClose(80);
+            }}
+          />
+        </div>
+      )}
+
+      {/* Lading Menu */}
+      {showLadingMenu && (
+        <div
+          ref={ladingMenuRef}
+          className="fixed left-[80px] w-[160px] bg-white rounded-[6px] shadow-[0px_12px_16px_-4px_rgba(16,24,40,0.08),0px_4px_6px_-2px_rgba(16,24,40,0.03)] z-[70]"
+          style={{ top: `${ladingMenuTop}px` }}
+          onMouseEnter={cancelLadingClose}
+          onMouseLeave={() => scheduleLadingClose(100)}
+        >
+          <div className="content-stretch flex flex-col items-start overflow-clip relative rounded-[inherit] size-full">
+            <div className="content-stretch flex flex-col items-start overflow-clip py-[4px] relative shrink-0 w-full">
+              {ladingMenuItems.map((item) => {
+                const isActive = location.pathname.startsWith(item.path);
+                return (
+                  <div key={item.path} className="relative shrink-0 w-full">
+                    <div className="flex flex-row items-center size-full">
+                      <div className="content-stretch flex items-center px-[4px] py-px relative w-full">
+                        <Link
+                          to={item.path}
+                          onClick={() => setShowLadingMenu(false)}
                           className={`flex-[1_0_0] min-h-px min-w-px relative rounded-[4px] ${
                             isActive ? 'bg-rdj-bg-secondary' : 'hover:bg-rdj-bg-secondary'
                           } transition-colors duration-150`}

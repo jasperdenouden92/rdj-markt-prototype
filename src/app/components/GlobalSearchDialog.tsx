@@ -47,7 +47,7 @@ function buildSearchResults(): SearchResult[] {
       type: "partij",
       title: l.titel,
       subtitle: `${l.product} · ${l.tonnage}`,
-      path: `/lading/${l.id}`,
+      path: `/lading/partij/${l.id}`,
       meta: {
         product: l.product,
         tonnage: l.tonnage,
