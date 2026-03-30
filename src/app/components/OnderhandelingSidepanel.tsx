@@ -15,6 +15,7 @@ import imgJanWillemVdKraan from "../../assets/9e45f45f537bea4bf653bc0307471e5ff5
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "./ui/dialog";
 import { Input } from "./ui/input";
 import { Label } from "./ui/label";
+import DatePickerPopover, { formatDatePickerValue, type DatePickerValue } from "./DatePickerPopover";
 
 /**
  * OnderhandelingSidepanel — modeless panel for a negotiation.
@@ -44,7 +45,8 @@ const mockCondities: Record<ConditiesField, { inkoop: number | null; verkoop: nu
 
 /* ── Mock negotiation meta ── */
 const mockNegotiationMeta = {
-  deadline: "17 jan 2026",
+  laadgereed: "±Wo 15 Jan",
+  losgereed: "Do 16 Jan",
   eigenaar: "Khoa Nguyen",
   eigenaarInitials: "KN",
   eigenaarFoto: imgKhoaNguyen,
@@ -94,7 +96,8 @@ const mockLading = {
   eigenaar: "Eric Nieuwkoop",
   eigenaarInitials: "EN",
   eigenaarFoto: imgEricNieuwkoop,
-  deadline: "17 jan 2026",
+  laadgereed: "±Wo 15 Jan",
+  losgereed: "Do 16 Jan",
 };
 
 /* ── Mock activiteit data (onderhandelingsstappen) ── */
@@ -248,6 +251,10 @@ export default function OnderhandelingSidepanel({ negotiationId, status: initial
   const [sideTab, setSideTab] = useState<SideTab>(initialSideTab || "activiteit");
   const [overig, setOverig] = useState("");
   const [currentStatus, setCurrentStatus] = useState<NegotiationStatus>(initialStatus);
+  const [laadgereed, setLaadgereed] = useState(mockNegotiationMeta.laadgereed);
+  const [losgereed, setLosgereed] = useState(mockNegotiationMeta.losgereed);
+  const [laadgereedPicker, setLaadgereedPicker] = useState<DatePickerValue | undefined>(undefined);
+  const [losgereedPicker, setLosgereedPicker] = useState<DatePickerValue | undefined>(undefined);
   const isActive = activeStatuses.includes(currentStatus);
   const [conditiesOverrides, setConditiesOverrides] = useState<Partial<Record<ConditiesField, number | null>>>({});
   const [extraEvents, setExtraEvents] = useState<ActivityEvent[]>([]);
@@ -354,12 +361,36 @@ export default function OnderhandelingSidepanel({ negotiationId, status: initial
               type={statusBadgeConfig[currentStatus].type}
               icon={statusBadgeConfig[currentStatus].icon ?? undefined}
             />
-            <div className="flex items-center gap-[6px]">
-              <Calendar size={14} className="text-rdj-text-tertiary shrink-0" />
-              <p className="font-sans font-normal leading-[20px] text-rdj-text-secondary text-[14px]">
-                {mockNegotiationMeta.deadline}
-              </p>
-            </div>
+            <DatePickerPopover
+              id="sidepanel-laadgereed"
+              value={laadgereedPicker}
+              onChange={(val) => {
+                setLaadgereedPicker(val);
+                setLaadgereed(formatDatePickerValue(val));
+              }}
+            >
+              <button className="flex items-center gap-[6px] hover:bg-rdj-bg-primary-hover rounded-[4px] px-[4px] py-[2px] -mx-[4px] transition-colors">
+                <Calendar size={14} className="text-rdj-text-tertiary shrink-0" />
+                <p className="font-sans font-normal leading-[20px] text-rdj-text-secondary text-[14px]">
+                  Laden: {laadgereed}
+                </p>
+              </button>
+            </DatePickerPopover>
+            <DatePickerPopover
+              id="sidepanel-losgereed"
+              value={losgereedPicker}
+              onChange={(val) => {
+                setLosgereedPicker(val);
+                setLosgereed(formatDatePickerValue(val));
+              }}
+            >
+              <button className="flex items-center gap-[6px] hover:bg-rdj-bg-primary-hover rounded-[4px] px-[4px] py-[2px] -mx-[4px] transition-colors">
+                <Calendar size={14} className="text-rdj-text-tertiary shrink-0" />
+                <p className="font-sans font-normal leading-[20px] text-rdj-text-secondary text-[14px]">
+                  Lossen: {losgereed}
+                </p>
+              </button>
+            </DatePickerPopover>
             <div className="flex items-center gap-[6px]">
               <div className="relative rounded-full shrink-0 size-[20px] bg-rdj-bg-secondary overflow-hidden">
                 <img alt="" src={mockNegotiationMeta.eigenaarFoto} className="absolute inset-0 size-full object-cover rounded-full" />
@@ -793,7 +824,8 @@ function LadingTab() {
 
       <DetailsSidebarSection>
         <DetailRow label="Eigenaar" type="user" value={mockLading.eigenaar} avatarSrc={mockLading.eigenaarFoto} avatarInitials={mockLading.eigenaarInitials} />
-        <DetailRow label="Deadline" value={mockLading.deadline} />
+        <DetailRow label="Laadgereed" value={mockLading.laadgereed} />
+        <DetailRow label="Losgereed" value={mockLading.losgereed} />
       </DetailsSidebarSection>
     </>
   );
