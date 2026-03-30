@@ -11,6 +11,7 @@ import {
   mockRelatieVaartuigMatches,
 } from "../data/mock-relatie-data";
 import LastActivityButton from "./LastActivityButton";
+import { useAnnotationContext } from "./AnnotationContext";
 import DatePickerPopover, { formatDatePickerValue, type DatePickerValue } from "./DatePickerPopover";
 
 /* ── Types ── */
@@ -99,6 +100,13 @@ export default function ConversationDialog({
     if (preSelectedItemType === "relatie-lading") return "ladingen-relatie";
     return "eigen-ladingen";
   };
+
+  // Annotation context tracking
+  const { pushContext, popContext } = useAnnotationContext();
+  useEffect(() => {
+    pushContext("dialog:conversation");
+    return () => popContext();
+  }, [pushContext, popContext]);
 
   const [activeTab, setActiveTab] = useState<TabValue>(getInitialTab);
   const [selectedLeftId, setSelectedLeftId] = useState<string | null>(preSelectedItemId ?? null);
