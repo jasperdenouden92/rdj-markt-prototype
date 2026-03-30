@@ -29,6 +29,7 @@ interface DisplayItem {
   laaddatum?: string;
   loslocatie?: string;
   losdatum?: string;
+  relatieName?: string;
 }
 
 interface MatchDisplayItem extends DisplayItem {
@@ -111,6 +112,7 @@ export default function ConversationDialog({
   const [addingItem, setAddingItem] = useState<"lading" | "vaartuig" | null>(null);
   const [showMarktLadingen, setShowMarktLadingen] = useState(false);
   const [showMarktVaartuigen, setShowMarktVaartuigen] = useState(false);
+  const [bemiddelingSet, setBemiddelingSet] = useState<Set<string>>(new Set()); // set of rightId's that are in bemiddeling
 
   // Data
   const [eigenLadingen, setEigenLadingen] = useState<DisplayItem[]>([]);
@@ -215,6 +217,7 @@ export default function ConversationDialog({
             laaddatum: lm.laaddatum ? formatDate(lm.laaddatum) : undefined,
             loslocatie: losHaven,
             losdatum: lm.losdatum ? formatDate(lm.losdatum) : undefined,
+            relatieName: relNaam || undefined,
           };
         })
     );
@@ -268,6 +271,7 @@ export default function ConversationDialog({
           meta: `${havenMap.get(vm.huidigeLocatieId)?.naam || ""} · ${relatieMap.get(vm.relatieId)?.naam || ""}`,
           source: "markt" as const,
           kind: "vaartuig" as const,
+          relatieName: relatieMap.get(vm.relatieId)?.naam || undefined,
         }))
     );
 
@@ -533,6 +537,7 @@ export default function ConversationDialog({
             source: (m.isEigen ? "eigen" : "markt") as "eigen" | "relatie" | "markt",
             kind: "vaartuig" as const,
             matchPercentage: m.matchPercentage,
+            relatieName: !m.isEigen ? m.relatie : undefined,
           }));
         // Include origin item if not already in results
         if (preSelectedOriginId) {
@@ -570,6 +575,7 @@ export default function ConversationDialog({
             laaddatum: m.laadDatum,
             loslocatie: m.losHaven,
             losdatum: m.losDatum,
+            relatieName: !m.isEigen ? m.relatie : undefined,
           }));
         // Include origin item if not already in results
         if (preSelectedOriginId) {
@@ -593,6 +599,31 @@ export default function ConversationDialog({
 
   const matchItems = getMatchItems();
   const showMatches = selectedLeftId !== null && matchItems.length > 0;
+
+  // Bemiddeling logic: auto-detect when markt items are involved
+  const selectedLeftItem = selectedLeftId ? leftItems.find(i => i.id === selectedLeftId) : null;
+  const isLeftMarkt = selectedLeftItem?.source === "markt";
+
+  // Helper: check if a specific right match is in bemiddeling
+  const isMatchBemiddeld = (matchId: string) => {
+    if (isLeftMarkt) return true; // left is markt → all matches are bemiddeling
+    return bemiddelingSet.has(matchId);
+  };
+
+  // Bemiddeling is active when left is markt OR any right match is manually bemiddeld
+  const isBemiddelingActive = isLeftMarkt || bemiddelingSet.size > 0;
+
+  // Count stats for footer
+  const bemiddelingCount = bemiddelingSet.size + (isLeftMarkt ? matchItems.length : 0);
+  const statusEntries = Array.from(itemStatuses.entries());
+  const ladingenCount = statusEntries.filter(([id]) => {
+    const item = [...leftItems, ...matchItems].find(i => i.id === id);
+    return item?.kind === "lading";
+  }).length;
+  const vaartuigenCount = statusEntries.filter(([id]) => {
+    const item = [...leftItems, ...matchItems].find(i => i.id === id);
+    return item?.kind === "vaartuig";
+  }).length;
 
   const setStatus = (id: string, status: ItemStatus) => {
     setItemStatuses(prev => {
@@ -662,6 +693,7 @@ export default function ConversationDialog({
 
   const handleLeftItemClick = (id: string) => {
     setSelectedLeftId(prev => (prev === id ? null : id));
+    setBemiddelingSet(new Set()); // reset manual bemiddeling when switching left item
   };
 
   const handleAddRelatieLading = (data: { titel: string; tonnage: string; product: string; laadhaven: string; loshaven: string; laaddatum: string; losdatum: string }) => {
@@ -786,6 +818,19 @@ export default function ConversationDialog({
                     conditions={itemConditions.get(item.id)}
                     bidConditions={itemBidConditions.get(item.id)}
                     conditionsExpanded={expandedConditions.has(item.id)}
+                    bemiddelingMode={item.source === "markt" || (item.id === selectedLeftId && isBemiddelingActive)}
+                    bemiddelingMatchRelatie={item.id === selectedLeftId ? (() => {
+                      // For markt items on left: the "other" relatie is the markt match's relatie
+                      if (item.source === "markt") {
+                        // Find markt match relatie, or fall back to conversation relatie
+                        const marktMatch = matchItems.find(m => m.source === "markt");
+                        return marktMatch?.relatieName || relatieName;
+                      }
+                      // For non-markt left items: the "other" relatie is the bemiddeld match's relatie
+                      const bemiddeldMatch = matchItems.find(m => bemiddelingSet.has(m.id));
+                      return bemiddeldMatch?.relatieName;
+                    })() : undefined}
+                    conversationRelatieName={relatieName}
                     onStatusChange={status => {
                       setStatus(item.id, status);
                       if ((status === "aangeboden" || status === "interesse") && item.kind === "lading") {
@@ -865,6 +910,30 @@ export default function ConversationDialog({
                         conditions={itemConditions.get(item.id)}
                         bidConditions={itemBidConditions.get(item.id)}
                         conditionsExpanded={expandedConditions.has(item.id)}
+                        isBemiddelingActive={isMatchBemiddeld(item.id)}
+                        isMarktItem={item.source === "markt"}
+                        showBemiddelingButton={item.source === "markt" && item.kind === "vaartuig"}
+                        onBemiddelingToggle={() => {
+                          setBemiddelingSet(prev => {
+                            const next = new Set(prev);
+                            if (next.has(item.id)) {
+                              next.delete(item.id);
+                            } else {
+                              next.add(item.id);
+                              // Auto-set "aangeboden" status on the match item
+                              setStatus(item.id, "aangeboden");
+                              if (item.kind === "lading") {
+                                setExpandedConditions(p => new Set(p).add(item.id));
+                              }
+                              // Also set status on the left item and expand its conditions
+                              if (selectedLeftId && selectedLeftItem?.kind === "lading") {
+                                setStatus(selectedLeftId, "aangeboden");
+                                setExpandedConditions(p => new Set(p).add(selectedLeftId));
+                              }
+                            }
+                            return next;
+                          });
+                        }}
                         onStatusChange={status => {
                           setStatus(item.id, status);
                           if ((status === "aangeboden" || status === "interesse") && item.kind === "lading") {
@@ -872,10 +941,22 @@ export default function ConversationDialog({
                           } else if (status === "geen-interesse" && item.kind === "lading") {
                             setExpandedConditions(prev => { const next = new Set(prev); next.delete(item.id); return next; });
                           }
+                          // Auto-bemiddeling for markt items on "aangeboden"
+                          if (item.source === "markt" && status === "aangeboden") {
+                            setBemiddelingSet(prev => new Set(prev).add(item.id));
+                            if (selectedLeftId && selectedLeftItem?.kind === "lading") {
+                              setStatus(selectedLeftId, "aangeboden");
+                              setExpandedConditions(p => new Set(p).add(selectedLeftId));
+                            }
+                          } else if (item.source === "markt" && status !== "aangeboden") {
+                            setBemiddelingSet(prev => { const next = new Set(prev); next.delete(item.id); return next; });
+                          }
                         }}
                         onToggleConditions={() => toggleConditionsExpanded(item.id)}
                         onConditionChange={(key, value) => setConditionValue(item.id, key, value)}
                         onBidConditionChange={(key, value) => setBidConditionValue(item.id, key, value)}
+                        selectedLeftItem={selectedLeftItem ?? undefined}
+                        conversationRelatieName={relatieName}
                       />
                     ))
                   ) : (
@@ -916,7 +997,11 @@ export default function ConversationDialog({
         </div>
 
         {/* Footer */}
-        <div className="shrink-0 border-t border-rdj-border-secondary px-[32px] py-[16px] flex items-center justify-end gap-[12px]">
+        <div className="shrink-0 border-t border-rdj-border-secondary px-[32px] py-[16px] flex items-center justify-between gap-[12px]">
+          <p className="font-sans font-normal text-[13px] leading-[18px] text-rdj-text-tertiary">
+            {ladingenCount} {ladingenCount === 1 ? "lading" : "ladingen"} en {vaartuigenCount} {vaartuigenCount === 1 ? "vaartuig" : "vaartuigen"}{bemiddelingCount > 0 ? ` — ${bemiddelingCount} ${bemiddelingCount === 1 ? "bemiddeling" : "bemiddelingen"}` : ""}
+          </p>
+          <div className="flex items-center gap-[12px]">
           <button
             onClick={onClose}
             className="bg-white relative rounded-[6px] shrink-0"
@@ -935,6 +1020,7 @@ export default function ConversationDialog({
             </div>
             <div aria-hidden="true" className="absolute border border-[#1567a4] inset-0 pointer-events-none rounded-[6px] shadow-[0px_1px_2px_0px_rgba(16,24,40,0.05)]" />
           </button>
+          </div>
         </div>
       </div>
     </div>
@@ -1080,6 +1166,9 @@ function ItemRow({
   conditions,
   bidConditions,
   conditionsExpanded,
+  bemiddelingMode,
+  bemiddelingMatchRelatie,
+  conversationRelatieName,
   onStatusChange,
   onToggleConditions,
   onConditionChange,
@@ -1093,6 +1182,9 @@ function ItemRow({
   conditions?: ConditionValues;
   bidConditions?: ConditionValues;
   conditionsExpanded: boolean;
+  bemiddelingMode?: boolean;
+  bemiddelingMatchRelatie?: string;
+  conversationRelatieName?: string;
   onStatusChange: (status: ItemStatus) => void;
   onToggleConditions: () => void;
   onConditionChange: (key: ConditionKey, value: string) => void;
@@ -1102,12 +1194,15 @@ function ItemRow({
 }) {
   const isEigen = item.source === "eigen";
   const isLading = item.kind === "lading";
-  const isRelatieLading = !isEigen && isLading;
+  const isRelatieLading = !isEigen && !item.source.startsWith("markt") && isLading;
   const isEigenLading = isEigen && isLading;
+  const isMarktLading = item.source === "markt" && isLading;
   const isVaartuig = item.kind === "vaartuig";
   const hasLocation = isLading && (item.laadlocatie || item.loslocatie);
   const isMarkt = item.source === "markt";
   const filledConditions = conditions ? Object.keys(conditions).length : 0;
+  // Markt ladingen get same buttons as eigen ladingen
+  const showEigenButtons = isEigenLading || isMarktLading;
 
   return (
     <div
@@ -1180,7 +1275,7 @@ function ItemRow({
               />
             </>
           )}
-          {isEigenLading && (
+          {showEigenButtons && (
             <>
               <Button
                 variant="tertiary-gray"
@@ -1222,39 +1317,42 @@ function ItemRow({
           conditions={conditions}
           bidConditions={bidConditions}
           showBid={status === "aangeboden"}
-          primaryLabel="Hun"
-          secondaryLabel="Ons"
+          primaryLabel={bemiddelingMode ? "Verkoop" : "Hun"}
+          primarySubLabel={bemiddelingMode ? conversationRelatieName : undefined}
+          secondaryLabel={bemiddelingMode ? "Inkoop" : "Ons"}
+          secondarySubLabel={bemiddelingMode ? bemiddelingMatchRelatie : undefined}
           onConditionChange={onConditionChange}
           onBidConditionChange={onBidConditionChange}
-
         />
       )}
 
-      {/* Expanded conditions for eigen ladingen: aangeboden = onze condities, interesse = onze condities + hun bod */}
-      {isEigenLading && conditionsExpanded && (status === "aangeboden" || status === "interesse") && (
+      {/* Expanded conditions for eigen/markt ladingen */}
+      {showEigenButtons && conditionsExpanded && (status === "aangeboden" || status === "interesse") && (
         <LadingConditionsSection
           conditions={conditions}
           bidConditions={bidConditions}
-          showBid={status === "interesse"}
-          primaryLabel="Ons"
-          secondaryLabel="Hun"
+          showBid={bemiddelingMode ? (status === "aangeboden" || status === "interesse") : status === "interesse"}
+          primaryLabel={bemiddelingMode ? "Inkoop" : "Ons"}
+          primarySubLabel={bemiddelingMode ? (isMarkt ? item.relatieName : undefined) : undefined}
+          secondaryLabel={bemiddelingMode ? "Verkoop" : "Hun"}
+          secondarySubLabel={bemiddelingMode ? (isMarkt ? conversationRelatieName : bemiddelingMatchRelatie) : undefined}
           onConditionChange={onConditionChange}
           onBidConditionChange={onBidConditionChange}
-
         />
       )}
 
       {/* Condities-only view (no status set yet) */}
-      {isEigenLading && conditionsExpanded && !status && (
+      {showEigenButtons && conditionsExpanded && !status && (
         <LadingConditionsSection
           conditions={conditions}
           bidConditions={bidConditions}
           showBid={false}
-          primaryLabel="Ons"
-          secondaryLabel="Hun"
+          primaryLabel={bemiddelingMode ? "Inkoop" : "Ons"}
+          primarySubLabel={bemiddelingMode ? (isMarkt ? item.relatieName : undefined) : undefined}
+          secondaryLabel={bemiddelingMode ? "Verkoop" : "Hun"}
+          secondarySubLabel={bemiddelingMode ? (isMarkt ? conversationRelatieName : bemiddelingMatchRelatie) : undefined}
           onConditionChange={onConditionChange}
           onBidConditionChange={onBidConditionChange}
-
         />
       )}
     </div>
@@ -1270,10 +1368,16 @@ function MatchRow({
   conditions,
   bidConditions,
   conditionsExpanded,
+  isBemiddelingActive,
+  isMarktItem,
+  showBemiddelingButton,
+  onBemiddelingToggle,
   onStatusChange,
   onToggleConditions,
   onConditionChange,
   onBidConditionChange,
+  selectedLeftItem,
+  conversationRelatieName,
 }: {
   item: MatchDisplayItem;
   mode: "eigen-lading" | "relatie-lading" | "no-buttons";
@@ -1281,18 +1385,29 @@ function MatchRow({
   conditions?: ConditionValues;
   bidConditions?: ConditionValues;
   conditionsExpanded: boolean;
+  isBemiddelingActive?: boolean;
+  isMarktItem?: boolean;
+  showBemiddelingButton?: boolean;
+  onBemiddelingToggle?: () => void;
   onStatusChange: (status: ItemStatus) => void;
   onToggleConditions: () => void;
   onConditionChange: (key: ConditionKey, value: string) => void;
   onBidConditionChange: (key: ConditionKey, value: string) => void;
+  selectedLeftItem?: DisplayItem;
+  conversationRelatieName?: string;
 }) {
   const isLading = item.kind === "lading";
   const hasLocation = isLading && (item.laadlocatie || item.loslocatie);
   const filledConditions = conditions ? Object.keys(conditions).length : 0;
   const showButtons = mode !== "no-buttons" && isLading;
   const isEigenMode = mode === "eigen-lading";
-  const primaryLabel = isEigenMode ? "Ons" : "Hun";
-  const secondaryLabel = isEigenMode ? "Hun" : "Ons";
+  // In bemiddeling: Inkoop = markt item relatie, Verkoop = conversation relatie or left item relatie
+  const rightRelatie = item.relatieName ?? (item.source === "relatie" ? conversationRelatieName : undefined);
+  const leftRelatie = selectedLeftItem?.source === "markt" ? selectedLeftItem.relatieName : conversationRelatieName;
+  const primaryLabel = isBemiddelingActive ? "Inkoop" : (isEigenMode ? "Ons" : "Hun");
+  const primarySubLabel = isBemiddelingActive ? rightRelatie : undefined;
+  const secondaryLabel = isBemiddelingActive ? "Verkoop" : (isEigenMode ? "Hun" : "Ons");
+  const secondarySubLabel = isBemiddelingActive ? leftRelatie : undefined;
 
   return (
     <div className="px-[16px] py-[10px] hover:bg-[#f9fafb] transition-colors">
@@ -1303,7 +1418,12 @@ function MatchRow({
         </div>
 
         <div className="flex-1 min-w-0">
-          <div className="flex items-baseline gap-[8px]">
+          <div className="flex items-center gap-[8px]">
+            {item.source === "markt" && (
+              <span className="shrink-0 inline-flex items-center rounded-full bg-[#f2f4f7] px-[6px] py-[1px] font-sans font-bold text-[11px] leading-[16px] text-[#344054]">
+                Markt
+              </span>
+            )}
             <p className="font-sans font-bold text-[14px] leading-[20px] text-rdj-text-primary truncate shrink-0">
               {item.title}
             </p>
@@ -1311,6 +1431,12 @@ function MatchRow({
               {item.subtitle}
             </p>
           </div>
+
+          {item.relatieName && (
+            <p className="mt-[2px] font-sans font-normal text-[12px] leading-[16px] text-rdj-text-tertiary">
+              {item.relatieName}
+            </p>
+          )}
 
           {hasLocation && (
             <div className="flex items-center gap-[6px] mt-[2px] font-sans font-normal text-[12px] leading-[16px] text-rdj-text-tertiary">
@@ -1324,8 +1450,13 @@ function MatchRow({
             </div>
           )}
 
-          {!hasLocation && item.meta && (
+          {!hasLocation && !item.relatieName && item.meta && (
             <p className="mt-[2px] font-sans font-normal text-[12px] leading-[16px] text-rdj-text-tertiary">
+              {item.meta}
+            </p>
+          )}
+          {!hasLocation && item.relatieName && item.meta && (
+            <p className="mt-[1px] font-sans font-normal text-[12px] leading-[16px] text-rdj-text-tertiary">
               {item.meta}
             </p>
           )}
@@ -1333,6 +1464,15 @@ function MatchRow({
 
         {/* Action buttons */}
         <div className="shrink-0 flex items-center gap-[4px]">
+          {showBemiddelingButton && onBemiddelingToggle && (
+            <Button
+              variant={isBemiddelingActive ? "primary" : "secondary"}
+              size="xs"
+              leadingIcon={isBemiddelingActive ? <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M11.667 3.5L5.25 9.917 2.333 7" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round"/></svg> : undefined}
+              label={isBemiddelingActive ? "Bemiddeling" : "+ Bemiddeling"}
+              onClick={(e: React.MouseEvent) => { e.stopPropagation(); onBemiddelingToggle(); }}
+            />
+          )}
           {showButtons && (
             <>
               <Button
@@ -1375,12 +1515,13 @@ function MatchRow({
         <LadingConditionsSection
           conditions={conditions}
           bidConditions={bidConditions}
-          showBid={isEigenMode ? status === "interesse" : status === "aangeboden"}
+          showBid={isBemiddelingActive ? (status === "aangeboden" || status === "interesse") : (isEigenMode ? status === "interesse" : status === "aangeboden")}
           primaryLabel={primaryLabel}
+          primarySubLabel={primarySubLabel}
           secondaryLabel={secondaryLabel}
+          secondarySubLabel={secondarySubLabel}
           onConditionChange={onConditionChange}
           onBidConditionChange={onBidConditionChange}
-
         />
       )}
     </div>
@@ -1438,7 +1579,9 @@ function LadingConditionsSection({
   bidConditions,
   showBid,
   primaryLabel,
+  primarySubLabel,
   secondaryLabel,
+  secondarySubLabel,
   onConditionChange,
   onBidConditionChange,
 }: {
@@ -1446,17 +1589,24 @@ function LadingConditionsSection({
   bidConditions?: ConditionValues;
   showBid: boolean;
   primaryLabel: string;
+  primarySubLabel?: string;
   secondaryLabel: string;
+  secondarySubLabel?: string;
   onConditionChange: (key: ConditionKey, value: string) => void;
   onBidConditionChange: (key: ConditionKey, value: string) => void;
 }) {
   return (
     <div className="mt-[8px] ml-[30px]" onClick={e => e.stopPropagation()}>
       {/* Primary conditions */}
-      <div className="flex items-start gap-[6px] mb-[6px]">
-        <span className="font-sans font-bold text-[11px] leading-[22px] text-rdj-text-tertiary uppercase tracking-wide w-[32px] shrink-0">
-          {primaryLabel}
-        </span>
+      <div className="flex items-start gap-[8px] mb-[6px]">
+        <div className="shrink-0 w-[64px]">
+          <span className="font-sans font-bold text-[11px] leading-[22px] text-rdj-text-tertiary uppercase tracking-wide whitespace-nowrap">
+            {primaryLabel}
+          </span>
+          {primarySubLabel && (
+            <p className="font-sans font-normal text-[10px] leading-[14px] text-rdj-text-tertiary truncate">{primarySubLabel}</p>
+          )}
+        </div>
         <div className="flex items-center gap-[4px] flex-wrap">
           {CONDITION_DEFS.map(def =>
             def.isDate ? (
@@ -1480,10 +1630,15 @@ function LadingConditionsSection({
 
       {/* Secondary (bid) conditions */}
       {showBid && (
-        <div className="flex items-start gap-[6px] mb-[6px]">
-          <span className="font-sans font-bold text-[11px] leading-[22px] text-[#175cd3] uppercase tracking-wide w-[32px] shrink-0">
-            {secondaryLabel}
-          </span>
+        <div className="flex items-start gap-[8px] mb-[6px]">
+          <div className="shrink-0 w-[64px]">
+            <span className="font-sans font-bold text-[11px] leading-[22px] text-[#175cd3] uppercase tracking-wide whitespace-nowrap">
+              {secondaryLabel}
+            </span>
+            {secondarySubLabel && (
+              <p className="font-sans font-normal text-[10px] leading-[14px] text-[#175cd3] truncate">{secondarySubLabel}</p>
+            )}
+          </div>
           <div className="flex items-center gap-[4px] flex-wrap">
             {CONDITION_DEFS.map(def =>
               def.isDate ? (
