@@ -16,7 +16,6 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "./ui/dialog";
 import { Input } from "./ui/input";
 import { Label } from "./ui/label";
 import DatePickerPopover, { formatDatePickerValue, type DatePickerValue } from "./DatePickerPopover";
-import { useAnnotationContext } from "./AnnotationContext";
 
 /**
  * OnderhandelingSidepanel — modeless panel for a negotiation.
@@ -262,13 +261,6 @@ const bemiddelingStatusConfig: Record<BemiddelingStatus, { variant: BadgeVariant
 };
 
 export default function OnderhandelingSidepanel({ negotiationId, status: initialStatus, bron, soort, relatieName, subtitle: subtitleText, initialSideTab, bemiddeling, onClose, onStatusChange }: OnderhandelingSidepanelProps) {
-  // Annotation context tracking
-  const { pushContext, popContext } = useAnnotationContext();
-  useEffect(() => {
-    pushContext("panel:onderhandeling");
-    return () => popContext();
-  }, [pushContext, popContext]);
-
   const isBemiddeling = !!bemiddeling;
   const [sideTab, setSideTab] = useState<SideTab>(initialSideTab || "activiteit");
   const [overig, setOverig] = useState("");

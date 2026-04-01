@@ -23,7 +23,6 @@ import imgPelgerDeJong from "../../assets/e7809035038b3816de2a1d67c5de86ebeed325
 import imgJanWillemVdKraan from "../../assets/9e45f45f537bea4bf653bc0307471e5ff5545f63.png";
 import svgPaths from "../../imports/svg-5lxjaeghl9";
 import FloatingActionBar from "../components/FloatingActionBar";
-import AnnotationMarker from "../components/AnnotationMarker";
 import { useBevrachtingData, type BevrachtingCargo, type BevrachtingVessel } from "../data/useMarktData";
 
 /* ── Status mapping for table view ── */
@@ -455,11 +454,6 @@ export default function Bevrachting() {
                     items={intakeCargos}
                     onDrop={handleDrop}
                     type="cargo"
-                    wrapCard={(itemId, card) =>
-                      itemId === intakeCargos[0]?.id
-                        ? <AnnotationMarker annotationId="7f82648d-b174-4030-9eb8-9309efaf4ccd">{card}</AnnotationMarker>
-                        : card
-                    }
                   />
                   <DroppableColumn
                     title="Werklijst"
