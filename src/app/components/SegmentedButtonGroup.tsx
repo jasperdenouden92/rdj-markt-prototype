@@ -20,6 +20,8 @@ interface SegmentedButtonGroupProps {
   onChange: (value: string) => void;
   /** Optional className on the outer wrapper */
   className?: string;
+  /** When true, buttons stretch to fill available width equally */
+  fullWidth?: boolean;
 }
 
 export default function SegmentedButtonGroup({
@@ -27,6 +29,7 @@ export default function SegmentedButtonGroup({
   value,
   onChange,
   className = "",
+  fullWidth = false,
 }: SegmentedButtonGroupProps) {
   return (
     <div className={`relative rounded-[6px] shrink-0 ${className}`}>
@@ -44,7 +47,7 @@ export default function SegmentedButtonGroup({
                 isActive ? "bg-rdj-bg-active" : "bg-rdj-bg-primary"
               } content-stretch flex items-center justify-center gap-[6px] min-h-[40px] ${
                 item.label ? "px-[16px]" : "px-[12px]"
-              } py-[8px] relative shrink-0 cursor-pointer`}
+              } py-[8px] relative ${fullWidth ? "flex-1" : "shrink-0"} cursor-pointer`}
               style={{ zIndex }}
             >
               {/* Divider between segments */}
