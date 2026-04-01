@@ -1,4 +1,5 @@
 import { useState, useMemo } from "react";
+import { PanelRight } from "lucide-react";
 import { useParams, Link } from "react-router";
 import Sidebar from "../components/Sidebar";
 import Button from "../components/Button";
@@ -92,6 +93,7 @@ const mockNietBeschikbaar: NietBeschikbaar[] = [
 
 export default function VlootVaartuigDetail() {
   const { id } = useParams();
+  const [sidebarOpen, setSidebarOpen] = useState(true);
   const [sidebarTab, setSidebarTab] = useState<"details" | "profiel" | "team" | "plan">("details");
   const [reizenTab, setReizenTab] = useState("alle");
   const [nbTab, setNbTab] = useState("alle");
@@ -120,26 +122,35 @@ export default function VlootVaartuigDetail() {
     <div className="flex min-h-screen bg-white">
       <Sidebar />
 
-      <div className="flex-1 overflow-auto">
+      <div className="flex-1 flex min-h-0">
+        <div className="flex-1 overflow-auto min-w-0">
         {/* Breadcrumb */}
         <div className="flex flex-col gap-[20px] items-start pt-[24px] w-full">
-          <div className="flex items-center gap-[8px] pl-[24px]">
-            <Link to="/vloot" className="flex items-center justify-center p-[4px] rounded-[6px] hover:bg-rdj-bg-primary-hover">
-              <p className="font-sans font-bold leading-[20px] text-[#475467] text-[14px] whitespace-nowrap">Vloot</p>
-            </Link>
-            <div className="overflow-clip shrink-0 size-[16px]"><div className="absolute bottom-1/4 left-[37.5%] right-[37.5%] top-1/4 relative"><div className="absolute inset-[-8.33%_-16.67%]">{chevronSvg}</div></div></div>
-            <div className="bg-[#f9fafb] flex items-center justify-center px-[8px] py-[4px] rounded-[6px]">
-              <p className="font-sans font-bold leading-[20px] text-[#344054] text-[14px] whitespace-nowrap">{vaartuig.naam}</p>
+          <div className="flex items-center justify-between gap-[8px] px-[24px]">
+            <div className="flex items-center gap-[8px]">
+              <Link to="/vloot" className="flex items-center justify-center p-[4px] rounded-[6px] hover:bg-rdj-bg-primary-hover">
+                <p className="font-sans font-bold leading-[20px] text-[#475467] text-[14px] whitespace-nowrap">Vloot</p>
+              </Link>
+              <div className="overflow-clip shrink-0 size-[16px]"><div className="absolute bottom-1/4 left-[37.5%] right-[37.5%] top-1/4 relative"><div className="absolute inset-[-8.33%_-16.67%]">{chevronSvg}</div></div></div>
+              <div className="bg-[#f9fafb] flex items-center justify-center px-[8px] py-[4px] rounded-[6px]">
+                <p className="font-sans font-bold leading-[20px] text-[#344054] text-[14px] whitespace-nowrap">{vaartuig.naam}</p>
+              </div>
+              {/* Prev/next arrows */}
+              <div className="flex items-center gap-[4px] ml-[8px]">
+                <button className="size-[24px] flex items-center justify-center rounded-[4px] border border-rdj-border-primary text-rdj-text-secondary hover:bg-rdj-bg-primary-hover">
+                  <svg className="size-[12px]" fill="none" viewBox="0 0 12 12"><path d="M7.5 9L4.5 6L7.5 3" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" /></svg>
+                </button>
+                <button className="size-[24px] flex items-center justify-center rounded-[4px] border border-rdj-border-primary text-rdj-text-secondary hover:bg-rdj-bg-primary-hover">
+                  <svg className="size-[12px]" fill="none" viewBox="0 0 12 12"><path d="M4.5 3L7.5 6L4.5 9" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" /></svg>
+                </button>
+              </div>
             </div>
-            {/* Prev/next arrows */}
-            <div className="flex items-center gap-[4px] ml-[8px]">
-              <button className="size-[24px] flex items-center justify-center rounded-[4px] border border-rdj-border-primary text-rdj-text-secondary hover:bg-rdj-bg-primary-hover">
-                <svg className="size-[12px]" fill="none" viewBox="0 0 12 12"><path d="M7.5 9L4.5 6L7.5 3" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" /></svg>
-              </button>
-              <button className="size-[24px] flex items-center justify-center rounded-[4px] border border-rdj-border-primary text-rdj-text-secondary hover:bg-rdj-bg-primary-hover">
-                <svg className="size-[12px]" fill="none" viewBox="0 0 12 12"><path d="M4.5 3L7.5 6L4.5 9" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" /></svg>
-              </button>
-            </div>
+            <button
+              onClick={() => setSidebarOpen((v) => !v)}
+              className={`p-[8px] rounded-[8px] transition-colors shrink-0 ${sidebarOpen ? 'bg-rdj-bg-active text-rdj-text-brand' : 'hover:bg-rdj-bg-primary-hover text-rdj-text-secondary'}`}
+            >
+              <PanelRight size={20} />
+            </button>
           </div>
           <div className="h-px w-full bg-rdj-border-secondary" />
         </div>
@@ -342,8 +353,15 @@ export default function VlootVaartuigDetail() {
             </div>
           </div>
 
+        </div>
+        </div>
+
           {/* Right Sidebar */}
-          <div className="w-[320px] shrink-0 border-l border-rdj-border-secondary bg-white">
+          <div
+            className={`shrink-0 overflow-hidden transition-[width] duration-150 ease-out bg-white ${sidebarOpen ? "border-l border-rdj-border-secondary" : "border-l-0"}`}
+            style={{ width: sidebarOpen ? 320 : 0 }}
+          >
+            <div className="w-[320px] h-full overflow-y-auto">
             {/* Sidebar tabs */}
             <div className="flex border-b border-rdj-border-secondary">
               {(["details", "profiel", "team", "plan"] as const).map((tab) => (
@@ -468,7 +486,7 @@ export default function VlootVaartuigDetail() {
               )}
             </div>
           </div>
-        </div>
+          </div>
       </div>
     </div>
   );
