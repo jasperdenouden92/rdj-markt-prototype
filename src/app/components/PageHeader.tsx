@@ -88,38 +88,36 @@ export default function PageHeader({
       {/* Tabs Row */}
       {tabs && tabs.length > 0 && (
         <div className="relative shrink-0 w-full pt-[24px]">
-          <div className="content-stretch flex flex-col items-start px-[24px] relative w-full">
-            <div className="content-stretch flex flex-col items-start relative shrink-0 w-full">
-              <div
-                aria-hidden="true"
-                className="absolute border-rdj-border-secondary border-b border-solid inset-0 pointer-events-none"
-              />
-              <div className="content-stretch flex gap-[12px] items-center relative shrink-0 w-full">
-                {tabs.map((tab) => (
-                  <button
-                    key={tab.path}
-                    onClick={() => onTabClick ? onTabClick(tab) : navigate(tab.path)}
-                    className={`content-stretch flex gap-[8px] h-[32px] items-center justify-center pb-[12px] px-[4px] relative shrink-0 ${
-                      tab.isActive ? "border-b-2 border-[#1567a4]" : ""
+          <div className="content-stretch flex flex-col items-start relative w-full">
+            <div
+              aria-hidden="true"
+              className="absolute border-rdj-border-secondary border-b border-solid inset-0 pointer-events-none"
+            />
+            <div className="content-stretch flex gap-[12px] items-center relative shrink-0 w-full px-[24px]">
+              {tabs.map((tab) => (
+                <button
+                  key={tab.path}
+                  onClick={() => onTabClick ? onTabClick(tab) : navigate(tab.path)}
+                  className={`content-stretch flex gap-[8px] h-[32px] items-center justify-center pb-[12px] px-[4px] relative shrink-0 ${
+                    tab.isActive ? "border-b-2 border-[#1567a4]" : ""
+                  }`}
+                >
+                  <p
+                    className={`font-sans font-bold leading-[20px] relative shrink-0 text-[14px] whitespace-nowrap ${
+                      tab.isActive ? "text-rdj-text-brand" : "text-rdj-text-tertiary"
                     }`}
                   >
-                    <p
-                      className={`font-sans font-bold leading-[20px] relative shrink-0 text-[14px] whitespace-nowrap ${
-                        tab.isActive ? "text-rdj-text-brand" : "text-rdj-text-tertiary"
-                      }`}
-                    >
-                      {tab.label}
-                    </p>
-                    {tab.badge && (
-                      <Badge
-                        label={tab.badge}
-                        variant="brand"
-                        type={tab.isActive ? "color" : "default"}
-                      />
-                    )}
-                  </button>
-                ))}
-              </div>
+                    {tab.label}
+                  </p>
+                  {tab.badge && (
+                    <Badge
+                      label={tab.badge}
+                      variant="brand"
+                      type={tab.isActive ? "color" : "default"}
+                    />
+                  )}
+                </button>
+              ))}
             </div>
           </div>
         </div>

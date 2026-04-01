@@ -239,7 +239,7 @@ export default function InboxCargoDetail() {
             {/* Page content with max width */}
             <div className="flex flex-col items-center size-full">
               <div className="flex flex-col items-center py-[24px] w-full">
-                <div className="flex flex-col gap-[0px] items-start max-w-[1116px] pt-[24px] w-full">
+                <div className="flex flex-col gap-[0px] items-start pt-[24px] w-full">
                   <PageHeader
                     title={summaryLoading ? "Laden..." : (summary?.title || "—")}
                     subtitle={
