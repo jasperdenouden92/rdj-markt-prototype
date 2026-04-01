@@ -109,8 +109,8 @@ export default function LadingModuleDetail() {
     <div className="flex min-h-screen bg-white">
       <Sidebar />
 
-      <div className="flex-1 flex min-h-0">
-        <div className="flex-1 overflow-auto min-w-0">
+      <div className="flex-1 flex min-h-0 min-w-0">
+        <div className="flex-1 overflow-y-auto overflow-x-hidden min-w-0">
         {/* Breadcrumb */}
         <div className="flex flex-col gap-[20px] items-start pt-[24px] w-full">
           <div className="flex items-center justify-between gap-[8px] px-[24px]">

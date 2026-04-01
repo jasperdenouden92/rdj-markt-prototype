@@ -257,8 +257,8 @@ export default function LadingDetail() {
     <div className="flex min-h-screen bg-white">
       <Sidebar />
 
-      <div className="flex-1 flex min-h-0">
-        <div className="flex-1 overflow-auto min-w-0">
+      <div className="flex-1 flex min-h-0 min-w-0">
+        <div className="flex-1 overflow-y-auto overflow-x-hidden min-w-0">
           {breadcrumb}
 
           <div className="content-stretch flex items-stretch justify-center relative shrink-0 w-full min-h-[calc(100vh-65px)]">

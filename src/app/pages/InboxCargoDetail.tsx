@@ -217,8 +217,8 @@ export default function InboxCargoDetail() {
       <div className="flex min-h-screen bg-white">
         <Sidebar />
 
-        <div className="flex-1 flex min-h-0">
-          <div className="flex-1 overflow-auto min-w-0">
+        <div className="flex-1 flex min-h-0 min-w-0">
+          <div className="flex-1 overflow-y-auto overflow-x-hidden min-w-0">
           {/* Breadcrumbs */}
           <div className="flex items-center justify-between gap-[8px] px-[24px] pt-[24px] pb-[20px] border-b border-rdj-border-secondary">
             <div className="flex items-center gap-[8px]">
