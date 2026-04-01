@@ -73,9 +73,10 @@ type ConditiesField = "prijs" | "laadtijd" | "liggeldLaden" | "lostijd" | "ligge
 interface LadingEigenSidebarProps {
   id: string;
   onEdit?: (field: string) => void;
+  collapsed?: boolean;
 }
 
-export default function LadingEigenSidebar({ id, onEdit }: LadingEigenSidebarProps) {
+export default function LadingEigenSidebar({ id, onEdit, collapsed }: LadingEigenSidebarProps) {
   const navigate = useNavigate();
   // Split IDs (e.g. "le-001-2", "le-001-rest") don't exist in the store; use base ID for API calls.
   const baseId = id.replace(/-(rest|[1-9]\d*)$/, '');
@@ -204,6 +205,7 @@ export default function LadingEigenSidebar({ id, onEdit }: LadingEigenSidebarPro
         ]}
         activeTab={activeTab}
         onTabChange={setActiveTab}
+        collapsed={collapsed}
       >
         <div className="flex items-center justify-center py-[40px] w-full">
           <p className="font-sans font-normal leading-[20px] text-rdj-text-tertiary text-[14px]">
@@ -223,6 +225,7 @@ export default function LadingEigenSidebar({ id, onEdit }: LadingEigenSidebarPro
         ]}
         activeTab={activeTab}
         onTabChange={setActiveTab}
+        collapsed={collapsed}
       >
         <div className="flex items-center justify-center py-[40px] w-full">
           <p className="font-sans font-normal leading-[20px] text-rdj-text-tertiary text-[14px]">
@@ -241,6 +244,7 @@ export default function LadingEigenSidebar({ id, onEdit }: LadingEigenSidebarPro
       ]}
       activeTab={activeTab}
       onTabChange={setActiveTab}
+      collapsed={collapsed}
     >
       {activeTab === "details" && (
         <>

@@ -1,6 +1,6 @@
 import { useState, useMemo, useCallback } from "react";
 import { useParams, useLocation, Link, useNavigate } from "react-router";
-import { Send, MailOpen, Check, X, MessageSquare } from "lucide-react";
+import { Send, MailOpen, Check, X, MessageSquare, PanelRight } from "lucide-react";
 import Sidebar from "../components/Sidebar";
 import PageHeader from "../components/PageHeader";
 import type { PageTab } from "../components/PageHeader";
@@ -102,6 +102,7 @@ export default function RelatieDetail() {
   const [negFilter, setNegFilter] = useState("Actief");
   const [negPage, setNegPage] = useState(1);
   const [negRowsPerPage, setNegRowsPerPage] = useState(50);
+  const [sidebarOpen, setSidebarOpen] = useState(true);
   const [showEditDialog, setShowEditDialog] = useState(false);
   const [conversationDialog, setConversationDialog] = useState<{ relatieId: string; relatieName: string; itemId?: string; itemType?: "lading" | "vaartuig" } | null>(null);
   const [relaties, setRelaties] = useState<Relatie[]>(mockRelaties);
@@ -174,8 +175,8 @@ export default function RelatieDetail() {
 
   const breadcrumb = (
     <div className="content-stretch flex flex-col gap-[20px] items-start pt-[24px] relative shrink-0 w-full">
-      <div className="content-stretch flex gap-[20px] items-start relative shrink-0 w-full">
-        <div className="content-stretch flex items-center pl-[24px] relative shrink-0">
+      <div className="content-stretch flex gap-[20px] items-center justify-between relative shrink-0 w-full px-[24px]">
+        <div className="content-stretch flex items-center relative shrink-0">
           <div className="content-stretch flex gap-[8px] items-center relative shrink-0">
             <Link to={backPath} className="content-stretch flex items-center justify-center p-[4px] relative rounded-[6px] shrink-0 hover:bg-rdj-bg-primary-hover">
               <p className="font-sans font-bold leading-[20px] relative shrink-0 text-[#475467] text-[14px] whitespace-nowrap">{backModule}</p>
@@ -200,6 +201,12 @@ export default function RelatieDetail() {
             </div>
           </div>
         </div>
+        <button
+          onClick={() => setSidebarOpen((v) => !v)}
+          className={`p-[8px] rounded-[8px] transition-colors shrink-0 ${sidebarOpen ? 'bg-rdj-bg-active text-rdj-text-brand' : 'hover:bg-rdj-bg-primary-hover text-rdj-text-secondary'}`}
+        >
+          <PanelRight size={20} />
+        </button>
       </div>
       <div className="h-px relative shrink-0 w-full bg-rdj-border-secondary" />
     </div>
@@ -247,15 +254,16 @@ export default function RelatieDetail() {
     <div className="flex min-h-screen bg-white">
       <Sidebar />
 
-      <div className="flex-1 overflow-auto">
-        {breadcrumb}
+      <div className="flex-1 flex min-h-0">
+        <div className="flex-1 overflow-auto min-w-0">
+          {breadcrumb}
 
-        <div className="content-stretch flex items-stretch justify-center relative shrink-0 w-full min-h-[calc(100vh-65px)]">
-          <div className="flex-[1_0_0] min-h-px min-w-px relative">
-            <div className="flex flex-col items-center size-full">
-              <div className="content-stretch flex flex-col items-center py-[24px] relative w-full">
-                <div className="content-stretch flex flex-col gap-[0px] items-start max-w-[1116px] pt-[24px] relative shrink-0 w-full">
-                  <PageHeader
+          <div className="content-stretch flex items-stretch justify-center relative shrink-0 w-full min-h-[calc(100vh-65px)]">
+            <div className="flex-[1_0_0] min-h-px min-w-px relative">
+              <div className="flex flex-col items-center size-full">
+                <div className="content-stretch flex flex-col items-center py-[24px] relative w-full">
+                  <div className="content-stretch flex flex-col gap-[0px] items-start max-w-[1116px] pt-[24px] relative shrink-0 w-full">
+                    <PageHeader
                     title={relatie.naam}
                     titleBadge={titleBadge}
                     subtitle={subtitle}
@@ -542,9 +550,10 @@ export default function RelatieDetail() {
               </div>
             </div>
           </div>
-
-          <RelatieDetailSidebar relatie={relatie} contactPersonen={contactPersonen} />
         </div>
+        </div>
+
+        <RelatieDetailSidebar relatie={relatie} contactPersonen={contactPersonen} collapsed={!sidebarOpen} />
       </div>
 
       {showEditDialog && (

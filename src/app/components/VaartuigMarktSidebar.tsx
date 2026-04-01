@@ -22,16 +22,17 @@ interface VaartuigMarktSidebarProps {
   id: string;
   onEdit?: (field: string) => void;
   onResetToBron?: () => void;
+  collapsed?: boolean;
 }
 
-export default function VaartuigMarktSidebar({ id, onEdit, onResetToBron }: VaartuigMarktSidebarProps) {
+export default function VaartuigMarktSidebar({ id, onEdit, onResetToBron, collapsed }: VaartuigMarktSidebarProps) {
   const navigate = useNavigate();
   const { data, loading, error } = useVaartuigMarktDetail(id);
   const [activeTab, setActiveTab] = useState<string>("details");
 
   if (loading) {
     return (
-      <DetailsSidebar activeTab={activeTab} onTabChange={setActiveTab}>
+      <DetailsSidebar activeTab={activeTab} onTabChange={setActiveTab} collapsed={collapsed}>
         <div className="flex items-center justify-center py-[40px] w-full">
           <p className="font-sans font-normal leading-[20px] text-rdj-text-tertiary text-[14px]">
             Laden...
@@ -43,7 +44,7 @@ export default function VaartuigMarktSidebar({ id, onEdit, onResetToBron }: Vaar
 
   if (error || !data) {
     return (
-      <DetailsSidebar activeTab={activeTab} onTabChange={setActiveTab}>
+      <DetailsSidebar activeTab={activeTab} onTabChange={setActiveTab} collapsed={collapsed}>
         <div className="flex items-center justify-center py-[40px] w-full">
           <p className="font-sans font-normal leading-[20px] text-rdj-text-tertiary text-[14px]">
             {error || "Geen data gevonden"}
@@ -56,7 +57,7 @@ export default function VaartuigMarktSidebar({ id, onEdit, onResetToBron }: Vaar
   const stars = Array.from({ length: 5 }, (_, i) => i < data.prioriteit);
 
   return (
-    <DetailsSidebar activeTab={activeTab} onTabChange={setActiveTab}>
+    <DetailsSidebar activeTab={activeTab} onTabChange={setActiveTab} collapsed={collapsed}>
       <DetailsSidebarSection>
         <DetailRow label="Beschikbaar vanaf" value={data.beschikbaarVanaf} editable onEdit={() => onEdit?.("beschikbaarVanaf")} />
         <DetailRow label="Huidige locatie" value={data.huidigeLocatie} editable onEdit={() => onEdit?.("huidigeLocatie")} />

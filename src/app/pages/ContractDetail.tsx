@@ -1,4 +1,5 @@
 import { useState, useMemo } from "react";
+import { PanelRight } from "lucide-react";
 import { useParams, Link } from "react-router";
 import Sidebar from "../components/Sidebar";
 import PageHeader from "../components/PageHeader";
@@ -41,6 +42,7 @@ const chevronSvg = (
 
 export default function ContractDetail() {
   const { id } = useParams();
+  const [sidebarOpen, setSidebarOpen] = useState(true);
   const [activeTab, setActiveTab] = useState<"overzicht" | "mail" | "activiteit">("overzicht");
   const [showEditDialog, setShowEditDialog] = useState(false);
   const [contracten, setContracten] = useState<Contract[]>(mockContracten);
@@ -70,32 +72,36 @@ export default function ContractDetail() {
 
   const breadcrumb = (
     <div className="content-stretch flex flex-col gap-[20px] items-start pt-[24px] relative shrink-0 w-full">
-      <div className="content-stretch flex gap-[20px] items-start relative shrink-0 w-full">
-        <div className="content-stretch flex items-center pl-[24px] relative shrink-0">
-          <div className="content-stretch flex gap-[8px] items-center relative shrink-0">
-            <Link to="/crm/deals" className="content-stretch flex items-center justify-center p-[4px] relative rounded-[6px] shrink-0 hover:bg-rdj-bg-primary-hover">
-              <p className="font-sans font-bold leading-[20px] relative shrink-0 text-[#475467] text-[14px] whitespace-nowrap">CRM</p>
-            </Link>
-            <div className="overflow-clip relative shrink-0 size-[16px]">
-              <div className="absolute bottom-1/4 left-[37.5%] right-[37.5%] top-1/4">
-                <div className="absolute inset-[-8.33%_-16.67%]">{chevronSvg}</div>
-              </div>
-            </div>
-            <Link to="/crm/deals" className="content-stretch flex items-center justify-center px-[8px] py-[4px] relative rounded-[6px] shrink-0 hover:bg-rdj-bg-primary-hover">
-              <p className="font-sans font-bold leading-[20px] relative shrink-0 text-[#475467] text-[14px] whitespace-nowrap">Deals</p>
-            </Link>
-            <div className="overflow-clip relative shrink-0 size-[16px]">
-              <div className="absolute bottom-1/4 left-[37.5%] right-[37.5%] top-1/4">
-                <div className="absolute inset-[-8.33%_-16.67%]">{chevronSvg}</div>
-              </div>
-            </div>
-            <div className="bg-[#f9fafb] content-stretch flex items-center justify-center px-[8px] py-[4px] relative rounded-[6px] shrink-0">
-              <p className="font-sans font-bold leading-[20px] relative shrink-0 text-[#344054] text-[14px] whitespace-nowrap">
-                {contract.titel}
-              </p>
+      <div className="content-stretch flex items-center justify-between relative shrink-0 w-full px-[24px]">
+        <div className="content-stretch flex gap-[8px] items-center relative shrink-0">
+          <Link to="/crm/deals" className="content-stretch flex items-center justify-center p-[4px] relative rounded-[6px] shrink-0 hover:bg-rdj-bg-primary-hover">
+            <p className="font-sans font-bold leading-[20px] relative shrink-0 text-[#475467] text-[14px] whitespace-nowrap">CRM</p>
+          </Link>
+          <div className="overflow-clip relative shrink-0 size-[16px]">
+            <div className="absolute bottom-1/4 left-[37.5%] right-[37.5%] top-1/4">
+              <div className="absolute inset-[-8.33%_-16.67%]">{chevronSvg}</div>
             </div>
           </div>
+          <Link to="/crm/deals" className="content-stretch flex items-center justify-center px-[8px] py-[4px] relative rounded-[6px] shrink-0 hover:bg-rdj-bg-primary-hover">
+            <p className="font-sans font-bold leading-[20px] relative shrink-0 text-[#475467] text-[14px] whitespace-nowrap">Deals</p>
+          </Link>
+          <div className="overflow-clip relative shrink-0 size-[16px]">
+            <div className="absolute bottom-1/4 left-[37.5%] right-[37.5%] top-1/4">
+              <div className="absolute inset-[-8.33%_-16.67%]">{chevronSvg}</div>
+            </div>
+          </div>
+          <div className="bg-[#f9fafb] content-stretch flex items-center justify-center px-[8px] py-[4px] relative rounded-[6px] shrink-0">
+            <p className="font-sans font-bold leading-[20px] relative shrink-0 text-[#344054] text-[14px] whitespace-nowrap">
+              {contract.titel}
+            </p>
+          </div>
         </div>
+        <button
+          onClick={() => setSidebarOpen((v) => !v)}
+          className={`p-[8px] rounded-[8px] transition-colors shrink-0 ${sidebarOpen ? 'bg-rdj-bg-active text-rdj-text-brand' : 'hover:bg-rdj-bg-primary-hover text-rdj-text-secondary'}`}
+        >
+          <PanelRight size={20} />
+        </button>
       </div>
       <div className="h-px relative shrink-0 w-full bg-rdj-border-secondary" />
     </div>
@@ -131,7 +137,8 @@ export default function ContractDetail() {
     <div className="flex min-h-screen bg-white">
       <Sidebar />
 
-      <div className="flex-1 overflow-auto">
+      <div className="flex-1 flex min-h-0">
+        <div className="flex-1 overflow-auto min-w-0">
         {breadcrumb}
 
         <div className="content-stretch flex items-stretch justify-center relative shrink-0 w-full min-h-[calc(100vh-65px)]">
@@ -320,8 +327,15 @@ export default function ContractDetail() {
             </div>
           </div>
 
+        </div>
+        </div>
+
           {/* Sidebar */}
-          <div className="w-[320px] shrink-0 border-l border-rdj-border-secondary bg-white">
+          <div
+            className={`shrink-0 overflow-hidden transition-[width] duration-150 ease-out bg-white ${sidebarOpen ? "border-l border-rdj-border-secondary" : "border-l-0"}`}
+            style={{ width: sidebarOpen ? 320 : 0 }}
+          >
+            <div className="w-[320px] h-full overflow-y-auto">
             <div className="p-[24px] flex flex-col">
               {/* Details rows — label left, value right but left-aligned */}
               <div className="flex flex-col gap-[16px]">
@@ -417,7 +431,7 @@ export default function ContractDetail() {
               </div>
             </div>
           </div>
-        </div>
+          </div>
       </div>
 
       {showEditDialog && (

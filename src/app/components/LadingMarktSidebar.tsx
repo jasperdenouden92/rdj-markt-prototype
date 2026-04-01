@@ -63,9 +63,10 @@ const fieldLabels: Record<ConditiesField, string> = {
 interface LadingMarktSidebarProps {
   id: string;
   onEdit?: (field: string) => void;
+  collapsed?: boolean;
 }
 
-export default function LadingMarktSidebar({ id, onEdit }: LadingMarktSidebarProps) {
+export default function LadingMarktSidebar({ id, onEdit, collapsed }: LadingMarktSidebarProps) {
   const navigate = useNavigate();
   const { data, loading, error, refetch } = useLadingMarktDetail(id);
   const [activeTab, setActiveTab] = useState<string>("details");
@@ -108,6 +109,7 @@ export default function LadingMarktSidebar({ id, onEdit }: LadingMarktSidebarPro
         ]}
         activeTab={activeTab}
         onTabChange={setActiveTab}
+        collapsed={collapsed}
       >
         <div className="flex items-center justify-center py-[40px] w-full">
           <p className="font-sans font-normal leading-[20px] text-rdj-text-tertiary text-[14px]">
@@ -127,6 +129,7 @@ export default function LadingMarktSidebar({ id, onEdit }: LadingMarktSidebarPro
         ]}
         activeTab={activeTab}
         onTabChange={setActiveTab}
+        collapsed={collapsed}
       >
         <div className="flex items-center justify-center py-[40px] w-full">
           <p className="font-sans font-normal leading-[20px] text-rdj-text-tertiary text-[14px]">
@@ -147,6 +150,7 @@ export default function LadingMarktSidebar({ id, onEdit }: LadingMarktSidebarPro
       ]}
       activeTab={activeTab}
       onTabChange={setActiveTab}
+      collapsed={collapsed}
     >
       {activeTab === "details" && (
         <>
