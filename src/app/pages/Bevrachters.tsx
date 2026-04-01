@@ -8,7 +8,8 @@ import Pagination from "../components/Pagination";
 import FilterDropdown from "../components/FilterDropdown";
 import Button from "../components/Button";
 import ConversationDialog from "../components/ConversationDialog";
-import { mockRelaties, mockContactPersonen, mockGebruikers, LADINGGROEP_SUGGESTIES, SOORT_RELATIE_OPTIES, mockRelatieCounts } from "../data/mock-relatie-data";
+import useTableSort from "../components/useTableSort";
+import { mockRelaties, mockContactPersonen, mockGebruikers, mockRelatieCounts } from "../data/mock-relatie-data";
 import { mockTaken } from "../data/mock-taken-data";
 
 function getInitials(name: string): string {
@@ -37,16 +38,15 @@ function isDateExpired(dateStr?: string, daysThreshold = 30): boolean {
 export default function Bevrachters() {
   const navigate = useNavigate();
   const [search, setSearch] = useState("");
-  const [ladingGroepFilter, setLadingGroepFilter] = useState<string[]>([]);
+  const [soortRelatieFilter, setSoortRelatieFilter] = useState<string[]>([]);
   const [eigenaarFilter, setEigenaarFilter] = useState<string[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(25);
   const [hoveredRow, setHoveredRow] = useState<string | null>(null);
   const [conversationRelatie, setConversationRelatie] = useState<{ id: string; naam: string } | null>(null);
 
-  // Pre-filter: only active bevrachters
-  const bevrachters = useMemo(
-    () => mockRelaties.filter((r) => r.status === "actief" && (r.soortRelatie || []).includes("bevrachter")),
+  const relaties = useMemo(
+    () => mockRelaties.filter((r) => r.status === "actief"),
     []
   );
 
@@ -54,27 +54,28 @@ export default function Bevrachters() {
     () => ["Alle eigenaren", ...mockGebruikers.map((g) => g.naam)],
     []
   );
-  const ladingGroepOptions = useMemo(
-    () => ["Alle ladinggroepen", ...LADINGGROEP_SUGGESTIES],
-    []
-  );
+  const soortRelatieOptions = ["Alle relaties", "Bevrachters", "Lading eigenaren", "Vaartuig eigenaren"];
+  const soortRelatieValueMap: Record<string, string> = {
+    "Bevrachters": "bevrachter",
+    "Lading eigenaren": "lading-eigenaar",
+    "Vaartuig eigenaren": "scheepseigenaar",
+  };
 
   const filtered = useMemo(() => {
-    return bevrachters.filter((r) => {
+    return relaties.filter((r) => {
       if (search && !r.naam.toLowerCase().includes(search.toLowerCase())) return false;
-      if (ladingGroepFilter.length > 0 && !(r.ladingGroepen || []).some((g) => ladingGroepFilter.includes(g))) return false;
+      if (soortRelatieFilter.length > 0) {
+        const filterValues = soortRelatieFilter.map((label) => soortRelatieValueMap[label]).filter(Boolean);
+        if (!filterValues.some((v) => (r.soortRelatie || []).includes(v))) return false;
+      }
       if (eigenaarFilter.length > 0) {
         const eigenaar = mockGebruikers.find((g) => g.id === r.eigenaarId);
         if (!eigenaar || !eigenaarFilter.includes(eigenaar.naam)) return false;
       }
       return true;
     });
-  }, [bevrachters, search, ladingGroepFilter, eigenaarFilter]);
+  }, [relaties, search, soortRelatieFilter, eigenaarFilter]);
 
-  const paged = useMemo(() => {
-    const start = (currentPage - 1) * rowsPerPage;
-    return filtered.slice(start, start + rowsPerPage);
-  }, [filtered, currentPage, rowsPerPage]);
 
   const onderhandelingIcon = (
     <svg className="size-[16px]" fill="none" viewBox="0 0 20 20">
@@ -107,40 +108,35 @@ export default function Bevrachters() {
       minWidth: "min-w-[480px]",
     },
     {
-      key: "ladingGroepen",
-      header: "Ladinggroepen",
+      key: "ladingenBadge",
+      header: "Ladingen",
       type: "badges",
       defaultVariant: "grey",
-      width: "w-[200px]",
-    },
-    {
-      key: "contactCount",
-      header: "Contacten",
-      type: "text",
+      maxVisible: 1,
       width: "w-[100px]",
     },
     {
-      key: "ladingenCount",
-      header: "Ladingen",
-      type: "text",
-      width: "w-[100px]",
-    },
-    {
-      key: "vaartuigenCount",
+      key: "vaartuigenBadge",
       header: "Vaartuigen",
-      type: "text",
+      type: "badges",
+      defaultVariant: "grey",
+      maxVisible: 1,
       width: "w-[100px]",
     },
     {
-      key: "onderhandelingenCount",
+      key: "onderhandelingenBadge",
       header: "Onderhandelingen",
-      type: "text",
+      type: "badges",
+      defaultVariant: "grey",
+      maxVisible: 1,
       width: "w-[130px]",
     },
     {
-      key: "takenCount",
+      key: "takenBadge",
       header: "Taken",
-      type: "text",
+      type: "badges",
+      defaultVariant: "grey",
+      maxVisible: 1,
       width: "w-[80px]",
     },
     {
@@ -160,9 +156,8 @@ export default function Bevrachters() {
     },
   ];
 
-  const tableData: RowData[] = paged.map((r) => {
+  const allTableData: RowData[] = useMemo(() => filtered.map((r) => {
     const eigenaar = mockGebruikers.find((g) => g.id === r.eigenaarId);
-    const contactCount = mockContactPersonen.filter((cp) => cp.relatieId === r.id).length;
     const counts = mockRelatieCounts[r.id] || { ladingen: 0, vaartuigen: 0, onderhandelingen: 0 };
     const openTakenCount = mockTaken.filter((t) => t.relatieId === r.id && t.status === "open").length;
     return {
@@ -181,20 +176,27 @@ export default function Bevrachters() {
           }}
         />
       ),
-      soortRelatieLabel: (r.soortRelatie || []).map((v) => SOORT_RELATIE_OPTIES.find((o) => o.value === v)?.label).filter(Boolean).join(", ") || "—",
-      ladingGroepen: r.ladingGroepen || [],
-      contactCount: String(contactCount),
-      ladingenCount: String(counts.ladingen),
-      vaartuigenCount: String(counts.vaartuigen),
-      onderhandelingenCount: String(counts.onderhandelingen),
-      takenCount: openTakenCount > 0 ? String(openTakenCount) : "—",
+      ladingenBadge: counts.ladingen > 0 ? [String(counts.ladingen)] : [],
+      vaartuigenBadge: counts.vaartuigen > 0 ? [String(counts.vaartuigen)] : [],
+      onderhandelingenBadge: counts.onderhandelingen > 0 ? [String(counts.onderhandelingen)] : [],
+      takenBadge: openTakenCount > 0 ? [String(openTakenCount)] : [],
       eigenaarNaam: eigenaar?.naam || "—",
       eigenaarInitials: eigenaar ? getInitials(eigenaar.naam) : undefined,
       eigenaarFoto: eigenaar?.profielfoto || undefined,
       laatsteContactLabel: formatDate(r.laatsteContact),
       contactExpired: isDateExpired(r.laatsteContact),
     };
+  }), [filtered, onderhandelingIcon]);
+
+  const { sortedData, sortedColumns } = useTableSort(columns, allTableData, {
+    initialSortKey: "naam",
+    initialDirection: "asc",
   });
+
+  const pagedData = useMemo(() => {
+    const start = (currentPage - 1) * rowsPerPage;
+    return sortedData.slice(start, start + rowsPerPage);
+  }, [sortedData, currentPage, rowsPerPage]);
 
   return (
     <div className="flex min-h-screen bg-rdj-bg-primary">
@@ -203,15 +205,15 @@ export default function Bevrachters() {
       <div className="flex-1 flex flex-col overflow-auto">
         <div className="pt-[32px] pb-[8px]">
           <PageHeader
-            title="Bevrachters"
+            title="Relaties"
             filtersLeft={
               <>
                 <FilterDropdown
-                  label="Ladinggroep"
-                  options={ladingGroepOptions}
-                  allLabel="Alle ladinggroepen"
-                  selectedValues={ladingGroepFilter}
-                  onMultiSelect={(v) => { setLadingGroepFilter(v); setCurrentPage(1); }}
+                  label="Relatiesoort"
+                  options={soortRelatieOptions}
+                  allLabel="Alle relaties"
+                  selectedValues={soortRelatieFilter}
+                  onMultiSelect={(v) => { setSoortRelatieFilter(v); setCurrentPage(1); }}
                 />
                 <FilterDropdown
                   label="Eigenaar"
@@ -250,11 +252,11 @@ export default function Bevrachters() {
         />
 
         <Table
-          columns={columns}
-          data={tableData}
+          columns={sortedColumns}
+          data={pagedData}
           hoveredRowId={hoveredRow}
           onRowHover={setHoveredRow}
-          onRowClick={(row) => navigate(`/markt/bevrachters/${row.id}`)}
+          onRowClick={(row) => navigate(`/markt/relaties/${row.id}`)}
         />
       </div>
 

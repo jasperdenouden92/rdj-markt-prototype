@@ -9,6 +9,7 @@ import { mockTaken } from "../data/mock-taken-data";
 interface RelatieDetailSidebarProps {
   relatie: Relatie;
   contactPersonen: ContactPersoon[];
+  collapsed?: boolean;
 }
 
 const frequentieLabels: Record<string, string> = {
@@ -24,7 +25,7 @@ function formatDate(dateStr?: string): string {
   return d.toLocaleDateString("nl-NL", { day: "numeric", month: "long", year: "numeric" });
 }
 
-export default function RelatieDetailSidebar({ relatie, contactPersonen }: RelatieDetailSidebarProps) {
+export default function RelatieDetailSidebar({ relatie, contactPersonen, collapsed = false }: RelatieDetailSidebarProps) {
   const [activeTab, setActiveTab] = useState<"details" | "contactpersonen" | "taken">("details");
   const eigenaar = mockGebruikers.find((g) => g.id === relatie.eigenaarId);
   const openTakenCount = useMemo(
@@ -33,7 +34,11 @@ export default function RelatieDetailSidebar({ relatie, contactPersonen }: Relat
   );
 
   return (
-    <div className="shrink-0 w-[380px] border-l border-rdj-border-secondary bg-white sticky top-0 h-screen overflow-y-auto">
+    <div
+      className={`shrink-0 overflow-hidden transition-[width] duration-150 ease-out bg-white ${collapsed ? "border-l-0" : "border-l border-rdj-border-secondary"}`}
+      style={{ width: collapsed ? 0 : 380 }}
+    >
+      <div className="w-[380px] h-full overflow-y-auto">
       {/* Tabs */}
       <div className="border-b border-rdj-border-secondary px-[20px] pt-[24px]">
         <div className="flex gap-[12px]">
@@ -148,6 +153,7 @@ export default function RelatieDetailSidebar({ relatie, contactPersonen }: Relat
         {activeTab === "taken" && (
           <TakenList relatieId={relatie.id} showDeal compact />
         )}
+      </div>
       </div>
     </div>
   );

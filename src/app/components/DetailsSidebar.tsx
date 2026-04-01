@@ -28,6 +28,9 @@ export interface DetailsSidebarProps {
 
   /** Optional extra className on the root */
   className?: string;
+
+  /** Whether the sidebar is collapsed */
+  collapsed?: boolean;
 }
 
 export default function DetailsSidebar({
@@ -37,19 +40,14 @@ export default function DetailsSidebar({
   width = 400,
   children,
   className,
+  collapsed = false,
 }: DetailsSidebarProps) {
   return (
     <div
-      className={`self-stretch sticky top-0 relative shrink-0 ${className || ""}`}
-      style={{ width }}
+      className={`shrink-0 relative overflow-hidden transition-[width] duration-150 ease-out ${collapsed ? "border-l-0" : "border-l border-rdj-border-secondary"} ${className || ""}`}
+      style={{ width: collapsed ? 0 : width }}
     >
-      {/* Left border */}
-      <div
-        aria-hidden="true"
-        className="absolute border-rdj-border-secondary border-l border-solid inset-0 pointer-events-none"
-      />
-
-      <div className="flex flex-col items-center size-full">
+      <div className="flex flex-col items-center h-full" style={{ width }}>
         <div className="content-stretch flex flex-col gap-[16px] items-center pt-[16px] px-[24px] relative size-full overflow-y-auto">
           {/* Tab bar */}
           {tabs && tabs.length > 0 && (
