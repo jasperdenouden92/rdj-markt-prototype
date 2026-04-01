@@ -1,7 +1,4 @@
 import { createBrowserRouter, Navigate, Outlet } from "react-router";
-import { AnnotationProvider } from "./components/AnnotationContext";
-import AnnotationButton from "./components/AnnotationButton";
-import AnnotationPanel from "./components/AnnotationPanel";
 import Bevrachting from "./pages/Bevrachting";
 import Inbox from "./pages/Inbox";
 import InboxVessels from "./pages/InboxVessels";
@@ -30,11 +27,7 @@ import VlootVaartuigDetail from "./pages/VlootVaartuigDetail";
 
 function RootLayout() {
   return (
-    <AnnotationProvider>
-      <Outlet />
-      <AnnotationButton />
-      <AnnotationPanel />
-    </AnnotationProvider>
+    <Outlet />
   );
 }
 
