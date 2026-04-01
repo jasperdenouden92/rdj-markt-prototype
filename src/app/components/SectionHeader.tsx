@@ -124,7 +124,7 @@ export default function SectionHeader({
               <button
                 onClick={onAdd}
                 title={addTooltip}
-                className={`relative rounded-[6px] shrink-0 transition-colors cursor-pointer ${addPrimary ? "bg-rdj-bg-brand-solid hover:bg-rdj-bg-brand-solid-hover text-white" : "bg-white hover:bg-rdj-bg-primary-hover"}`}
+                className={`relative rounded-[6px] shrink-0 transition-colors cursor-pointer ${addPrimary ? "bg-[#1567a4] hover:opacity-90 text-white" : "bg-white hover:bg-rdj-bg-primary-hover"}`}
               >
                 <div className="content-stretch flex items-center justify-center overflow-clip p-[8px] relative rounded-[inherit]">
                   <div className="overflow-clip relative shrink-0 size-[20px]">

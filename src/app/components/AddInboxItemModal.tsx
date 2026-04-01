@@ -1,5 +1,8 @@
 import { useState } from "react";
 import svgPaths from "../../imports/svg-hstiyx955m";
+import Checkbox from "./Checkbox";
+import SegmentedButtonGroup from "./SegmentedButtonGroup";
+import TermijnDropdown, { type TermijnValue } from "./TermijnDropdown";
 
 interface AddInboxItemModalProps {
   isOpen: boolean;
@@ -10,17 +13,19 @@ interface AddInboxItemModalProps {
 
 export default function AddInboxItemModal({ isOpen, onClose, onSubmit, itemType: initialItemType }: AddInboxItemModalProps) {
   const [itemType, setItemType] = useState<'lading' | 'vaartuig'>(initialItemType);
+  const [isRange, setIsRange] = useState(false);
+  const [loadTerms, setLoadTerms] = useState<TermijnValue | undefined>();
+  const [unloadTerms, setUnloadTerms] = useState<TermijnValue | undefined>();
   const [formData, setFormData] = useState({
     relation: '',
     contactPerson: '',
-    tonnage: '',
+    tonnageMin: '',
+    tonnageMax: '',
     cargoType: '',
     cargoSubType: '',
     specificWeight: '',
     loadPort: '',
-    loadTerms: '',
     unloadPort: '',
-    unloadTerms: '',
     owner: '',
     priority: 1,
   });
@@ -28,27 +33,28 @@ export default function AddInboxItemModal({ isOpen, onClose, onSubmit, itemType:
   if (!isOpen) return null;
 
   const handleSubmit = () => {
-    onSubmit({ ...formData, type: itemType });
+    onSubmit({ ...formData, loadTerms, unloadTerms, tonnageMax: isRange ? formData.tonnageMax : '', type: itemType });
     // Reset form
     setFormData({
       relation: '',
       contactPerson: '',
-      tonnage: '',
+      tonnageMin: '',
+      tonnageMax: '',
       cargoType: '',
       cargoSubType: '',
       specificWeight: '',
       loadPort: '',
-      loadTerms: '',
       unloadPort: '',
-      unloadTerms: '',
       owner: '',
       priority: 1,
     });
+    setLoadTerms(undefined);
+    setUnloadTerms(undefined);
     onClose();
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center">
+    <div className="fixed inset-0 z-50 flex items-start justify-center pt-[128px]">
       {/* Background Overlay */}
       <div 
         className="absolute bg-[#0c111d] inset-0 opacity-70" 
@@ -82,30 +88,18 @@ export default function AddInboxItemModal({ isOpen, onClose, onSubmit, itemType:
 
         <div className="h-[20px] shrink-0 w-full" />
 
-        {/* Tabs */}
+        {/* Type selector */}
         <div className="px-[24px]">
-          <div className="content-stretch flex gap-[8px] items-start relative shrink-0 w-full">
-            <button 
-              onClick={() => setItemType('lading')}
-              className={`content-stretch flex flex-col items-center relative shrink-0 ${itemType === 'lading' ? 'border-b-2 border-[#1567a4]' : ''}`}
-            >
-              <div className={`content-stretch flex items-center justify-center px-[12px] py-[10px] relative rounded-tl-[6px] rounded-tr-[6px] shrink-0 ${itemType === 'lading' ? 'bg-[#f9fafb]' : 'bg-white'}`}>
-                <p className={`font-sans font-bold leading-[20px] relative shrink-0 text-[14px] whitespace-nowrap ${itemType === 'lading' ? 'text-[#145990]' : 'text-[#667085]'}`}>
-                  Lading
-                </p>
-              </div>
-            </button>
-            <button 
-              onClick={() => setItemType('vaartuig')}
-              className={`content-stretch flex flex-col items-center relative shrink-0 ${itemType === 'vaartuig' ? 'border-b-2 border-[#1567a4]' : ''}`}
-            >
-              <div className={`content-stretch flex items-center justify-center px-[12px] py-[10px] relative rounded-tl-[6px] rounded-tr-[6px] shrink-0 ${itemType === 'vaartuig' ? 'bg-[#f9fafb]' : 'bg-white'}`}>
-                <p className={`font-sans font-bold leading-[20px] relative shrink-0 text-[14px] whitespace-nowrap ${itemType === 'vaartuig' ? 'text-[#145990]' : 'text-[#667085]'}`}>
-                  Vaartuig
-                </p>
-              </div>
-            </button>
-          </div>
+          <SegmentedButtonGroup
+            items={[
+              { value: 'lading', label: 'Lading' },
+              { value: 'vaartuig', label: 'Vaartuig' },
+            ]}
+            value={itemType}
+            onChange={(v) => setItemType(v as 'lading' | 'vaartuig')}
+            className="w-full"
+            fullWidth
+          />
         </div>
 
         {/* Form Content */}
@@ -146,22 +140,48 @@ export default function AddInboxItemModal({ isOpen, onClose, onSubmit, itemType:
             {/* Row 2: Tonnage & Ladingsoort */}
             {itemType === 'lading' && (
               <div className="flex gap-[12px] w-full">
-                <div className="w-[160px] flex flex-col gap-[6px]">
+                <div className="flex flex-col gap-[6px]">
                   <p className="font-sans font-bold leading-[20px] text-[#344054] text-[14px]">
                     Tonnage
                   </p>
-                  <div className="bg-white relative rounded-[6px] flex items-center overflow-hidden border border-[#d0d5dd]">
-                    <input
-                      type="number"
-                      value={formData.tonnage}
-                      onChange={(e) => setFormData({ ...formData, tonnage: e.target.value })}
-                      className="flex-1 px-[12px] py-[8px] font-sans font-normal leading-[20px] text-[#101828] text-[14px] focus:outline-none"
-                      placeholder="5000"
-                    />
-                    <div className="px-[12px] py-[8px] bg-[#f9fafb]">
-                      <p className="font-sans font-bold leading-[20px] text-[#475467] text-[14px]">ton</p>
+                  <div className="flex gap-[8px] items-center">
+                    <div className={`bg-white content-stretch flex items-start relative rounded-[6px] shrink-0 w-[140px]`}>
+                      <div aria-hidden="true" className="absolute border border-solid inset-0 pointer-events-none rounded-[6px] shadow-[0px_1px_2px_0px_rgba(16,24,40,0.05)] border-[#d0d5dd]" />
+                      <input
+                        type="text"
+                        value={formData.tonnageMin}
+                        onChange={(e) => setFormData({ ...formData, tonnageMin: e.target.value })}
+                        placeholder={isRange ? "Min" : "Aantal"}
+                        className="flex-1 px-[12px] py-[8px] font-sans font-normal leading-[20px] text-[#101828] text-[14px] bg-transparent outline-none rounded-l-[6px] w-0"
+                      />
+                      <div className="content-stretch flex items-center px-[12px] py-[8px] relative rounded-br-[8px] rounded-tr-[8px] shrink-0">
+                        <p className="font-sans font-bold leading-[20px] relative shrink-0 text-[#475467] text-[14px] text-left whitespace-nowrap">t</p>
+                      </div>
                     </div>
+                    {isRange && (
+                      <>
+                        <span className="font-sans font-normal text-[#475467] text-[14px]">–</span>
+                        <div className={`bg-white content-stretch flex items-start relative rounded-[6px] shrink-0 w-[140px]`}>
+                          <div aria-hidden="true" className="absolute border border-solid inset-0 pointer-events-none rounded-[6px] shadow-[0px_1px_2px_0px_rgba(16,24,40,0.05)] border-[#d0d5dd]" />
+                          <input
+                            type="text"
+                            value={formData.tonnageMax}
+                            onChange={(e) => setFormData({ ...formData, tonnageMax: e.target.value })}
+                            placeholder="Max"
+                            className="flex-1 px-[12px] py-[8px] font-sans font-normal leading-[20px] text-[#101828] text-[14px] bg-transparent outline-none rounded-l-[6px] w-0"
+                          />
+                          <div className="content-stretch flex items-center px-[12px] py-[8px] relative rounded-br-[8px] rounded-tr-[8px] shrink-0">
+                            <p className="font-sans font-bold leading-[20px] relative shrink-0 text-[#475467] text-[14px] text-left whitespace-nowrap">t</p>
+                          </div>
+                        </div>
+                      </>
+                    )}
                   </div>
+                  <Checkbox
+                    checked={isRange}
+                    onChange={(checked) => setIsRange(checked)}
+                    label="Range"
+                  />
                 </div>
                 <div className="flex-1 flex flex-col gap-[6px]">
                   <p className="font-sans font-bold leading-[20px] text-[#344054] text-[14px]">
@@ -221,7 +241,7 @@ export default function AddInboxItemModal({ isOpen, onClose, onSubmit, itemType:
             )}
 
             {/* Info label */}
-            {itemType === 'lading' && formData.tonnage && formData.specificWeight && (
+            {itemType === 'lading' && formData.tonnageMin && formData.specificWeight && (
               <div className="bg-white flex gap-[4px] items-center rounded-[6px] p-[8px] border border-[#d0d5dd]">
                 <div className="overflow-clip relative shrink-0 size-[16px]">
                   <div className="absolute inset-[8.33%]">
@@ -233,16 +253,18 @@ export default function AddInboxItemModal({ isOpen, onClose, onSubmit, itemType:
                   </div>
                 </div>
                 <p className="flex-1 font-sans font-normal leading-[20px] text-[#145990] text-[14px]">
-                  Benodigde inhoud: {(parseFloat(formData.tonnage) / parseFloat(formData.specificWeight)).toFixed(0)} m³
+                  Benodigde inhoud: {isRange && formData.tonnageMax
+                    ? `${(parseFloat(formData.tonnageMin) / parseFloat(formData.specificWeight)).toFixed(0)}–${(parseFloat(formData.tonnageMax) / parseFloat(formData.specificWeight)).toFixed(0)} m³`
+                    : `${(parseFloat(formData.tonnageMin) / parseFloat(formData.specificWeight)).toFixed(0)} m³`}
                 </p>
               </div>
             )}
 
-            {/* Row 4: Laadhaven & Laadtermijn */}
+            {/* Row 4: Laadlocatie & Laadtermijn */}
             <div className="flex gap-[12px] w-full">
               <div className="flex-1 flex flex-col gap-[6px]">
                 <p className="font-sans font-bold leading-[20px] text-[#344054] text-[14px]">
-                  {itemType === 'lading' ? 'Laadhaven' : 'Beschikbaar vanaf'}
+                  {itemType === 'lading' ? 'Laadlocatie' : 'Beschikbaar vanaf'}
                 </p>
                 <div className="bg-white relative rounded-[6px] w-full">
                   <input
@@ -256,26 +278,32 @@ export default function AddInboxItemModal({ isOpen, onClose, onSubmit, itemType:
               </div>
               <div className="w-[270px] flex flex-col gap-[6px]">
                 <p className="font-sans font-bold leading-[20px] text-[#344054] text-[14px]">
-                  {itemType === 'lading' ? 'Laadtermijn (optioneel)' : 'Locatie (optioneel)'}
+                  {itemType === 'lading' ? 'Laadtermijn' : 'Locatie (optioneel)'}
                 </p>
-                <div className="bg-white relative rounded-[6px] w-full">
+                {itemType === 'lading' ? (
+                  <TermijnDropdown
+                    value={loadTerms}
+                    onChange={setLoadTerms}
+                    placeholder="Selecteer termijn..."
+                  />
+                ) : (
                   <input
                     type="text"
-                    value={formData.loadTerms}
-                    onChange={(e) => setFormData({ ...formData, loadTerms: e.target.value })}
-                    className="w-full px-[12px] py-[8px] rounded-[6px] border border-[#d0d5dd] font-sans font-normal leading-[20px] text-[#101828] text-[14px] focus:outline-none focus:ring-2 focus:ring-[#1567a4]"
-                    placeholder={itemType === 'lading' ? "Bijv. Melden bij aankomst" : "Bijv. ARA gebied"}
+                    value={formData.loadPort}
+                    onChange={(e) => setFormData({ ...formData, loadPort: e.target.value })}
+                    className="w-full px-[12px] py-[8px] rounded-[6px] border border-[#d0d5dd] font-sans font-normal leading-[20px] text-[#101828] text-[14px] focus:outline-none focus:ring-2 focus:ring-[#1567a4] bg-white"
+                    placeholder="Bijv. ARA gebied"
                   />
-                </div>
+                )}
               </div>
             </div>
 
-            {/* Row 5: Loshaven & Lostermijn */}
+            {/* Row 5: Loslocatie & Lostermijn */}
             {itemType === 'lading' && (
               <div className="flex gap-[12px] w-full">
                 <div className="flex-1 flex flex-col gap-[6px]">
                   <p className="font-sans font-bold leading-[20px] text-[#344054] text-[14px]">
-                    Loshaven
+                    Loslocatie
                   </p>
                   <div className="bg-white relative rounded-[6px] w-full">
                     <input
@@ -289,17 +317,13 @@ export default function AddInboxItemModal({ isOpen, onClose, onSubmit, itemType:
                 </div>
                 <div className="w-[270px] flex flex-col gap-[6px]">
                   <p className="font-sans font-bold leading-[20px] text-[#344054] text-[14px]">
-                    Lostermijn (optioneel)
+                    Lostermijn
                   </p>
-                  <div className="bg-white relative rounded-[6px] w-full">
-                    <input
-                      type="text"
-                      value={formData.unloadTerms}
-                      onChange={(e) => setFormData({ ...formData, unloadTerms: e.target.value })}
-                      className="w-full px-[12px] py-[8px] rounded-[6px] border border-[#d0d5dd] font-sans font-normal leading-[20px] text-[#101828] text-[14px] focus:outline-none focus:ring-2 focus:ring-[#1567a4]"
-                      placeholder="Bijv. Melden bij aankomst"
-                    />
-                  </div>
+                  <TermijnDropdown
+                    value={unloadTerms}
+                    onChange={setUnloadTerms}
+                    placeholder="Selecteer termijn..."
+                  />
                 </div>
               </div>
             )}

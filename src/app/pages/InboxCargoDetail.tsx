@@ -335,7 +335,6 @@ export default function InboxCargoDetail() {
                           onFilterChange={setNegFilter}
                           onAdd={() => setConversationDialog({ relatieId: "", relatieName: "" })}
                           addTooltip="Onderhandeling starten"
-                          addPrimary
                         />
                         <Pagination
                           currentPage={negPage}
