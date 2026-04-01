@@ -14,6 +14,7 @@ import SectionHeader from "../components/SectionHeader";
 import Table from "../components/Table";
 import type { Column, RowData } from "../components/Table";
 import Pagination from "../components/Pagination";
+import useTableSort from "../components/useTableSort";
 import OnderhandelingSidepanel from "../components/OnderhandelingSidepanel";
 import ConversationDialog from "../components/ConversationDialog";
 import { mockRelaties, mockContactPersonen, mockRelatieLadingen, mockRelatieVaartuigen, mockMailConversaties, mockGespreksverslagen, mockRelatieOnderhandelingen, mockGebruikers, VAARTUIG_STATUS_MAP } from "../data/mock-relatie-data";
@@ -157,6 +158,160 @@ export default function RelatieDetail() {
     setVerslagen((prev) => [...prev, newVerslag]);
   }, []);
 
+  /* ── Onderhandelingen table ── */
+  const negColumns: Column[] = useMemo(() => [
+    { key: "lading", header: "Lading", type: "leading-text", subtextKey: "route", actionLabel: "Openen" },
+    { key: "vaartuig", header: "Vaartuig", type: "text", width: "w-[160px]" },
+    { key: "vrachtprijs", header: "Vrachtprijs", type: "text", subtextKey: "vrachtprijsDiff", subtextColorKey: "vrachtprijsDiffColor", subtextTooltipKey: "vrachtprijsDiffTooltip", align: "right", width: "w-[160px]" },
+    { key: "tonnage", header: "Tonnage", type: "text", align: "right", width: "w-[120px]" },
+    { key: "deadline", header: "Deadline", type: "deadline", expiredKey: "deadlineExpired", editable: true, width: "w-[160px]" },
+    { key: "status", header: "Status", type: "status", variantKey: "statusVariant", iconKey: "statusIcon", typeKey: "statusType", width: "w-[160px]" },
+    { key: "contactName", header: "Laatste update", type: "text", subtextKey: "contactDate", avatarSrcKey: "contactAvatar", width: "w-[200px]" },
+  ], []);
+
+  const negData: RowData[] = useMemo(() => relatieOnderhandelingen.map((neg) => {
+    const gebruiker = mockGebruikers.find((g) => g.id === neg.contact.gebruikerId);
+    return {
+      id: neg.id,
+      lading: neg.lading,
+      route: neg.route,
+      vaartuig: neg.vaartuig,
+      vrachtprijs: neg.vrachtprijs || "—",
+      vrachtprijsDiff: neg.vrachtprijsDiff || "",
+      vrachtprijsDiffColor: neg.vrachtprijsDiff?.startsWith("+") ? "#F79009" : undefined,
+      vrachtprijsDiffTooltip: neg.vrachtprijsDiff && neg.vrachtprijsDiff !== "" && neg.vrachtprijsDiff !== "0,0%" && neg.vrachtprijsDiff !== "+0,0%" ? "Vergeleken met verkoop" : undefined,
+      tonnage: neg.tonnage,
+      deadline: neg.deadline,
+      deadlineExpired: neg.deadlineExpired,
+      status: neg.status,
+      statusVariant: negotiationStatusVariantMap[neg.status] || "grey",
+      statusIcon: negotiationStatusIconMap[neg.status] || null,
+      statusType: negotiationStatusTypeMap[neg.status] || "default",
+      contactName: neg.contact.naam,
+      contactDate: neg.contact.datum,
+      contactAvatar: gebruiker?.profielfoto,
+    };
+  }), [relatieOnderhandelingen]);
+
+  const filteredNegData = useMemo(() => negFilter === "Alles"
+    ? negData
+    : negFilter === "Actief"
+      ? negData.filter((row) => activeNegStatuses.includes(row.status as string))
+      : negFilter === "Goedgekeurd"
+        ? negData.filter((row) => row.status === "Goedgekeurd")
+        : negData.filter((row) => row.status === "Afgewezen" || row.status === "Afgekeurd"),
+  [negData, negFilter]);
+
+  const { sortedData: sortedNegData, sortedColumns: sortedNegColumns } = useTableSort(negColumns, filteredNegData);
+
+  /* ── Ladingen table ── */
+  const ladingenColumns: Column[] = useMemo(() => [
+    { key: "titel", header: "Lading", type: "leading-text", subtextKey: "product", actionLabel: "Openen", extraActionsKey: "extraActions" },
+    { key: "route", header: "Route", type: "text", width: "w-[200px]" },
+    { key: "tonnage", header: "Tonnage", type: "text", width: "w-[120px]" },
+    { key: "laaddatum", header: "Laaddatum", type: "text", width: "w-[140px]" },
+    { key: "matches", header: "Matches", type: "text", width: "w-[120px]" },
+    { key: "statusLabel", header: "Status", type: "status", variantKey: "statusVariant", defaultVariant: "grey", width: "w-[120px]" },
+  ], []);
+
+  const ladingenData: RowData[] = useMemo(() => relatieLadingen.map((l) => {
+    const s = ladingStatusMap[l.status] || { label: l.status, variant: "grey" };
+    return {
+      id: l.id,
+      titel: l.titel,
+      product: l.product,
+      route: `${l.laadhaven} → ${l.loshaven}`,
+      tonnage: String(l.tonnage),
+      laaddatum: formatDate(l.laaddatum),
+      matches: l.matches > 0 ? `${l.matches} match${l.matches !== 1 ? "es" : ""}` : "—",
+      statusLabel: s.label,
+      statusVariant: s.variant,
+      extraActions: (
+        <Button
+          variant="secondary"
+          size="sm"
+          leadingIcon={<MessageSquare size={14} strokeWidth={2.5} />}
+          onClick={(e: React.MouseEvent) => {
+            e.stopPropagation();
+            setConversationDialog({ relatieId: id!, relatieName: relatie?.naam || "", itemId: l.id, itemType: "lading" });
+          }}
+        />
+      ),
+    };
+  }), [relatieLadingen, id, relatie?.naam]);
+
+  const { sortedData: sortedLadingenData, sortedColumns: sortedLadingenColumns } = useTableSort(ladingenColumns, ladingenData);
+
+  /* ── Vaartuigen table ── */
+  const vaartuigenColumns: Column[] = useMemo(() => [
+    { key: "naam", header: "Vaartuig", type: "leading-text", actionLabel: "Openen", extraActionsKey: "extraActions" },
+    { key: "type", header: "Type", type: "text", width: "w-[160px]" },
+    { key: "capaciteit", header: "Capaciteit", type: "text", width: "w-[120px]" },
+    { key: "locatie", header: "Locatie", type: "text", width: "w-[160px]" },
+    { key: "matches", header: "Matches", type: "text", width: "w-[120px]" },
+    { key: "statusLabel", header: "Status", type: "status", variantKey: "statusVariant", defaultVariant: "grey", width: "w-[120px]" },
+  ], []);
+
+  const vaartuigenData: RowData[] = useMemo(() => relatieVaartuigen.map((v) => {
+    const s = vaartuigStatusMap[v.status] || { label: v.status, variant: "grey" };
+    return {
+      id: v.id,
+      naam: v.naam,
+      type: v.type,
+      capaciteit: v.capaciteit,
+      locatie: v.locatie,
+      matches: v.matches > 0 ? `${v.matches} match${v.matches !== 1 ? "es" : ""}` : "—",
+      statusLabel: s.label,
+      statusVariant: s.variant,
+      extraActions: (
+        <Button
+          variant="secondary"
+          size="sm"
+          leadingIcon={<MessageSquare size={14} strokeWidth={2.5} />}
+          onClick={(e: React.MouseEvent) => {
+            e.stopPropagation();
+            setConversationDialog({ relatieId: id!, relatieName: relatie?.naam || "", itemId: v.id, itemType: "vaartuig" });
+          }}
+        />
+      ),
+    };
+  }), [relatieVaartuigen, id, relatie?.naam]);
+
+  const { sortedData: sortedVaartuigenData, sortedColumns: sortedVaartuigenColumns } = useTableSort(vaartuigenColumns, vaartuigenData);
+
+  /* ── Deals table ── */
+  const filterLabels: Record<string, string> = { alle: "Alles", spot: "Spot", contract: "Contract" };
+  const filteredDeals = useMemo(() => dealFilter === "alle"
+    ? relatieAllDeals
+    : relatieAllDeals.filter((c) => c.type === dealFilter),
+  [relatieAllDeals, dealFilter]);
+
+  const dealsColumns: Column[] = useMemo(() => [
+    { key: "titel", header: "Titel", type: "leading-text", subtextKey: "subtitel" },
+    ...(dealFilter === "alle" ? [{ key: "typeLabel", header: "Type", type: "status" as const, variantKey: "typeVariant", defaultVariant: "grey" as const, width: "w-[120px]" }] : []),
+    { key: "routePeriode", header: "Route / Periode", type: "text", width: "w-[220px]" },
+    { key: "statusLabel", header: "Status", type: "status", variantKey: "statusVariant", defaultVariant: "grey", width: "w-[140px]" },
+    { key: "waarde", header: "Waarde", type: "text", width: "w-[120px]" },
+  ], [dealFilter]);
+
+  const dealsData: RowData[] = useMemo(() => filteredDeals.map((c) => ({
+    id: c.id,
+    titel: c.titel,
+    subtitel: c.type === "contract" && c.routes && c.routes.length > 0
+      ? `${c.routes.length} route${c.routes.length > 1 ? "s" : ""}`
+      : undefined,
+    typeLabel: c.type === "spot" ? "Spot" : "Contract",
+    typeVariant: c.type === "spot" ? "grey" : "brand",
+    routePeriode: c.type === "spot"
+      ? ([c.laadhavenNaam, c.loshavenNaam].filter(Boolean).join(" → ") || "—")
+      : (c.startDatum && c.eindDatum ? `${formatDate(c.startDatum)} – ${formatDate(c.eindDatum)}` : "—"),
+    statusLabel: CONTRACT_STATUS_LABELS[c.status] || "—",
+    statusVariant: (CONTRACT_STATUS_VARIANT_MAP[c.status] || "grey"),
+    waarde: c.waarde ? new Intl.NumberFormat("nl-NL", { style: "currency", currency: "EUR", maximumFractionDigits: 0 }).format(c.waarde) : "—",
+  })), [filteredDeals]);
+
+  const { sortedData: sortedDealsData, sortedColumns: sortedDealsColumns } = useTableSort(dealsColumns, dealsData);
+
   if (!relatie) {
     return (
       <div className="flex min-h-screen bg-white">
@@ -276,89 +431,45 @@ export default function RelatieDetail() {
                   />
 
                   <div className="w-full pt-[20px]">
-                    {activeTab === "onderhandelingen" && (() => {
-                      const negColumns: Column[] = [
-                        { key: "lading", header: "Lading", type: "leading-text", subtextKey: "route", actionLabel: "Openen" },
-                        { key: "vaartuig", header: "Vaartuig", type: "text", width: "w-[160px]" },
-                        { key: "vrachtprijs", header: "Vrachtprijs", type: "text", subtextKey: "vrachtprijsDiff", subtextColorKey: "vrachtprijsDiffColor", subtextTooltipKey: "vrachtprijsDiffTooltip", align: "right", width: "w-[160px]" },
-                        { key: "tonnage", header: "Tonnage", type: "text", align: "right", width: "w-[120px]" },
-                        { key: "deadline", header: "Deadline", type: "deadline", expiredKey: "deadlineExpired", editable: true, width: "w-[160px]" },
-                        { key: "status", header: "Status", type: "status", variantKey: "statusVariant", iconKey: "statusIcon", typeKey: "statusType", width: "w-[160px]" },
-                        { key: "contactName", header: "Laatste update", type: "text", subtextKey: "contactDate", avatarSrcKey: "contactAvatar", width: "w-[200px]" },
-                      ];
-
-                      const negData: RowData[] = relatieOnderhandelingen.map((neg) => {
-                        const gebruiker = mockGebruikers.find((g) => g.id === neg.contact.gebruikerId);
-                        return {
-                          id: neg.id,
-                          lading: neg.lading,
-                          route: neg.route,
-                          vaartuig: neg.vaartuig,
-                          vrachtprijs: neg.vrachtprijs || "—",
-                          vrachtprijsDiff: neg.vrachtprijsDiff || "",
-                          vrachtprijsDiffColor: neg.vrachtprijsDiff?.startsWith("+") ? "#F79009" : undefined,
-                          vrachtprijsDiffTooltip: neg.vrachtprijsDiff && neg.vrachtprijsDiff !== "" && neg.vrachtprijsDiff !== "0,0%" && neg.vrachtprijsDiff !== "+0,0%" ? "Vergeleken met verkoop" : undefined,
-                          tonnage: neg.tonnage,
-                          deadline: neg.deadline,
-                          deadlineExpired: neg.deadlineExpired,
-                          status: neg.status,
-                          statusVariant: negotiationStatusVariantMap[neg.status] || "grey",
-                          statusIcon: negotiationStatusIconMap[neg.status] || null,
-                          statusType: negotiationStatusTypeMap[neg.status] || "default",
-                          contactName: neg.contact.naam,
-                          contactDate: neg.contact.datum,
-                          contactAvatar: gebruiker?.profielfoto,
-                        };
-                      });
-
-                      const filteredNegData = negFilter === "Alles"
-                        ? negData
-                        : negFilter === "Actief"
-                          ? negData.filter((row) => activeNegStatuses.includes(row.status as string))
-                          : negFilter === "Goedgekeurd"
-                            ? negData.filter((row) => row.status === "Goedgekeurd")
-                            : negData.filter((row) => row.status === "Afgewezen" || row.status === "Afgekeurd");
-
-                      return (
-                        <>
-                          <SectionHeader
-                            title="Onderhandelingen"
-                            filterLabel={negFilter}
-                            filterOptions={["Alles", "Actief", "Goedgekeurd", "Afgewezen"]}
-                            filterValue={negFilter}
-                            onFilterChange={setNegFilter}
-                            onAdd={() => setConversationDialog({ relatieId: id!, relatieName: relatie.naam })}
-                            addTooltip="Onderhandeling starten"
+                    {activeTab === "onderhandelingen" && (
+                      <>
+                        <SectionHeader
+                          title="Onderhandelingen"
+                          filterLabel={negFilter}
+                          filterOptions={["Alles", "Actief", "Goedgekeurd", "Afgewezen"]}
+                          filterValue={negFilter}
+                          onFilterChange={setNegFilter}
+                          onAdd={() => setConversationDialog({ relatieId: id!, relatieName: relatie.naam })}
+                          addTooltip="Onderhandeling starten"
+                        />
+                        <Pagination
+                          currentPage={negPage}
+                          totalItems={sortedNegData.length}
+                          rowsPerPage={negRowsPerPage}
+                          onPageChange={setNegPage}
+                          onRowsPerPageChange={setNegRowsPerPage}
+                        />
+                        {sortedNegData.length === 0 ? (
+                          <div className="py-[48px] text-center">
+                            <p className="font-sans font-normal text-[14px] text-rdj-text-tertiary">
+                              Geen onderhandelingen gevonden.
+                            </p>
+                          </div>
+                        ) : (
+                          <Table
+                            columns={sortedNegColumns}
+                            data={sortedNegData}
+                            activeRowId={selectedNegotiation?.id ?? null}
+                            onRowClick={(row) => setSelectedNegotiation({
+                              id: row.id,
+                              status: row.status as string,
+                              relatieName: relatie.naam,
+                              subtitle: `${row.tonnage} · ${row.vaartuig}`,
+                            })}
                           />
-                          <Pagination
-                            currentPage={negPage}
-                            totalItems={filteredNegData.length}
-                            rowsPerPage={negRowsPerPage}
-                            onPageChange={setNegPage}
-                            onRowsPerPageChange={setNegRowsPerPage}
-                          />
-                          {filteredNegData.length === 0 ? (
-                            <div className="py-[48px] text-center">
-                              <p className="font-sans font-normal text-[14px] text-rdj-text-tertiary">
-                                Geen onderhandelingen gevonden.
-                              </p>
-                            </div>
-                          ) : (
-                            <Table
-                              columns={negColumns}
-                              data={filteredNegData}
-                              activeRowId={selectedNegotiation?.id ?? null}
-                              onRowClick={(row) => setSelectedNegotiation({
-                                id: row.id,
-                                status: row.status as string,
-                                relatieName: relatie.naam,
-                                subtitle: `${row.tonnage} · ${row.vaartuig}`,
-                              })}
-                            />
-                          )}
-                        </>
-                      );
-                    })()}
+                        )}
+                      </>
+                    )}
 
                     {activeTab === "overzicht" && (
                       <RelatieOverzichtTab
@@ -367,170 +478,73 @@ export default function RelatieDetail() {
                       />
                     )}
 
-                    {activeTab === "ladingen" && (() => {
-                      const ladingenColumns: Column[] = [
-                        { key: "titel", header: "Lading", type: "leading-text", subtextKey: "product", actionLabel: "Openen", extraActionsKey: "extraActions" },
-                        { key: "route", header: "Route", type: "text", width: "w-[200px]" },
-                        { key: "tonnage", header: "Tonnage", type: "text", width: "w-[120px]" },
-                        { key: "laaddatum", header: "Laaddatum", type: "text", width: "w-[140px]" },
-                        { key: "matches", header: "Matches", type: "text", width: "w-[120px]" },
-                        { key: "statusLabel", header: "Status", type: "status", variantKey: "statusVariant", defaultVariant: "grey", width: "w-[120px]" },
-                      ];
-                      const ladingenData: RowData[] = relatieLadingen.map((l) => {
-                        const s = ladingStatusMap[l.status] || { label: l.status, variant: "grey" };
-                        return {
-                          id: l.id,
-                          titel: l.titel,
-                          product: l.product,
-                          route: `${l.laadhaven} → ${l.loshaven}`,
-                          tonnage: String(l.tonnage),
-                          laaddatum: formatDate(l.laaddatum),
-                          matches: l.matches > 0 ? `${l.matches} match${l.matches !== 1 ? "es" : ""}` : "—",
-                          statusLabel: s.label,
-                          statusVariant: s.variant,
-                          extraActions: (
-                            <Button
-                              variant="secondary"
-                              size="sm"
-                              leadingIcon={<MessageSquare size={14} strokeWidth={2.5} />}
-                              onClick={(e: React.MouseEvent) => {
-                                e.stopPropagation();
-                                setConversationDialog({ relatieId: id!, relatieName: relatie.naam, itemId: l.id, itemType: "lading" });
-                              }}
-                            />
-                          ),
-                        };
-                      });
-                      return (
-                        <div className="w-full pb-[32px]">
-                          <SectionHeader title="Ladingen" onAdd={() => {}} addTooltip="Lading toevoegen" />
-                          {relatieLadingen.length === 0 ? (
-                            <div className="py-[48px] text-center">
-                              <p className="font-sans font-normal text-[14px] text-rdj-text-tertiary">
-                                Nog geen ladingen gekoppeld aan deze relatie.
-                              </p>
-                            </div>
-                          ) : (
-                            <Table
-                              columns={ladingenColumns}
-                              data={ladingenData}
-                              onRowClick={(row) => navigate(`/crm/relatie/${id}/lading/${row.id}`)}
-                            />
-                          )}
-                        </div>
-                      );
-                    })()}
-
-                    {activeTab === "vaartuigen" && (() => {
-                      const vaartuigenColumns: Column[] = [
-                        { key: "naam", header: "Vaartuig", type: "leading-text", actionLabel: "Openen", extraActionsKey: "extraActions" },
-                        { key: "type", header: "Type", type: "text", width: "w-[160px]" },
-                        { key: "capaciteit", header: "Capaciteit", type: "text", width: "w-[120px]" },
-                        { key: "locatie", header: "Locatie", type: "text", width: "w-[160px]" },
-                        { key: "matches", header: "Matches", type: "text", width: "w-[120px]" },
-                        { key: "statusLabel", header: "Status", type: "status", variantKey: "statusVariant", defaultVariant: "grey", width: "w-[120px]" },
-                      ];
-                      const vaartuigenData: RowData[] = relatieVaartuigen.map((v) => {
-                        const s = vaartuigStatusMap[v.status] || { label: v.status, variant: "grey" };
-                        return {
-                          id: v.id,
-                          naam: v.naam,
-                          type: v.type,
-                          capaciteit: v.capaciteit,
-                          locatie: v.locatie,
-                          matches: v.matches > 0 ? `${v.matches} match${v.matches !== 1 ? "es" : ""}` : "—",
-                          statusLabel: s.label,
-                          statusVariant: s.variant,
-                          extraActions: (
-                            <Button
-                              variant="secondary"
-                              size="sm"
-                              leadingIcon={<MessageSquare size={14} strokeWidth={2.5} />}
-                              onClick={(e: React.MouseEvent) => {
-                                e.stopPropagation();
-                                setConversationDialog({ relatieId: id!, relatieName: relatie.naam, itemId: v.id, itemType: "vaartuig" });
-                              }}
-                            />
-                          ),
-                        };
-                      });
-                      return (
-                        <div className="w-full pb-[32px]">
-                          <SectionHeader title="Vaartuigen" onAdd={() => {}} addTooltip="Vaartuig toevoegen" />
-                          {relatieVaartuigen.length === 0 ? (
-                            <div className="py-[48px] text-center">
-                              <p className="font-sans font-normal text-[14px] text-rdj-text-tertiary">
-                                Nog geen vaartuigen gekoppeld aan deze relatie.
-                              </p>
-                            </div>
-                          ) : (
-                            <Table
-                              columns={vaartuigenColumns}
-                              data={vaartuigenData}
-                              onRowClick={(row) => navigate(`/crm/relatie/${id}/vaartuig/${row.id}`)}
-                            />
-                          )}
-                        </div>
-                      );
-                    })()}
-
-                    {activeTab === "deals" && (() => {
-                      const filterLabels: Record<string, string> = { alle: "Alles", spot: "Spot", contract: "Contract" };
-                      const filteredDeals = dealFilter === "alle"
-                        ? relatieAllDeals
-                        : relatieAllDeals.filter((c) => c.type === dealFilter);
-                      const dealsColumns: Column[] = [
-                        { key: "titel", header: "Titel", type: "leading-text", subtextKey: "subtitel" },
-                        ...(dealFilter === "alle" ? [{ key: "typeLabel", header: "Type", type: "status" as const, variantKey: "typeVariant", defaultVariant: "grey" as const, width: "w-[120px]" }] : []),
-                        { key: "routePeriode", header: "Route / Periode", type: "text", width: "w-[220px]" },
-                        { key: "statusLabel", header: "Status", type: "status", variantKey: "statusVariant", defaultVariant: "grey", width: "w-[140px]" },
-                        { key: "waarde", header: "Waarde", type: "text", width: "w-[120px]" },
-                      ];
-                      const dealsData: RowData[] = filteredDeals.map((c) => ({
-                        id: c.id,
-                        titel: c.titel,
-                        subtitel: c.type === "contract" && c.routes && c.routes.length > 0
-                          ? `${c.routes.length} route${c.routes.length > 1 ? "s" : ""}`
-                          : undefined,
-                        typeLabel: c.type === "spot" ? "Spot" : "Contract",
-                        typeVariant: c.type === "spot" ? "grey" : "brand",
-                        routePeriode: c.type === "spot"
-                          ? ([c.laadhavenNaam, c.loshavenNaam].filter(Boolean).join(" → ") || "—")
-                          : (c.startDatum && c.eindDatum ? `${formatDate(c.startDatum)} – ${formatDate(c.eindDatum)}` : "—"),
-                        statusLabel: CONTRACT_STATUS_LABELS[c.status] || "—",
-                        statusVariant: (CONTRACT_STATUS_VARIANT_MAP[c.status] || "grey"),
-                        waarde: c.waarde ? new Intl.NumberFormat("nl-NL", { style: "currency", currency: "EUR", maximumFractionDigits: 0 }).format(c.waarde) : "—",
-                      }));
-                      return (
-                        <div className="w-full pb-[32px]">
-                          <SectionHeader
-                            title="Deals"
-                            filterLabel={filterLabels[dealFilter]}
-                            filterOptions={["Alles", "Spot", "Contract"]}
-                            filterValue={filterLabels[dealFilter]}
-                            onFilterChange={(v) => {
-                              const key = v === "Alles" ? "alle" : v.toLowerCase();
-                              setDealFilter(key as "alle" | "spot" | "contract");
-                            }}
-                            onAdd={() => {}}
-                            addTooltip="Deal toevoegen"
+                    {activeTab === "ladingen" && (
+                      <div className="w-full pb-[32px]">
+                        <SectionHeader title="Ladingen" onAdd={() => {}} addTooltip="Lading toevoegen" />
+                        {relatieLadingen.length === 0 ? (
+                          <div className="py-[48px] text-center">
+                            <p className="font-sans font-normal text-[14px] text-rdj-text-tertiary">
+                              Nog geen ladingen gekoppeld aan deze relatie.
+                            </p>
+                          </div>
+                        ) : (
+                          <Table
+                            columns={sortedLadingenColumns}
+                            data={sortedLadingenData}
+                            onRowClick={(row) => navigate(`/crm/relatie/${id}/lading/${row.id}`)}
                           />
-                          {filteredDeals.length === 0 ? (
-                            <div className="py-[48px] text-center">
-                              <p className="font-sans font-normal text-[14px] text-rdj-text-tertiary">
-                                Geen deals gevonden.
-                              </p>
-                            </div>
-                          ) : (
-                            <Table
-                              columns={dealsColumns}
-                              data={dealsData}
-                              onRowClick={(row) => navigate(`/crm/deal/${row.id}`)}
-                            />
-                          )}
-                        </div>
-                      );
-                    })()}
+                        )}
+                      </div>
+                    )}
+
+                    {activeTab === "vaartuigen" && (
+                      <div className="w-full pb-[32px]">
+                        <SectionHeader title="Vaartuigen" onAdd={() => {}} addTooltip="Vaartuig toevoegen" />
+                        {relatieVaartuigen.length === 0 ? (
+                          <div className="py-[48px] text-center">
+                            <p className="font-sans font-normal text-[14px] text-rdj-text-tertiary">
+                              Nog geen vaartuigen gekoppeld aan deze relatie.
+                            </p>
+                          </div>
+                        ) : (
+                          <Table
+                            columns={sortedVaartuigenColumns}
+                            data={sortedVaartuigenData}
+                            onRowClick={(row) => navigate(`/crm/relatie/${id}/vaartuig/${row.id}`)}
+                          />
+                        )}
+                      </div>
+                    )}
+
+                    {activeTab === "deals" && (
+                      <div className="w-full pb-[32px]">
+                        <SectionHeader
+                          title="Deals"
+                          filterLabel={filterLabels[dealFilter]}
+                          filterOptions={["Alles", "Spot", "Contract"]}
+                          filterValue={filterLabels[dealFilter]}
+                          onFilterChange={(v) => {
+                            const key = v === "Alles" ? "alle" : v.toLowerCase();
+                            setDealFilter(key as "alle" | "spot" | "contract");
+                          }}
+                          onAdd={() => {}}
+                          addTooltip="Deal toevoegen"
+                        />
+                        {filteredDeals.length === 0 ? (
+                          <div className="py-[48px] text-center">
+                            <p className="font-sans font-normal text-[14px] text-rdj-text-tertiary">
+                              Geen deals gevonden.
+                            </p>
+                          </div>
+                        ) : (
+                          <Table
+                            columns={sortedDealsColumns}
+                            data={sortedDealsData}
+                            onRowClick={(row) => navigate(`/crm/deal/${row.id}`)}
+                          />
+                        )}
+                      </div>
+                    )}
 
                     {activeTab === "mail" && (
                       <MailConversaties conversaties={relatieMail} deals={relatieDeals} onLinkDeal={handleLinkDeal} />

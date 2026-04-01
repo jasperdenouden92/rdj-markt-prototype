@@ -8,6 +8,7 @@ import Badge from "../components/Badge";
 import Table from "../components/Table";
 import type { Column, RowData } from "../components/Table";
 import Pagination from "../components/Pagination";
+import useTableSort from "../components/useTableSort";
 import Button from "../components/Button";
 import ActivityFeed from "../components/ActivityFeed";
 import SectionHeader from "../components/SectionHeader";
@@ -153,6 +154,8 @@ export default function CrmLadingDetail() {
         : row)
     : matchTableData.filter((row) => row.matchStatus === matchFilter.toLowerCase());
 
+  const { sortedData: sortedMatchData, sortedColumns: sortedMatchColumns } = useTableSort(matchColumns, filteredMatchData);
+
   return (
     <div className="flex min-h-screen bg-white">
       <Sidebar />
@@ -196,8 +199,8 @@ export default function CrmLadingDetail() {
                             onRowsPerPageChange={setMatchRowsPerPage}
                           />
                           <Table
-                            columns={matchColumns}
-                            data={filteredMatchData}
+                            columns={sortedMatchColumns}
+                            data={sortedMatchData}
                             hoveredRowId={hoveredRow}
                             onRowHover={setHoveredRow}
                             onRowAction={(row) => {
