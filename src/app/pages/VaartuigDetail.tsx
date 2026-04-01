@@ -287,7 +287,7 @@ export default function VaartuigDetail() {
             <div className="flex-[1_0_0] min-h-px min-w-px relative">
               <div className="flex flex-col items-center size-full">
                 <div className="content-stretch flex flex-col items-center py-[24px] relative w-full">
-                  <div className="content-stretch flex flex-col gap-[0px] items-start max-w-[1116px] pt-[24px] relative shrink-0 w-full">
+                  <div className="content-stretch flex flex-col gap-[0px] items-start pt-[24px] relative shrink-0 w-full">
                     <PageHeader
                       title={summaryLoading ? "Laden..." : (summary?.title || "—")}
                       titleBadge={titleBadge}
