@@ -88,10 +88,10 @@ export default function RelatieDetail() {
   const { id } = useParams();
   const location = useLocation();
   const navigate = useNavigate();
-  const isBevrachterContext = location.pathname.startsWith("/markt/bevrachters");
-  const backPath = isBevrachterContext ? "/markt/bevrachters" : "/crm/relaties";
-  const backModule = isBevrachterContext ? "Markt" : "CRM";
-  const backSection = isBevrachterContext ? "Bevrachters" : "Relaties";
+  const isMarktRelatieContext = location.pathname.startsWith("/markt/relaties");
+  const backPath = isMarktRelatieContext ? "/markt/relaties" : "/crm/relaties";
+  const backModule = isMarktRelatieContext ? "Markt" : "CRM";
+  const backSection = "Relaties";
   type TabKey = "overzicht" | "onderhandelingen" | "ladingen" | "vaartuigen" | "deals" | "mail" | "gesprekken" | "activiteit";
   const defaultTab: TabKey = "overzicht";
   const initialTab = (location.hash.replace("#", "") || defaultTab) as TabKey;

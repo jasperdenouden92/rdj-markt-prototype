@@ -152,7 +152,7 @@ export default function LastActivityButton({ relatieId, onNavigateAway, maxAvata
                 onClick={() => {
                   setOpen(false);
                   onNavigateAway?.();
-                  navigate(`/markt/bevrachters/${relatieId}#activiteit`);
+                  navigate(`/markt/relaties/${relatieId}#activiteit`);
                 }}
               />
             </div>

@@ -257,7 +257,7 @@ const segmentLabels: Record<string, string> = {
   onderhandelingen: "Onderhandelingen",
   ladingen: "Ladingen",
   vaartuigen: "Vaartuigen",
-  bevrachters: "Bevrachters",
+  relaties: "Relaties",
   database: "Database",
   crm: "CRM",
   relaties: "Relaties",
