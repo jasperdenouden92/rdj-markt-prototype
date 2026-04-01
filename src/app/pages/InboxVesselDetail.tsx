@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate, useParams } from "react-router";
-import { Send, MailOpen, Check, X } from "lucide-react";
+import { Send, MailOpen, Check, X, PanelRight } from "lucide-react";
 import { toast, Toaster } from "sonner";
 import Sidebar from "../components/Sidebar";
 import PageHeader from "../components/PageHeader";
@@ -90,6 +90,7 @@ export default function InboxVesselDetail() {
   const setActiveTab = (tab: typeof activeTab) => { setActiveTabRaw(tab); setSelectedNegotiation(null); };
   const [conversationDialog, setConversationDialog] = useState<{ relatieId: string; relatieName: string; matchName?: string; itemType?: "lading" | "vaartuig" | "relatie-vaartuig" | "relatie-lading"; rightName?: string } | null>(null);
   const [brokerDialog, setBrokerDialog] = useState<{ relatieA: { id: string; name: string }; vesselName: string; vesselSubtitle: string; relatieB: { id: string; name: string }; cargoName: string; cargoSubtitle: string } | null>(null);
+  const [sidebarOpen, setSidebarOpen] = useState(true);
   const [matchFilter, setMatchFilter] = useState("Alles");
   const [negFilter, setNegFilter] = useState("Actief");
   const [activityFilter, setActivityFilter] = useState("Alle activiteit");
@@ -227,7 +228,8 @@ export default function InboxVesselDetail() {
       <div className="flex min-h-screen bg-white">
         <Sidebar />
 
-        <div className="flex-1 overflow-auto">
+        <div className="flex-1 flex min-h-0">
+          <div className="flex-1 overflow-auto min-w-0">
           {/* Breadcrumbs */}
           <div className="flex items-center justify-between gap-[8px] px-[24px] pt-[24px] pb-[20px] border-b border-rdj-border-secondary">
             <div className="flex items-center gap-[8px]">
@@ -245,7 +247,15 @@ export default function InboxVesselDetail() {
                 </p>
               </div>
             </div>
-            <LastActivityButton maxAvatars={3} />
+            <div className="flex items-center gap-[8px]">
+              <LastActivityButton maxAvatars={3} />
+              <button
+                onClick={() => setSidebarOpen((v) => !v)}
+                className={`p-[8px] rounded-[8px] transition-colors shrink-0 ${sidebarOpen ? 'bg-rdj-bg-active text-rdj-text-brand' : 'hover:bg-rdj-bg-primary-hover text-rdj-text-secondary'}`}
+              >
+                <PanelRight size={20} />
+              </button>
+            </div>
           </div>
 
           <div className="flex items-stretch w-full min-h-[calc(100vh-65px)]">
@@ -379,9 +389,11 @@ export default function InboxVesselDetail() {
             </div>
           </div>
 
-          {/* Right sidebar */}
-          <VaartuigMarktSidebar id={id!} />
           </div>
+          </div>
+
+          {/* Right sidebar */}
+          <VaartuigMarktSidebar id={id!} collapsed={!sidebarOpen} />
         </div>
       </div>
 

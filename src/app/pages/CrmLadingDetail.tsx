@@ -1,5 +1,6 @@
 import { useState, useMemo } from "react";
 import { useParams, Link, useNavigate } from "react-router";
+import { PanelRight } from "lucide-react";
 import Sidebar from "../components/Sidebar";
 import PageHeader from "../components/PageHeader";
 import type { PageTab } from "../components/PageHeader";
@@ -43,6 +44,7 @@ export default function CrmLadingDetail() {
   const [matchFilter, setMatchFilter] = useState("Alles");
   const [negFilter, setNegFilter] = useState("Actief");
   const [activityFilter, setActivityFilter] = useState("Alle activiteit");
+  const [sidebarOpen, setSidebarOpen] = useState(true);
   const [conversationDialog, setConversationDialog] = useState<{ relatieId: string; relatieName: string; matchName?: string } | null>(null);
 
   const lading = useMemo(() => mockRelatieLadingen.find((l) => l.id === id), [id]);
@@ -69,8 +71,8 @@ export default function CrmLadingDetail() {
 
   const breadcrumb = (
     <div className="content-stretch flex flex-col gap-[20px] items-start pt-[24px] relative shrink-0 w-full">
-      <div className="content-stretch flex gap-[20px] items-start relative shrink-0 w-full">
-        <div className="content-stretch flex items-center pl-[24px] relative shrink-0">
+      <div className="content-stretch flex gap-[20px] items-center justify-between relative shrink-0 w-full px-[24px]">
+        <div className="content-stretch flex items-center relative shrink-0">
           <div className="content-stretch flex gap-[8px] items-center relative shrink-0">
             <Link to="/crm/relaties" className="content-stretch flex items-center justify-center p-[4px] relative rounded-[6px] shrink-0 hover:bg-rdj-bg-primary-hover">
               <p className="font-sans font-bold leading-[20px] relative shrink-0 text-[#475467] text-[14px] whitespace-nowrap">CRM</p>
@@ -89,6 +91,12 @@ export default function CrmLadingDetail() {
             </div>
           </div>
         </div>
+        <button
+          onClick={() => setSidebarOpen((v) => !v)}
+          className={`p-[8px] rounded-[8px] transition-colors shrink-0 ${sidebarOpen ? 'bg-rdj-bg-active text-rdj-text-brand' : 'hover:bg-rdj-bg-primary-hover text-rdj-text-secondary'}`}
+        >
+          <PanelRight size={20} />
+        </button>
       </div>
       <div className="h-px relative shrink-0 w-full bg-rdj-border-secondary" />
     </div>
@@ -152,101 +160,108 @@ export default function CrmLadingDetail() {
     <div className="flex min-h-screen bg-white">
       <Sidebar />
 
-      <div className="flex-1 overflow-auto">
-        {breadcrumb}
+      <div className="flex-1 flex min-h-0">
+        <div className="flex-1 overflow-auto min-w-0">
+          {breadcrumb}
 
-        <div className="content-stretch flex items-stretch justify-center relative shrink-0 w-full min-h-[calc(100vh-65px)]">
-          <div className="flex-[1_0_0] min-h-px min-w-px relative">
-            <div className="flex flex-col items-center size-full">
-              <div className="content-stretch flex flex-col items-center py-[24px] relative w-full">
-                <div className="content-stretch flex flex-col gap-[0px] items-start max-w-[1116px] pt-[24px] relative shrink-0 w-full">
-                  <PageHeader
-                    title={lading.titel}
-                    titleBadge={titleBadge}
-                    subtitle={subtitle}
-                    actions={<Button variant="primary" label="Bewerken" />}
-                    tabs={tabs}
-                    onTabClick={(tab: PageTab) => {
-                      const tabKey = tab.path.replace("#", "") as typeof activeTab;
-                      setActiveTab(tabKey);
-                    }}
-                  />
+          <div className="content-stretch flex items-stretch justify-center relative shrink-0 w-full min-h-[calc(100vh-65px)]">
+            <div className="flex-[1_0_0] min-h-px min-w-px relative">
+              <div className="flex flex-col items-center size-full">
+                <div className="content-stretch flex flex-col items-center py-[24px] relative w-full">
+                  <div className="content-stretch flex flex-col gap-[0px] items-start max-w-[1116px] pt-[24px] relative shrink-0 w-full">
+                    <PageHeader
+                      title={lading.titel}
+                      titleBadge={titleBadge}
+                      subtitle={subtitle}
+                      actions={<Button variant="primary" label="Bewerken" />}
+                      tabs={tabs}
+                      onTabClick={(tab: PageTab) => {
+                        const tabKey = tab.path.replace("#", "") as typeof activeTab;
+                        setActiveTab(tabKey);
+                      }}
+                    />
 
-                  <div className="w-full pt-[20px]">
-                    {activeTab === "matches" && (
-                      <>
-                        <SectionHeader
-                          title="Matches"
-                          filterLabel={matchFilter}
-                          filterOptions={["Alles", "Openstaand", "Aangeboden"]}
-                          filterValue={matchFilter}
-                          onFilterChange={setMatchFilter}
-                        />
-                        <Pagination
-                          currentPage={matchPage}
-                          totalItems={filteredMatchData.length}
-                          rowsPerPage={matchRowsPerPage}
-                          onPageChange={setMatchPage}
-                          onRowsPerPageChange={setMatchRowsPerPage}
-                        />
-                        <Table
-                          columns={sortedMatchColumns}
-                          data={sortedMatchData}
-                          hoveredRowId={hoveredRow}
-                          onRowHover={setHoveredRow}
-                          onRowAction={(row) => {
-                            const rel = mockRelaties.find(r => r.naam === row.company);
-                            setConversationDialog({
-                              relatieId: rel?.id || relatie?.id || "",
-                              relatieName: (row.company as string) || relatie?.naam || "",
-                              matchName: row.name as string,
-                            });
-                          }}
-                        />
-                      </>
-                    )}
+                    <div className="w-full pt-[20px]">
+                      {activeTab === "matches" && (
+                        <>
+                          <SectionHeader
+                            title="Matches"
+                            filterLabel={matchFilter}
+                            filterOptions={["Alles", "Openstaand", "Aangeboden"]}
+                            filterValue={matchFilter}
+                            onFilterChange={setMatchFilter}
+                          />
+                          <Pagination
+                            currentPage={matchPage}
+                            totalItems={filteredMatchData.length}
+                            rowsPerPage={matchRowsPerPage}
+                            onPageChange={setMatchPage}
+                            onRowsPerPageChange={setMatchRowsPerPage}
+                          />
+                          <Table
+                            columns={sortedMatchColumns}
+                            data={sortedMatchData}
+                            hoveredRowId={hoveredRow}
+                            onRowHover={setHoveredRow}
+                            onRowAction={(row) => {
+                              const rel = mockRelaties.find(r => r.naam === row.company);
+                              setConversationDialog({
+                                relatieId: rel?.id || relatie?.id || "",
+                                relatieName: (row.company as string) || relatie?.naam || "",
+                                matchName: row.name as string,
+                              });
+                            }}
+                          />
+                        </>
+                      )}
 
-                    {activeTab === "onderhandelingen" && (
-                      <>
-                        <SectionHeader
-                          title="Onderhandelingen"
-                          filterLabel={negFilter}
-                          filterOptions={["Alles", "Actief", "Goedgekeurd", "Afgewezen"]}
-                          filterValue={negFilter}
-                          onFilterChange={setNegFilter}
-                          onAdd={() => setConversationDialog({ relatieId: relatie?.id || "", relatieName: relatie?.naam || "" })}
-                          addTooltip="Onderhandeling starten"
-                        />
-                        <div className="w-full px-[24px] py-[48px] text-center">
-                          <p className="font-sans font-normal text-[14px] text-rdj-text-tertiary">
-                            Nog geen onderhandelingen gestart voor deze lading.
-                          </p>
-                        </div>
-                      </>
-                    )}
+                      {activeTab === "onderhandelingen" && (
+                        <>
+                          <SectionHeader
+                            title="Onderhandelingen"
+                            filterLabel={negFilter}
+                            filterOptions={["Alles", "Actief", "Goedgekeurd", "Afgewezen"]}
+                            filterValue={negFilter}
+                            onFilterChange={setNegFilter}
+                            onAdd={() => setConversationDialog({ relatieId: relatie?.id || "", relatieName: relatie?.naam || "" })}
+                            addTooltip="Onderhandeling starten"
+                          />
+                          <div className="w-full px-[24px] py-[48px] text-center">
+                            <p className="font-sans font-normal text-[14px] text-rdj-text-tertiary">
+                              Nog geen onderhandelingen gestart voor deze lading.
+                            </p>
+                          </div>
+                        </>
+                      )}
 
-                    {activeTab === "activiteit" && (
-                      <>
-                        <SectionHeader
-                          title="Activiteit"
-                          filterLabel={activityFilter}
-                          filterOptions={["Alle activiteit", "Jouw activiteit"]}
-                          filterValue={activityFilter}
-                          onFilterChange={setActivityFilter}
-                        />
-                        <div className="w-full px-[24px]">
-                          <ActivityFeed filter={activityFilter === "Jouw activiteit" ? "mine" : "all"} />
-                        </div>
-                      </>
-                    )}
+                      {activeTab === "activiteit" && (
+                        <>
+                          <SectionHeader
+                            title="Activiteit"
+                            filterLabel={activityFilter}
+                            filterOptions={["Alle activiteit", "Jouw activiteit"]}
+                            filterValue={activityFilter}
+                            onFilterChange={setActivityFilter}
+                          />
+                          <div className="w-full px-[24px]">
+                            <ActivityFeed filter={activityFilter === "Jouw activiteit" ? "mine" : "all"} />
+                          </div>
+                        </>
+                      )}
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
           </div>
+        </div>
 
-          {/* Right Sidebar */}
-          <div className="w-[320px] shrink-0 border-l border-rdj-border-secondary bg-white">
+        {/* Right Sidebar */}
+        <div
+          className={`shrink-0 overflow-hidden transition-[width] duration-150 ease-out bg-white ${sidebarOpen ? "border-l border-rdj-border-secondary" : "border-l-0"}`}
+          style={{ width: sidebarOpen ? 320 : 0 }}
+        >
+          <div className="w-[320px] h-full overflow-y-auto">
             <div className="p-[24px] flex flex-col gap-[24px]">
               <div>
                 <p className="font-sans font-bold text-[16px] leading-[24px] text-rdj-text-primary mb-[16px]">Details</p>
