@@ -139,11 +139,11 @@ export const router = createBrowserRouter([
         element: <Navigate to="/markt/onderhandelingen/ladingen" replace />,
       },
       {
-        path: "markt/bevrachters",
+        path: "markt/relaties",
         Component: Bevrachters,
       },
       {
-        path: "markt/bevrachters/:id",
+        path: "markt/relaties/:id",
         Component: RelatieDetail,
       },
       {
