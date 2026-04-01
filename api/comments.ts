@@ -114,7 +114,7 @@ async function handlePost(req: VercelRequest, res: VercelResponse) {
       parent: { database_id: NOTION_DATABASE_ID },
       properties: {
         Naam: {
-          title: [{ text: { content: pagina || annotationId } }],
+          title: [{ text: { content: comment } }],
         },
         Auteur: {
           rich_text: [{ text: { content: auteur || "Anoniem" } }],
