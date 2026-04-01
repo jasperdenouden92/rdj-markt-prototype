@@ -90,7 +90,9 @@ async function handleGet(req: VercelRequest, res: VercelResponse) {
     comment: getPlainText(page.properties["Comment"]),
     label: getPlainText(page.properties["Label"]),
     status: page.properties["Status"]?.select?.name ?? null,
-    createdAt: page.created_time,
+    aangemaakt: page.properties["Aangemaakt"]?.created_time ?? page.created_time,
+    antwoord: getPlainText(page.properties["Antwoord"]),
+    pagina: getPlainText(page.properties["Pagina"]),
   }));
 
   return res.status(200).json(comments);
@@ -153,7 +155,9 @@ async function handlePost(req: VercelRequest, res: VercelResponse) {
     comment,
     label: label || "",
     status: "Open",
-    createdAt: page.created_time,
+    aangemaakt: page.created_time,
+    antwoord: "",
+    pagina: pagina || "",
   });
 }
 
