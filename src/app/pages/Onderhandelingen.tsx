@@ -448,7 +448,7 @@ const PlusIcon = (
   <svg fill="none" viewBox="0 0 20 20">
     <path
       d="M10 4.167V15.833M4.167 10H15.833"
-      stroke="currentColor"
+      stroke="white"
       strokeLinecap="round"
       strokeLinejoin="round"
       strokeWidth="1.67"
