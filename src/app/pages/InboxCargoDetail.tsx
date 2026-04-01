@@ -9,6 +9,7 @@ import Badge from "../components/Badge";
 import Table from "../components/Table";
 import type { Column, RowData } from "../components/Table";
 import Pagination from "../components/Pagination";
+import useTableSort from "../components/useTableSort";
 import Button from "../components/Button";
 import LadingMarktSidebar from "../components/LadingMarktSidebar";
 import StartNegotiationSidebar from "../components/StartNegotiationSidebar";
@@ -206,6 +207,9 @@ export default function InboxCargoDetail() {
         ? negTableData.filter((row) => row.status === "Geaccepteerd")
         : negTableData.filter((row) => row.status === "Geweigerd");
 
+  const { sortedData: sortedMatchData, sortedColumns: sortedMatchColumns } = useTableSort(matchColumns, filteredMatchRows);
+  const { sortedData: sortedNegData, sortedColumns: sortedNegColumns } = useTableSort(negColumns, filteredNegData);
+
   return (
     <>
       <Toaster position="top-right" richColors />
@@ -280,8 +284,8 @@ export default function InboxCargoDetail() {
                           onRowsPerPageChange={setMatchRowsPerPage}
                         />
                         <Table
-                          columns={matchColumns}
-                          data={filteredMatchRows}
+                          columns={sortedMatchColumns}
+                          data={sortedMatchData}
                           hoveredRowId={hoveredRow}
                           onRowHover={setHoveredRow}
                           onRowAction={(row) => {
@@ -331,8 +335,8 @@ export default function InboxCargoDetail() {
                           onRowsPerPageChange={setNegRowsPerPage}
                         />
                         <Table
-                          columns={negColumns}
-                          data={filteredNegData}
+                          columns={sortedNegColumns}
+                          data={sortedNegData}
                           hoveredRowId={hoveredRow}
                           onRowHover={setHoveredRow}
                           activeRowId={selectedNegotiation?.id ?? null}

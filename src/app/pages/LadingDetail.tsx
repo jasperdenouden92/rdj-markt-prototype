@@ -8,6 +8,7 @@ import Badge from "../components/Badge";
 import Table from "../components/Table";
 import type { Column, RowData } from "../components/Table";
 import Pagination from "../components/Pagination";
+import useTableSort from "../components/useTableSort";
 import Button from "../components/Button";
 import ActivityFeed from "../components/ActivityFeed";
 import SectionHeader from "../components/SectionHeader";
@@ -223,6 +224,9 @@ export default function LadingDetail() {
         ? negTableData.filter((row) => row.status === "Goedgekeurd")
         : negTableData.filter((row) => row.status === "Afgewezen" || row.status === "Afgekeurd");
 
+  const { sortedData: sortedMatchData, sortedColumns: sortedMatchColumns } = useTableSort(matchColumns, filteredMatchData);
+  const { sortedData: sortedNegData, sortedColumns: sortedNegColumns } = useTableSort(negColumns, filteredNegData);
+
   /* ── Actions ── */
   const actions = (
     <>
@@ -290,8 +294,8 @@ export default function LadingDetail() {
                           onRowsPerPageChange={setMatchRowsPerPage}
                         />
                         <Table
-                          columns={matchColumns}
-                          data={filteredMatchData}
+                          columns={sortedMatchColumns}
+                          data={sortedMatchData}
                           hoveredRowId={hoveredRow}
                           onRowHover={setHoveredRow}
                           onRowClick={(row) => {
@@ -333,8 +337,8 @@ export default function LadingDetail() {
                           onRowsPerPageChange={setNegRowsPerPage}
                         />
                         <Table
-                          columns={negColumns}
-                          data={filteredNegData}
+                          columns={sortedNegColumns}
+                          data={sortedNegData}
                           hoveredRowId={hoveredRow}
                           onRowHover={setHoveredRow}
                           activeRowId={selectedNegotiation?.id ?? null}
