@@ -1,8 +1,26 @@
-import { useState } from "react";
+import { useState, useMemo, useRef, useEffect } from "react";
 import svgPaths from "../../imports/svg-hstiyx955m";
+import { type Relatie } from "../data/api";
+import { mockRelaties } from "../data/mock-relatie-data";
+import Button from "./Button";
 import Checkbox from "./Checkbox";
 import SegmentedButtonGroup from "./SegmentedButtonGroup";
 import TermijnDropdown, { type TermijnValue } from "./TermijnDropdown";
+
+// Simulated IVR Hull Database
+interface IvrVessel { eni: string; naam: string; eigenaar: string }
+const ivrDatabase: IvrVessel[] = [
+  { eni: "02332456", naam: "Emily", eigenaar: "Van der Berg Shipping B.V." },
+  { eni: "02334567", naam: "S.S. Anna", eigenaar: "Rijnvaart Transport N.V." },
+  { eni: "02335678", naam: "Bregje", eigenaar: "De Vries Binnenvaart" },
+  { eni: "02336789", naam: "Hercules", eigenaar: "Duwvaart Nederland B.V." },
+  { eni: "02331111", naam: "Antonia V", eigenaar: "Visscher & Zonen" },
+  { eni: "02332222", naam: "Duwbak Alfa-1", eigenaar: "Alfa Duwvaart B.V." },
+  { eni: "02333333", naam: "Duwbak Alfa-2", eigenaar: "Alfa Duwvaart B.V." },
+  { eni: "02337890", naam: "Orion", eigenaar: "Stervaart Logistics B.V." },
+  { eni: "02338901", naam: "Cornelia", eigenaar: "Janssen Scheepvaart" },
+  { eni: "02339012", naam: "De Hoop", eigenaar: "Combinatie De Hoop V.O.F." },
+];
 
 interface AddInboxItemModalProps {
   isOpen: boolean;
@@ -16,6 +34,15 @@ export default function AddInboxItemModal({ isOpen, onClose, onSubmit, itemType:
   const [isRange, setIsRange] = useState(false);
   const [loadTerms, setLoadTerms] = useState<TermijnValue | undefined>();
   const [unloadTerms, setUnloadTerms] = useState<TermijnValue | undefined>();
+  const [eniQuery, setEniQuery] = useState('');
+  const [selectedVessel, setSelectedVessel] = useState<IvrVessel | null>(null);
+  const [showDropdown, setShowDropdown] = useState(false);
+  const eniInputRef = useRef<HTMLInputElement>(null);
+  const [relatieQuery, setRelatieQuery] = useState('');
+  const [selectedRelatie, setSelectedRelatie] = useState<Relatie | null>(null);
+  const [showRelatieDropdown, setShowRelatieDropdown] = useState(false);
+  const [showNieuweRelatie, setShowNieuweRelatie] = useState(false);
+  const relatieInputRef = useRef<HTMLInputElement>(null);
   const [formData, setFormData] = useState({
     relation: '',
     contactPerson: '',
@@ -30,11 +57,48 @@ export default function AddInboxItemModal({ isOpen, onClose, onSubmit, itemType:
     priority: 1,
   });
 
+  const eniSearchResults = useMemo(() => {
+    const q = eniQuery.replace(/\s/g, '');
+    if (q.length < 2) return [];
+    return ivrDatabase.filter(
+      (v) => v.eni.includes(q) || v.naam.toLowerCase().includes(q.toLowerCase())
+    );
+  }, [eniQuery]);
+
+  const relatieSearchResults = useMemo(() => {
+    if (relatieQuery.length < 1) return mockRelaties.slice(0, 6);
+    const q = relatieQuery.toLowerCase();
+    return mockRelaties.filter(
+      (r) => r.naam.toLowerCase().includes(q) || r.plaats?.toLowerCase().includes(q)
+    );
+  }, [relatieQuery]);
+
+  // Auto-fill relatie from IVR eigenaar when vessel is selected
+  useEffect(() => {
+    if (selectedVessel && !selectedRelatie) {
+      const eigenaar = selectedVessel.eigenaar.toLowerCase();
+      const match = mockRelaties.find((r) => r.naam.toLowerCase() === eigenaar);
+      if (match) {
+        setSelectedRelatie(match);
+        setRelatieQuery('');
+        setShowNieuweRelatie(false);
+      } else {
+        setRelatieQuery(selectedVessel.eigenaar);
+        setShowNieuweRelatie(true);
+      }
+    }
+  }, [selectedVessel]);
+
   if (!isOpen) return null;
 
   const handleSubmit = () => {
-    onSubmit({ ...formData, loadTerms, unloadTerms, tonnageMax: isRange ? formData.tonnageMax : '', type: itemType });
+    onSubmit({ ...formData, eniNumber: selectedVessel?.eni, ivrNaam: selectedVessel?.naam, relatieId: selectedRelatie?.id, relatieNaam: selectedRelatie?.naam ?? (showNieuweRelatie ? relatieQuery : undefined), loadTerms, unloadTerms, tonnageMax: isRange ? formData.tonnageMax : '', type: itemType });
     // Reset form
+    setEniQuery('');
+    setSelectedVessel(null);
+    setRelatieQuery('');
+    setSelectedRelatie(null);
+    setShowNieuweRelatie(false);
     setFormData({
       relation: '',
       contactPerson: '',
@@ -105,21 +169,189 @@ export default function AddInboxItemModal({ isOpen, onClose, onSubmit, itemType:
         {/* Form Content */}
         <div className="px-[24px] py-[24px]">
           <div className="flex flex-col gap-[20px]">
+            {/* ENI Lookup (vaartuig only) */}
+            {itemType === 'vaartuig' && (
+              <div className="flex flex-col gap-[6px]">
+                <p className="font-sans font-bold leading-[20px] text-[#344054] text-[14px]">
+                  {selectedVessel ? 'Geselecteerd vaartuig' : 'ENI-nummer'}
+                </p>
+
+                {selectedVessel ? (
+                  <div className="bg-[#f9fafb] rounded-[8px] border border-[#d0d5dd] px-[14px] py-[12px] flex items-start gap-[12px]">
+                    <div className="flex-1 flex flex-col gap-[2px] min-w-0">
+                      <p className="font-sans font-bold leading-[20px] text-[#101828] text-[14px]">
+                        {selectedVessel.naam}
+                      </p>
+                      <p className="font-sans font-normal leading-[20px] text-[#475467] text-[13px]">
+                        ENI {selectedVessel.eni} &middot; {selectedVessel.eigenaar}
+                      </p>
+                    </div>
+                    <Button
+                      variant="secondary"
+                      size="xs"
+                      icon={
+                        <svg fill="none" viewBox="0 0 10 10">
+                          <path d={svgPaths.p1ddb9c00} stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.33" />
+                        </svg>
+                      }
+                      onClick={() => {
+                        setSelectedVessel(null);
+                        setEniQuery('');
+                        setTimeout(() => eniInputRef.current?.focus(), 0);
+                      }}
+                    />
+                  </div>
+                ) : (
+                  <div className="relative">
+                    <input
+                      ref={eniInputRef}
+                      type="text"
+                      value={eniQuery}
+                      onChange={(e) => {
+                        setEniQuery(e.target.value);
+                        setShowDropdown(true);
+                      }}
+                      onFocus={() => setShowDropdown(true)}
+                      onBlur={() => setTimeout(() => setShowDropdown(false), 150)}
+                      className="w-full px-[12px] py-[8px] rounded-[6px] border border-[#d0d5dd] font-sans font-normal leading-[20px] text-[#101828] text-[14px] focus:outline-none focus:ring-2 focus:ring-[#1567a4]"
+                      placeholder="Zoek op ENI-nummer of naam..."
+                    />
+                    {showDropdown && eniQuery.length >= 2 && (
+                      <div className="absolute z-10 top-[calc(100%+4px)] left-0 w-full bg-white rounded-[8px] border border-[#d0d5dd] shadow-[0px_12px_16px_-4px_rgba(16,24,40,0.08),0px_4px_6px_-2px_rgba(16,24,40,0.03)] max-h-[200px] overflow-auto">
+                        {eniSearchResults.length === 0 ? (
+                          <div className="px-[12px] py-[10px]">
+                            <p className="font-sans font-normal leading-[20px] text-[#475467] text-[13px]">
+                              Geen resultaten gevonden
+                            </p>
+                          </div>
+                        ) : (
+                          eniSearchResults.map((vessel) => (
+                            <button
+                              key={vessel.eni}
+                              onMouseDown={(e) => e.preventDefault()}
+                              onClick={() => {
+                                setSelectedVessel(vessel);
+                                setEniQuery('');
+                                setShowDropdown(false);
+                              }}
+                              className="w-full text-left px-[12px] py-[8px] hover:bg-[#f2f4f7] flex flex-col gap-[1px] cursor-pointer first:rounded-t-[8px] last:rounded-b-[8px]"
+                            >
+                              <p className="font-sans font-bold leading-[20px] text-[#101828] text-[14px]">
+                                {vessel.naam}
+                              </p>
+                              <p className="font-sans font-normal leading-[18px] text-[#475467] text-[13px]">
+                                ENI {vessel.eni} &middot; {vessel.eigenaar}
+                              </p>
+                            </button>
+                          ))
+                        )}
+                      </div>
+                    )}
+                  </div>
+                )}
+              </div>
+            )}
+
             {/* Row 1: Relatie & Contactpersoon */}
             <div className="flex gap-[12px] w-full">
               <div className="flex-1 flex flex-col gap-[6px]">
                 <p className="font-sans font-bold leading-[20px] text-[#344054] text-[14px]">
                   Relatie
                 </p>
-                <div className="bg-white relative rounded-[6px] w-full">
-                  <input
-                    type="text"
-                    value={formData.relation}
-                    onChange={(e) => setFormData({ ...formData, relation: e.target.value })}
-                    className="w-full px-[12px] py-[8px] rounded-[6px] border border-[#d0d5dd] font-sans font-normal leading-[20px] text-[#101828] text-[14px] focus:outline-none focus:ring-2 focus:ring-[#1567a4]"
-                    placeholder="Selecteer relatie..."
-                  />
-                </div>
+
+                {selectedRelatie || showNieuweRelatie ? (
+                  <>
+                    <div className="relative w-full">
+                      <div className="w-full px-[12px] py-[8px] pr-[36px] rounded-[6px] border border-[#d0d5dd] font-sans font-normal leading-[20px] text-[#101828] text-[14px] bg-white truncate">
+                        {selectedRelatie?.naam ?? relatieQuery}
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setSelectedRelatie(null);
+                          setShowNieuweRelatie(false);
+                          setRelatieQuery('');
+                          setTimeout(() => relatieInputRef.current?.focus(), 0);
+                        }}
+                        className="absolute right-[10px] top-1/2 -translate-y-1/2 size-[16px] flex items-center justify-center text-[#667085] hover:text-[#344054]"
+                      >
+                        <svg className="block size-[10px]" fill="none" viewBox="0 0 10 10">
+                          <path d={svgPaths.p1ddb9c00} stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.33" />
+                        </svg>
+                      </button>
+                    </div>
+                    {showNieuweRelatie && (
+                      <p className="font-sans font-normal leading-[18px] text-[#475467] text-[13px]">
+                        Wordt aangemaakt met alleen naam.{' '}
+                        <button type="button" className="font-bold text-[#1567a4] hover:underline">
+                          Details aanvullen
+                        </button>
+                      </p>
+                    )}
+                  </>
+                ) : (
+                  <div className="relative">
+                    <input
+                      ref={relatieInputRef}
+                      type="text"
+                      value={relatieQuery}
+                      onChange={(e) => {
+                        setRelatieQuery(e.target.value);
+                        setShowRelatieDropdown(true);
+                      }}
+                      onFocus={() => setShowRelatieDropdown(true)}
+                      onBlur={() => setTimeout(() => setShowRelatieDropdown(false), 150)}
+                      className="w-full px-[12px] py-[8px] rounded-[6px] border border-[#d0d5dd] font-sans font-normal leading-[20px] text-[#101828] text-[14px] focus:outline-none focus:ring-2 focus:ring-[#1567a4]"
+                      placeholder="Zoek relatie..."
+                    />
+                    {showRelatieDropdown && (
+                      <div className="absolute z-10 top-[calc(100%+4px)] left-0 w-full bg-white rounded-[8px] border border-[#d0d5dd] shadow-[0px_12px_16px_-4px_rgba(16,24,40,0.08),0px_4px_6px_-2px_rgba(16,24,40,0.03)] max-h-[240px] overflow-auto">
+                        {relatieSearchResults.map((relatie) => (
+                          <button
+                            key={relatie.id}
+                            onMouseDown={(e) => e.preventDefault()}
+                            onClick={() => {
+                              setSelectedRelatie(relatie);
+                              setRelatieQuery('');
+                              setShowRelatieDropdown(false);
+                            }}
+                            className="w-full text-left px-[12px] py-[8px] hover:bg-[#f2f4f7] flex items-center gap-[8px] cursor-pointer first:rounded-t-[8px] last:rounded-b-[8px]"
+                          >
+                            <div className="flex-1 min-w-0">
+                              <p className="font-sans font-bold leading-[20px] text-[#101828] text-[14px] truncate">
+                                {relatie.naam}
+                              </p>
+                              {relatie.plaats && (
+                                <p className="font-sans font-normal leading-[18px] text-[#475467] text-[13px]">
+                                  {relatie.plaats}
+                                </p>
+                              )}
+                            </div>
+                          </button>
+                        ))}
+                        {relatieQuery.length >= 2 && (
+                          <button
+                            onMouseDown={(e) => e.preventDefault()}
+                            onClick={() => {
+                              setShowNieuweRelatie(true);
+                              setShowRelatieDropdown(false);
+                            }}
+                            className="w-full text-left px-[12px] py-[8px] hover:bg-[#f2f4f7] flex items-center gap-[8px] cursor-pointer border-t border-[#eaecf0] last:rounded-b-[8px]"
+                          >
+                            <div className="overflow-clip shrink-0 size-[16px]">
+                              <svg className="block size-full" fill="none" viewBox="0 0 16 16">
+                                <path d="M8 3.33v9.34M3.33 8h9.34" stroke="#1567A4" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.33" />
+                              </svg>
+                            </div>
+                            <p className="font-sans font-bold leading-[20px] text-[#1567a4] text-[14px]">
+                              "{relatieQuery}" als nieuwe relatie aanmaken
+                            </p>
+                          </button>
+                        )}
+                      </div>
+                    )}
+                  </div>
+                )}
               </div>
               <div className="flex-1 flex flex-col gap-[6px]">
                 <p className="font-sans font-bold leading-[20px] text-[#344054] text-[14px]">
