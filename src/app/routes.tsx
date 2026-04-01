@@ -1,4 +1,10 @@
-import { createBrowserRouter, Navigate, Outlet } from "react-router";
+import { createBrowserRouter, Navigate, Outlet, useLocation } from "react-router";
+import {
+  AnnotationProvider,
+  AnnotationPanel,
+  AnnotationButton,
+} from "@jasperdenouden92/annotations";
+import { annotations } from "./data/annotations";
 import Bevrachting from "./pages/Bevrachting";
 import Inbox from "./pages/Inbox";
 import InboxVessels from "./pages/InboxVessels";
@@ -26,8 +32,17 @@ import Vloot from "./pages/Vloot";
 import VlootVaartuigDetail from "./pages/VlootVaartuigDetail";
 
 function RootLayout() {
+  const location = useLocation();
+
   return (
-    <Outlet />
+    <AnnotationProvider
+      annotations={annotations}
+      currentRoute={location.pathname}
+    >
+      <Outlet />
+      <AnnotationPanel />
+      <AnnotationButton />
+    </AnnotationProvider>
   );
 }
 
