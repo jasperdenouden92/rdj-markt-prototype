@@ -3,6 +3,7 @@ import {
   AnnotationProvider,
   AnnotationPanel,
   AnnotationButton,
+  Inspector,
 } from "@jasperdenouden92/annotations";
 import { annotations } from "./data/annotations";
 import Bevrachting from "./pages/Bevrachting";
@@ -38,10 +39,12 @@ function RootLayout() {
     <AnnotationProvider
       annotations={annotations}
       currentRoute={location.pathname}
+      comments={{ enabled: true, apiBase: "", project: "rederij-de-jong" }}
     >
       <Outlet />
       <AnnotationPanel />
       <AnnotationButton />
+      <Inspector />
     </AnnotationProvider>
   );
 }

@@ -18,9 +18,10 @@ interface DroppableColumnProps {
   items: (Cargo | Vessel)[];
   onDrop: (itemId: string, newStatus: 'intake' | 'werklijst' | 'markt' | 'gesloten') => void;
   type: 'cargo' | 'vessel';
+  wrapCard?: (card: React.ReactNode, item: Cargo | Vessel, index: number) => React.ReactNode;
 }
 
-export default function DroppableColumn({ title, status, items, onDrop, type }: DroppableColumnProps) {
+export default function DroppableColumn({ title, status, items, onDrop, type, wrapCard }: DroppableColumnProps) {
   const [{ isOver }, drop] = useDrop({
     accept: type === 'cargo' ? 'CARGO' : 'VESSEL',
     drop: (item: { id: string }) => {
@@ -55,11 +56,11 @@ export default function DroppableColumn({ title, status, items, onDrop, type }: 
 
       {/* Cards */}
       <div className="flex flex-col gap-[12px] flex-1">
-        {items.map(item => {
+        {items.map((item, index) => {
           const card = type === 'cargo'
             ? <CargoCard key={item.id} cargo={item as Cargo} />
             : <VesselCard key={item.id} vessel={item as Vessel} />;
-          return card;
+          return wrapCard ? wrapCard(card, item, index) : card;
         })}
       </div>
 
