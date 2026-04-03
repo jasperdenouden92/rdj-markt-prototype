@@ -167,7 +167,7 @@ export function useInboxLadingen() {
           relation: relatie?.naam || "",
           relationLink: contactPersoon?.naam || "",
           loadLocation: laadlocatie?.naam || "",
-          loadDate: formatDate((item as any).laaddatum),
+          loadDate: (item as any).laaddatum ? formatDate((item as any).laaddatum) : "",
           unloadLocation: loslocatie?.naam || "Af te stemmen",
           unloadDate: (item as any).losdatum ? formatDate((item as any).losdatum) : "",
           source: bron?.titel || "",

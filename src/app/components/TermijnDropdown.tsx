@@ -31,6 +31,7 @@ interface TermijnDropdownProps {
   value: TermijnValue | undefined;
   onChange: (value: TermijnValue) => void;
   placeholder?: string;
+  variant?: "default" | "sidebar";
 }
 
 /* ── TermijnPill — pill-shaped trigger with same popover as TermijnDropdown ── */
@@ -167,7 +168,7 @@ export function TermijnPill({ label, value, onChange, variant = "primary" }: Ter
   );
 }
 
-export default function TermijnDropdown({ value, onChange, placeholder = "Selecteer..." }: TermijnDropdownProps) {
+export default function TermijnDropdown({ value, onChange, placeholder = "Selecteer...", variant = "default" }: TermijnDropdownProps) {
   const [open, setOpen] = useState(false);
   const [view, setView] = useState<"menu" | "calendar">("menu");
   const [month, setMonth] = useState<Date>(
@@ -210,17 +211,30 @@ export default function TermijnDropdown({ value, onChange, placeholder = "Select
       }}
     >
       <PopoverTrigger asChild>
-        <button
-          type="button"
-          className="w-full px-[12px] py-[8px] rounded-[6px] border border-[#d0d5dd] font-sans font-normal leading-[20px] text-[14px] text-left focus:outline-none focus:ring-2 focus:ring-[#1567a4] bg-white flex items-center justify-between"
-        >
-          <span className={displayValue ? "text-[#101828]" : "text-[#667085]"}>
-            {displayValue || placeholder}
-          </span>
-          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" className="shrink-0 ml-[8px]">
-            <path d="M4 6L8 10L12 6" stroke="#667085" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-          </svg>
-        </button>
+        {variant === "sidebar" ? (
+          <button
+            type="button"
+            className="w-full rounded-[6px] border border-transparent hover:border-rdj-border-primary hover:bg-rdj-bg-secondary-hover transition-all text-left focus:outline-none"
+          >
+            <div className="pl-[12px] pr-[6px] py-[8px]">
+              <p className={`font-sans leading-[20px] text-[14px] ${displayValue ? "font-bold text-rdj-text-primary" : "font-normal text-rdj-text-tertiary"}`}>
+                {displayValue || "Voeg toe"}
+              </p>
+            </div>
+          </button>
+        ) : (
+          <button
+            type="button"
+            className="w-full px-[12px] py-[8px] rounded-[6px] border border-[#d0d5dd] font-sans font-normal leading-[20px] text-[14px] text-left focus:outline-none focus:ring-2 focus:ring-[#1567a4] bg-white flex items-center justify-between"
+          >
+            <span className={displayValue ? "text-[#101828]" : "text-[#667085]"}>
+              {displayValue || placeholder}
+            </span>
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" className="shrink-0 ml-[8px]">
+              <path d="M4 6L8 10L12 6" stroke="#667085" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
+          </button>
+        )}
       </PopoverTrigger>
       <PopoverContent
         align="start"
