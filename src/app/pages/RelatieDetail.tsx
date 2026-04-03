@@ -206,11 +206,36 @@ export default function RelatieDetail() {
 
   /* ── Ladingen table ── */
   const ladingenColumns: Column[] = useMemo(() => [
-    { key: "titel", header: "Lading", type: "leading-text", subtextKey: "product", actionLabel: "Openen", extraActionsKey: "extraActions" },
-    { key: "route", header: "Route", type: "text", width: "w-[200px]" },
-    { key: "tonnage", header: "Tonnage", type: "text", width: "w-[120px]" },
-    { key: "laaddatum", header: "Laaddatum", type: "text", width: "w-[140px]" },
-    { key: "matches", header: "Matches", type: "text", width: "w-[120px]" },
+    { key: "titel", header: "Lading", type: "leading-text", subtextKey: "product", maxWidth: "max-w-[480px]" },
+    { key: "tonnage", header: "Tonnage", type: "text", width: "w-[120px]", align: "right" },
+    { key: "laadhaven", header: "Laden", type: "text", width: "w-[180px]" },
+    { key: "loshaven", header: "Lossen", type: "text", width: "w-[180px]" },
+    {
+      key: "matches", header: "Matches", type: "custom", width: "w-[120px]",
+      render: (row) => {
+        const count = row.matches as number;
+        if (!count) return null;
+        return (
+          <span className="inline-flex items-center gap-[4px] rounded-full border px-[10px] py-[2px] font-sans font-bold text-[13px] leading-[20px] bg-white text-[#344054] border-[#d0d5dd]">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M5.25 6.417h3.5M5.25 8.75h2.333M9.333 2.917H11.2c.653 0 .98 0 1.232.127.222.112.403.293.515.515.127.252.127.578.127 1.232v5.834c0 .653 0 .98-.127 1.232a1.167 1.167 0 0 1-.515.515c-.252.128-.579.128-1.232.128H2.8c-.653 0-.98 0-1.232-.128a1.167 1.167 0 0 1-.515-.515C.927 11.605.927 11.278.927 10.625V4.79c0-.654 0-.98.127-1.232.112-.222.293-.403.515-.515.252-.127.579-.127 1.232-.127h1.866m0-1.75h4.666c.327 0 .49 0 .616.064.11.056.201.146.258.258.063.126.063.29.063.616v.812c0 .327 0 .49-.063.616a.583.583 0 0 1-.258.258c-.126.063-.29.063-.616.063H4.667c-.327 0-.49 0-.616-.063a.583.583 0 0 1-.258-.258c-.063-.126-.063-.29-.063-.616v-.812c0-.327 0-.49.063-.616a.583.583 0 0 1 .258-.258c.126-.064.29-.064.616-.064Z" stroke="currentColor" strokeWidth="1.17" strokeLinecap="round" strokeLinejoin="round"/></svg>
+            {count}
+          </span>
+        );
+      },
+    },
+    {
+      key: "onderhandelingen", header: "Onderhandelingen", type: "custom", width: "w-[140px]",
+      render: (row) => {
+        const count = row.onderhandelingen as number;
+        if (!count) return null;
+        return (
+          <span className="inline-flex items-center gap-[4px] rounded-full border px-[10px] py-[2px] font-sans font-bold text-[13px] leading-[20px] bg-white text-[#344054] border-[#d0d5dd]">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M4.667 5.25h4.666M4.667 7.583h2.916M7 12.25c2.9 0 5.25-2.35 5.25-5.25S9.9 1.75 7 1.75 1.75 4.1 1.75 7c0 .93.243 1.804.669 2.56.09.16.135.24.152.305a.52.52 0 0 1 .015.165c-.008.068-.037.14-.094.286l-.742 1.855c-.082.204-.123.306-.098.38a.292.292 0 0 0 .164.164c.074.025.176-.016.38-.098l1.855-.742c.145-.058.218-.087.286-.094a.52.52 0 0 1 .165.015c.065.017.145.062.305.152A5.222 5.222 0 0 0 7 12.25Z" stroke="currentColor" strokeWidth="1.17" strokeLinecap="round" strokeLinejoin="round"/></svg>
+            {count}
+          </span>
+        );
+      },
+    },
     { key: "statusLabel", header: "Status", type: "status", variantKey: "statusVariant", defaultVariant: "grey", width: "w-[120px]" },
   ], []);
 
@@ -220,25 +245,15 @@ export default function RelatieDetail() {
       id: l.id,
       titel: l.titel,
       product: l.product,
-      route: `${l.laadhaven} → ${l.loshaven}`,
       tonnage: String(l.tonnage),
-      laaddatum: formatDate(l.laaddatum),
-      matches: l.matches > 0 ? `${l.matches} match${l.matches !== 1 ? "es" : ""}` : "—",
+      laadhaven: l.laadhaven,
+      loshaven: l.loshaven,
+      matches: l.matches,
+      onderhandelingen: l.onderhandelingen,
       statusLabel: s.label,
       statusVariant: s.variant,
-      extraActions: (
-        <Button
-          variant="secondary"
-          size="sm"
-          leadingIcon={<MessageSquare size={14} strokeWidth={2.5} />}
-          onClick={(e: React.MouseEvent) => {
-            e.stopPropagation();
-            setConversationDialog({ relatieId: id!, relatieName: relatie?.naam || "", itemId: l.id, itemType: "lading" });
-          }}
-        />
-      ),
     };
-  }), [relatieLadingen, id, relatie?.naam]);
+  }), [relatieLadingen]);
 
   const { sortedData: sortedLadingenData, sortedColumns: sortedLadingenColumns } = useTableSort(ladingenColumns, ladingenData);
 
