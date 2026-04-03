@@ -31,7 +31,7 @@ export const ladingenMarkt: (LadingMarkt & { status: string; laaddatum?: string;
   {
     id: "lm-002",
     opmerking: "",
-    tonnage: 2000,
+    tonnage: { min: 1500, max: 2000 },
     ladingSoortId: "ls-003",
     subsoortId: "lss-007",
     bijzonderheidIds: ["bh-001", "bh-002"],
@@ -105,7 +105,7 @@ export const ladingenMarkt: (LadingMarkt & { status: string; laaddatum?: string;
   {
     id: "lm-005",
     opmerking: "",
-    tonnage: 2500,
+    tonnage: { min: 2000, max: 2500 },
     ladingSoortId: "ls-004",
     subsoortId: "lss-008",
     bijzonderheidIds: ["bh-005"],
@@ -155,7 +155,7 @@ export const ladingenMarkt: (LadingMarkt & { status: string; laaddatum?: string;
   {
     id: "lm-007",
     opmerking: "",
-    tonnage: 2000,
+    tonnage: { min: 1800, max: 2200 },
     ladingSoortId: "ls-008",
     subsoortId: "",
     bijzonderheidIds: [],
