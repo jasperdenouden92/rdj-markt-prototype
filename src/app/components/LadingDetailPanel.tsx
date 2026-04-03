@@ -362,9 +362,9 @@ function LadingEigenSidebarContent({ id }: { id: string }) {
             <DetailRow label="Soortelijk gewicht" value={data.soortelijkGewicht} editable />
             <DetailRow label="Inhoud" value={data.inhoud} editable />
             <DetailRow label="Bijzonderheden" type="badges" badges={data.bijzonderheden} editable />
-            <DetailRow label="Laadhaven" value={data.laadhaven} editable />
+            <DetailRow label="Laadlocatie" value={data.laadlocatie} editable />
             <DetailRow label="Laaddatum" value={data.laaddatum} editable />
-            <DetailRow label="Loshaven" value={data.loshaven} editable />
+            <DetailRow label="Loslocatie" value={data.loslocatie} editable />
             <DetailRow label="Losdatum" value={data.losdatum} editable />
             <DetailRow label="Relatie" type="linked" value={data.relatie} onClick={() => navigate(`/crm/relatie/${data.raw.relatieId}`)} />
             <DetailRow label="Contactpersoon" value={data.contactpersoon} />
@@ -387,9 +387,9 @@ function LadingEigenSidebarContent({ id }: { id: string }) {
             <DetailRow label="Soortelijk gewicht" value={marktData.soortelijkGewicht} editable />
             <DetailRow label="Inhoud" value={marktData.inhoud} editable />
             <DetailRow label="Bijzonderheden" type="badges" badges={marktData.bijzonderheden} editable />
-            <DetailRow label="Laadhaven" value={marktData.laadhaven} editable />
+            <DetailRow label="Laadlocatie" value={marktData.laadlocatie} editable />
             <DetailRow label="Laaddatum" value={marktData.laaddatum} editable />
-            <DetailRow label="Loshaven" value={marktData.loshaven} editable />
+            <DetailRow label="Loslocatie" value={marktData.loslocatie} editable />
             <DetailRow label="Losdatum" value={marktData.losdatum} editable />
             <DetailRow label="Bron" value={marktData.bron} />
             <DetailRow label="Relatie" type="linked" value={marktData.relatie} onClick={() => navigate(`/crm/relatie/${marktData.raw.relatieId}`)} />

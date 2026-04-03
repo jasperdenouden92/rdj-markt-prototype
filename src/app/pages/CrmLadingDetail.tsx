@@ -103,7 +103,7 @@ export default function CrmLadingDetail() {
   );
 
   const titleBadge = <Badge label={statusInfo.label} variant={statusInfo.variant} size="lg" dot />;
-  const subtitle = `${lading.tonnage} ${lading.product} vanuit ${lading.laadhaven} naar ${lading.loshaven}`;
+  const subtitle = `${lading.tonnage} ${lading.product} vanuit ${lading.laadlocatie} naar ${lading.loslocatie}`;
 
   const tabs: PageTab[] = [
     { label: "Onderhandelingen", path: "#onderhandelingen", isActive: activeTab === "onderhandelingen", badge: String(lading.onderhandelingen) },
@@ -275,12 +275,12 @@ export default function CrmLadingDetail() {
                     <p className="font-sans font-bold text-[14px] text-rdj-text-primary mt-[2px]">{lading.product}</p>
                   </div>
                   <div>
-                    <p className="font-sans font-normal text-[12px] text-rdj-text-secondary uppercase tracking-[0.04em]">Laadhaven</p>
-                    <p className="font-sans font-bold text-[14px] text-rdj-text-primary mt-[2px]">{lading.laadhaven}</p>
+                    <p className="font-sans font-normal text-[12px] text-rdj-text-secondary uppercase tracking-[0.04em]">Laadlocatie</p>
+                    <p className="font-sans font-bold text-[14px] text-rdj-text-primary mt-[2px]">{lading.laadlocatie}</p>
                   </div>
                   <div>
-                    <p className="font-sans font-normal text-[12px] text-rdj-text-secondary uppercase tracking-[0.04em]">Loshaven</p>
-                    <p className="font-sans font-bold text-[14px] text-rdj-text-primary mt-[2px]">{lading.loshaven}</p>
+                    <p className="font-sans font-normal text-[12px] text-rdj-text-secondary uppercase tracking-[0.04em]">Loslocatie</p>
+                    <p className="font-sans font-bold text-[14px] text-rdj-text-primary mt-[2px]">{lading.loslocatie}</p>
                   </div>
                   <div>
                     <p className="font-sans font-normal text-[12px] text-rdj-text-secondary uppercase tracking-[0.04em]">Laaddatum</p>

@@ -159,8 +159,8 @@ export default function ConversationDialog({
         const partij = partijMap.get(le.partijId);
         const subpartij = subpartijMap.get(le.subpartijId);
         const ex = partij?.exId ? exMap.get(partij.exId) : null;
-        const laadHaven = partij ? havenMap.get(partij.laadhavenId)?.naam : undefined;
-        const losHaven = subpartij ? havenMap.get(subpartij.loshavenId)?.naam : undefined;
+        const laadLocatie = partij ? havenMap.get(partij.laadlocatieId)?.naam : undefined;
+        const losLocatie = subpartij ? havenMap.get(subpartij.loslocatieId)?.naam : undefined;
         const title = ex
           ? (ex.type === "opslag" ? ex.naam : `m/v ${ex.naam}`)
           : partij?.naam || le.opmerking || le.id;
@@ -171,9 +171,9 @@ export default function ConversationDialog({
           meta: "",
           source: "eigen" as const,
           kind: "lading" as const,
-          laadlocatie: laadHaven,
+          laadlocatie: laadLocatie,
           laaddatum: subpartij?.laaddatum ? formatDate(subpartij.laaddatum) : undefined,
-          loslocatie: losHaven,
+          loslocatie: losLocatie,
           losdatum: subpartij?.losdatum ? formatDate(subpartij.losdatum) : undefined,
         };
       })
@@ -202,8 +202,8 @@ export default function ConversationDialog({
       allLadingenMarkt
         .filter(lm => lm.relatieId !== relatieId)
         .map(lm => {
-          const laadHaven = havenMap.get(lm.laadhavenId)?.naam;
-          const losHaven = havenMap.get(lm.loshavenId)?.naam;
+          const laadLocatie = havenMap.get(lm.laadlocatieId)?.naam;
+          const losLocatie = havenMap.get(lm.loslocatieId)?.naam;
           const relNaam = relatieMap.get(lm.relatieId)?.naam || "";
           const soort = soortMap.get(lm.ladingSoortId)?.naam || "";
           return {
@@ -213,9 +213,9 @@ export default function ConversationDialog({
             meta: "",
             source: "markt" as const,
             kind: "lading" as const,
-            laadlocatie: laadHaven,
+            laadlocatie: laadLocatie,
             laaddatum: lm.laaddatum ? formatDate(lm.laaddatum) : undefined,
-            loslocatie: losHaven,
+            loslocatie: losLocatie,
             losdatum: lm.losdatum ? formatDate(lm.losdatum) : undefined,
             relatieName: relNaam || undefined,
           };
@@ -290,9 +290,9 @@ export default function ConversationDialog({
         meta: "",
         source: "relatie" as const,
         kind: "lading" as const,
-        laadlocatie: l.laadhaven,
+        laadlocatie: l.laadlocatie,
         laaddatum: l.laaddatum ? formatDate(l.laaddatum) : undefined,
-        loslocatie: l.loshaven,
+        loslocatie: l.loslocatie,
         losdatum: l.losdatum ? formatDate(l.losdatum) : undefined,
       }))
     );
@@ -577,9 +577,9 @@ export default function ConversationDialog({
             source: (m.isEigen ? "eigen" : "markt") as "eigen" | "relatie" | "markt",
             kind: "lading" as const,
             matchPercentage: m.matchPercentage,
-            laadlocatie: m.laadHaven,
+            laadlocatie: m.laadLocatie,
             laaddatum: m.laadDatum,
-            loslocatie: m.losHaven,
+            loslocatie: m.losLocatie,
             losdatum: m.losDatum,
             relatieName: !m.isEigen ? m.relatie : undefined,
           }));
@@ -712,7 +712,7 @@ export default function ConversationDialog({
     setBemiddelingSet(new Set()); // reset manual bemiddeling when switching left item
   };
 
-  const handleAddRelatieLading = (data: { titel: string; tonnage: string; product: string; laadhaven: string; loshaven: string; laaddatum: string; losdatum: string }) => {
+  const handleAddRelatieLading = (data: { titel: string; tonnage: string; product: string; laadlocatie: string; loslocatie: string; laaddatum: string; losdatum: string }) => {
     const id = `rl-new-${Date.now()}`;
     const newItem: DisplayItem = {
       id,
@@ -721,9 +721,9 @@ export default function ConversationDialog({
       meta: "",
       source: "relatie",
       kind: "lading",
-      laadlocatie: data.laadhaven || undefined,
+      laadlocatie: data.laadlocatie || undefined,
       laaddatum: data.laaddatum || undefined,
-      loslocatie: data.loshaven || undefined,
+      loslocatie: data.loslocatie || undefined,
       losdatum: data.losdatum || undefined,
     };
     setRelatieLadingenItems(prev => [...prev, newItem]);
@@ -1940,14 +1940,14 @@ function QuickAddLading({
   onCancel,
 }: {
   inputRef: React.RefObject<HTMLInputElement | null>;
-  onSave: (data: { titel: string; tonnage: string; product: string; laadhaven: string; loshaven: string; laaddatum: string; losdatum: string }) => void;
+  onSave: (data: { titel: string; tonnage: string; product: string; laadlocatie: string; loslocatie: string; laaddatum: string; losdatum: string }) => void;
   onCancel: () => void;
 }) {
   const [titel, setTitel] = useState("");
   const [tonnage, setTonnage] = useState("");
   const [product, setProduct] = useState("");
-  const [laadhaven, setLaadhaven] = useState("");
-  const [loshaven, setLoshaven] = useState("");
+  const [laadlocatie, setLaadlocatie] = useState("");
+  const [loslocatie, setLoslocatie] = useState("");
   const [laaddatum, setLaaddatum] = useState("");
   const [losdatum, setLosdatum] = useState("");
 
@@ -1959,8 +1959,8 @@ function QuickAddLading({
       titel: titel.trim(),
       tonnage: tonnage.trim() || "– ton",
       product: product.trim() || "–",
-      laadhaven: laadhaven.trim(),
-      loshaven: loshaven.trim(),
+      laadlocatie: laadlocatie.trim(),
+      loslocatie: loslocatie.trim(),
       laaddatum: laaddatum.trim(),
       losdatum: losdatum.trim(),
     });
@@ -1979,11 +1979,11 @@ function QuickAddLading({
         <QuickInput value={product} onChange={setProduct} onKeyDown={handleKeyDown} placeholder="Product" className="flex-[1_1_80px]" />
       </div>
       <div className="flex flex-wrap gap-[8px] mt-[6px]">
-        <QuickInput value={laadhaven} onChange={setLaadhaven} onKeyDown={handleKeyDown} placeholder="Laadhaven" className="flex-1" />
+        <QuickInput value={laadlocatie} onChange={setLaadlocatie} onKeyDown={handleKeyDown} placeholder="Laadlocatie" className="flex-1" />
         <QuickInput value={laaddatum} onChange={setLaaddatum} onKeyDown={handleKeyDown} placeholder="Datum laden" className="flex-1" />
       </div>
       <div className="flex flex-wrap gap-[8px] mt-[6px]">
-        <QuickInput value={loshaven} onChange={setLoshaven} onKeyDown={handleKeyDown} placeholder="Loshaven" className="flex-1" />
+        <QuickInput value={loslocatie} onChange={setLoslocatie} onKeyDown={handleKeyDown} placeholder="Loslocatie" className="flex-1" />
         <QuickInput value={losdatum} onChange={setLosdatum} onKeyDown={handleKeyDown} placeholder="Datum lossen" className="flex-1" />
       </div>
       <div className="flex items-center gap-[8px] mt-[8px]">

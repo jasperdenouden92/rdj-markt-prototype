@@ -1588,7 +1588,7 @@ function MessageBubble() {
     <div className="relative rounded-bl-[8px] rounded-br-[8px] rounded-tr-[8px] shrink-0 w-full" data-name="Message bubble">
       <div aria-hidden="true" className="absolute border border-[#eaecf0] border-solid inset-0 pointer-events-none rounded-bl-[8px] rounded-br-[8px] rounded-tr-[8px] shadow-[0px_1px_2px_0px_rgba(16,24,40,0.05)]" />
       <div className="content-stretch flex items-start px-[12px] py-[10px] relative w-full">
-        <p className="flex-[1_0_0] font-sans font-normal leading-[20px] min-h-px min-w-px relative text-[#344054] text-[14px]">“Gebeld met de laadhaven. Loopt volgens planning.”</p>
+        <p className="flex-[1_0_0] font-sans font-normal leading-[20px] min-h-px min-w-px relative text-[#344054] text-[14px]">“Gebeld met de laadlocatie. Loopt volgens planning.”</p>
       </div>
     </div>
   );

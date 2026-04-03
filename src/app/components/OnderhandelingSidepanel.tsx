@@ -86,9 +86,9 @@ const mockLading = {
   soortelijkGewicht: "1,65 t/m³",
   inhoud: "727 m³",
   bijzonderheden: ["Stofvrij"],
-  laadhaven: "Rotterdam Waalhaven",
+  laadlocatie: "Rotterdam Waalhaven",
   laaddatum: "15 jan 2026, 08:00",
-  loshaven: "Antwerpen",
+  loslocatie: "Antwerpen",
   losdatum: "16 jan 2026, 14:00",
   opdrachtgever: "Rederij de Jong",
   opdrachtgeverId: "rel-2",
@@ -1124,9 +1124,9 @@ function LadingTab() {
         <DetailRow label="Soortelijk gewicht" value={mockLading.soortelijkGewicht} />
         <DetailRow label="Inhoud" value={mockLading.inhoud} />
         <DetailRow label="Bijzonderheden" type="badges" badges={mockLading.bijzonderheden} />
-        <DetailRow label="Laadhaven" value={mockLading.laadhaven} />
+        <DetailRow label="Laadlocatie" value={mockLading.laadlocatie} />
         <DetailRow label="Laaddatum" value={mockLading.laaddatum} />
-        <DetailRow label="Loshaven" value={mockLading.loshaven} />
+        <DetailRow label="Loslocatie" value={mockLading.loslocatie} />
         <DetailRow label="Losdatum" value={mockLading.losdatum} />
       </DetailsSidebarSection>
 

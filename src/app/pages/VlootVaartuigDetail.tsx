@@ -22,8 +22,8 @@ interface Reis {
   ladinggewichtSub: string;
   laaddatum: string;
   losdatum: string;
-  laadhaven: string;
-  loshaven: string;
+  laadlocatie: string;
+  loslocatie: string;
   status: string;
   statusVariant: "brand" | "success" | "warning" | "error" | "grey";
 }
@@ -46,8 +46,8 @@ const mockReizen: Reis[] = [
     ladinggewichtSub: "~5,82t",
     laaddatum: "Vr 9 Jan 10:05",
     losdatum: "Zo 11 Jan 10:05",
-    laadhaven: "Rotterdam Botlek",
-    loshaven: "Gatum Containers",
+    laadlocatie: "Rotterdam Botlek",
+    loslocatie: "Gatum Containers",
     status: "Varend",
     statusVariant: "success",
   },
@@ -60,8 +60,8 @@ const mockReizen: Reis[] = [
     ladinggewichtSub: "",
     laaddatum: "Wo 14 Jan 10:05",
     losdatum: "Wo 14 Jan 10:05",
-    laadhaven: "Rotterdam Botlek",
-    loshaven: "Gatum Containers",
+    laadlocatie: "Rotterdam Botlek",
+    loslocatie: "Gatum Containers",
     status: "Gepland",
     statusVariant: "brand",
   },
@@ -74,8 +74,8 @@ const mockReizen: Reis[] = [
     ladinggewichtSub: "",
     laaddatum: "Wo 21 Jan 10:05",
     losdatum: "Ma 19 Jan 10:05",
-    laadhaven: "Rotterdam",
-    loshaven: "Gent",
+    laadlocatie: "Rotterdam",
+    loslocatie: "Gent",
     status: "Te laden",
     statusVariant: "warning",
   },
@@ -226,7 +226,7 @@ export default function VlootVaartuigDetail() {
                     <table className="w-full">
                       <thead>
                         <tr className="border-b border-rdj-border-secondary bg-[#f9fafb]">
-                          {["Subject", "Type lading", "Ladinggewicht", "Laaddatum", "Losdatum", "Laadhaven", "Loshaven", "Status"].map((h) => (
+                          {["Subject", "Type lading", "Ladinggewicht", "Laaddatum", "Losdatum", "Laadlocatie", "Loslocatie", "Status"].map((h) => (
                             <th key={h} className="text-left px-[16px] py-[10px] font-sans font-bold text-[12px] text-rdj-text-secondary whitespace-nowrap">
                               {h}
                             </th>
@@ -256,10 +256,10 @@ export default function VlootVaartuigDetail() {
                               <p className="font-sans font-normal text-[14px] text-rdj-text-primary whitespace-nowrap">{reis.losdatum}</p>
                             </td>
                             <td className="px-[16px] py-[12px]">
-                              <p className="font-sans font-normal text-[14px] text-rdj-text-primary whitespace-nowrap">{reis.laadhaven}</p>
+                              <p className="font-sans font-normal text-[14px] text-rdj-text-primary whitespace-nowrap">{reis.laadlocatie}</p>
                             </td>
                             <td className="px-[16px] py-[12px]">
-                              <p className="font-sans font-normal text-[14px] text-rdj-text-primary whitespace-nowrap">{reis.loshaven}</p>
+                              <p className="font-sans font-normal text-[14px] text-rdj-text-primary whitespace-nowrap">{reis.loslocatie}</p>
                             </td>
                             <td className="px-[16px] py-[12px]">
                               <Badge label={reis.status} variant={reis.statusVariant} dot />

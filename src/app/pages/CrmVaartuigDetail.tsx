@@ -119,8 +119,8 @@ export default function CrmVaartuigDetail() {
   const matchColumns: Column[] = [
     { key: "cargo", header: "Lading", type: "leading-text", badgeKey: "eigenBadge", actionLabel: "Onderhandeling", actionCompletedKey: "actionCompletedLabel" },
     { key: "company", header: "Relatie", type: "text", subtextKey: "contactPersoon", textColor: "text-rdj-text-brand", width: "w-[180px]", onClickKey: "onRelatieClick" },
-    { key: "laadHaven", header: "Laden", type: "text", subtextKey: "laadDatum", width: "w-[180px]" },
-    { key: "losHaven", header: "Lossen", type: "text", subtextKey: "losDatum", width: "w-[180px]" },
+    { key: "laadLocatie", header: "Laden", type: "text", subtextKey: "laadDatum", width: "w-[180px]" },
+    { key: "losLocatie", header: "Lossen", type: "text", subtextKey: "losDatum", width: "w-[180px]" },
     { key: "source", header: "Bron", type: "text", subtextKey: "sourceDate", featuredIconKey: "sourceIcon", featuredIconVariantKey: "sourceIconVariant", width: "w-[180px]" },
     { key: "matchPercentage", header: "Match", type: "progress", align: "right", width: "w-[100px]" },
   ];
@@ -133,9 +133,9 @@ export default function CrmVaartuigDetail() {
     company: m.relatie,
     contactPersoon: m.contactPersoon,
     onRelatieClick: () => { const rel = mockRelaties.find(r => r.naam === m.relatie); if (rel) navigate(`/crm/relatie/${rel.id}`); },
-    laadHaven: m.laadHaven,
+    laadLocatie: m.laadLocatie,
     laadDatum: m.laadDatum,
-    losHaven: m.losHaven,
+    losLocatie: m.losLocatie,
     losDatum: m.losDatum,
     source: m.bron,
     sourceDate: m.bronDatum,
