@@ -16,6 +16,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "./ui/dialog";
 import { Input } from "./ui/input";
 import { Label } from "./ui/label";
 import DatePickerPopover, { formatDatePickerValue, type DatePickerValue } from "./DatePickerPopover";
+import SectionHeader from "./SectionHeader";
 
 /**
  * OnderhandelingSidepanel — modeless panel for a negotiation.
@@ -202,7 +203,7 @@ function calcPctDiff(
   };
 }
 
-type SideTab = "activiteit" | "vaartuig" | "lading";
+type SideTab = "vaartuig" | "lading";
 
 type NegotiationStatus = "Via werklijst" | "Bod verstuurd" | "Bod ontvangen" | "Openstaand bod" | "Goedgekeurd" | "Afgewezen" | "In onderhandeling" | "Geaccepteerd" | "Geweigerd";
 
@@ -232,7 +233,7 @@ interface OnderhandelingSidepanelProps {
   relatieName?: string;
   /** Subtitle description (e.g. "1.200 t Grind · MS Adriana") */
   subtitle?: string;
-  /** Initial sidebar tab (defaults to "activiteit") */
+  /** Initial sidebar tab (defaults to "vaartuig") */
   initialSideTab?: SideTab;
   /** Bemiddeling mode with two relatie names */
   bemiddeling?: {
@@ -262,7 +263,7 @@ const bemiddelingStatusConfig: Record<BemiddelingStatus, { variant: BadgeVariant
 
 export default function OnderhandelingSidepanel({ negotiationId, status: initialStatus, bron, soort, relatieName, subtitle: subtitleText, initialSideTab, bemiddeling, onClose, onStatusChange }: OnderhandelingSidepanelProps) {
   const isBemiddeling = !!bemiddeling;
-  const [sideTab, setSideTab] = useState<SideTab>(initialSideTab || "activiteit");
+  const [sideTab, setSideTab] = useState<SideTab>(initialSideTab || "vaartuig");
   const [overig, setOverig] = useState("");
   const [currentStatus, setCurrentStatus] = useState<NegotiationStatus>(initialStatus);
   const [laadgereed, setLaadgereed] = useState(mockNegotiationMeta.laadgereed);
@@ -361,7 +362,6 @@ export default function OnderhandelingSidepanel({ negotiationId, status: initial
   };
 
   const sideTabs: { id: SideTab; label: string }[] = [
-    { id: "activiteit", label: "Activiteit" },
     { id: "vaartuig", label: "Vaartuig" },
     { id: "lading", label: "Lading" },
   ];
@@ -534,7 +534,6 @@ export default function OnderhandelingSidepanel({ negotiationId, status: initial
 
           {/* Side tab content */}
           <div className="flex flex-col gap-[16px] p-[16px] flex-1 overflow-y-auto">
-            {sideTab === "activiteit" && <ActiviteitTab events={allEvents} />}
             {sideTab === "vaartuig" && <VaartuigTab />}
             {sideTab === "lading" && <LadingTab />}
           </div>
@@ -544,6 +543,11 @@ export default function OnderhandelingSidepanel({ negotiationId, status: initial
       {/* Main section: Condities */}
       <div className="flex flex-col gap-[16px] p-[24px]">
         <ConditiesTab bron={bron} soort={soort} overig={overig} onOverigChange={setOverig} overrides={conditiesOverrides} onEditSave={handleConditiesSave} bemiddeling={bemiddeling} inkoopStatus={bemiddelingInkoopStatus} verkoopStatus={bemiddelingVerkoopStatus} onInkoopStatusChange={setBemiddelingInkoopStatus} onVerkoopStatusChange={setBemiddelingVerkoopStatus} />
+      </div>
+      <div className="w-full h-px bg-rdj-border-secondary" />
+      <SectionHeader title="Activiteit" />
+      <div className="px-[24px] pb-[24px]">
+        <ActiviteitTab events={allEvents} />
       </div>
     </ModelessPanel>
     <ApprovalConfirmationDialog
