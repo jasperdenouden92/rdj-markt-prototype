@@ -132,7 +132,7 @@ const mockInboxData: InboxItem[] = [
     relation: 'Trans Logistics Group',
     relationLink: '',
     loadLocation: 'IJmuiden Zeehaven',
-    loadDate: 'Af te stemmen',
+    loadDate: '',
     unloadLocation: 'Af te stemmen',
     unloadDate: '',
     source: 'Automatische feed',
@@ -167,7 +167,7 @@ const mockInboxData: InboxItem[] = [
     relation: 'Van Dijk Shipping B.V.',
     relationLink: 'Wanda in \'t Veld',
     loadLocation: 'Dordrecht Zeehaven',
-    loadDate: 'Af te stemmen',
+    loadDate: '',
     unloadLocation: 'Den Bosch Diezehaven',
     unloadDate: 'Week 7 of 8',
     source: 'Automatische feed',
@@ -365,8 +365,8 @@ export default function Inbox() {
   const columns: Column[] = [
     { key: 'ladingSoort', header: 'Lading', type: 'leading-text', maxWidth: 'max-w-[480px]' },
     { key: 'tonnage', header: 'Tonnage', type: 'text', width: 'w-[120px]', align: 'right' },
-    { key: 'loadLocation', header: 'Laden', type: 'text', width: 'w-[180px]', editable: true },
-    { key: 'unloadLocation', header: 'Lossen', type: 'text', width: 'w-[180px]', editable: true },
+    { key: 'loadLocation', header: 'Laden', type: 'text', width: 'w-[180px]', editable: true, subtextKey: 'loadDate' },
+    { key: 'unloadLocation', header: 'Lossen', type: 'text', width: 'w-[180px]', editable: true, subtextKey: 'unloadDate' },
     { key: 'relation', header: 'Relatie', type: 'text', width: 'w-[180px]', textColor: 'text-rdj-text-brand', subtextKey: 'relationLink', onClickKey: 'onRelatieClick' },
     { key: 'source', header: 'Bron', type: 'text', width: 'w-[180px]', subtextKey: 'sourceDate', featuredIconKey: 'sourceIcon', featuredIconVariantKey: 'sourceIconVariant', featuredIconDefaultVariant: 'grey' as const },
     {
@@ -414,7 +414,9 @@ export default function Inbox() {
     relationLink: item.relationLink,
     onRelatieClick: () => { const rel = mockRelaties.find(r => r.naam === item.relation); if (rel) navigate(`/crm/relatie/${rel.id}`); },
     loadLocation: item.loadLocation,
+    loadDate: item.loadDate,
     unloadLocation: item.unloadLocation,
+    unloadDate: item.unloadDate,
     source: item.source,
     sourceDate: item.sourceDate,
     sourceIcon: item.source === 'Handmatig ingevoerd'
