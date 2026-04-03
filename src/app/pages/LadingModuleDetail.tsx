@@ -38,8 +38,8 @@ export default function LadingModuleDetail() {
     // Build lading-like object from partij data
     const le = ladingenEigen.find((l) => l.partijId === partij.id);
     const subs = subpartijen.filter((s) => s.partijId === partij.id);
-    const laadhaven = havens.find((h) => h.id === partij.laadhavenId);
-    const loshaven = subs[0] ? havens.find((h) => h.id === subs[0].loshavenId) : undefined;
+    const laadlocatie = havens.find((h) => h.id === partij.laadlocatieId);
+    const loslocatie = subs[0] ? havens.find((h) => h.id === subs[0].loslocatieId) : undefined;
     const ex = partij.exId ? exen.find((e) => e.id === partij.exId) : undefined;
     return {
       id: partij.id,
@@ -47,8 +47,8 @@ export default function LadingModuleDetail() {
       titel: partij.naam,
       ladingSoortId: partij.ladingSoortId,
       subsoortId: partij.subsoortId,
-      laadhaven: laadhaven?.naam || "—",
-      loshaven: loshaven?.naam || "—",
+      laadlocatie: laadlocatie?.naam || "—",
+      loslocatie: loslocatie?.naam || "—",
       tonnage: `${partij.tonnage.toLocaleString("nl-NL")} ton`,
       product: "",
       laaddatum: subs[0]?.laaddatum || undefined,
@@ -99,7 +99,7 @@ export default function LadingModuleDetail() {
     );
   }
 
-  const subtitle = `Vanuit ${lading.laadhaven}${lading.aankomst ? ` · Verwachte start op ${formatDate(lading.aankomst)}` : lading.laaddatum ? ` · Verwachte start op ${formatDate(lading.laaddatum)}` : ""}`;
+  const subtitle = `Vanuit ${lading.laadlocatie}${lading.aankomst ? ` · Verwachte start op ${formatDate(lading.aankomst)}` : lading.laaddatum ? ` · Verwachte start op ${formatDate(lading.laaddatum)}` : ""}`;
 
   const bijzonderheden = (lading.bijzonderheidIds || [])
     .map((id) => mockBijzonderheden.find((b) => b.id === id))
@@ -222,7 +222,7 @@ export default function LadingModuleDetail() {
                 {/* Table header */}
                 <div className="border-b border-rdj-border-secondary">
                   <div className="grid grid-cols-[1fr_100px_100px_120px] gap-[8px] px-[12px] py-[10px]">
-                    {["Subpartij", "Laaddatum", "Losdatum", "Loshaven"].map((h) => (
+                    {["Subpartij", "Laaddatum", "Losdatum", "Loslocatie"].map((h) => (
                       <p key={h} className="font-sans font-bold text-[12px] text-rdj-text-secondary uppercase tracking-[0.04em]">{h}</p>
                     ))}
                   </div>
@@ -230,7 +230,7 @@ export default function LadingModuleDetail() {
 
                 {/* Subpartij rows from partij data */}
                 {(lading as any)?._subpartijen?.map((sub: any) => {
-                  const loshavenNaam = havens.find((h) => h.id === sub.loshavenId)?.naam || "—";
+                  const loslocatieNaam = havens.find((h) => h.id === sub.loslocatieId)?.naam || "—";
                   return (
                     <Link
                       key={sub.id}
@@ -240,7 +240,7 @@ export default function LadingModuleDetail() {
                       <p className="font-sans font-bold text-[14px] text-rdj-text-brand hover:underline truncate">{sub.naam}</p>
                       <p className="font-sans font-normal text-[14px] text-rdj-text-primary">{sub.laaddatum ? formatDate(sub.laaddatum) : "—"}</p>
                       <p className="font-sans font-normal text-[14px] text-rdj-text-primary">{sub.losdatum ? formatDate(sub.losdatum) : "—"}</p>
-                      <p className="font-sans font-normal text-[14px] text-rdj-text-primary">{loshavenNaam}</p>
+                      <p className="font-sans font-normal text-[14px] text-rdj-text-primary">{loslocatieNaam}</p>
                     </Link>
                   );
                 })}
@@ -389,9 +389,9 @@ export default function LadingModuleDetail() {
 
               {sidebarTab === "logistiek" && (
                 <div className="flex flex-col gap-[12px]">
-                  <DetailRow label="Laadhaven" value={lading.laadhaven || "—"} />
+                  <DetailRow label="Laadlocatie" value={lading.laadlocatie || "—"} />
                   {lading.laadterminal && <DetailRow label="Laadterminal" value={lading.laadterminal} />}
-                  <DetailRow label="Loshaven" value={lading.loshaven || "—"} />
+                  <DetailRow label="Loslocatie" value={lading.loslocatie || "—"} />
                   {lading.losterminal && <DetailRow label="Losterminal" value={lading.losterminal} />}
                   {lading.lostermijn && <DetailRow label="Lostermijn" value={lading.lostermijn} />}
                   <DetailRow label="Regie" value={lading.regie ? (lading.regie === "flex" ? "Flex" : lading.regie === "duwvaart" ? "Duwvaart" : "Binnenvaart") : "Flex"} />

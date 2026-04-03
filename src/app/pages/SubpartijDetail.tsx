@@ -24,8 +24,8 @@ export default function SubpartijDetail() {
 
   const subpartij = useMemo(() => subpartijen.find((s) => s.id === id), [id]);
   const partij = useMemo(() => subpartij ? partijen.find((p) => p.id === subpartij.partijId) : undefined, [subpartij]);
-  const laadhaven = useMemo(() => partij ? havens.find((h) => h.id === partij.laadhavenId) : undefined, [partij]);
-  const loshaven = useMemo(() => subpartij ? havens.find((h) => h.id === subpartij.loshavenId) : undefined, [subpartij]);
+  const laadlocatie = useMemo(() => partij ? havens.find((h) => h.id === partij.laadlocatieId) : undefined, [partij]);
+  const loslocatie = useMemo(() => subpartij ? havens.find((h) => h.id === subpartij.loslocatieId) : undefined, [subpartij]);
   const ladingSoort = useMemo(() => partij ? mockLadingSoorten.find((ls) => ls.id === partij.ladingSoortId) : undefined, [partij]);
   const subsoort = useMemo(() => partij?.subsoortId ? mockLadingSubsoorten.find((s) => s.id === partij.subsoortId) : undefined, [partij]);
   const bijzonderheden = useMemo(() =>
@@ -51,7 +51,7 @@ export default function SubpartijDetail() {
     );
   }
 
-  const subtitle = [laadhaven?.naam, loshaven?.naam].filter(Boolean).join(" → ");
+  const subtitle = [laadlocatie?.naam, loslocatie?.naam].filter(Boolean).join(" → ");
 
   return (
     <div className="flex min-h-screen bg-white">
@@ -152,11 +152,11 @@ export default function SubpartijDetail() {
                     <p className="font-sans font-bold text-[14px] text-rdj-text-primary">{subsoort.naam}</p>
                   </DetailRow>
                 )}
-                <DetailRow label="Laadhaven">
-                  <p className="font-sans font-bold text-[14px] text-rdj-text-primary">{laadhaven?.naam || "—"}</p>
+                <DetailRow label="Laadlocatie">
+                  <p className="font-sans font-bold text-[14px] text-rdj-text-primary">{laadlocatie?.naam || "—"}</p>
                 </DetailRow>
-                <DetailRow label="Loshaven">
-                  <p className="font-sans font-bold text-[14px] text-rdj-text-primary">{loshaven?.naam || "—"}</p>
+                <DetailRow label="Loslocatie">
+                  <p className="font-sans font-bold text-[14px] text-rdj-text-primary">{loslocatie?.naam || "—"}</p>
                 </DetailRow>
                 <DetailRow label="Laaddatum">
                   <p className="font-sans font-bold text-[14px] text-rdj-text-primary">{formatDate(subpartij.laaddatum)}</p>

@@ -124,9 +124,9 @@ const mockDetails = {
   soortelijkGewicht: "0,05 t/m³",
   inhoud: "5.000 m³",
   bijzonderheden: ["KS", "LK", "GMP"],
-  laadhaven: { name: "IJmuiden", sub: "Buitenspuikkanaal", sub2: "Amsterdam" },
+  laadlocatie: { name: "IJmuiden", sub: "Buitenspuikkanaal", sub2: "Amsterdam" },
   laaddatum: "Di 13 Jan 10:05",
-  loshaven: { name: "Eemhaven", sub: "Rotterdam" },
+  loslocatie: { name: "Eemhaven", sub: "Rotterdam" },
   losdatum: "Do 15 Jan 10:05",
   relatie: "Agro Delta Groep",
   contact: {
@@ -955,11 +955,11 @@ export default function NegotiationDialog({
                     </div>
                   </DetailRow>
 
-                  <DetailRow label="Laadhaven">
+                  <DetailRow label="Laadlocatie">
                     <div>
-                      <BoldText>{mockDetails.laadhaven.name}</BoldText>
-                      <BoldText>{mockDetails.laadhaven.sub}</BoldText>
-                      <SubText>{mockDetails.laadhaven.sub2}</SubText>
+                      <BoldText>{mockDetails.laadlocatie.name}</BoldText>
+                      <BoldText>{mockDetails.laadlocatie.sub}</BoldText>
+                      <SubText>{mockDetails.laadlocatie.sub2}</SubText>
                     </div>
                   </DetailRow>
 
@@ -967,10 +967,10 @@ export default function NegotiationDialog({
                     <BoldText>{mockDetails.laaddatum}</BoldText>
                   </DetailRow>
 
-                  <DetailRow label="Loshaven">
+                  <DetailRow label="Loslocatie">
                     <div>
-                      <BoldText>{mockDetails.loshaven.name}</BoldText>
-                      <SubText>{mockDetails.loshaven.sub}</SubText>
+                      <BoldText>{mockDetails.loslocatie.name}</BoldText>
+                      <SubText>{mockDetails.loslocatie.sub}</SubText>
                     </div>
                   </DetailRow>
 

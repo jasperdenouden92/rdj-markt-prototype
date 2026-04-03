@@ -161,9 +161,9 @@ export default function LadingMarktSidebar({ id, onEdit, collapsed }: LadingMark
             <DetailRow label="Soortelijk gewicht" value={data.soortelijkGewicht} editable onEdit={() => onEdit?.("soortelijkGewicht")} />
             <DetailRow label="Inhoud" value={data.inhoud} editable onEdit={() => onEdit?.("inhoud")} />
             <DetailRow label="Bijzonderheden" type="badges" badges={data.bijzonderheden} editable onEdit={() => onEdit?.("bijzonderheden")} />
-            <DetailRow label="Laadhaven" value={data.laadhaven} editable onEdit={() => onEdit?.("laadhaven")} />
+            <DetailRow label="Laadlocatie" value={data.laadlocatie} editable onEdit={() => onEdit?.("laadlocatie")} />
             <DetailRow label="Laaddatum" value={data.laaddatum} editable onEdit={() => onEdit?.("laaddatum")} />
-            <DetailRow label="Loshaven" value={data.loshaven} editable onEdit={() => onEdit?.("loshaven")} />
+            <DetailRow label="Loslocatie" value={data.loslocatie} editable onEdit={() => onEdit?.("loslocatie")} />
             <DetailRow label="Losdatum" value={data.losdatum} editable onEdit={() => onEdit?.("losdatum")} />
             <DetailRow label="Bron" type="linked" value={data.bron} subtext={data.bronDatum} />
             <DetailRow label="Relatie" type="linked" value={data.relatie} onClick={() => navigate(`/crm/relatie/${data.relatieId}`)} />

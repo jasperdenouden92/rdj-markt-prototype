@@ -197,7 +197,7 @@ export default function ContractDetail() {
                                     <div className="w-[6px] h-[6px] rounded-full border-[1.5px] border-[#667085]" />
                                   </div>
                                   <p className="font-sans font-normal leading-[18px] text-[#344054] text-[13px] flex-1 min-w-0">
-                                    {contract.laadhavenNaam || "—"}
+                                    {contract.laadlocatieNaam || "—"}
                                   </p>
                                   <p className="font-sans font-normal leading-[18px] text-rdj-text-tertiary text-[12px] shrink-0">
                                     {formatDate(contract.laaddatum)}
@@ -208,7 +208,7 @@ export default function ContractDetail() {
                                     <div className="w-[6px] h-[6px] rounded-full bg-[#667085]" />
                                   </div>
                                   <p className="font-sans font-normal leading-[18px] text-[#344054] text-[13px] flex-1 min-w-0">
-                                    {contract.loshavenNaam || "—"}
+                                    {contract.loslocatieNaam || "—"}
                                   </p>
                                   <p className="font-sans font-normal leading-[18px] text-rdj-text-tertiary text-[12px] shrink-0">
                                     {formatDate(contract.losdatum)}
@@ -256,8 +256,8 @@ export default function ContractDetail() {
                                 <table className="w-full">
                                   <thead>
                                     <tr className="border-b border-rdj-border-secondary bg-[#f9fafb]">
-                                      <th className="text-left px-[12px] py-[8px] font-sans font-bold text-[12px] text-rdj-text-secondary">Laadhaven</th>
-                                      <th className="text-left px-[12px] py-[8px] font-sans font-bold text-[12px] text-rdj-text-secondary">Loshaven</th>
+                                      <th className="text-left px-[12px] py-[8px] font-sans font-bold text-[12px] text-rdj-text-secondary">Laadlocatie</th>
+                                      <th className="text-left px-[12px] py-[8px] font-sans font-bold text-[12px] text-rdj-text-secondary">Loslocatie</th>
                                       <th className="text-left px-[12px] py-[8px] font-sans font-bold text-[12px] text-rdj-text-secondary">Tonnage</th>
                                       <th className="text-left px-[12px] py-[8px] font-sans font-bold text-[12px] text-rdj-text-secondary">Vrachtprijs</th>
                                     </tr>
@@ -265,8 +265,8 @@ export default function ContractDetail() {
                                   <tbody>
                                     {contract.routes.map((route) => (
                                       <tr key={route.id} className="border-b border-rdj-border-secondary last:border-b-0">
-                                        <td className="px-[12px] py-[10px] font-sans font-normal text-[14px] text-rdj-text-primary">{route.laadhavenNaam}</td>
-                                        <td className="px-[12px] py-[10px] font-sans font-normal text-[14px] text-rdj-text-primary">{route.loshavenNaam}</td>
+                                        <td className="px-[12px] py-[10px] font-sans font-normal text-[14px] text-rdj-text-primary">{route.laadlocatieNaam}</td>
+                                        <td className="px-[12px] py-[10px] font-sans font-normal text-[14px] text-rdj-text-primary">{route.loslocatieNaam}</td>
                                         <td className="px-[12px] py-[10px] font-sans font-normal text-[14px] text-rdj-text-primary">{route.tonnage ? `${route.tonnage.toLocaleString("nl-NL")} ton` : "—"}</td>
                                         <td className="px-[12px] py-[10px] font-sans font-normal text-[14px] text-rdj-text-primary">{route.vrachtprijs ? `€ ${route.vrachtprijs.toFixed(2)}/ton` : "—"}</td>
                                       </tr>
