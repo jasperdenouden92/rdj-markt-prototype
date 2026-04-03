@@ -19,6 +19,7 @@ import SectionHeader from "../components/SectionHeader";
 import LastActivityButton from "../components/LastActivityButton";
 import { useInboxVaartuigSummary } from "../data/useDetailData";
 import { mockRelaties } from "../data/mock-relatie-data";
+import svgPaths from "../../imports/svg-62fj7rjvas";
 import imgAvatar from "../../assets/a2737d3b5b234fc04041650cb9f114889c6859da.png";
 import imgAvatar1 from "../../assets/3627de284acb374a4d9313b3c2dbaeeb87a48224.png";
 import imgAvatar2 from "../../assets/e7809035038b3816de2a1d67c5de86ebeed325d0.png";
@@ -81,6 +82,27 @@ function BreadcrumbChevron() {
   );
 }
 
+/* ── Source icons ── */
+const automatischeFeedIcon = (
+  <svg fill="none" viewBox="0 0 14.6667 12.0001">
+    <path d={svgPaths.p29cbab00} stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.33333" />
+  </svg>
+);
+
+const planningIcon = (
+  <svg fill="none" viewBox="0 0 18.0002 22">
+    <path d={svgPaths.p20684dc0} stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" />
+  </svg>
+);
+
+function getSourceIconForCargo(isEigen: boolean) {
+  return isEigen ? planningIcon : automatischeFeedIcon;
+}
+
+function getSourceVariantForCargo(isEigen: boolean): 'grey' | 'brand' {
+  return isEigen ? 'brand' : 'grey';
+}
+
 export default function InboxVesselDetail() {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -115,6 +137,7 @@ export default function InboxVesselDetail() {
     { key: "relatie", header: "Relatie", type: "text", subtextKey: "relatieContact", textColor: "text-rdj-text-brand", width: "w-[180px]", onClickKey: "onRelatieClick" },
     { key: "laden", header: "Laden", type: "text", subtextKey: "ladenDatum", width: "w-[140px]" },
     { key: "lossen", header: "Lossen", type: "text", subtextKey: "lossenDatum", width: "w-[140px]" },
+    { key: "source", header: "Bron", type: "text", subtextKey: "sourceDate", featuredIconKey: "sourceIcon", featuredIconVariantKey: "sourceIconVariant", width: "w-[180px]" },
     {
       key: "matchPct", header: "Match", type: "custom", width: "w-[80px]",
       sortActive: true, sortDirection: "desc",
@@ -138,7 +161,14 @@ export default function InboxVesselDetail() {
     { id: "3", lading: "Staal", ladingSubtext: "3.000 ton", isEigen: false, tonnage: "3.000 ton", relatie: "Janlow B.V.", relatieContact: "Pieter Jansen", laden: "Dordrecht", ladenDatum: "Za 15 Mrt 2026", lossen: "Antwerpen", lossenDatum: "Ma 17 Mrt 2026", matchPct: 75, matchStatus: "openstaand", onRelatieClick: () => { const rel = mockRelaties.find(r => r.naam === "Janlow B.V."); if (rel) navigate(`/crm/relatie/${rel.id}`); } },
     { id: "4", lading: "Sojabonen Botlek", ladingSubtext: "3.500 ton Sojabonen", isEigen: true, tonnage: "3.500 ton", relatie: "—", relatieContact: "", laden: "Rotterdam Botlek", ladenDatum: "Zo 16 Mrt 2026", lossen: "Basel", lossenDatum: "Do 20 Mrt 2026", matchPct: 70, matchStatus: "openstaand" },
     { id: "5", lading: "Sojabonen", ladingSubtext: "3.500 ton", isEigen: false, tonnage: "3.500 ton", relatie: "Cargill N.V.", relatieContact: "Sophie van Dam", laden: "Rotterdam Botlek", ladenDatum: "Zo 16 Mrt 2026", lossen: "Basel", lossenDatum: "Do 20 Mrt 2026", matchPct: 60, matchStatus: "openstaand", onRelatieClick: () => { const rel = mockRelaties.find(r => r.naam === "Cargill N.V."); if (rel) navigate(`/crm/relatie/${rel.id}`); } },
-  ].map(row => ({ ...row, sourceBadge: row.isEigen ? undefined : "Markt" }));
+  ].map(row => ({
+    ...row,
+    sourceBadge: row.isEigen ? undefined : "Markt",
+    source: row.isEigen ? "Laadplanning" : "Automatische feed",
+    sourceDate: row.isEigen ? "Do 6 Mrt 08:00" : "Do 6 Mrt 12:44",
+    sourceIcon: getSourceIconForCargo(row.isEigen as boolean),
+    sourceIconVariant: getSourceVariantForCargo(row.isEigen as boolean),
+  }));
 
   /* ── Vessel-specific negotiations with cargo info ── */
   const vesselNegotiations = [
