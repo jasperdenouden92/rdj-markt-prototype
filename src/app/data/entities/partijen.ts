@@ -12,7 +12,7 @@ export const exen: Ex[] = [
 export const partijen: Partij[] = [
   {
     id: "par-001",
-    naam: "Graan Rotterdam Q1",
+    naam: "PRO001",
     ladingSoortId: "ls-001",
     subsoortId: "lss-001",
     exId: "ex-001",
@@ -22,7 +22,7 @@ export const partijen: Partij[] = [
   },
   {
     id: "par-002",
-    naam: "Houtpellets Salzgitter",
+    naam: "PRO002",
     ladingSoortId: "ls-003",
     subsoortId: "lss-006",
     exId: "ex-002",
@@ -32,7 +32,7 @@ export const partijen: Partij[] = [
   },
   {
     id: "par-003",
-    naam: "Staal Dordrecht",
+    naam: "JAN001",
     ladingSoortId: "ls-004",
     subsoortId: "lss-008",
     exId: "ex-003",
@@ -42,7 +42,7 @@ export const partijen: Partij[] = [
   },
   {
     id: "par-004",
-    naam: "Sojabonen Botlek",
+    naam: "CAR001",
     ladingSoortId: "ls-007",
     subsoortId: "",
     exId: "ex-004",
@@ -52,7 +52,7 @@ export const partijen: Partij[] = [
   },
   {
     id: "par-005",
-    naam: "Kolen Morgenster",
+    naam: "JAN002",
     ladingSoortId: "ls-002",
     subsoortId: "lss-003",
     exId: "ex-005",
@@ -62,7 +62,7 @@ export const partijen: Partij[] = [
   },
   {
     id: "par-006",
-    naam: "Mais Europoort",
+    naam: "PRO003",
     ladingSoortId: "ls-001",
     subsoortId: "lss-002",
     exId: "ex-006",
@@ -75,7 +75,7 @@ export const partijen: Partij[] = [
 export const subpartijen: Subpartij[] = [
   {
     id: "sub-001",
-    naam: "Graan Rotterdam–Krefeld #1",
+    naam: "PRO001-01",
     partijId: "par-001",
     bijzonderheidIds: ["bh-001", "bh-002"],
     loslocatieId: "hav-004",
@@ -84,7 +84,7 @@ export const subpartijen: Subpartij[] = [
   },
   {
     id: "sub-002",
-    naam: "Houtpellets Salzgitter–Hamburg #1",
+    naam: "PRO002-01",
     partijId: "par-002",
     bijzonderheidIds: ["bh-002"],
     loslocatieId: "hav-002",
@@ -93,7 +93,7 @@ export const subpartijen: Subpartij[] = [
   },
   {
     id: "sub-003",
-    naam: "Staal Dordrecht–Antwerpen #1",
+    naam: "JAN001-01",
     partijId: "par-003",
     bijzonderheidIds: ["bh-005"],
     loslocatieId: "hav-008",
@@ -102,7 +102,7 @@ export const subpartijen: Subpartij[] = [
   },
   {
     id: "sub-004",
-    naam: "Sojabonen Botlek–Basel #1",
+    naam: "CAR001-01",
     partijId: "par-004",
     bijzonderheidIds: ["bh-001", "bh-002", "bh-003"],
     loslocatieId: "hav-010",
@@ -111,7 +111,7 @@ export const subpartijen: Subpartij[] = [
   },
   {
     id: "sub-005",
-    naam: "Kolen Morgenster–Duisburg #1",
+    naam: "JAN002-01",
     partijId: "par-005",
     bijzonderheidIds: ["bh-003"],
     loslocatieId: "hav-005",
@@ -120,7 +120,7 @@ export const subpartijen: Subpartij[] = [
   },
   {
     id: "sub-006",
-    naam: "Mais Europoort–Mannheim #1",
+    naam: "PRO003-01",
     partijId: "par-006",
     bijzonderheidIds: ["bh-001"],
     loslocatieId: "hav-006",
@@ -129,7 +129,7 @@ export const subpartijen: Subpartij[] = [
   },
   {
     id: "sub-007",
-    naam: "Graan Rotterdam–Duisburg #2",
+    naam: "PRO001-02",
     partijId: "par-001",
     bijzonderheidIds: ["bh-001"],
     loslocatieId: "hav-005",
@@ -138,7 +138,7 @@ export const subpartijen: Subpartij[] = [
   },
   {
     id: "sub-008",
-    naam: "Graan Rotterdam–Antwerpen #3",
+    naam: "PRO001-03",
     partijId: "par-001",
     bijzonderheidIds: ["bh-002"],
     loslocatieId: "hav-008",
