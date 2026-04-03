@@ -12,6 +12,7 @@ import {
 } from "../data/mock-relatie-data";
 import LastActivityButton from "./LastActivityButton";
 import DatePickerPopover, { formatDatePickerValue, type DatePickerValue } from "./DatePickerPopover";
+import { TermijnPill } from "./TermijnDropdown";
 
 /* ── Types ── */
 
@@ -55,7 +56,7 @@ const fmtLiggeld = (v: string, label: string): string => {
   return `€${v} ${label}`;
 };
 
-const CONDITION_DEFS: { key: ConditionKey; label: string; placeholder: string; format: (v: string) => string; isDate?: boolean }[] = [
+const CONDITION_DEFS: { key: ConditionKey; label: string; placeholder?: string; format: (v: string) => string; isDate?: boolean; isTermijn?: boolean }[] = [
   { key: "prijs", label: "Prijs", placeholder: "bijv. 4,00", format: v => `€${v} /ton` },
   { key: "laadtijd", label: "Laadtijd", placeholder: "bijv. 12", format: v => `${v} uur laden` },
   { key: "laadgereed", label: "Laadgereed", placeholder: "datum", format: v => `laadgereed ${v}`, isDate: true },
@@ -208,8 +209,8 @@ export default function ConversationDialog({
           const soort = soortMap.get(lm.ladingSoortId)?.naam || "";
           return {
             id: lm.id,
-            title: soort || `${lm.tonnage.toLocaleString("nl-NL")} ton`,
-            subtitle: `${lm.tonnage.toLocaleString("nl-NL")} ton`,
+            title: soort || `${typeof lm.tonnage === "object" ? `${lm.tonnage.min.toLocaleString("nl-NL")}–${lm.tonnage.max.toLocaleString("nl-NL")}` : lm.tonnage.toLocaleString("nl-NL")} ton`,
+            subtitle: `${typeof lm.tonnage === "object" ? `${lm.tonnage.min.toLocaleString("nl-NL")}–${lm.tonnage.max.toLocaleString("nl-NL")}` : lm.tonnage.toLocaleString("nl-NL")} ton`,
             meta: "",
             source: "markt" as const,
             kind: "lading" as const,
@@ -1100,24 +1101,26 @@ function ConditionPill({
 
   if (value) {
     return (
-      <button
-        onClick={() => {
-          setDraft(value);
-          setEditing(true);
-        }}
-        className="inline-flex items-center rounded-full border border-[#abefc6] bg-[#ecfdf3] px-[10px] py-[3px] font-sans font-bold text-[12px] leading-[16px] text-[#067647] hover:bg-[#d1fadf] transition-colors"
-      >
-        {def.format(value)}
-      </button>
+      <span className="inline-flex items-center rounded-full border border-[#abefc6] bg-[#ecfdf3] pl-[10px] pr-[6px] py-[3px] gap-[4px] hover:bg-[#d1fadf] transition-colors">
+        <button
+          onClick={() => { setDraft(value); setEditing(true); }}
+          className="font-sans font-bold text-[12px] leading-[16px] text-[#067647]"
+        >
+          {def.format(value)}
+        </button>
+        <button
+          onClick={(e) => { e.stopPropagation(); onChange(""); }}
+          className="flex items-center justify-center text-[#067647] opacity-50 hover:opacity-100 transition-opacity"
+        >
+          <svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M8 2L2 8M2 2L8 8" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5"/></svg>
+        </button>
+      </span>
     );
   }
 
   return (
     <button
-      onClick={() => {
-        setDraft("");
-        setEditing(true);
-      }}
+      onClick={() => { setDraft(""); setEditing(true); }}
       className="inline-flex items-center rounded-full border border-dashed border-[#d0d5dd] bg-white px-[10px] py-[3px] font-sans font-normal text-[12px] leading-[16px] text-rdj-text-tertiary hover:border-[#98a2b3] hover:text-[#344054] transition-colors"
     >
       {def.label}
@@ -1153,11 +1156,15 @@ function DateConditionPill({
   if (value) {
     return (
       <DatePickerPopover value={pickerValue} onChange={handleDateChange}>
-        <button
-          className={`inline-flex items-center rounded-full border px-[10px] py-[3px] font-sans font-bold text-[12px] leading-[16px] transition-colors ${filledClass}`}
-        >
-          {def.format(value)}
-        </button>
+        <span className={`inline-flex items-center rounded-full border pl-[10px] pr-[6px] py-[3px] gap-[4px] transition-colors cursor-pointer ${filledClass}`}>
+          <span className="font-sans font-bold text-[12px] leading-[16px]">{def.format(value)}</span>
+          <button
+            onClick={(e) => { e.stopPropagation(); onChange(""); }}
+            className="flex items-center justify-center opacity-50 hover:opacity-100 transition-opacity"
+          >
+            <svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M8 2L2 8M2 2L8 8" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5"/></svg>
+          </button>
+        </span>
       </DatePickerPopover>
     );
   }
@@ -1631,7 +1638,14 @@ function LadingConditionsSection({
         </div>
         <div className="flex items-center gap-[4px] flex-wrap">
           {CONDITION_DEFS.map(def =>
-            def.isDate ? (
+            def.isTermijn ? (
+              <TermijnPill
+                key={def.key}
+                label={def.label}
+                value={conditions?.[def.key]}
+                onChange={value => onConditionChange(def.key, value)}
+              />
+            ) : def.isDate ? (
               <DateConditionPill
                 key={def.key}
                 def={def}
@@ -1663,7 +1677,15 @@ function LadingConditionsSection({
           </div>
           <div className="flex items-center gap-[4px] flex-wrap">
             {CONDITION_DEFS.map(def =>
-              def.isDate ? (
+              def.isTermijn ? (
+                <TermijnPill
+                  key={def.key}
+                  label={def.label}
+                  value={bidConditions?.[def.key]}
+                  onChange={value => onBidConditionChange(def.key, value)}
+                  variant="bid"
+                />
+              ) : def.isDate ? (
                 <DateConditionPill
                   key={def.key}
                   def={def}

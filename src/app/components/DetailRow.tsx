@@ -69,6 +69,7 @@ export interface DetailRowProps {
 
   /** Optional hover card content shown on hover of linked rows */
   hoverContent?: ReactNode;
+
 }
 
 export default function DetailRow({
