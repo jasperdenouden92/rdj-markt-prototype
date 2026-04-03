@@ -54,6 +54,43 @@ const negotiationStatusTypeMap: Record<string, "default" | "color"> = {
   "Afgekeurd": "color",
 };
 
+/* ── Source icons ── */
+const automatischeFeedIcon = (
+  <svg fill="none" viewBox="0 0 14.6667 12.0001">
+    <path d={svgPaths.p29cbab00} stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.33333" />
+  </svg>
+);
+
+const handmatigIcon = (
+  <svg fill="none" viewBox="0 0 14.219 14.219">
+    <path d="M0.917365 11.296C0.947994 11.0204 0.963308 10.8826 1.00501 10.7537C1.04201 10.6394 1.09429 10.5307 1.16043 10.4304C1.23497 10.3173 1.33304 10.2193 1.52916 10.0231L10.3334 1.21895C11.0697 0.482571 12.2636 0.482572 13 1.21895C13.7364 1.95533 13.7364 3.14924 13 3.88562L4.19582 12.6898C3.9997 12.8859 3.90164 12.984 3.7886 13.0585C3.6883 13.1247 3.57953 13.1769 3.46524 13.2139C3.33641 13.2556 3.19858 13.271 2.92292 13.3016L0.666671 13.5523L0.917365 11.296Z" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.33333" />
+  </svg>
+);
+
+const vlootIcon = (
+  <svg fill="none" viewBox="0 0 22 22">
+    <path d={svgPaths.p22d4a480} stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" />
+  </svg>
+);
+
+const planningIcon = (
+  <svg fill="none" viewBox="0 0 18.0002 22">
+    <path d={svgPaths.p20684dc0} stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" />
+  </svg>
+);
+
+function getSourceIcon(source: string) {
+  if (source === 'Eigen vloot') return vlootIcon;
+  if (source === 'Laadplanning') return planningIcon;
+  if (source === 'Handmatig ingevoerd') return handmatigIcon;
+  return automatischeFeedIcon;
+}
+
+function getSourceVariant(source: string): 'grey' | 'brand' {
+  if (source === 'Eigen vloot' || source === 'Laadplanning') return 'brand';
+  return 'grey';
+}
+
 export default function LadingDetail() {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -158,34 +195,30 @@ export default function LadingDetail() {
     { key: 'matchPercentage', header: 'Match', type: 'progress', align: 'right', width: 'w-[100px]' },
   ];
 
-  const sourceIcon = (
-    <svg fill="none" viewBox="0 0 16 16">
-      <circle cx="8" cy="8" r="7" stroke="currentColor" strokeWidth="1.5" fill="none"/>
-      <circle cx="8" cy="8" r="2" fill="currentColor"/>
-    </svg>
-  );
-
   const activeNegStatuses = ["Via werklijst", "Bod verstuurd", "Bod ontvangen"];
 
-  const matchTableData: RowData[] = mockMatches.map((match, idx) => ({
-    id: match.id,
-    name: match.name,
-    type: match.type,
-    eigenBadge: match.isEigen ? undefined : 'Markt',
-    matchStatus: idx < 2 ? 'aangeboden' : 'openstaand',
-    company: match.company,
-    contactPersoon: match.contactPersoon || match.companyLocation,
-    onRelatieClick: () => { const rel = mockRelaties.find(r => r.naam === match.company); if (rel) navigate(`/crm/relatie/${rel.id}`); },
-    location: match.location,
-    locationDate: match.locationDate || '',
-    distance: match.distance,
-    inhoud: match.inhoud || '',
-    source: match.source || match.cargoType,
-    sourceDate: match.sourceDate || match.cargoDate,
-    sourceIcon: sourceIcon,
-    sourceIconVariant: 'grey',
-    matchPercentage: match.matchPercentage,
-  }));
+  const matchTableData: RowData[] = mockMatches.map((match, idx) => {
+    const src = match.source || match.cargoType;
+    return {
+      id: match.id,
+      name: match.name,
+      type: match.type,
+      eigenBadge: match.isEigen ? undefined : 'Markt',
+      matchStatus: idx < 2 ? 'aangeboden' : 'openstaand',
+      company: match.company,
+      contactPersoon: match.contactPersoon || match.companyLocation,
+      onRelatieClick: () => { const rel = mockRelaties.find(r => r.naam === match.company); if (rel) navigate(`/crm/relatie/${rel.id}`); },
+      location: match.location,
+      locationDate: match.locationDate || '',
+      distance: match.distance,
+      inhoud: match.inhoud || '',
+      source: src,
+      sourceDate: match.sourceDate || match.cargoDate,
+      sourceIcon: getSourceIcon(src),
+      sourceIconVariant: getSourceVariant(src),
+      matchPercentage: match.matchPercentage,
+    };
+  });
 
   /* ── Negotiations table ── */
   const negColumns: Column[] = [

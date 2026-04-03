@@ -21,6 +21,7 @@ import SectionHeader from "../components/SectionHeader";
 import LastActivityButton from "../components/LastActivityButton";
 import { useInboxLadingSummary } from "../data/useDetailData";
 import { mockNegotiations } from "../data/mock-data";
+import svgPaths from "../../imports/svg-62fj7rjvas";
 import { mockRelaties } from "../data/mock-relatie-data";
 import imgAvatar from "../../assets/a2737d3b5b234fc04041650cb9f114889c6859da.png";
 import imgAvatar1 from "../../assets/3627de284acb374a4d9313b3c2dbaeeb87a48224.png";
@@ -83,6 +84,27 @@ function BreadcrumbChevron() {
   );
 }
 
+/* ── Source icons ── */
+const automatischeFeedIcon = (
+  <svg fill="none" viewBox="0 0 14.6667 12.0001">
+    <path d={svgPaths.p29cbab00} stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.33333" />
+  </svg>
+);
+
+const vlootIcon = (
+  <svg fill="none" viewBox="0 0 22 22">
+    <path d={svgPaths.p22d4a480} stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" />
+  </svg>
+);
+
+function getSourceIconForVessel(isEigen: boolean) {
+  return isEigen ? vlootIcon : automatischeFeedIcon;
+}
+
+function getSourceVariantForVessel(isEigen: boolean): 'grey' | 'brand' {
+  return isEigen ? 'brand' : 'grey';
+}
+
 export default function InboxCargoDetail() {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -119,6 +141,7 @@ export default function InboxCargoDetail() {
     { key: "location", header: "Locatie", type: "text", subtextKey: "locationDate", width: "w-[200px]" },
     { key: "capacity", header: "Groottonnage", type: "text", width: "w-[140px]" },
     { key: "content", header: "Inhoud", type: "text", width: "w-[100px]" },
+    { key: "source", header: "Bron", type: "text", subtextKey: "sourceDate", featuredIconKey: "sourceIcon", featuredIconVariantKey: "sourceIconVariant", width: "w-[180px]" },
     {
       key: "matchPct", header: "Match", type: "custom", width: "w-[80px]",
       sortActive: true, sortDirection: "desc",
@@ -141,7 +164,14 @@ export default function InboxCargoDetail() {
     { id: "2", name: "Emily", subtype: "Motorschip", isEigen: false, company: "Provaart Logistics BV", contact: "Jan de Vries", location: "Waalhaven", locationDate: "Vanaf Wo 12 Mrt, 2026", capacity: "3.000 mt", content: "3.800 m³", matchPct: 90, matchStatus: offeredMatches.has("2") ? "aangeboden" : "openstaand", onRelatieClick: () => { const rel = mockRelaties.find(r => r.naam === "Provaart Logistics BV"); if (rel) navigate(`/crm/relatie/${rel.id}`); } },
     { id: "3", name: "Duwbak Alfa-1", subtype: "Duwbak · 2.000 mt", isEigen: true, company: "—", contact: "", location: "Dordrecht", locationDate: "Vanaf Di 1 Apr, 2026", capacity: "2.000 mt", content: "2.400 m³", matchPct: 82, matchStatus: "openstaand" },
     { id: "4", name: "S.S. Anna", subtype: "Motorschip", isEigen: false, company: "Janlow B.V.", contact: "Pieter Jansen", location: "Bremerhaven", locationDate: "Vanaf Vr 14 Mrt, 2026", capacity: "2.500 mt", content: "3.000 m³", matchPct: 78, matchStatus: offeredMatches.has("4") ? "aangeboden" : "openstaand", onRelatieClick: () => { const rel = mockRelaties.find(r => r.naam === "Janlow B.V."); if (rel) navigate(`/crm/relatie/${rel.id}`); } },
-  ].map(row => ({ ...row, sourceBadge: row.isEigen ? undefined : "Markt" }));
+  ].map(row => ({
+    ...row,
+    sourceBadge: row.isEigen ? undefined : "Markt",
+    source: row.isEigen ? "Eigen vloot" : "Automatische feed",
+    sourceDate: row.isEigen ? "Do 6 Mrt 08:00" : "Do 6 Mrt 12:44",
+    sourceIcon: getSourceIconForVessel(row.isEigen as boolean),
+    sourceIconVariant: getSourceVariantForVessel(row.isEigen as boolean),
+  }));
 
   const handleMatchClick = (row: RowData) => {
     setSelectedMatch({ id: row.id, name: row.name as string, company: row.company as string, contact: row.contact as string, location: row.location as string, locationDate: row.locationDate as string, capacity: row.capacity as string, content: row.content as string, matchPercentage: `${row.matchPct}%` });

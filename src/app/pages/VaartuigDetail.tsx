@@ -28,7 +28,7 @@ import imgAvatar4 from "../../assets/9e45f45f537bea4bf653bc0307471e5ff5545f63.pn
 
 /* ── Mock vessel matches (ladingen die passen bij dit vaartuig) ── */
 const vesselMatches = [
-  { id: 'VM001', cargo: '3.000 ton Houtpellets (DSIT)', exNaam: 'Houtpellets Salzgitter', company: 'Provaart Logistics BV', contactPersoon: 'Jan de Vries', laadLocatie: 'Salzgitter Stichkanal', laadDatum: 'Vr 14 Mrt 10:00', losLocatie: 'Hamburg Veddelkanal', losDatum: 'Di 18 Mrt 14:00', matchPercentage: 92, isEigen: true, source: 'Automatische feed', sourceDate: 'Do 6 Mrt 12:44' },
+  { id: 'VM001', cargo: '3.000 ton Houtpellets (DSIT)', exNaam: 'Houtpellets Salzgitter', company: 'Provaart Logistics BV', contactPersoon: 'Jan de Vries', laadLocatie: 'Salzgitter Stichkanal', laadDatum: 'Vr 14 Mrt 10:00', losLocatie: 'Hamburg Veddelkanal', losDatum: 'Di 18 Mrt 14:00', matchPercentage: 92, isEigen: true, source: 'Laadplanning', sourceDate: 'Do 6 Mrt 12:44' },
   { id: 'VM002', cargo: '3.000 ton Staal', company: 'Janlow B.V.', contactPersoon: 'Pieter Jansen', laadLocatie: 'Dordrecht', laadDatum: 'Za 15 Mrt 06:00', losLocatie: 'Antwerpen', losDatum: 'Ma 17 Mrt 14:00', matchPercentage: 85, isEigen: false, source: 'Automatische feed', sourceDate: 'Do 6 Mrt 15:45' },
   { id: 'VM003', cargo: '3.500 ton Sojabonen', company: 'Cargill N.V.', contactPersoon: 'Sophie van Dam', laadLocatie: 'Rotterdam Botlek', laadDatum: 'Zo 16 Mrt 08:00', losLocatie: 'Basel', losDatum: 'Do 20 Mrt', matchPercentage: 78, isEigen: false, source: 'Automatische feed', sourceDate: 'Do 6 Mrt 10:30' },
   { id: 'VM004', cargo: '3.000 ton Graan', company: 'Provaart Logistics BV', contactPersoon: 'Maria Bakker', laadLocatie: 'Rotterdam', laadDatum: 'Di 18 Mrt 08:00', losLocatie: 'Krefeld', losDatum: 'Vr 21 Mrt', matchPercentage: 65, isEigen: false, source: 'Automatische feed', sourceDate: 'Vr 7 Mrt 09:15' },
@@ -67,6 +67,43 @@ const statusTypeMap: Record<string, "default" | "color"> = {
   "Afgewezen": "color",
   "Afgekeurd": "color",
 };
+
+/* ── Source icons ── */
+const automatischeFeedIcon = (
+  <svg fill="none" viewBox="0 0 14.6667 12.0001">
+    <path d={svgPaths.p29cbab00} stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.33333" />
+  </svg>
+);
+
+const handmatigIcon = (
+  <svg fill="none" viewBox="0 0 14.219 14.219">
+    <path d="M0.917365 11.296C0.947994 11.0204 0.963308 10.8826 1.00501 10.7537C1.04201 10.6394 1.09429 10.5307 1.16043 10.4304C1.23497 10.3173 1.33304 10.2193 1.52916 10.0231L10.3334 1.21895C11.0697 0.482571 12.2636 0.482572 13 1.21895C13.7364 1.95533 13.7364 3.14924 13 3.88562L4.19582 12.6898C3.9997 12.8859 3.90164 12.984 3.7886 13.0585C3.6883 13.1247 3.57953 13.1769 3.46524 13.2139C3.33641 13.2556 3.19858 13.271 2.92292 13.3016L0.666671 13.5523L0.917365 11.296Z" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.33333" />
+  </svg>
+);
+
+const vlootIcon = (
+  <svg fill="none" viewBox="0 0 22 22">
+    <path d={svgPaths.p22d4a480} stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" />
+  </svg>
+);
+
+const planningIcon = (
+  <svg fill="none" viewBox="0 0 18.0002 22">
+    <path d={svgPaths.p20684dc0} stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" />
+  </svg>
+);
+
+function getSourceIcon(source: string) {
+  if (source === 'Eigen vloot') return vlootIcon;
+  if (source === 'Laadplanning') return planningIcon;
+  if (source === 'Handmatig ingevoerd') return handmatigIcon;
+  return automatischeFeedIcon;
+}
+
+function getSourceVariant(source: string): 'grey' | 'brand' {
+  if (source === 'Eigen vloot' || source === 'Laadplanning') return 'brand';
+  return 'grey';
+}
 
 export default function VaartuigDetail() {
   const { id } = useParams();
@@ -171,13 +208,6 @@ export default function VaartuigDetail() {
     { key: 'matchPercentage', header: 'Match', type: 'progress', align: 'right', width: 'w-[100px]' },
   ];
 
-  const sourceIcon = (
-    <svg fill="none" viewBox="0 0 16 16">
-      <circle cx="8" cy="8" r="7" stroke="currentColor" strokeWidth="1.5" fill="none"/>
-      <circle cx="8" cy="8" r="2" fill="currentColor"/>
-    </svg>
-  );
-
   const activeNegStatuses = ["Via werklijst", "Bod verstuurd", "Bod ontvangen"];
 
   const matchTableData: RowData[] = vesselMatches.map((m, idx) => {
@@ -185,25 +215,26 @@ export default function VaartuigDetail() {
     const tonnage = tonnageMatch ? tonnageMatch[1].trim() : '';
     const ladingSoort = tonnageMatch ? tonnageMatch[2] : m.cargo;
     return {
-    id: m.id,
-    cargoTitle: m.isEigen ? m.exNaam ?? ladingSoort : ladingSoort,
-    cargoSubtitle: m.isEigen ? `${tonnage} ${ladingSoort}`.trim() : tonnage,
-    tonnage,
-    eigenBadge: m.isEigen ? undefined : 'Markt',
-    matchStatus: idx < 2 ? 'aangeboden' : 'openstaand',
-    company: m.company,
-    contactPersoon: m.contactPersoon,
-    onRelatieClick: () => { const rel = mockRelaties.find(r => r.naam === m.company); if (rel) navigate(`/crm/relatie/${rel.id}`); },
-    laadLocatie: m.laadLocatie,
-    laadDatum: m.laadDatum,
-    losLocatie: m.losLocatie,
-    losDatum: m.losDatum,
-    source: m.source,
-    sourceDate: m.sourceDate,
-    sourceIcon: sourceIcon,
-    sourceIconVariant: 'grey',
-    matchPercentage: m.matchPercentage,
-  }; });
+      id: m.id,
+      cargoTitle: m.isEigen ? m.exNaam ?? ladingSoort : ladingSoort,
+      cargoSubtitle: m.isEigen ? `${tonnage} ${ladingSoort}`.trim() : tonnage,
+      tonnage,
+      eigenBadge: m.isEigen ? undefined : 'Markt',
+      matchStatus: idx < 2 ? 'aangeboden' : 'openstaand',
+      company: m.company,
+      contactPersoon: m.contactPersoon,
+      onRelatieClick: () => { const rel = mockRelaties.find(r => r.naam === m.company); if (rel) navigate(`/crm/relatie/${rel.id}`); },
+      laadLocatie: m.laadLocatie,
+      laadDatum: m.laadDatum,
+      losLocatie: m.losLocatie,
+      losDatum: m.losDatum,
+      source: m.source,
+      sourceDate: m.sourceDate,
+      sourceIcon: getSourceIcon(m.source),
+      sourceIconVariant: getSourceVariant(m.source),
+      matchPercentage: m.matchPercentage,
+    };
+  });
 
   /* ── Onderhandelingen table columns ── */
   const negColumns: Column[] = [
