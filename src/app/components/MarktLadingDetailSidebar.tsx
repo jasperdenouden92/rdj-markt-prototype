@@ -83,9 +83,9 @@ export default function MarktLadingDetailSidebar({
           <DetailRow label="Soortelijk gewicht" value="Voeg toe" />
           <DetailRow label="Inhoud" value="Voeg toe" />
           <DetailRow label="Bijzonderheden" value="Dataselect" />
-          <DetailRow label="Laadhaven" value="Dataselect" />
+          <DetailRow label="Laadlocatie" value="Dataselect" />
           <DetailRow label="Laaddatum" value="Dataselect" />
-          <DetailRow label="Loshaven" value="Dataselect" />
+          <DetailRow label="Loslocatie" value="Dataselect" />
           <DetailRow label="Losdatum" value="Dataselect" />
           <DetailRow
             label="Bron"

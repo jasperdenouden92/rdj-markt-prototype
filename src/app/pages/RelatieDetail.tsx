@@ -220,7 +220,7 @@ export default function RelatieDetail() {
       id: l.id,
       titel: l.titel,
       product: l.product,
-      route: `${l.laadhaven} → ${l.loshaven}`,
+      route: `${l.laadlocatie} → ${l.loslocatie}`,
       tonnage: String(l.tonnage),
       laaddatum: formatDate(l.laaddatum),
       matches: l.matches > 0 ? `${l.matches} match${l.matches !== 1 ? "es" : ""}` : "—",
@@ -303,7 +303,7 @@ export default function RelatieDetail() {
     typeLabel: c.type === "spot" ? "Spot" : "Contract",
     typeVariant: c.type === "spot" ? "grey" : "brand",
     routePeriode: c.type === "spot"
-      ? ([c.laadhavenNaam, c.loshavenNaam].filter(Boolean).join(" → ") || "—")
+      ? ([c.laadlocatieNaam, c.loslocatieNaam].filter(Boolean).join(" → ") || "—")
       : (c.startDatum && c.eindDatum ? `${formatDate(c.startDatum)} – ${formatDate(c.eindDatum)}` : "—"),
     statusLabel: CONTRACT_STATUS_LABELS[c.status] || "—",
     statusVariant: (CONTRACT_STATUS_VARIANT_MAP[c.status] || "grey"),

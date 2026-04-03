@@ -41,8 +41,8 @@ export default function ContractFormDialog({ contract, onSave, onClose }: Contra
   const [opmerkingen, setOpmerkingen] = useState(contract?.opmerkingen || "");
 
   // Spot fields
-  const [laadhavenNaam, setLaadhavenNaam] = useState(contract?.laadhavenNaam || "");
-  const [loshavenNaam, setLoshavenNaam] = useState(contract?.loshavenNaam || "");
+  const [laadlocatieNaam, setLaadlocatieNaam] = useState(contract?.laadlocatieNaam || "");
+  const [loslocatieNaam, setLoslocatieNaam] = useState(contract?.loslocatieNaam || "");
   const [tonnage, setTonnage] = useState(contract?.tonnage?.toString() || "");
   const [vrachtprijs, setVrachtprijs] = useState(contract?.vrachtprijs?.toString() || "");
   const [laaddatum, setLaaddatum] = useState(contract?.laaddatum || "");
@@ -98,7 +98,7 @@ export default function ContractFormDialog({ contract, onSave, onClose }: Contra
   const addRoute = () => {
     setRoutes((prev) => [
       ...prev,
-      { id: `r-new-${Date.now()}`, laadhavenNaam: "", loshavenNaam: "" },
+      { id: `r-new-${Date.now()}`, laadlocatieNaam: "", loslocatieNaam: "" },
     ]);
   };
 
@@ -133,8 +133,8 @@ export default function ContractFormDialog({ contract, onSave, onClose }: Contra
 
     if (type === "spot") {
       Object.assign(data, {
-        laadhavenNaam: laadhavenNaam.trim() || undefined,
-        loshavenNaam: loshavenNaam.trim() || undefined,
+        laadlocatieNaam: laadlocatieNaam.trim() || undefined,
+        loslocatieNaam: loslocatieNaam.trim() || undefined,
         tonnage: tonnage ? parseFloat(tonnage) : undefined,
         vrachtprijs: vrachtprijs ? parseFloat(vrachtprijs) : undefined,
         laaddatum: laaddatum || undefined,
@@ -144,7 +144,7 @@ export default function ContractFormDialog({ contract, onSave, onClose }: Contra
       Object.assign(data, {
         startDatum: startDatum || undefined,
         eindDatum: eindDatum || undefined,
-        routes: routes.filter((r) => r.laadhavenNaam.trim() || r.loshavenNaam.trim()),
+        routes: routes.filter((r) => r.laadlocatieNaam.trim() || r.loslocatieNaam.trim()),
       });
     }
 
@@ -326,12 +326,12 @@ export default function ContractFormDialog({ contract, onSave, onClose }: Contra
             <>
               <div className="grid grid-cols-2 gap-[12px]">
                 <div className="flex flex-col gap-[6px]">
-                  <Label htmlFor="ctr-laadhaven" className="font-sans font-bold text-[14px] text-[#344054]">Laadhaven</Label>
-                  <Input id="ctr-laadhaven" value={laadhavenNaam} onChange={(e) => setLaadhavenNaam(e.target.value)} placeholder="Rotterdam" />
+                  <Label htmlFor="ctr-laadlocatie" className="font-sans font-bold text-[14px] text-[#344054]">Laadlocatie</Label>
+                  <Input id="ctr-laadlocatie" value={laadlocatieNaam} onChange={(e) => setLaadlocatieNaam(e.target.value)} placeholder="Rotterdam" />
                 </div>
                 <div className="flex flex-col gap-[6px]">
-                  <Label htmlFor="ctr-loshaven" className="font-sans font-bold text-[14px] text-[#344054]">Loshaven</Label>
-                  <Input id="ctr-loshaven" value={loshavenNaam} onChange={(e) => setLoshavenNaam(e.target.value)} placeholder="Duisburg" />
+                  <Label htmlFor="ctr-loslocatie" className="font-sans font-bold text-[14px] text-[#344054]">Loslocatie</Label>
+                  <Input id="ctr-loslocatie" value={loslocatieNaam} onChange={(e) => setLoslocatieNaam(e.target.value)} placeholder="Duisburg" />
                 </div>
               </div>
               <div className="grid grid-cols-2 gap-[12px]">
@@ -402,10 +402,10 @@ export default function ContractFormDialog({ contract, onSave, onClose }: Contra
                     </div>
                     <div className="flex items-end gap-[8px]">
                       <div className="flex-1 flex flex-col gap-[4px]">
-                        <Label className="font-sans font-normal text-[12px] text-rdj-text-secondary">Laadhaven</Label>
+                        <Label className="font-sans font-normal text-[12px] text-rdj-text-secondary">Laadlocatie</Label>
                         <Input
-                          value={route.laadhavenNaam}
-                          onChange={(e) => updateRoute(route.id, "laadhavenNaam", e.target.value)}
+                          value={route.laadlocatieNaam}
+                          onChange={(e) => updateRoute(route.id, "laadlocatieNaam", e.target.value)}
                           placeholder="Bijv. Rotterdam"
                         />
                       </div>
@@ -415,10 +415,10 @@ export default function ContractFormDialog({ contract, onSave, onClose }: Contra
                         </svg>
                       </div>
                       <div className="flex-1 flex flex-col gap-[4px]">
-                        <Label className="font-sans font-normal text-[12px] text-rdj-text-secondary">Loshaven</Label>
+                        <Label className="font-sans font-normal text-[12px] text-rdj-text-secondary">Loslocatie</Label>
                         <Input
-                          value={route.loshavenNaam}
-                          onChange={(e) => updateRoute(route.id, "loshavenNaam", e.target.value)}
+                          value={route.loslocatieNaam}
+                          onChange={(e) => updateRoute(route.id, "loslocatieNaam", e.target.value)}
                           placeholder="Bijv. Duisburg"
                         />
                       </div>

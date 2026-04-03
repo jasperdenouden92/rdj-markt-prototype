@@ -28,17 +28,17 @@ import imgAvatar4 from "../../assets/9e45f45f537bea4bf653bc0307471e5ff5545f63.pn
 
 /* ── Mock vessel matches (ladingen die passen bij dit vaartuig) ── */
 const vesselMatches = [
-  { id: 'VM001', cargo: '3.000 ton Houtpellets (DSIT)', exNaam: 'Houtpellets Salzgitter', company: 'Provaart Logistics BV', contactPersoon: 'Jan de Vries', laadHaven: 'Salzgitter Stichkanal', laadDatum: 'Vr 14 Mrt 10:00', losHaven: 'Hamburg Veddelkanal', losDatum: 'Di 18 Mrt 14:00', matchPercentage: 92, isEigen: true, source: 'Automatische feed', sourceDate: 'Do 6 Mrt 12:44' },
-  { id: 'VM002', cargo: '3.000 ton Staal', company: 'Janlow B.V.', contactPersoon: 'Pieter Jansen', laadHaven: 'Dordrecht', laadDatum: 'Za 15 Mrt 06:00', losHaven: 'Antwerpen', losDatum: 'Ma 17 Mrt 14:00', matchPercentage: 85, isEigen: false, source: 'Automatische feed', sourceDate: 'Do 6 Mrt 15:45' },
-  { id: 'VM003', cargo: '3.500 ton Sojabonen', company: 'Cargill N.V.', contactPersoon: 'Sophie van Dam', laadHaven: 'Rotterdam Botlek', laadDatum: 'Zo 16 Mrt 08:00', losHaven: 'Basel', losDatum: 'Do 20 Mrt', matchPercentage: 78, isEigen: false, source: 'Automatische feed', sourceDate: 'Do 6 Mrt 10:30' },
-  { id: 'VM004', cargo: '3.000 ton Graan', company: 'Provaart Logistics BV', contactPersoon: 'Maria Bakker', laadHaven: 'Rotterdam', laadDatum: 'Di 18 Mrt 08:00', losHaven: 'Krefeld', losDatum: 'Vr 21 Mrt', matchPercentage: 65, isEigen: false, source: 'Automatische feed', sourceDate: 'Vr 7 Mrt 09:15' },
+  { id: 'VM001', cargo: '3.000 ton Houtpellets (DSIT)', exNaam: 'Houtpellets Salzgitter', company: 'Provaart Logistics BV', contactPersoon: 'Jan de Vries', laadLocatie: 'Salzgitter Stichkanal', laadDatum: 'Vr 14 Mrt 10:00', losLocatie: 'Hamburg Veddelkanal', losDatum: 'Di 18 Mrt 14:00', matchPercentage: 92, isEigen: true, source: 'Automatische feed', sourceDate: 'Do 6 Mrt 12:44' },
+  { id: 'VM002', cargo: '3.000 ton Staal', company: 'Janlow B.V.', contactPersoon: 'Pieter Jansen', laadLocatie: 'Dordrecht', laadDatum: 'Za 15 Mrt 06:00', losLocatie: 'Antwerpen', losDatum: 'Ma 17 Mrt 14:00', matchPercentage: 85, isEigen: false, source: 'Automatische feed', sourceDate: 'Do 6 Mrt 15:45' },
+  { id: 'VM003', cargo: '3.500 ton Sojabonen', company: 'Cargill N.V.', contactPersoon: 'Sophie van Dam', laadLocatie: 'Rotterdam Botlek', laadDatum: 'Zo 16 Mrt 08:00', losLocatie: 'Basel', losDatum: 'Do 20 Mrt', matchPercentage: 78, isEigen: false, source: 'Automatische feed', sourceDate: 'Do 6 Mrt 10:30' },
+  { id: 'VM004', cargo: '3.000 ton Graan', company: 'Provaart Logistics BV', contactPersoon: 'Maria Bakker', laadLocatie: 'Rotterdam', laadDatum: 'Di 18 Mrt 08:00', losLocatie: 'Krefeld', losDatum: 'Vr 21 Mrt', matchPercentage: 65, isEigen: false, source: 'Automatische feed', sourceDate: 'Vr 7 Mrt 09:15' },
 ];
 
 /* ── Mock onderhandelingen ── */
 const vesselNegotiations = [
-  { id: 'VN001', company: 'Provaart Logistics BV', cargo: '2.000 ton Houtpellets (DSIT)', price: '€3,50 per ton', priceDiff: '+4,2%', laadHaven: 'Salzgitter Stichkanal', laadDatum: 'Ma 12 Jan 10:00', losHaven: 'Hamburg Veddelkanal', losDatum: 'Vr 16 Jan 14:00', deadline: 'Za 14 Feb, 16:00', deadlineExpired: true, status: 'Bod ontvangen', contact: { name: 'Eric Nieuwkoop', date: 'Ma 9 Feb 07:28' }, bemiddeling: { inkoopRelatie: 'Provaart Logistics BV', verkoopRelatie: 'Rederij van Dam' } as const },
-  { id: 'VN002', company: 'Janlow B.V.', cargo: '3.000 ton Houtpellets', price: '€3,00 per ton', priceDiff: '-2,1%', laadHaven: 'Rotterdam Europoort', laadDatum: 'Do 15 Jan 08:00', losHaven: 'Mannheim', losDatum: 'Af te stemmen', deadline: 'Morgen, 10:00', deadlineExpired: false, status: 'Via werklijst', contact: { name: 'Pelger de Jong', date: 'Di 10 Feb 19:53' } },
-  { id: 'VN003', company: 'Cargill N.V.', cargo: '2.000 ton Koolraapzaad', price: '', priceDiff: '', laadHaven: 'Bremerhaven', laadDatum: 'Ma 19 Jan', losHaven: 'Duisburg', losDatum: 'Wo 21 Jan', deadline: 'Do 19 Feb, 11:15', deadlineExpired: false, status: 'Via werklijst', contact: { name: 'Khoa Nguyen', date: 'Zo 8 Feb 01:31' }, bemiddeling: { inkoopRelatie: 'Cargill N.V.', verkoopRelatie: 'Rederij Alfa' } as const },
+  { id: 'VN001', company: 'Provaart Logistics BV', cargo: '2.000 ton Houtpellets (DSIT)', price: '€3,50 per ton', priceDiff: '+4,2%', laadLocatie: 'Salzgitter Stichkanal', laadDatum: 'Ma 12 Jan 10:00', losLocatie: 'Hamburg Veddelkanal', losDatum: 'Vr 16 Jan 14:00', deadline: 'Za 14 Feb, 16:00', deadlineExpired: true, status: 'Bod ontvangen', contact: { name: 'Eric Nieuwkoop', date: 'Ma 9 Feb 07:28' }, bemiddeling: { inkoopRelatie: 'Provaart Logistics BV', verkoopRelatie: 'Rederij van Dam' } as const },
+  { id: 'VN002', company: 'Janlow B.V.', cargo: '3.000 ton Houtpellets', price: '€3,00 per ton', priceDiff: '-2,1%', laadLocatie: 'Rotterdam Europoort', laadDatum: 'Do 15 Jan 08:00', losLocatie: 'Mannheim', losDatum: 'Af te stemmen', deadline: 'Morgen, 10:00', deadlineExpired: false, status: 'Via werklijst', contact: { name: 'Pelger de Jong', date: 'Di 10 Feb 19:53' } },
+  { id: 'VN003', company: 'Cargill N.V.', cargo: '2.000 ton Koolraapzaad', price: '', priceDiff: '', laadLocatie: 'Bremerhaven', laadDatum: 'Ma 19 Jan', losLocatie: 'Duisburg', losDatum: 'Wo 21 Jan', deadline: 'Do 19 Feb, 11:15', deadlineExpired: false, status: 'Via werklijst', contact: { name: 'Khoa Nguyen', date: 'Zo 8 Feb 01:31' }, bemiddeling: { inkoopRelatie: 'Cargill N.V.', verkoopRelatie: 'Rederij Alfa' } as const },
 ];
 
 const statusVariantMap: Record<string, string> = {
@@ -165,8 +165,8 @@ export default function VaartuigDetail() {
     { key: 'cargoTitle', header: 'Lading', type: 'leading-text', subtextKey: 'cargoSubtitle', maxWidth: 'max-w-[480px]', badgeKey: 'eigenBadge', actionLabel: 'Onderhandeling', actionCompletedKey: 'actionCompletedLabel' },
     { key: 'tonnage', header: 'Tonnage', type: 'text', width: 'w-[120px]', align: 'right' },
     { key: 'company', header: 'Relatie', type: 'text', subtextKey: 'contactPersoon', textColor: 'text-rdj-text-brand', width: 'w-[180px]', onClickKey: 'onRelatieClick' },
-    { key: 'laadHaven', header: 'Laden', type: 'text', subtextKey: 'laadDatum', width: 'w-[180px]' },
-    { key: 'losHaven', header: 'Lossen', type: 'text', subtextKey: 'losDatum', width: 'w-[180px]' },
+    { key: 'laadLocatie', header: 'Laden', type: 'text', subtextKey: 'laadDatum', width: 'w-[180px]' },
+    { key: 'losLocatie', header: 'Lossen', type: 'text', subtextKey: 'losDatum', width: 'w-[180px]' },
     { key: 'source', header: 'Bron', type: 'text', subtextKey: 'sourceDate', featuredIconKey: 'sourceIcon', featuredIconVariantKey: 'sourceIconVariant', width: 'w-[180px]' },
     { key: 'matchPercentage', header: 'Match', type: 'progress', align: 'right', width: 'w-[100px]' },
   ];
@@ -194,9 +194,9 @@ export default function VaartuigDetail() {
     company: m.company,
     contactPersoon: m.contactPersoon,
     onRelatieClick: () => { const rel = mockRelaties.find(r => r.naam === m.company); if (rel) navigate(`/crm/relatie/${rel.id}`); },
-    laadHaven: m.laadHaven,
+    laadLocatie: m.laadLocatie,
     laadDatum: m.laadDatum,
-    losHaven: m.losHaven,
+    losLocatie: m.losLocatie,
     losDatum: m.losDatum,
     source: m.source,
     sourceDate: m.sourceDate,
@@ -209,8 +209,8 @@ export default function VaartuigDetail() {
   const negColumns: Column[] = [
     { key: 'company', header: 'Relatie', type: 'leading-text', subtextKey: 'cargo', badgeKey: 'bemiddelingBadge', badgeStyleKey: 'bemiddelingBadgeStyle', actionLabel: 'Openen' },
     { key: 'freightPrice', header: 'Vrachtprijs', type: 'text', width: 'w-[140px]', subtextKey: 'priceDiff', subtextColorKey: 'priceDiffColor', subtextTooltipKey: 'priceDiffTooltip', align: 'right' },
-    { key: 'laadHaven', header: 'Laden', type: 'text', subtextKey: 'laadDatum', width: 'w-[180px]' },
-    { key: 'losHaven', header: 'Lossen', type: 'text', subtextKey: 'losDatum', width: 'w-[180px]' },
+    { key: 'laadLocatie', header: 'Laden', type: 'text', subtextKey: 'laadDatum', width: 'w-[180px]' },
+    { key: 'losLocatie', header: 'Lossen', type: 'text', subtextKey: 'losDatum', width: 'w-[180px]' },
     { key: 'deadline', header: 'Deadline', type: 'deadline', expiredKey: 'deadlineExpired', editable: true, width: 'w-[160px]' },
     { key: 'status', header: 'Status', type: 'status', variantKey: 'statusVariant', iconKey: 'statusIcon', typeKey: 'statusType', width: 'w-[160px]' },
     { key: 'contactName', header: 'Laatste update', type: 'text', subtextKey: 'contactDate', avatarSrcKey: 'contactAvatar', width: 'w-[200px]' },
@@ -226,9 +226,9 @@ export default function VaartuigDetail() {
     priceDiff: b.priceDiff,
     priceDiffColor: b.priceDiff?.startsWith('+') ? '#F79009' : undefined,
     priceDiffTooltip: b.priceDiff && b.priceDiff !== '' ? 'Vergeleken met inkoop' : undefined,
-    laadHaven: b.laadHaven,
+    laadLocatie: b.laadLocatie,
     laadDatum: b.laadDatum,
-    losHaven: b.losHaven,
+    losLocatie: b.losLocatie,
     losDatum: b.losDatum,
     deadline: b.deadline,
     deadlineExpired: b.deadlineExpired,

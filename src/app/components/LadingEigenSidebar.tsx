@@ -90,10 +90,10 @@ export default function LadingEigenSidebar({ id, onEdit, collapsed }: LadingEige
     const p = partijen.find((x) => x.id === data.raw.partijId);
     if (!p) return null;
     const ex = p.exId ? exen.find((e) => e.id === p.exId) : null;
-    const laadhaven = havens.find((h) => h.id === p.laadhavenId);
+    const laadlocatie = havens.find((h) => h.id === p.laadlocatieId);
     const ladingSoort = mockLadingSoorten.find((ls) => ls.id === p.ladingSoortId);
     const subs = subpartijen.filter((s) => p.subpartijIds.includes(s.id));
-    return { partij: p, ex, laadhaven, ladingSoort, subpartijen: subs };
+    return { partij: p, ex, laadlocatie, ladingSoort, subpartijen: subs };
   }, [data]);
 
   const subpartijData = useMemo(() => {
@@ -101,13 +101,13 @@ export default function LadingEigenSidebar({ id, onEdit, collapsed }: LadingEige
     const s = subpartijen.find((x) => x.id === data.raw.subpartijId);
     if (!s) return null;
     const parentPartij = partijen.find((p) => p.id === s.partijId);
-    const laadhaven = parentPartij ? havens.find((h) => h.id === parentPartij.laadhavenId) : null;
-    const loshaven = havens.find((h) => h.id === s.loshavenId);
+    const laadlocatie = parentPartij ? havens.find((h) => h.id === parentPartij.laadlocatieId) : null;
+    const loslocatie = havens.find((h) => h.id === s.loslocatieId);
     const bijz = s.bijzonderheidIds
       .map((bid) => mockBijzonderheden.find((b) => b.id === bid))
       .filter(Boolean)
       .map((b) => b!.naam);
-    return { subpartij: s, laadhaven, loshaven, bijzonderheden: bijz };
+    return { subpartij: s, laadlocatie, loslocatie, bijzonderheden: bijz };
   }, [data]);
 
   // Derive lot status
@@ -136,8 +136,8 @@ export default function LadingEigenSidebar({ id, onEdit, collapsed }: LadingEige
         const lotIndex = allLots.findIndex((l) => l.id === le.id) + 1;
         const sub = subpartijen.find((s) => s.id === le.subpartijId);
         const parentPartij = partijen.find((p) => p.id === le.partijId);
-        const laadhaven = parentPartij ? havens.find((h) => h.id === parentPartij.laadhavenId) : null;
-        const loshaven = sub ? havens.find((h) => h.id === sub.loshavenId) : null;
+        const laadlocatie = parentPartij ? havens.find((h) => h.id === parentPartij.laadlocatieId) : null;
+        const loslocatie = sub ? havens.find((h) => h.id === sub.loslocatieId) : null;
         const bijz = sub?.bijzonderheidIds
           .map((bid) => mockBijzonderheden.find((b) => b.id === bid))
           .filter(Boolean)
@@ -148,8 +148,8 @@ export default function LadingEigenSidebar({ id, onEdit, collapsed }: LadingEige
           naam: sub?.naam || le.id,
           lotIndex,
           tonnage: le.tonnage ? `${le.tonnage.toLocaleString("nl-NL")} t` : "—",
-          laadhaven: laadhaven?.naam || "—",
-          loshaven: loshaven?.naam || "—",
+          laadlocatie: laadlocatie?.naam || "—",
+          loslocatie: loslocatie?.naam || "—",
           laaddatum: sub?.laaddatum || null,
           losdatum: sub?.losdatum || null,
           bijzonderheden: bijz,
@@ -260,7 +260,7 @@ export default function LadingEigenSidebar({ id, onEdit, collapsed }: LadingEige
                   title={partijData.partij.naam}
                   ladingSoort={partijData.ladingSoort?.naam || "—"}
                   tonnage={partijData.partij.tonnage}
-                  laadhaven={partijData.laadhaven?.naam || "—"}
+                  laadlocatie={partijData.laadlocatie?.naam || "—"}
                   exNaam={partijData.ex?.naam}
                   exType={partijData.ex?.type}
                   subpartijen={partijData.subpartijen.map((s) => s.naam)}
@@ -276,8 +276,8 @@ export default function LadingEigenSidebar({ id, onEdit, collapsed }: LadingEige
                 <SubpartijHoverCard
                   title={subpartijData.subpartij.naam}
                   status={((ladingenEigen.find((le) => le.subpartijId === data.raw.subpartijId) as any)?.status || "intake")}
-                  laadhaven={subpartijData.laadhaven?.naam || "—"}
-                  loshaven={subpartijData.loshaven?.naam || "—"}
+                  laadlocatie={subpartijData.laadlocatie?.naam || "—"}
+                  loslocatie={subpartijData.loslocatie?.naam || "—"}
                   laaddatum={subpartijData.subpartij.laaddatum}
                   losdatum={subpartijData.subpartij.losdatum}
                   bijzonderheden={subpartijData.bijzonderheden}
@@ -317,8 +317,8 @@ export default function LadingEigenSidebar({ id, onEdit, collapsed }: LadingEige
                         <SubpartijHoverCard
                           title={lot.naam}
                           status={lot.status}
-                          laadhaven={lot.laadhaven}
-                          loshaven={lot.loshaven}
+                          laadlocatie={lot.laadlocatie}
+                          loslocatie={lot.loslocatie}
                           laaddatum={lot.laaddatum}
                           losdatum={lot.losdatum}
                           bijzonderheden={lot.bijzonderheden}
@@ -348,8 +348,8 @@ export default function LadingEigenSidebar({ id, onEdit, collapsed }: LadingEige
                 if (n != null) { await api.patch("lading_eigen", baseId, { tonnage: n }); refetch(); }
               }}
             />
-            <DetailRow label="Laden" value={data.laadhaven} subtext={data.laaddatum} />
-            <DetailRow label="Lossen" value={data.loshaven} subtext={data.losdatum} />
+            <DetailRow label="Laden" value={data.laadlocatie} subtext={data.laaddatum} />
+            <DetailRow label="Lossen" value={data.loslocatie} subtext={data.losdatum} />
             <DetailRow label="Relatie" type="linked" value={data.opdrachtgever} onClick={() => navigate(`/crm/relatie/${data.relatieId}`)} />
           </DetailsSidebarSection>
 
@@ -427,11 +427,11 @@ function formatShortDate(dateStr: string | null): string {
   return d.toLocaleDateString("nl-NL", { day: "numeric", month: "short" });
 }
 
-function PartijHoverCard({ title, ladingSoort, tonnage, laadhaven, exNaam, exType, subpartijen: subs }: {
+function PartijHoverCard({ title, ladingSoort, tonnage, laadlocatie, exNaam, exType, subpartijen: subs }: {
   title: string;
   ladingSoort: string;
   tonnage: number;
-  laadhaven: string;
+  laadlocatie: string;
   exNaam?: string;
   exType?: string;
   subpartijen: string[];
@@ -455,12 +455,12 @@ function PartijHoverCard({ title, ladingSoort, tonnage, laadhaven, exNaam, exTyp
         </p>
       </div>
 
-      {/* Laadhaven */}
+      {/* Laadlocatie */}
       <div className="flex items-center gap-[6px] mb-[8px]">
         <div className="shrink-0 w-[14px] flex items-center justify-center">
           <div className="w-[6px] h-[6px] rounded-full border-[1.5px] border-[#667085]" />
         </div>
-        <p className="font-sans font-normal leading-[18px] text-[#344054] text-[12px]">{laadhaven}</p>
+        <p className="font-sans font-normal leading-[18px] text-[#344054] text-[12px]">{laadlocatie}</p>
       </div>
 
       {/* Subpartijen */}
@@ -487,11 +487,11 @@ const statusConfig: Record<string, { label: string; bg: string; text: string }> 
   gesloten: { label: "Gesloten", bg: "bg-[#F2F4F7]", text: "text-[#344054]" },
 };
 
-function SubpartijHoverCard({ title, status, laadhaven, loshaven, laaddatum, losdatum, bijzonderheden }: {
+function SubpartijHoverCard({ title, status, laadlocatie, loslocatie, laaddatum, losdatum, bijzonderheden }: {
   title: string;
   status: string;
-  laadhaven: string;
-  loshaven: string;
+  laadlocatie: string;
+  loslocatie: string;
   laaddatum: string | null;
   losdatum: string | null;
   bijzonderheden: string[];
@@ -509,20 +509,20 @@ function SubpartijHoverCard({ title, status, laadhaven, loshaven, laaddatum, los
         </div>
       </div>
 
-      {/* Route: laadhaven (van partij) → loshaven (van subpartij) */}
+      {/* Route: laadlocatie (van partij) → loslocatie (van subpartij) */}
       <div className="space-y-[6px]">
         <div className="flex items-center gap-[6px]">
           <div className="shrink-0 w-[14px] flex items-center justify-center">
             <div className="w-[6px] h-[6px] rounded-full border-[1.5px] border-[#667085]" />
           </div>
-          <p className="font-sans font-normal leading-[18px] text-[#344054] text-[12px] flex-1 min-w-0 truncate">{laadhaven}</p>
+          <p className="font-sans font-normal leading-[18px] text-[#344054] text-[12px] flex-1 min-w-0 truncate">{laadlocatie}</p>
           <p className="font-sans font-normal leading-[18px] text-rdj-text-tertiary text-[12px] shrink-0">{formatShortDate(laaddatum)}</p>
         </div>
         <div className="flex items-center gap-[6px]">
           <div className="shrink-0 w-[14px] flex items-center justify-center">
             <div className="w-[6px] h-[6px] rounded-full bg-[#667085]" />
           </div>
-          <p className="font-sans font-normal leading-[18px] text-[#344054] text-[12px] flex-1 min-w-0 truncate">{loshaven}</p>
+          <p className="font-sans font-normal leading-[18px] text-[#344054] text-[12px] flex-1 min-w-0 truncate">{loslocatie}</p>
           <p className="font-sans font-normal leading-[18px] text-rdj-text-tertiary text-[12px] shrink-0">{formatShortDate(losdatum)}</p>
         </div>
       </div>

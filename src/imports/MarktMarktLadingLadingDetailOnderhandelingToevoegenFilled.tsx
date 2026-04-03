@@ -2123,7 +2123,7 @@ function Row10() {
 function Row11() {
   return (
     <div className="content-stretch flex gap-[16px] items-center relative shrink-0 w-full" data-name="Row">
-      <p className="font-sans font-normal leading-[20px] relative shrink-0 text-[#475467] text-[14px] w-[144px]">Laadhaven</p>
+      <p className="font-sans font-normal leading-[20px] relative shrink-0 text-[#475467] text-[14px] w-[144px]">Laadlocatie</p>
       <div className="bg-white flex-[1_0_0] min-h-px min-w-px relative rounded-[6px]" data-name="Label">
         <div className="flex flex-row items-center size-full">
           <div className="content-stretch flex items-center pl-[12px] pr-[6px] py-[8px] relative w-full">
@@ -2161,7 +2161,7 @@ function Row12() {
 function Row13() {
   return (
     <div className="content-stretch flex gap-[16px] items-center relative shrink-0 w-full" data-name="Row">
-      <p className="font-sans font-normal leading-[20px] relative shrink-0 text-[#475467] text-[14px] w-[144px]">Loshaven</p>
+      <p className="font-sans font-normal leading-[20px] relative shrink-0 text-[#475467] text-[14px] w-[144px]">Loslocatie</p>
       <div className="bg-white flex-[1_0_0] min-h-px min-w-px relative rounded-[6px]" data-name="Label">
         <div className="flex flex-row items-center size-full">
           <div className="content-stretch flex items-center pl-[12px] pr-[6px] py-[8px] relative w-full">

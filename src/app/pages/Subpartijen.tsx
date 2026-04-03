@@ -78,8 +78,8 @@ export default function Subpartijen() {
 
   const tableData: RowData[] = paged.map((s) => {
     const partij = partijen.find((p) => p.id === s.partijId);
-    const laadhaven = partij ? havens.find((h) => h.id === partij.laadhavenId) : undefined;
-    const loshaven = havens.find((h) => h.id === s.loshavenId);
+    const laadlocatie = partij ? havens.find((h) => h.id === partij.laadlocatieId) : undefined;
+    const loslocatie = havens.find((h) => h.id === s.loslocatieId);
     const bijz = s.bijzonderheidIds
       .map((bid) => mockBijzonderheden.find((b) => b.id === bid))
       .filter(Boolean)
@@ -89,7 +89,7 @@ export default function Subpartijen() {
       id: s.id,
       naam: s.naam,
       partijNaam: partij?.naam || "—",
-      routeLabel: [laadhaven?.naam, loshaven?.naam].filter(Boolean).join(" → "),
+      routeLabel: [laadlocatie?.naam, loslocatie?.naam].filter(Boolean).join(" → "),
       laaddatumLabel: formatDate(s.laaddatum),
       laaddatumExpired: s.laaddatum ? new Date(s.laaddatum) < new Date() : false,
       losdatumLabel: formatDate(s.losdatum),

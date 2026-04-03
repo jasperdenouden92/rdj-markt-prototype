@@ -59,9 +59,9 @@ function formatShortDate(dateStr?: string): string {
   return d.toLocaleDateString("nl-NL", { day: "numeric", month: "short" });
 }
 
-function formatRoute(laadhaven: string, laaddatum?: string, loshaven?: string, losdatum?: string): string {
-  const laad = laaddatum ? `${laadhaven} (${formatShortDate(laaddatum)})` : laadhaven;
-  const los = loshaven ? (losdatum ? `${loshaven} (${formatShortDate(losdatum)})` : loshaven) : "";
+function formatRoute(laadlocatie: string, laaddatum?: string, loslocatie?: string, losdatum?: string): string {
+  const laad = laaddatum ? `${laadlocatie} (${formatShortDate(laaddatum)})` : laadlocatie;
+  const los = loslocatie ? (losdatum ? `${loslocatie} (${formatShortDate(losdatum)})` : loslocatie) : "";
   return los ? `${laad} → ${los}` : laad;
 }
 
@@ -149,7 +149,7 @@ export default function GespreksverslagQuickDialog({
       for (const [itemId, status] of aangeboden) {
         const lading = bevrachtingLadingen.find((l) => l.id === itemId);
         const vaartuig = bevrachtingVaartuigen.find((v) => v.id === itemId);
-        const label = lading ? `${lading.product} ${lading.tonnage} (${lading.laadhaven} → ${lading.loshaven})` : vaartuig ? `${vaartuig.naam} (${vaartuig.capaciteit})` : itemId;
+        const label = lading ? `${lading.product} ${lading.tonnage} (${lading.laadlocatie} → ${lading.loslocatie})` : vaartuig ? `${vaartuig.naam} (${vaartuig.capaciteit})` : itemId;
         const statusLabel = status === "aangeboden" ? "Aangeboden" : status === "niet-geinteresseerd" ? "Niet geïnteresseerd" : "Geïnteresseerd + bod";
         parts.push(`• ${label}: ${statusLabel}`);
       }
@@ -161,7 +161,7 @@ export default function GespreksverslagQuickDialog({
     if (bekendeMetPrijs.length > 0 || ingevuldeRijen.length > 0) {
       parts.push("--- Ladinguitvraag ---");
       for (const l of bekendeMetPrijs) {
-        const details = `${l.product} ${l.tonnage} (${l.laadhaven} → ${l.loshaven})`;
+        const details = `${l.product} ${l.tonnage} (${l.laadlocatie} → ${l.loslocatie})`;
         const extra = [bekendePrijzen[l.id] && `€${bekendePrijzen[l.id]}`, bekendeCondities[l.id]].filter(Boolean).join(", ");
         parts.push(`• ${details}: ${extra}`);
       }
@@ -477,7 +477,7 @@ export default function GespreksverslagQuickDialog({
                               key={lading.id}
                               id={lading.id}
                               label={`${lading.exNaam || lading.titel} · ${lading.tonnage} ${lading.product}`}
-                              route={formatRoute(lading.laadhaven, lading.laaddatum, lading.loshaven, lading.losdatum)}
+                              route={formatRoute(lading.laadlocatie, lading.laaddatum, lading.loslocatie, lading.losdatum)}
                               badge={badge}
                               currentStatus={currentStatus}
                               onSetStatus={setAanbiedStatus}
@@ -551,7 +551,7 @@ export default function GespreksverslagQuickDialog({
                                     )}
                                   </div>
                                   <p className="font-sans font-normal text-[12px] text-rdj-text-secondary truncate">
-                                    {lading.tonnage} · {lading.laadhaven} → {lading.loshaven}
+                                    {lading.tonnage} · {lading.laadlocatie} → {lading.loslocatie}
                                   </p>
                                 </div>
                                 {badge && (
@@ -638,14 +638,14 @@ export default function GespreksverslagQuickDialog({
                             type="text"
                             value={rij.van}
                             onChange={(e) => updateUitvraagRij(rij.id, "van", e.target.value)}
-                            placeholder="Laadhaven"
+                            placeholder="Laadlocatie"
                             className="flex-1 min-w-0 font-sans font-normal text-[13px] text-rdj-text-primary placeholder:text-rdj-text-tertiary border border-rdj-border-primary rounded-[6px] px-[8px] py-[6px] outline-none focus:border-[#1567a4] focus:ring-1 focus:ring-[#1567a4]"
                           />
                           <input
                             type="text"
                             value={rij.naar}
                             onChange={(e) => updateUitvraagRij(rij.id, "naar", e.target.value)}
-                            placeholder="Loshaven"
+                            placeholder="Loslocatie"
                             className="flex-1 min-w-0 font-sans font-normal text-[13px] text-rdj-text-primary placeholder:text-rdj-text-tertiary border border-rdj-border-primary rounded-[6px] px-[8px] py-[6px] outline-none focus:border-[#1567a4] focus:ring-1 focus:ring-[#1567a4]"
                           />
                           <input

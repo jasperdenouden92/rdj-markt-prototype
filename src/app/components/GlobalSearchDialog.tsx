@@ -51,8 +51,8 @@ function buildSearchResults(): SearchResult[] {
       meta: {
         product: l.product,
         tonnage: l.tonnage,
-        laadhaven: l.laadhaven,
-        loshaven: l.loshaven,
+        laadlocatie: l.laadlocatie,
+        loslocatie: l.loslocatie,
         laaddatum: l.laaddatum || "",
         status: STATUS_LABELS[l.status] || l.status,
         relatie: relatie?.naam || "",
@@ -525,7 +525,7 @@ export default function GlobalSearchDialog({ open, onOpenChange }: GlobalSearchD
                       <div className="flex flex-col gap-[8px]">
                         <div className="flex items-center justify-between">
                           <span className="font-sans text-[12px] text-rdj-text-tertiary">Route</span>
-                          <span className="font-sans text-[13px] text-rdj-text-primary">{selectedResult.meta.laadhaven} → {selectedResult.meta.loshaven}</span>
+                          <span className="font-sans text-[13px] text-rdj-text-primary">{selectedResult.meta.laadlocatie} → {selectedResult.meta.loslocatie}</span>
                         </div>
                         <div className="flex items-center justify-between">
                           <span className="font-sans text-[12px] text-rdj-text-tertiary">Laaddatum</span>
