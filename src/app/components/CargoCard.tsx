@@ -5,6 +5,8 @@ import imgAvatar from "../../assets/a2737d3b5b234fc04041650cb9f114889c6859da.png
 import { Cargo } from "../data/mock-data";
 import { mockRelaties } from "../data/mock-relatie-data";
 import { splitColors } from "../utils/splitColors";
+import { buildRelatieHoverContent } from "./RelatieHoverCard";
+import { HoverCard, HoverCardTrigger, HoverCardContent } from "./ui/hover-card";
 
 interface CargoCardProps {
   cargo: Cargo;
@@ -53,8 +55,9 @@ export default function CargoCard({ cargo }: CargoCardProps) {
               })()}
             </div>
             <p className="font-sans font-normal leading-[18px] text-rdj-text-secondary text-[12px] mt-[2px]">
-              {cargo.company && (
-                <>
+              {cargo.company && (() => {
+                const hoverContent = buildRelatieHoverContent(cargo.company);
+                const btn = (
                   <button
                     type="button"
                     className="text-rdj-text-brand hover:underline"
@@ -66,9 +69,21 @@ export default function CargoCard({ cargo }: CargoCardProps) {
                   >
                     {cargo.company}
                   </button>
-                  {" · "}
-                </>
-              )}{cargo.code}
+                );
+                return (
+                  <>
+                    {hoverContent ? (
+                      <HoverCard openDelay={300} closeDelay={100}>
+                        <HoverCardTrigger asChild>{btn}</HoverCardTrigger>
+                        <HoverCardContent side="left" align="start" sideOffset={8} className="w-[280px] p-0 border-rdj-border-secondary">
+                          {hoverContent}
+                        </HoverCardContent>
+                      </HoverCard>
+                    ) : btn}
+                    {" · "}
+                  </>
+                );
+              })()}{cargo.code}
             </p>
           </div>
           <div className="relative rounded-[9999px] shrink-0 size-[28px]">

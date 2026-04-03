@@ -6,6 +6,7 @@ import FeaturedIcon from "./FeaturedIcon";
 import Badge, { type BadgeVariant } from "./Badge";
 import Button from "./Button";
 import { Tooltip, TooltipTrigger, TooltipContent } from "./ui/tooltip";
+import { HoverCard, HoverCardTrigger, HoverCardContent } from "./ui/hover-card";
 
 /* ─────────────────────────────────────────────
    Column header
@@ -133,6 +134,8 @@ export interface TextColumn extends BaseColumn {
   subtextColorKey?: string;
   /** Row key for subtext tooltip text */
   subtextTooltipKey?: string;
+  /** Row key for a ReactNode rendered in a HoverCard on hover of this cell */
+  hoverContentKey?: string;
 }
 
 export interface RatingColumn extends BaseColumn {
@@ -354,6 +357,7 @@ function CellText({ row, col }: { row: RowData; col: TextColumn }) {
   const textColor = col.textColor ?? "text-rdj-text-primary";
   const subtextColor = col.subtextColorKey ? (row[col.subtextColorKey] as string | undefined) : undefined;
   const subtextTooltip = col.subtextTooltipKey ? (row[col.subtextTooltipKey] as string | undefined) : undefined;
+  const hoverContent = col.hoverContentKey ? row[col.hoverContentKey] as ReactNode | undefined : undefined;
 
   const subtextEl = subtext != null && String(subtext) !== "" ? (() => {
     if (!subtextTooltip) {
@@ -414,7 +418,7 @@ function CellText({ row, col }: { row: RowData; col: TextColumn }) {
 
   // If we have a leading visual, wrap in horizontal flex
   if (hasLeading) {
-    return (
+    const leadingContent = (
       <div className={`flex items-center gap-[8px] ${hasText ? "" : "justify-center"}`}>
         {leadingEl}
         {hasText && (
@@ -439,6 +443,17 @@ function CellText({ row, col }: { row: RowData; col: TextColumn }) {
         )}
       </div>
     );
+    if (hoverContent) {
+      return (
+        <HoverCard openDelay={300} closeDelay={100}>
+          <HoverCardTrigger asChild><div>{leadingContent}</div></HoverCardTrigger>
+          <HoverCardContent side="left" align="start" sideOffset={8} className="w-[280px] p-0 border-rdj-border-secondary">
+            {hoverContent}
+          </HoverCardContent>
+        </HoverCard>
+      );
+    }
+    return leadingContent;
   }
 
   // No leading visual — plain text layout
@@ -457,6 +472,22 @@ function CellText({ row, col }: { row: RowData; col: TextColumn }) {
       </p>
     )
   ) : null;
+
+  if (hoverContent) {
+    return (
+      <HoverCard openDelay={300} closeDelay={100}>
+        <HoverCardTrigger asChild>
+          <div className={alignCls}>
+            {textEl}
+            {subtextEl}
+          </div>
+        </HoverCardTrigger>
+        <HoverCardContent side="left" align="start" sideOffset={8} className="w-[280px] p-0 border-rdj-border-secondary">
+          {hoverContent}
+        </HoverCardContent>
+      </HoverCard>
+    );
+  }
 
   return (
     <div className={alignCls}>

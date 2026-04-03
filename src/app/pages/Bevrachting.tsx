@@ -17,6 +17,7 @@ import Pagination from "../components/Pagination";
 import { mockCargos, mockVessels, Cargo, Vessel } from "../data/mock-data";
 import { splitColors } from "../utils/splitColors";
 import { mockRelaties } from "../data/mock-relatie-data";
+import { buildRelatieHoverContent } from "../components/RelatieHoverCard";
 import imgEricNieuwkoop from "../../assets/a2737d3b5b234fc04041650cb9f114889c6859da.png";
 import imgKhoaNguyen from "../../assets/3627de284acb374a4d9313b3c2dbaeeb87a48224.png";
 import imgPelgerDeJong from "../../assets/e7809035038b3816de2a1d67c5de86ebeed325d0.png";
@@ -222,7 +223,7 @@ export default function Bevrachting() {
     { key: 'tonnage', header: 'Tonnage', type: 'text', width: 'w-[120px]', align: 'right' },
     { key: 'laden', header: 'Laden', type: 'text', width: 'w-[180px]', subtextKey: 'ladenDate' },
     { key: 'lossen', header: 'Lossen', type: 'text', width: 'w-[180px]', subtextKey: 'lossenDate' },
-    { key: 'relatie', header: 'Relatie', type: 'text', width: 'w-[180px]', textColor: 'text-rdj-text-brand', onClickKey: 'onRelatieClick' },
+    { key: 'relatie', header: 'Relatie', type: 'text', width: 'w-[180px]', textColor: 'text-rdj-text-brand', onClickKey: 'onRelatieClick', hoverContentKey: 'relatieHoverContent' },
     { key: 'biedingenBadges', header: 'Biedingen', type: 'badges', width: 'w-[100px]' },
     { key: 'matchesBadges', header: 'Matches', type: 'badges', width: 'w-[100px]' },
     { key: 'deadline', header: 'Deadline', type: 'text', width: 'w-[140px]' },
@@ -297,6 +298,7 @@ export default function Bevrachting() {
       lossenDate: c.toDate,
       relatie: c.company ?? '',
       onRelatieClick: () => { const rel = mockRelaties.find(r => r.naam === c.company); if (rel) navigate(`/crm/relatie/${rel.id}`); },
+      relatieHoverContent: buildRelatieHoverContent(c.company),
       biedingenBadges: c.bids != null ? [`${c.bids}`] : [],
       matchesBadges: c.matches != null ? [`${c.matches}`] : [],
       deadline: deadlineMap[c.status] ?? '',

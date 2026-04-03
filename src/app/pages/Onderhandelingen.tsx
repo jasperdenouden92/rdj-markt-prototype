@@ -14,6 +14,7 @@ import Button from "../components/Button";
 import OnderhandelingSidepanel from "../components/OnderhandelingSidepanel";
 import svgPaths from "../../imports/svg-q07ncv0e2v";
 import imgAvatar from "../../assets/a2737d3b5b234fc04041650cb9f114889c6859da.png";
+import { buildRelatieHoverContent } from "../components/RelatieHoverCard";
 
 /* ── Status badge mapping ── */
 const statusVariantMap: Record<string, string> = {
@@ -605,6 +606,7 @@ export default function Onderhandelingen() {
       type: "text",
       width: "w-[180px]",
       textColor: "text-rdj-text-brand",
+      hoverContentKey: "relatieHoverContent",
     },
     {
       key: "laden",
@@ -690,6 +692,7 @@ export default function Onderhandelingen() {
       type: "text",
       width: "w-[180px]",
       textColor: "text-rdj-text-brand",
+      hoverContentKey: "relatieHoverContent",
     },
     {
       key: "laden",
@@ -748,6 +751,7 @@ export default function Onderhandelingen() {
       : (item.vrachtprijsDiff?.startsWith("-") ? "#F79009" : undefined),
     vrachtprijsDiffTooltip: item.vrachtprijsDiff && item.vrachtprijsDiff !== "" ? (item.bron === "eigen" ? "Vergeleken met verkoop" : "Vergeleken met inkoop") : undefined,
     relatie: item.relatie,
+    relatieHoverContent: buildRelatieHoverContent(item.relatie),
     laden: item.laadLocatie,
     ladenDate: item.laadDatum,
     lossen: item.losLocatie,
@@ -777,6 +781,7 @@ export default function Onderhandelingen() {
     tonnage: item.tonnage,
     vrachtprijs: item.vrachtprijs,
     relatie: item.relatie,
+    relatieHoverContent: buildRelatieHoverContent(item.relatie),
     laden: item.laadLocatie,
     ladenDate: item.laadDatum,
     lossen: item.losLocatie,
