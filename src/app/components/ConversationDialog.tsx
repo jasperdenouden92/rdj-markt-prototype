@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef, forwardRef } from "react";
-import SegmentedButtonGroup from "./SegmentedButtonGroup";
+import { TabsList, TabsTrigger, Tabs } from "./ui/tabs";
+import RadioButton from "./RadioButton";
 import Button from "./Button";
 import { Tooltip, TooltipTrigger, TooltipContent } from "./ui/tooltip";
 import * as api from "../data/api";
@@ -16,7 +17,7 @@ import { TermijnPill } from "./TermijnDropdown";
 
 /* ── Types ── */
 
-type TabValue = "eigen-ladingen" | "eigen-vaartuigen" | "ladingen-relatie" | "vaartuigen-relatie";
+type TabValue = "eigen-ladingen" | "ladingen-relatie" | "markt-ladingen";
 type ItemStatus = "aangeboden" | "interesse" | "geen-interesse";
 
 interface DisplayItem {
@@ -95,8 +96,6 @@ export default function ConversationDialog({
 }: ConversationDialogProps) {
   const getInitialTab = (): TabValue => {
     if (preSelectedItemType === "lading") return "eigen-ladingen";
-    if (preSelectedItemType === "vaartuig") return "eigen-vaartuigen";
-    if (preSelectedItemType === "relatie-vaartuig") return "vaartuigen-relatie";
     if (preSelectedItemType === "relatie-lading") return "ladingen-relatie";
     return "eigen-ladingen";
   };
@@ -111,7 +110,6 @@ export default function ConversationDialog({
     preSelectedItemId ? new Set([preSelectedItemId]) : new Set()
   );
   const [addingItem, setAddingItem] = useState<"lading" | "vaartuig" | null>(null);
-  const [showMarktLadingen, setShowMarktLadingen] = useState(false);
   const [showMarktVaartuigen, setShowMarktVaartuigen] = useState(false);
   const [bemiddelingSet, setBemiddelingSet] = useState<Set<string>>(new Set()); // set of rightId's that are in bemiddeling
 
@@ -331,9 +329,6 @@ export default function ConversationDialog({
       const found = allRightCandidates.find(item => item.title === preSelectedMatchName);
       if (found) {
         matchAppliedRef.current = true;
-        // Enable markt toggles if needed so the item appears in the right panel
-        if (marktLadingen.some(l => l.id === found.id)) setShowMarktLadingen(true);
-        if (marktVaartuigen.some(v => v.id === found.id)) setShowMarktVaartuigen(true);
         setExpandedConditions(prev => new Set(prev).add(found.id));
       }
       return;
@@ -342,16 +337,13 @@ export default function ConversationDialog({
     // No preSelectedItemId — find and select on the left panel
     // Build search order, prioritising the list matching preSelectedItemType
     const searchOrder: { list: DisplayItem[]; tab: TabValue }[] = [
-      { list: relatieVaartuigenItems, tab: "vaartuigen-relatie" },
-      { list: eigenVaartuigen, tab: "eigen-vaartuigen" },
       { list: relatieLadingenItems, tab: "ladingen-relatie" },
       { list: eigenLadingen, tab: "eigen-ladingen" },
+      { list: marktLadingen, tab: "markt-ladingen" },
     ];
     // If a specific item type hint was given, search that list first
     const typeTabMap: Record<string, TabValue> = {
-      "relatie-vaartuig": "vaartuigen-relatie",
       "relatie-lading": "ladingen-relatie",
-      "vaartuig": "eigen-vaartuigen",
       "lading": "eigen-ladingen",
     };
     if (preSelectedItemType && typeTabMap[preSelectedItemType]) {
@@ -405,10 +397,9 @@ export default function ConversationDialog({
       return;
     }
 
-    // Check markt ladingen — enable the toggle so it appears in rightItems
+    // Check markt ladingen
     if (marktLadingen.some(l => l.id === preSelectedOriginId)) {
       originAppliedRef.current = true;
-      setShowMarktLadingen(true);
       setExpandedConditions(prev => new Set(prev).add(preSelectedOriginId));
       return;
     }
@@ -420,10 +411,9 @@ export default function ConversationDialog({
       return;
     }
 
-    // Check markt vaartuigen — enable the toggle so it appears in rightItems
+    // Check markt vaartuigen
     if (marktVaartuigen.some(v => v.id === preSelectedOriginId)) {
       originAppliedRef.current = true;
-      setShowMarktVaartuigen(true);
       setExpandedConditions(prev => new Set(prev).add(preSelectedOriginId));
       return;
     }
@@ -454,34 +444,13 @@ export default function ConversationDialog({
     const found = allCandidates.find(item => item.title === preSelectedRightName);
     if (found) {
       rightNameAppliedRef.current = true;
-      if (marktLadingen.some(l => l.id === found.id)) setShowMarktLadingen(true);
-      if (marktVaartuigen.some(v => v.id === found.id)) setShowMarktVaartuigen(true);
       setExpandedConditions(prev => new Set(prev).add(found.id));
     }
   }, [dataLoaded, selectedLeftId, preSelectedRightName, eigenLadingen, eigenVaartuigen, marktLadingen, marktVaartuigen, relatieLadingenItems, relatieVaartuigenItems]);
 
-  const combinedLadingen = showMarktLadingen ? [...eigenLadingen, ...marktLadingen] : eigenLadingen;
-  const combinedVaartuigen = showMarktVaartuigen ? [...eigenVaartuigen, ...marktVaartuigen] : eigenVaartuigen;
-
   type MatchMode = "eigen-lading" | "relatie-lading" | "no-buttons";
 
   const tabConfig: Record<TabValue, { leftItems: DisplayItem[]; rightItems: DisplayItem[]; leftLabel: string; rightLabel: string; matchLabel: string; matchMode: MatchMode }> = {
-    "eigen-ladingen": {
-      leftItems: combinedLadingen,
-      rightItems: relatieVaartuigenItems,
-      leftLabel: "Onze ladingen",
-      rightLabel: `Vaartuigen ${relatieName}`,
-      matchLabel: `Matches met vaartuigen ${relatieName}`,
-      matchMode: "no-buttons",
-    },
-    "eigen-vaartuigen": {
-      leftItems: combinedVaartuigen,
-      rightItems: relatieLadingenItems,
-      leftLabel: "Onze vaartuigen",
-      rightLabel: `Ladingen ${relatieName}`,
-      matchLabel: `Matches met ladingen ${relatieName}`,
-      matchMode: "relatie-lading",
-    },
     "ladingen-relatie": {
       leftItems: relatieLadingenItems,
       rightItems: showMarktVaartuigen ? [...eigenVaartuigen, ...marktVaartuigen] : eigenVaartuigen,
@@ -490,13 +459,21 @@ export default function ConversationDialog({
       matchLabel: "Matches met onze vaartuigen",
       matchMode: "no-buttons",
     },
-    "vaartuigen-relatie": {
-      leftItems: relatieVaartuigenItems,
-      rightItems: showMarktLadingen ? [...eigenLadingen, ...marktLadingen] : eigenLadingen,
-      leftLabel: `Vaartuigen ${relatieName}`,
-      rightLabel: "Onze ladingen",
-      matchLabel: "Matches met onze ladingen",
-      matchMode: "eigen-lading",
+    "eigen-ladingen": {
+      leftItems: eigenLadingen,
+      rightItems: relatieVaartuigenItems,
+      leftLabel: "Onze ladingen",
+      rightLabel: `Vaartuigen ${relatieName}`,
+      matchLabel: `Matches met vaartuigen ${relatieName}`,
+      matchMode: "no-buttons",
+    },
+    "markt-ladingen": {
+      leftItems: marktLadingen,
+      rightItems: showMarktVaartuigen ? [...eigenVaartuigen, ...marktVaartuigen] : eigenVaartuigen,
+      leftLabel: "Marktladingen",
+      rightLabel: "Onze vaartuigen",
+      matchLabel: "Matches met onze vaartuigen",
+      matchMode: "no-buttons",
     },
   };
 
@@ -532,7 +509,7 @@ export default function ConversationDialog({
     if (selectedItem.kind === "lading") {
       const realMatches = mockRelatieLadingMatches
         .filter(m => m.ladingId === selectedLeftId)
-        .filter(m => m.isEigen || showMarktVaartuigen);
+        .filter(() => true);
       if (realMatches.length > 0) {
         const results: MatchDisplayItem[] = realMatches
           .sort((a, b) => b.matchPercentage - a.matchPercentage)
@@ -566,7 +543,7 @@ export default function ConversationDialog({
     if (selectedItem.kind === "vaartuig") {
       const realMatches = mockRelatieVaartuigMatches
         .filter(m => m.vaartuigId === selectedLeftId)
-        .filter(m => m.isEigen || showMarktLadingen);
+        .filter(() => true);
       if (realMatches.length > 0) {
         const results: MatchDisplayItem[] = realMatches
           .sort((a, b) => b.matchPercentage - a.matchPercentage)
@@ -746,8 +723,8 @@ export default function ConversationDialog({
     setAddingItem(null);
   };
 
-  const isRelatieTab = activeTab === "ladingen-relatie" || activeTab === "vaartuigen-relatie";
-  const relatieKind = activeTab === "ladingen-relatie" ? "lading" : "vaartuig";
+  const isRelatieTab = activeTab === "ladingen-relatie";
+  const relatieKind = "lading" as const;
 
   return (
     <div className="fixed inset-0 z-50 flex">
@@ -757,7 +734,7 @@ export default function ConversationDialog({
       {/* Slide-in panel */}
       <div className="relative ml-auto flex flex-col bg-white w-full max-w-[1400px] h-full shadow-[0px_20px_24px_-4px_rgba(16,24,40,0.08),0px_8px_8px_-4px_rgba(16,24,40,0.03)]">
         {/* Header */}
-        <div className="border-b border-rdj-border-secondary px-[32px] py-[20px] shrink-0">
+        <div className="px-[32px] pt-[20px] shrink-0">
           <div className="flex items-start justify-between">
             <div className="flex flex-col gap-[4px]">
               <p className="font-sans font-bold text-[18px] leading-[28px] text-rdj-text-primary">
@@ -781,17 +758,29 @@ export default function ConversationDialog({
               </button>
             </div>
           </div>
-          <div className="mt-[16px] flex">
-            <SegmentedButtonGroup
-              items={[
-                { label: "Eigen ladingen", value: "eigen-ladingen" },
-                { label: "Eigen vaartuigen", value: "eigen-vaartuigen" },
-                { label: "Ladingen relatie", value: "ladingen-relatie" },
-                { label: "Vaartuigen relatie", value: "vaartuigen-relatie" },
-              ]}
-              value={activeTab}
-              onChange={val => setActiveTab(val as TabValue)}
-            />
+          <div className="mt-[16px] -mx-[32px] border-b border-rdj-border-secondary">
+            <Tabs value={activeTab} onValueChange={val => setActiveTab(val as TabValue)}>
+              <TabsList className="bg-transparent p-0 h-auto rounded-none justify-start gap-0 pl-[32px]">
+                <TabsTrigger
+                  value="ladingen-relatie"
+                  className="rounded-none border-0 border-b-2 -mb-px border-transparent data-[state=active]:border-[#1567a4] data-[state=active]:bg-transparent bg-transparent px-0 mr-[16px] py-[8px] font-sans font-bold text-[14px] leading-[20px] text-rdj-text-secondary data-[state=active]:text-[#1567a4] hover:text-rdj-text-primary transition-colors"
+                >
+                  Relatie
+                </TabsTrigger>
+                <TabsTrigger
+                  value="eigen-ladingen"
+                  className="rounded-none border-0 border-b-2 -mb-px border-transparent data-[state=active]:border-[#1567a4] data-[state=active]:bg-transparent bg-transparent px-0 mr-[16px] py-[8px] font-sans font-bold text-[14px] leading-[20px] text-rdj-text-secondary data-[state=active]:text-[#1567a4] hover:text-rdj-text-primary transition-colors"
+                >
+                  Eigen
+                </TabsTrigger>
+                <TabsTrigger
+                  value="markt-ladingen"
+                  className="rounded-none border-0 border-b-2 -mb-px border-transparent data-[state=active]:border-[#1567a4] data-[state=active]:bg-transparent bg-transparent px-0 py-[8px] font-sans font-bold text-[14px] leading-[20px] text-rdj-text-secondary data-[state=active]:text-[#1567a4] hover:text-rdj-text-primary transition-colors"
+                >
+                  Markt
+                </TabsTrigger>
+              </TabsList>
+            </Tabs>
           </div>
         </div>
 
@@ -799,27 +788,6 @@ export default function ConversationDialog({
         <div className="flex flex-1 min-h-0">
           {/* Left panel */}
           <div className="w-[50%] flex flex-col border-r border-rdj-border-secondary min-w-0">
-            <div className="px-[20px] py-[10px] border-b border-rdj-border-secondary bg-[#f9fafb] flex items-center justify-between gap-[12px]">
-              <p className="font-sans font-bold text-[13px] leading-[18px] text-rdj-text-secondary uppercase tracking-wide">
-                {leftLabel}
-              </p>
-              {activeTab === "eigen-ladingen" && (
-                <MarktToggle
-                  label="Marktladingen"
-                  checked={showMarktLadingen}
-
-                  onChange={setShowMarktLadingen}
-                />
-              )}
-              {activeTab === "eigen-vaartuigen" && (
-                <MarktToggle
-                  label="Marktvaartuigen"
-                  checked={showMarktVaartuigen}
-
-                  onChange={setShowMarktVaartuigen}
-                />
-              )}
-            </div>
             <div className="flex-1 overflow-y-auto divide-y divide-rdj-border-secondary">
               {leftItems.length === 0 && !addingItem ? (
                 <p className="font-sans font-normal text-[14px] text-rdj-text-tertiary py-[20px] text-center">
@@ -829,8 +797,8 @@ export default function ConversationDialog({
                 leftItems.map(item => (
                   <ItemRow
                     key={item.id}
+                    hideMarktBadge={activeTab === "markt-ladingen"}
                     item={item}
-                    bestMatch={getBestMatch(item)}
                     status={itemStatuses.get(item.id)}
                     conditions={itemConditions.get(item.id)}
                     bidConditions={itemBidConditions.get(item.id)}
@@ -901,18 +869,11 @@ export default function ConversationDialog({
                       </p>
                     )}
                   </div>
-                  {activeTab === "ladingen-relatie" && (
+                  {activeTab !== "eigen-ladingen" && (
                     <MarktToggle
                       label="Marktvaartuigen"
                       checked={showMarktVaartuigen}
                       onChange={setShowMarktVaartuigen}
-                    />
-                  )}
-                  {activeTab === "vaartuigen-relatie" && (
-                    <MarktToggle
-                      label="Marktladingen"
-                      checked={showMarktLadingen}
-                      onChange={setShowMarktLadingen}
                     />
                   )}
                 </div>
@@ -1198,6 +1159,7 @@ function ItemRow({
   onBidConditionChange,
   isSelected,
   onClick,
+  hideMarktBadge,
 }: {
   item: DisplayItem;
   bestMatch?: number;
@@ -1214,6 +1176,7 @@ function ItemRow({
   onBidConditionChange: (key: ConditionKey, value: string) => void;
   isSelected?: boolean;
   onClick?: () => void;
+  hideMarktBadge?: boolean;
 }) {
   const isEigen = item.source === "eigen";
   const isLading = item.kind === "lading";
@@ -1235,7 +1198,11 @@ function ItemRow({
       onClick={onClick}
     >
       {/* Main row */}
-      <div className="flex items-center gap-[10px]">
+      <div className="flex items-start gap-[10px]">
+        <div className="shrink-0 pt-[2px]">
+          <RadioButton checked={isSelected ?? false} />
+        </div>
+
         {bestMatch != null && (
           <div className="shrink-0">
             <MatchBadge percentage={bestMatch} />
@@ -1244,7 +1211,7 @@ function ItemRow({
 
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-[8px]">
-            {isMarkt && (
+            {isMarkt && !hideMarktBadge && (
               <span className="shrink-0 inline-flex items-center rounded-full bg-[#f2f4f7] px-[6px] py-[1px] font-sans font-bold text-[11px] leading-[16px] text-[#344054]">
                 Markt
               </span>
@@ -1343,6 +1310,7 @@ function ItemRow({
       {/* Expanded conditions for relatie ladingen */}
       {isRelatieLading && conditionsExpanded && (
         <LadingConditionsSection
+          noIndent
           conditions={conditions}
           bidConditions={bidConditions}
           showBid={status === "aangeboden"}
@@ -1358,6 +1326,7 @@ function ItemRow({
       {/* Expanded conditions for eigen/markt ladingen */}
       {showEigenButtons && conditionsExpanded && (status === "aangeboden" || status === "interesse") && (
         <LadingConditionsSection
+          noIndent
           conditions={conditions}
           bidConditions={bidConditions}
           showBid={bemiddelingMode ? (status === "aangeboden" || status === "interesse") : status === "interesse"}
@@ -1373,6 +1342,7 @@ function ItemRow({
       {/* Condities-only view (no status set yet) */}
       {showEigenButtons && conditionsExpanded && !status && (
         <LadingConditionsSection
+          noIndent
           conditions={conditions}
           bidConditions={bidConditions}
           showBid={false}
@@ -1613,6 +1583,7 @@ function LadingConditionsSection({
   secondarySubLabel,
   onConditionChange,
   onBidConditionChange,
+  noIndent,
 }: {
   conditions?: ConditionValues;
   bidConditions?: ConditionValues;
@@ -1623,9 +1594,10 @@ function LadingConditionsSection({
   secondarySubLabel?: string;
   onConditionChange: (key: ConditionKey, value: string) => void;
   onBidConditionChange: (key: ConditionKey, value: string) => void;
+  noIndent?: boolean;
 }) {
   return (
-    <div className="mt-[8px] ml-[30px]" onClick={e => e.stopPropagation()}>
+    <div className={`mt-[8px] ${noIndent ? "ml-[26px]" : "ml-[30px]"}`} onClick={e => e.stopPropagation()}>
       {/* Primary conditions */}
       <div className="flex items-start gap-[8px] mb-[6px]">
         <div className="shrink-0 w-[64px]">
