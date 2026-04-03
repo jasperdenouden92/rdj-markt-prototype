@@ -19,7 +19,9 @@ import OnderhandelingSidepanel from "../components/OnderhandelingSidepanel";
 import ConversationDialog from "../components/ConversationDialog";
 import { mockRelaties, mockContactPersonen, mockRelatieLadingen, mockRelatieVaartuigen, mockMailConversaties, mockGespreksverslagen, mockRelatieOnderhandelingen, mockGebruikers, VAARTUIG_STATUS_MAP } from "../data/mock-relatie-data";
 import type { Gespreksverslag } from "../data/mock-relatie-data";
-import { mockContracten, CONTRACT_STATUS_LABELS, CONTRACT_STATUS_VARIANT_MAP } from "../data/mock-contract-data";
+import { mockContracten, CONTRACT_STATUS_LABELS, CONTRACT_STATUS_VARIANT_MAP, mockLadingSoorten, mockLadingSubsoorten } from "../data/mock-contract-data";
+import { ladingenMarkt } from "../data/entities/ladingen-markt";
+import { havens } from "../data/entities/havens";
 import MailConversaties from "../components/MailConversaties";
 import Gespreksverslagen from "../components/Gespreksverslagen";
 import type { Relatie } from "../data/api";
@@ -121,6 +123,16 @@ export default function RelatieDetail() {
     () => mockRelatieLadingen.filter((l) => l.relatieId === id),
     [id]
   );
+  const relatieMarktLadingen = useMemo(
+    () => ladingenMarkt.filter((l) => l.relatieId === id),
+    [id]
+  );
+
+  // Lookup maps for resolving markt lading IDs
+  const havenMap = useMemo(() => new Map(havens.map((h) => [h.id, h.naam])), []);
+  const soortMap = useMemo(() => new Map(mockLadingSoorten.map((s) => [s.id, s])), []);
+  const subsoortMap = useMemo(() => new Map(mockLadingSubsoorten.map((s) => [s.id, s])), []);
+  const gebruikerMap = useMemo(() => new Map(mockGebruikers.map((g) => [g.id, g])), []);
   const relatieVaartuigen = useMemo(
     () => mockRelatieVaartuigen.filter((v) => v.relatieId === id),
     [id]
@@ -206,7 +218,7 @@ export default function RelatieDetail() {
 
   /* ── Ladingen table ── */
   const ladingenColumns: Column[] = useMemo(() => [
-    { key: "titel", header: "Lading", type: "leading-text", subtextKey: "product", maxWidth: "max-w-[480px]" },
+    { key: "titel", header: "Lading", type: "leading-text", subtextKey: "product", maxWidth: "max-w-[480px]", badgeKey: "bronBadge", badgeVariantKey: "bronBadgeVariant" },
     { key: "tonnage", header: "Tonnage", type: "text", width: "w-[120px]", align: "right" },
     { key: "laadhaven", header: "Laden", type: "text", width: "w-[180px]", subtextKey: "loadDate" },
     { key: "loshaven", header: "Lossen", type: "text", width: "w-[180px]", subtextKey: "unloadDate" },
@@ -245,24 +257,59 @@ export default function RelatieDetail() {
     { key: "statusLabel", header: "Status", type: "status", variantKey: "statusVariant", defaultVariant: "grey", width: "w-[120px]" },
   ], []);
 
-  const ladingenData: RowData[] = useMemo(() => relatieLadingen.map((l) => {
-    const s = ladingStatusMap[l.status] || { label: l.status, variant: "grey" };
-    return {
-      id: l.id,
-      titel: l.titel,
-      product: l.product,
-      tonnage: String(l.tonnage),
-      laadhaven: l.laadlocatie,
-      loshaven: l.loslocatie,
-      loadDate: formatDate(l.laaddatum),
-      unloadDate: formatDate(l.losdatum),
-      matches: l.matches,
-      matchType: "none",
-      onderhandelingen: l.onderhandelingen,
-      statusLabel: s.label,
-      statusVariant: s.variant,
-    };
-  }), [relatieLadingen]);
+  const ladingenData: RowData[] = useMemo(() => {
+    const crmRows: RowData[] = relatieLadingen.map((l) => {
+      const s = ladingStatusMap[l.status] || { label: l.status, variant: "grey" };
+      return {
+        id: l.id,
+        titel: l.titel,
+        product: l.product,
+        tonnage: String(l.tonnage),
+        laadhaven: l.laadlocatie,
+        loshaven: l.loslocatie,
+        loadDate: formatDate(l.laaddatum),
+        unloadDate: formatDate(l.losdatum),
+        matches: l.matches,
+        matchType: "none",
+        onderhandelingen: l.onderhandelingen,
+        statusLabel: s.label,
+        statusVariant: s.variant,
+      };
+    });
+
+    const marktRows: RowData[] = relatieMarktLadingen.map((l) => {
+      const soort = soortMap.get(l.ladingSoortId);
+      const subsoort = subsoortMap.get(l.subsoortId);
+      const soortLabel = subsoort ? `${soort?.naam || ""} (${subsoort.naam})` : soort?.naam || "";
+      const titel = l.opmerking || soortLabel;
+      const tonnageVal = typeof l.tonnage === "number"
+        ? `${l.tonnage.toLocaleString("nl-NL")} ton`
+        : `${(l.tonnage as any).min.toLocaleString("nl-NL")}–${(l.tonnage as any).max.toLocaleString("nl-NL")} ton`;
+      const eigenaar = l.eigenaarId ? gebruikerMap.get(l.eigenaarId) : null;
+      const initials = eigenaar ? eigenaar.naam.split(" ").filter(Boolean).map((w: string) => w[0]).join("").substring(0, 2).toUpperCase() : undefined;
+      return {
+        id: l.id,
+        titel,
+        product: soortLabel,
+        tonnage: tonnageVal,
+        laadhaven: havenMap.get(l.laadlocatieId) || "",
+        loshaven: havenMap.get(l.loslocatieId) || "Af te stemmen",
+        loadDate: formatDate(l.laaddatum),
+        unloadDate: formatDate(l.losdatum),
+        matches: l.matches ?? 0,
+        matchType: l.matchType ?? "none",
+        onderhandelingen: l.onderhandelingen ?? 0,
+        statusLabel: "In de markt",
+        statusVariant: "success",
+        bronBadge: "Markt",
+        bronBadgeVariant: "brand",
+        ownerInitials: initials,
+        priority: l.prioriteit,
+      };
+    });
+
+    return [...crmRows, ...marktRows];
+  }, [relatieLadingen, relatieMarktLadingen, havenMap, soortMap, subsoortMap, gebruikerMap]);
 
   const { sortedData: sortedLadingenData, sortedColumns: sortedLadingenColumns } = useTableSort(ladingenColumns, ladingenData);
 
@@ -407,7 +454,7 @@ export default function RelatieDetail() {
   const tabs: PageTab[] = [
     { label: "Overzicht", path: "#overzicht", isActive: activeTab === "overzicht" },
     { label: "Onderhandelingen", path: "#onderhandelingen", isActive: activeTab === "onderhandelingen", badge: String(relatieOnderhandelingen.length) },
-    { label: "Ladingen", path: "#ladingen", isActive: activeTab === "ladingen", badge: String(relatieLadingen.length) },
+    { label: "Ladingen", path: "#ladingen", isActive: activeTab === "ladingen", badge: String(relatieLadingen.length + relatieMarktLadingen.length) },
     { label: "Vaartuigen", path: "#vaartuigen", isActive: activeTab === "vaartuigen", badge: String(relatieVaartuigen.length) },
     { label: "Deals", path: "#deals", isActive: activeTab === "deals", badge: String(relatieAllDeals.length) },
     { label: "Mail", path: "#mail", isActive: activeTab === "mail", badge: String(relatieMail.length) },
@@ -501,7 +548,7 @@ export default function RelatieDetail() {
                     {activeTab === "ladingen" && (
                       <div className="w-full pb-[32px]">
                         <SectionHeader title="Ladingen" onAdd={() => {}} addTooltip="Lading toevoegen" />
-                        {relatieLadingen.length === 0 ? (
+                        {ladingenData.length === 0 ? (
                           <div className="py-[48px] text-center">
                             <p className="font-sans font-normal text-[14px] text-rdj-text-tertiary">
                               Nog geen ladingen gekoppeld aan deze relatie.
