@@ -765,19 +765,19 @@ export default function ConversationDialog({
                   value="ladingen-relatie"
                   className="rounded-none border-0 border-b-2 -mb-px border-transparent data-[state=active]:border-[#1567a4] data-[state=active]:bg-transparent bg-transparent px-0 mr-[16px] py-[8px] font-sans font-bold text-[14px] leading-[20px] text-rdj-text-secondary data-[state=active]:text-[#1567a4] hover:text-rdj-text-primary transition-colors"
                 >
-                  Relatie
+                  Lading van relatie
                 </TabsTrigger>
                 <TabsTrigger
                   value="eigen-ladingen"
                   className="rounded-none border-0 border-b-2 -mb-px border-transparent data-[state=active]:border-[#1567a4] data-[state=active]:bg-transparent bg-transparent px-0 mr-[16px] py-[8px] font-sans font-bold text-[14px] leading-[20px] text-rdj-text-secondary data-[state=active]:text-[#1567a4] hover:text-rdj-text-primary transition-colors"
                 >
-                  Eigen
+                  Eigen lading
                 </TabsTrigger>
                 <TabsTrigger
                   value="markt-ladingen"
                   className="rounded-none border-0 border-b-2 -mb-px border-transparent data-[state=active]:border-[#1567a4] data-[state=active]:bg-transparent bg-transparent px-0 py-[8px] font-sans font-bold text-[14px] leading-[20px] text-rdj-text-secondary data-[state=active]:text-[#1567a4] hover:text-rdj-text-primary transition-colors"
                 >
-                  Markt
+                  Markt lading
                 </TabsTrigger>
               </TabsList>
             </Tabs>
