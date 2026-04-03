@@ -421,18 +421,14 @@ export default function RelatieDetail() {
   };
 
   return (
-    <div className="flex min-h-screen bg-white">
+    <div className="flex min-h-screen bg-rdj-bg-primary">
       <Sidebar />
 
       <div className="flex-1 flex min-h-0 min-w-0">
         <div className="flex-1 overflow-y-auto overflow-x-hidden min-w-0">
           {breadcrumb}
 
-          <div className="content-stretch flex items-stretch justify-center relative shrink-0 w-full min-h-[calc(100vh-65px)]">
-            <div className="flex-[1_0_0] min-h-px min-w-px relative">
-              <div className="flex flex-col items-center size-full">
-                <div className="content-stretch flex flex-col items-center py-[24px] relative w-full">
-                  <div className="content-stretch flex flex-col gap-[0px] items-start max-w-[1116px] pt-[24px] relative shrink-0 w-full">
+          <div className="pt-[24px]">
                     <PageHeader
                     title={relatie.naam}
                     titleBadge={titleBadge}
@@ -575,11 +571,7 @@ export default function RelatieDetail() {
                       </div>
                     )}
                   </div>
-                </div>
-              </div>
-            </div>
           </div>
-        </div>
         </div>
 
         <RelatieDetailSidebar relatie={relatie} contactPersonen={contactPersonen} collapsed={!sidebarOpen} />
