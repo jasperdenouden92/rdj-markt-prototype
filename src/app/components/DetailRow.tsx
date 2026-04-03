@@ -2,6 +2,10 @@ import { useState, useRef, useEffect, type ReactNode } from "react";
 import StarRating from "./StarRating";
 import { Tooltip, TooltipTrigger, TooltipContent } from "./ui/tooltip";
 import { HoverCard, HoverCardTrigger, HoverCardContent } from "./ui/hover-card";
+import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
+import { Calendar } from "./ui/calendar";
+import { nl } from "date-fns/locale";
+import { PRESET_OPTIONS, formatDate } from "./TermijnDropdown";
 
 /**
  * DetailRow — a label + value row for detail sidebars.
@@ -69,6 +73,12 @@ export interface DetailRowProps {
 
   /** Optional hover card content shown on hover of linked rows */
   hoverContent?: ReactNode;
+
+  /** When provided, clicking the editable area opens a termijn dropdown instead of a text input */
+  onTermijnChange?: (value: string) => void;
+
+  /** Current termijn display value (used alongside onTermijnChange) */
+  termijnValue?: string;
 }
 
 export default function DetailRow({
@@ -90,10 +100,18 @@ export default function DetailRow({
   subtextColor,
   subtextTooltip,
   hoverContent,
+  onTermijnChange,
+  termijnValue,
 }: DetailRowProps) {
   const [editing, setEditing] = useState(false);
   const [editValue, setEditValue] = useState("");
   const inputRef = useRef<HTMLInputElement>(null);
+
+  // Termijn popover state
+  const [termijnOpen, setTermijnOpen] = useState(false);
+  const [termijnView, setTermijnView] = useState<"menu" | "calendar">("menu");
+  const [termijnCalDate, setTermijnCalDate] = useState<Date | undefined>(undefined);
+  const [termijnMonth, setTermijnMonth] = useState<Date>(new Date());
 
   useEffect(() => {
     if (editing && inputRef.current) {
@@ -125,6 +143,28 @@ export default function DetailRow({
     } else if (e.key === "Escape") {
       setEditing(false);
     }
+  };
+
+  const handleTermijnPreset = (option: typeof PRESET_OPTIONS[number]) => {
+    onTermijnChange?.(option.label);
+    setTermijnOpen(false);
+    setTermijnView("menu");
+  };
+
+  const handleTermijnDate = (date: Date | undefined) => {
+    if (date) {
+      setTermijnCalDate(date);
+      onTermijnChange?.(formatDate(date));
+      setTermijnOpen(false);
+      setTermijnView("menu");
+    }
+  };
+
+  const handleTermijnToday = () => {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    setTermijnMonth(today);
+    handleTermijnDate(today);
   };
 
   const valueContent = (
@@ -174,7 +214,60 @@ export default function DetailRow({
       </div>
 
       {/* Value */}
-      {editable && editing ? (
+      {onTermijnChange ? (
+        <Popover open={termijnOpen} onOpenChange={(o) => { setTermijnOpen(o); if (!o) setTermijnView("menu"); }}>
+          <PopoverTrigger asChild>
+            <div
+              role="button"
+              tabIndex={0}
+              onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") setTermijnOpen(true); }}
+              className="content-stretch flex flex-[1_0_0] flex-col items-start min-h-px min-w-px relative cursor-pointer"
+            >
+              <div className="rounded-[6px] w-full border border-transparent transition-all group-hover/detail-row:border-rdj-border-primary group-hover/detail-row:bg-rdj-bg-secondary-hover">
+                <div className="pl-[12px] pr-[6px] py-[8px]">
+                  <p className={`font-sans leading-[20px] text-[14px] ${termijnValue ? "font-bold text-rdj-text-primary" : "font-normal text-rdj-text-tertiary"}`}>
+                    {termijnValue || "Voeg toe"}
+                  </p>
+                </div>
+              </div>
+            </div>
+          </PopoverTrigger>
+          <PopoverContent align="start" sideOffset={4} className="w-auto p-0 border border-rdj-border-primary rounded-[12px] shadow-[0px_4px_6px_-2px_rgba(16,24,40,0.03),0px_12px_16px_-4px_rgba(16,24,40,0.08)]">
+            {termijnView === "menu" ? (
+              <div className="py-[4px] min-w-[200px]">
+                {PRESET_OPTIONS.map((option) => (
+                  <button key={option.value} onClick={() => handleTermijnPreset(option)} className="w-full px-[16px] py-[10px] text-left font-sans font-normal text-[14px] leading-[20px] text-[#101828] hover:bg-[#f9fafb] flex items-center justify-between">
+                    {option.label}
+                    {termijnValue === option.label && (
+                      <svg width="16" height="16" viewBox="0 0 16 16" fill="none" className="shrink-0">
+                        <path d="M3 8.5L6.5 12L13 4" stroke="#1567A4" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                      </svg>
+                    )}
+                  </button>
+                ))}
+                <button onClick={() => setTermijnView("calendar")} className="w-full px-[16px] py-[10px] text-left font-sans font-normal text-[14px] leading-[20px] text-[#101828] hover:bg-[#f9fafb]">
+                  Datum...
+                </button>
+              </div>
+            ) : (
+              <div className="flex flex-col w-[280px]">
+                <div className="px-[16px] pt-[16px] flex items-center gap-[8px]">
+                  <input type="text" readOnly value={termijnCalDate ? `${termijnCalDate.getDate()}-${termijnCalDate.getMonth() + 1}-${termijnCalDate.getFullYear()}` : ""} placeholder="Selecteer datum" className="flex-1 px-[10px] py-[6px] font-sans font-normal text-[13px] leading-[20px] text-rdj-text-primary border border-rdj-border-primary rounded-[6px] outline-none bg-white placeholder:text-rdj-text-tertiary" />
+                  <button onClick={handleTermijnToday} className="px-[10px] py-[6px] font-sans font-bold text-[13px] leading-[20px] text-rdj-text-brand border border-rdj-border-primary rounded-[6px] hover:bg-rdj-bg-primary-hover transition-colors whitespace-nowrap">Vandaag</button>
+                </div>
+                <Calendar mode="single" selected={termijnCalDate} onSelect={handleTermijnDate} month={termijnMonth} onMonthChange={setTermijnMonth} locale={nl} weekStartsOn={1} className="px-[12px] pb-[12px]" />
+                <div className="mx-[16px] h-px bg-rdj-border-secondary" />
+                <div className="px-[16px] py-[12px] flex items-center justify-between">
+                  <span className="font-sans font-normal text-[13px] leading-[20px] text-rdj-text-secondary">Tijd opgeven</span>
+                  <div className="relative w-[36px] h-[20px] rounded-full bg-[#d0d5dd] cursor-not-allowed">
+                    <span className="absolute top-[2px] left-[2px] w-[16px] h-[16px] rounded-full bg-white shadow-sm" />
+                  </div>
+                </div>
+              </div>
+            )}
+          </PopoverContent>
+        </Popover>
+      ) : editable && editing ? (
         <div className="content-stretch flex flex-[1_0_0] flex-col items-start min-h-px min-w-px relative">
           <div className="rounded-[6px] w-full border border-rdj-border-brand bg-white">
             <input

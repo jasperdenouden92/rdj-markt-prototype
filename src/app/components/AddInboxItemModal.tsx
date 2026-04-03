@@ -6,6 +6,100 @@ import Button from "./Button";
 import Checkbox from "./Checkbox";
 import SegmentedButtonGroup from "./SegmentedButtonGroup";
 import TermijnDropdown, { type TermijnValue } from "./TermijnDropdown";
+import DatePickerPopover, { type DatePickerValue, formatDatePickerValue } from "./DatePickerPopover";
+import { TermijnPill } from "./TermijnDropdown";
+
+/* ── Condition pills (zoekcriteria) ── */
+
+type ConditionKey = "prijs" | "laadtijd" | "laadgereed" | "liggeldLaden" | "lostijd" | "losgereed" | "liggeldLossen" | "deadline" | "overig";
+type ConditionValues = Partial<Record<ConditionKey, string>>;
+
+const fmtLiggeld = (v: string, label: string) => {
+  if (v.toUpperCase() === "NLW") return `NLW ${label}`;
+  return `€${v} ${label}`;
+};
+
+const CONDITION_DEFS: { key: ConditionKey; label: string; placeholder?: string; format: (v: string) => string; isDate?: boolean; isTermijn?: boolean }[] = [
+  { key: "prijs", label: "Prijs", placeholder: "bijv. 4,00", format: v => `€${v} /ton` },
+  { key: "laadtijd", label: "Laadtijd", placeholder: "bijv. 12", format: v => `${v} uur laden` },
+  { key: "laadgereed", label: "Laadgereed", placeholder: "datum", format: v => `laadgereed ${v}`, isDate: true },
+  { key: "liggeldLaden", label: "Liggeld laden", placeholder: "bijv. 25 of NLW", format: v => fmtLiggeld(v, "liggeld laden") },
+  { key: "lostijd", label: "Lostijd", placeholder: "bijv. 8", format: v => `${v} uur lossen` },
+  { key: "losgereed", label: "Losgereed", placeholder: "datum", format: v => `losgereed ${v}`, isDate: true },
+  { key: "liggeldLossen", label: "Liggeld lossen", placeholder: "bijv. 25 of NLW", format: v => fmtLiggeld(v, "liggeld lossen") },
+  { key: "deadline", label: "Deadline", placeholder: "bijv. 21-03", format: v => `deadline ${v}` },
+  { key: "overig", label: "Overig", placeholder: "vrije tekst", format: v => v },
+];
+
+function ConditionPill({ def, value, onChange }: { def: (typeof CONDITION_DEFS)[number]; value?: string; onChange: (value: string) => void }) {
+  const [editing, setEditing] = useState(false);
+  const [draft, setDraft] = useState(value || "");
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    if (editing && inputRef.current) {
+      inputRef.current.focus();
+      inputRef.current.select();
+    }
+  }, [editing]);
+
+  const handleConfirm = () => { onChange(draft.trim()); setEditing(false); };
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === "Enter") handleConfirm();
+    if (e.key === "Escape") { setDraft(value || ""); setEditing(false); }
+  };
+
+  if (editing) {
+    return (
+      <span className="inline-flex items-center rounded-full border border-[#1567a4] bg-white overflow-hidden">
+        <span className="font-sans font-bold text-[12px] leading-[16px] text-[#344054] pl-[10px] pr-[4px] whitespace-nowrap">{def.label}</span>
+        <input ref={inputRef} type="text" value={draft} onChange={e => setDraft(e.target.value)} onBlur={handleConfirm} onKeyDown={handleKeyDown} placeholder={def.placeholder} className="font-sans font-normal text-[12px] leading-[16px] text-[#101828] w-[80px] py-[3px] pr-[10px] outline-none bg-transparent" />
+      </span>
+    );
+  }
+  if (value) {
+    return (
+      <span className="inline-flex items-center rounded-full border border-[#abefc6] bg-[#ecfdf3] pl-[10px] pr-[6px] py-[3px] gap-[4px] hover:bg-[#d1fadf] transition-colors">
+        <button onClick={() => { setDraft(value); setEditing(true); }} className="font-sans font-bold text-[12px] leading-[16px] text-[#067647]">
+          {def.format(value)}
+        </button>
+        <button onClick={(e) => { e.stopPropagation(); onChange(""); }} className="flex items-center justify-center text-[#067647] opacity-50 hover:opacity-100 transition-opacity">
+          <svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M8 2L2 8M2 2L8 8" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5"/></svg>
+        </button>
+      </span>
+    );
+  }
+  return (
+    <button onClick={() => { setDraft(""); setEditing(true); }} className="inline-flex items-center rounded-full border border-dashed border-[#d0d5dd] bg-white px-[10px] py-[3px] font-sans font-normal text-[12px] leading-[16px] text-[#667085] hover:border-[#98a2b3] hover:text-[#344054] transition-colors">
+      {def.label}
+    </button>
+  );
+}
+
+function DateConditionPill({ def, value, onChange }: { def: (typeof CONDITION_DEFS)[number]; value?: string; onChange: (value: string) => void }) {
+  const [pickerValue, setPickerValue] = useState<DatePickerValue | undefined>(undefined);
+  const handleDateChange = (val: DatePickerValue) => { setPickerValue(val); const formatted = formatDatePickerValue(val); if (formatted) onChange(formatted); };
+
+  if (value) {
+    return (
+      <DatePickerPopover value={pickerValue} onChange={handleDateChange}>
+        <span className="inline-flex items-center rounded-full border border-[#abefc6] bg-[#ecfdf3] pl-[10px] pr-[6px] py-[3px] gap-[4px] hover:bg-[#d1fadf] transition-colors cursor-pointer">
+          <span className="font-sans font-bold text-[12px] leading-[16px] text-[#067647]">{def.format(value)}</span>
+          <button onClick={(e) => { e.stopPropagation(); onChange(""); }} className="flex items-center justify-center text-[#067647] opacity-50 hover:opacity-100 transition-opacity">
+            <svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M8 2L2 8M2 2L8 8" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5"/></svg>
+          </button>
+        </span>
+      </DatePickerPopover>
+    );
+  }
+  return (
+    <DatePickerPopover value={pickerValue} onChange={handleDateChange}>
+      <button className="inline-flex items-center rounded-full border border-dashed border-[#d0d5dd] bg-white px-[10px] py-[3px] font-sans font-normal text-[12px] leading-[16px] text-[#667085] hover:border-[#98a2b3] hover:text-[#344054] transition-colors">
+        {def.label}
+      </button>
+    </DatePickerPopover>
+  );
+}
 
 // Simulated IVR Hull Database
 interface IvrVessel { eni: string; naam: string; eigenaar: string }
@@ -56,6 +150,8 @@ export default function AddInboxItemModal({ isOpen, onClose, onSubmit, itemType:
     owner: '',
     priority: 1,
   });
+  const [conditions, setConditions] = useState<ConditionValues>({});
+  const setCondition = (key: ConditionKey, value: string) => setConditions(prev => ({ ...prev, [key]: value || undefined }));
 
   const eniSearchResults = useMemo(() => {
     const q = eniQuery.replace(/\s/g, '');
@@ -92,7 +188,7 @@ export default function AddInboxItemModal({ isOpen, onClose, onSubmit, itemType:
   if (!isOpen) return null;
 
   const handleSubmit = () => {
-    onSubmit({ ...formData, eniNumber: selectedVessel?.eni, ivrNaam: selectedVessel?.naam, relatieId: selectedRelatie?.id, relatieNaam: selectedRelatie?.naam ?? (showNieuweRelatie ? relatieQuery : undefined), loadTerms, unloadTerms, tonnageMax: isRange ? formData.tonnageMax : '', type: itemType });
+    onSubmit({ ...formData, eniNumber: selectedVessel?.eni, ivrNaam: selectedVessel?.naam, relatieId: selectedRelatie?.id, relatieNaam: selectedRelatie?.naam ?? (showNieuweRelatie ? relatieQuery : undefined), loadTerms, unloadTerms, tonnageMax: isRange ? formData.tonnageMax : '', type: itemType, conditions });
     // Reset form
     setEniQuery('');
     setSelectedVessel(null);
@@ -114,6 +210,7 @@ export default function AddInboxItemModal({ isOpen, onClose, onSubmit, itemType:
     });
     setLoadTerms(undefined);
     setUnloadTerms(undefined);
+    setConditions({});
     onClose();
   };
 
@@ -606,6 +703,27 @@ export default function AddInboxItemModal({ isOpen, onClose, onSubmit, itemType:
                   </p>
                 </div>
               </div>
+            </div>
+          </div>
+
+          {/* Condities (zoekcriteria) */}
+          <div className="flex flex-col gap-[10px] pt-[4px]">
+            <div className="flex items-center gap-[12px]">
+              <p className="font-sans font-bold leading-[20px] text-[#344054] text-[14px] shrink-0">
+                Zoekcriteria
+              </p>
+              <div className="flex-1 h-px bg-[#eaecf0]" />
+            </div>
+            <div className="flex items-center gap-[6px] flex-wrap">
+              {CONDITION_DEFS.map(def =>
+                def.isTermijn ? (
+                  <TermijnPill key={def.key} label={def.label} value={conditions[def.key]} onChange={v => setCondition(def.key, v)} />
+                ) : def.isDate ? (
+                  <DateConditionPill key={def.key} def={def} value={conditions[def.key]} onChange={v => setCondition(def.key, v)} />
+                ) : (
+                  <ConditionPill key={def.key} def={def} value={conditions[def.key]} onChange={v => setCondition(def.key, v)} />
+                )
+              )}
             </div>
           </div>
         </div>
