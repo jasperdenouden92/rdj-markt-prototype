@@ -167,7 +167,7 @@ export function useInboxLadingen() {
           relation: relatie?.naam || "",
           relationLink: contactPersoon?.naam || "",
           loadLocation: laadlocatie?.naam || "",
-          loadDate: formatDate((item as any).laaddatum),
+          loadDate: (item as any).laaddatum ? formatDate((item as any).laaddatum) : "",
           unloadLocation: loslocatie?.naam || "Af te stemmen",
           unloadDate: (item as any).losdatum ? formatDate((item as any).losdatum) : "",
           source: bron?.titel || "",
@@ -204,6 +204,7 @@ export interface InboxVaartuigRow {
   id: string;
   name: string;
   type: string;
+  eni?: string;
   relation: string;
   relationContact: string;
   location: string;
@@ -254,6 +255,7 @@ export function useInboxVaartuigen() {
           id: item.id,
           name: item.naam,
           type: "Motorschip",
+          eni: item.eni,
           relation: relatie?.naam || "",
           relationContact: contactPersoon?.naam || "",
           location: locatie?.naam || "",

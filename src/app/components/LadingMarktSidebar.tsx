@@ -1,9 +1,19 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router";
 import DetailsSidebar, { DetailsSidebarSection } from "./DetailsSidebar";
 import DetailRow from "./DetailRow";
+import TermijnDropdown, { PRESET_OPTIONS, type TermijnValue } from "./TermijnDropdown";
 import { useLadingMarktDetail } from "../data/useDetailData";
 import * as api from "../data/api";
+
+function parseTermijn(s: string): TermijnValue | undefined {
+  if (!s || s === "—") return undefined;
+  const preset = PRESET_OPTIONS.find((p) => p.label === s);
+  if (preset) return { type: "preset", value: preset.value, label: preset.label };
+  const d = new Date(s);
+  if (!isNaN(d.getTime())) return { type: "date", date: d };
+  return undefined;
+}
 
 /**
  * LadingMarktSidebar — detail sidebar for a markt-lading.
@@ -71,6 +81,15 @@ export default function LadingMarktSidebar({ id, onEdit, collapsed }: LadingMark
   const { data, loading, error, refetch } = useLadingMarktDetail(id);
   const [activeTab, setActiveTab] = useState<string>("details");
   const [overig, setOverig] = useState("");
+  const [laadtermijn, setLaadtermijn] = useState<TermijnValue | undefined>();
+  const [lostermijn, setLostermijn] = useState<TermijnValue | undefined>();
+
+  useEffect(() => {
+    if (data) {
+      setLaadtermijn(parseTermijn(data.laaddatum));
+      setLostermijn(parseTermijn(data.losdatum));
+    }
+  }, [data]);
 
   const getVal = (section: "inkoop" | "zoekcriteria", field: ConditiesField): number | null => {
     if (!data) return null;
@@ -162,9 +181,27 @@ export default function LadingMarktSidebar({ id, onEdit, collapsed }: LadingMark
             <DetailRow label="Inhoud" value={data.inhoud} editable onEdit={() => onEdit?.("inhoud")} />
             <DetailRow label="Bijzonderheden" type="badges" badges={data.bijzonderheden} editable onEdit={() => onEdit?.("bijzonderheden")} />
             <DetailRow label="Laadlocatie" value={data.laadlocatie} editable onEdit={() => onEdit?.("laadlocatie")} />
-            <DetailRow label="Laaddatum" value={data.laaddatum} editable onEdit={() => onEdit?.("laaddatum")} />
+            <div className="content-stretch flex gap-[16px] items-start relative shrink-0 w-full">
+              <div className="bg-white content-stretch flex items-center py-[8px] relative rounded-[6px] shrink-0 w-[144px]">
+                <p className="flex-[1_0_0] font-sans font-normal leading-[20px] min-h-px min-w-px relative text-rdj-text-secondary text-[14px]">
+                  Laadtermijn
+                </p>
+              </div>
+              <div className="flex-[1_0_0] min-w-0">
+                <TermijnDropdown value={laadtermijn} onChange={setLaadtermijn} variant="sidebar" />
+              </div>
+            </div>
             <DetailRow label="Loslocatie" value={data.loslocatie} editable onEdit={() => onEdit?.("loslocatie")} />
-            <DetailRow label="Losdatum" value={data.losdatum} editable onEdit={() => onEdit?.("losdatum")} />
+            <div className="content-stretch flex gap-[16px] items-start relative shrink-0 w-full">
+              <div className="bg-white content-stretch flex items-center py-[8px] relative rounded-[6px] shrink-0 w-[144px]">
+                <p className="flex-[1_0_0] font-sans font-normal leading-[20px] min-h-px min-w-px relative text-rdj-text-secondary text-[14px]">
+                  Lostermijn
+                </p>
+              </div>
+              <div className="flex-[1_0_0] min-w-0">
+                <TermijnDropdown value={lostermijn} onChange={setLostermijn} variant="sidebar" />
+              </div>
+            </div>
             <DetailRow label="Bron" type="linked" value={data.bron} subtext={data.bronDatum} />
             <DetailRow label="Relatie" type="linked" value={data.relatie} onClick={() => navigate(`/crm/relatie/${data.relatieId}`)} />
             <DetailRow label="Contactpersoon" value={data.contactpersoon} />

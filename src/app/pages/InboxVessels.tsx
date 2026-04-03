@@ -21,6 +21,7 @@ interface VesselItem {
   id: string;
   name: string;
   type: string;
+  eni?: string;
   relation: string;
   relationContact: string;
   location: string;
@@ -312,6 +313,7 @@ export default function InboxVessels() {
     id: a.id,
     name: a.name,
     type: a.type,
+    eni: a.eni,
     relation: a.relation,
     relationContact: a.relationContact,
     location: a.location,
@@ -350,7 +352,7 @@ export default function InboxVessels() {
   };
 
   const columns: Column[] = [
-    { key: 'name', header: 'Naam', type: 'leading-text', subtextKey: 'type', dotKey: 'isNew' },
+    { key: 'name', header: 'Naam', type: 'leading-text', subtextKey: 'typeWithEni', dotKey: 'isNew' },
     { key: 'location', header: 'Locatie', type: 'text', width: 'w-[140px]', editable: true },
     { key: 'availableFromDate', header: 'Beschikbaar vanaf', type: 'text', width: 'w-[140px]', subtextKey: 'availableFromTime', editable: true },
     { key: 'cargoTypesBadges', header: 'Bijzonderheden', type: 'badges', width: 'w-[160px]' },
@@ -404,6 +406,7 @@ export default function InboxVessels() {
       id: item.id,
       name: item.name,
       type: item.type,
+      typeWithEni: [item.type, item.eni].filter(Boolean).join(' · '),
       isNew: item.id === '1',
       relation: item.relation,
       relationContact: item.relationContact,
