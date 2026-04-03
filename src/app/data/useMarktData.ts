@@ -201,6 +201,7 @@ export interface InboxVaartuigRow {
   id: string;
   name: string;
   type: string;
+  eni?: string;
   relation: string;
   relationContact: string;
   location: string;
@@ -251,6 +252,7 @@ export function useInboxVaartuigen() {
           id: item.id,
           name: item.naam,
           type: "Motorschip",
+          eni: item.eni,
           relation: relatie?.naam || "",
           relationContact: contactPersoon?.naam || "",
           location: locatie?.naam || "",
