@@ -1,5 +1,5 @@
 import { useState, useCallback, useRef, useEffect, type ReactNode } from "react";
-import { X, Info } from "lucide-react";
+import { X, PanelRight } from "lucide-react";
 
 const SIDEBAR_WIDTH = 360;
 const MIN_WIDTH_CONTENT = 600;
@@ -35,7 +35,7 @@ export default function ModelessPanel({
   footer,
 }: ModelessPanelProps) {
   const [contentWidth, setContentWidth] = useState(initialWidth ?? MAX_WIDTH_CONTENT);
-  const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
   const isDragging = useRef(false);
   const startX = useRef(0);
   const startWidth = useRef(0);
@@ -107,7 +107,7 @@ export default function ModelessPanel({
                 onClick={() => setSidebarOpen((v) => !v)}
                 className={`p-[8px] rounded-[8px] transition-colors shrink-0 ${sidebarOpen ? 'bg-rdj-bg-active text-rdj-text-brand' : 'hover:bg-rdj-bg-primary-hover text-rdj-text-secondary'}`}
               >
-                <Info size={20} />
+                <PanelRight size={20} />
               </button>
             )}
             <button
