@@ -107,7 +107,7 @@ export default function ItemOfferCard({ type, value, onChange, label }: ItemOffe
           })),
           ...marktList.map(l => ({
             id: l.id,
-            naam: `${l.tonnage.toLocaleString("nl-NL")} ton`,
+            naam: `${typeof l.tonnage === "object" ? `${l.tonnage.min.toLocaleString("nl-NL")}–${l.tonnage.max.toLocaleString("nl-NL")}` : l.tonnage.toLocaleString("nl-NL")} ton`,
             subtext: "Markt",
             meta: l.id,
           })),

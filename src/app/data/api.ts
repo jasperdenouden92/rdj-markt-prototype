@@ -99,12 +99,12 @@ export interface Gebruiker {
 export interface LadingMarkt {
   id: string;
   opmerking: string;
-  tonnage: number;
+  tonnage: number | { min: number; max: number };
   ladingSoortId: string;
   subsoortId: string;
   bijzonderheidIds: string[];
-  laadhavenId: string;
-  loshavenId: string;
+  laadlocatieId: string;
+  loslocatieId: string;
   bronId: string;
   relatieId: string;
   eigenaarId: string | null;
@@ -122,7 +122,7 @@ export interface Partij {
   ladingSoortId: string;
   subsoortId: string;
   exId: string;
-  laadhavenId: string;
+  laadlocatieId: string;
   tonnage: number;
   subpartijIds: string[];
 }
@@ -138,7 +138,7 @@ export interface Subpartij {
   naam: string;
   partijId: string;
   bijzonderheidIds: string[];
-  loshavenId: string;
+  loslocatieId: string;
   laaddatum: string | null;
   losdatum: string | null;
 }
@@ -245,8 +245,8 @@ export type ContractStatus = "aandacht_nodig" | "in_onderhandeling" | "gewonnen"
 
 export interface ContractRoute {
   id: string;
-  laadhavenNaam: string;
-  loshavenNaam: string;
+  laadlocatieNaam: string;
+  loslocatieNaam: string;
   tonnage?: number;
   vrachtprijs?: number;
 }
@@ -263,8 +263,8 @@ export interface Contract {
   verlorenReden?: string;
   waarde?: number;
   ladingSoortId?: string;
-  laadhavenNaam?: string;
-  loshavenNaam?: string;
+  laadlocatieNaam?: string;
+  loslocatieNaam?: string;
   tonnage?: number;
   vrachtprijs?: number;
   laaddatum?: string;

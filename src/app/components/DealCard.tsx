@@ -47,9 +47,9 @@ export default function DealCard({ deal }: DealCardProps) {
   const deadlineExpired = isExpired(deadline);
 
   const route = deal.type === "spot"
-    ? [deal.laadhavenNaam, deal.loshavenNaam].filter(Boolean).join(" → ")
+    ? [deal.laadlocatieNaam, deal.loslocatieNaam].filter(Boolean).join(" → ")
     : deal.routes && deal.routes.length > 0
-      ? [deal.routes[0].laadhavenNaam, deal.routes[0].loshavenNaam].filter(Boolean).join(" → ") + (deal.routes.length > 1 ? ` +${deal.routes.length - 1}` : "")
+      ? [deal.routes[0].laadlocatieNaam, deal.routes[0].loslocatieNaam].filter(Boolean).join(" → ") + (deal.routes.length > 1 ? ` +${deal.routes.length - 1}` : "")
       : "";
 
   return (

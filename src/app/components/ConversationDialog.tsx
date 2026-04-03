@@ -12,6 +12,7 @@ import {
 } from "../data/mock-relatie-data";
 import LastActivityButton from "./LastActivityButton";
 import DatePickerPopover, { formatDatePickerValue, type DatePickerValue } from "./DatePickerPopover";
+import { TermijnPill } from "./TermijnDropdown";
 
 /* ── Types ── */
 
@@ -55,7 +56,7 @@ const fmtLiggeld = (v: string, label: string): string => {
   return `€${v} ${label}`;
 };
 
-const CONDITION_DEFS: { key: ConditionKey; label: string; placeholder: string; format: (v: string) => string; isDate?: boolean }[] = [
+const CONDITION_DEFS: { key: ConditionKey; label: string; placeholder?: string; format: (v: string) => string; isDate?: boolean; isTermijn?: boolean }[] = [
   { key: "prijs", label: "Prijs", placeholder: "bijv. 4,00", format: v => `€${v} /ton` },
   { key: "laadtijd", label: "Laadtijd", placeholder: "bijv. 12", format: v => `${v} uur laden` },
   { key: "laadgereed", label: "Laadgereed", placeholder: "datum", format: v => `laadgereed ${v}`, isDate: true },
@@ -159,8 +160,8 @@ export default function ConversationDialog({
         const partij = partijMap.get(le.partijId);
         const subpartij = subpartijMap.get(le.subpartijId);
         const ex = partij?.exId ? exMap.get(partij.exId) : null;
-        const laadHaven = partij ? havenMap.get(partij.laadhavenId)?.naam : undefined;
-        const losHaven = subpartij ? havenMap.get(subpartij.loshavenId)?.naam : undefined;
+        const laadLocatie = partij ? havenMap.get(partij.laadlocatieId)?.naam : undefined;
+        const losLocatie = subpartij ? havenMap.get(subpartij.loslocatieId)?.naam : undefined;
         const title = ex
           ? (ex.type === "opslag" ? ex.naam : `m/v ${ex.naam}`)
           : partij?.naam || le.opmerking || le.id;
@@ -171,9 +172,9 @@ export default function ConversationDialog({
           meta: "",
           source: "eigen" as const,
           kind: "lading" as const,
-          laadlocatie: laadHaven,
+          laadlocatie: laadLocatie,
           laaddatum: subpartij?.laaddatum ? formatDate(subpartij.laaddatum) : undefined,
-          loslocatie: losHaven,
+          loslocatie: losLocatie,
           losdatum: subpartij?.losdatum ? formatDate(subpartij.losdatum) : undefined,
         };
       })
@@ -202,20 +203,20 @@ export default function ConversationDialog({
       allLadingenMarkt
         .filter(lm => lm.relatieId !== relatieId)
         .map(lm => {
-          const laadHaven = havenMap.get(lm.laadhavenId)?.naam;
-          const losHaven = havenMap.get(lm.loshavenId)?.naam;
+          const laadLocatie = havenMap.get(lm.laadlocatieId)?.naam;
+          const losLocatie = havenMap.get(lm.loslocatieId)?.naam;
           const relNaam = relatieMap.get(lm.relatieId)?.naam || "";
           const soort = soortMap.get(lm.ladingSoortId)?.naam || "";
           return {
             id: lm.id,
-            title: soort || `${lm.tonnage.toLocaleString("nl-NL")} ton`,
-            subtitle: `${lm.tonnage.toLocaleString("nl-NL")} ton`,
+            title: soort || `${typeof lm.tonnage === "object" ? `${lm.tonnage.min.toLocaleString("nl-NL")}–${lm.tonnage.max.toLocaleString("nl-NL")}` : lm.tonnage.toLocaleString("nl-NL")} ton`,
+            subtitle: `${typeof lm.tonnage === "object" ? `${lm.tonnage.min.toLocaleString("nl-NL")}–${lm.tonnage.max.toLocaleString("nl-NL")}` : lm.tonnage.toLocaleString("nl-NL")} ton`,
             meta: "",
             source: "markt" as const,
             kind: "lading" as const,
-            laadlocatie: laadHaven,
+            laadlocatie: laadLocatie,
             laaddatum: lm.laaddatum ? formatDate(lm.laaddatum) : undefined,
-            loslocatie: losHaven,
+            loslocatie: losLocatie,
             losdatum: lm.losdatum ? formatDate(lm.losdatum) : undefined,
             relatieName: relNaam || undefined,
           };
@@ -290,9 +291,9 @@ export default function ConversationDialog({
         meta: "",
         source: "relatie" as const,
         kind: "lading" as const,
-        laadlocatie: l.laadhaven,
+        laadlocatie: l.laadlocatie,
         laaddatum: l.laaddatum ? formatDate(l.laaddatum) : undefined,
-        loslocatie: l.loshaven,
+        loslocatie: l.loslocatie,
         losdatum: l.losdatum ? formatDate(l.losdatum) : undefined,
       }))
     );
@@ -577,9 +578,9 @@ export default function ConversationDialog({
             source: (m.isEigen ? "eigen" : "markt") as "eigen" | "relatie" | "markt",
             kind: "lading" as const,
             matchPercentage: m.matchPercentage,
-            laadlocatie: m.laadHaven,
+            laadlocatie: m.laadLocatie,
             laaddatum: m.laadDatum,
-            loslocatie: m.losHaven,
+            loslocatie: m.losLocatie,
             losdatum: m.losDatum,
             relatieName: !m.isEigen ? m.relatie : undefined,
           }));
@@ -712,7 +713,7 @@ export default function ConversationDialog({
     setBemiddelingSet(new Set()); // reset manual bemiddeling when switching left item
   };
 
-  const handleAddRelatieLading = (data: { titel: string; tonnage: string; product: string; laadhaven: string; loshaven: string; laaddatum: string; losdatum: string }) => {
+  const handleAddRelatieLading = (data: { titel: string; tonnage: string; product: string; laadlocatie: string; loslocatie: string; laaddatum: string; losdatum: string }) => {
     const id = `rl-new-${Date.now()}`;
     const newItem: DisplayItem = {
       id,
@@ -721,9 +722,9 @@ export default function ConversationDialog({
       meta: "",
       source: "relatie",
       kind: "lading",
-      laadlocatie: data.laadhaven || undefined,
+      laadlocatie: data.laadlocatie || undefined,
       laaddatum: data.laaddatum || undefined,
-      loslocatie: data.loshaven || undefined,
+      loslocatie: data.loslocatie || undefined,
       losdatum: data.losdatum || undefined,
     };
     setRelatieLadingenItems(prev => [...prev, newItem]);
@@ -1100,24 +1101,26 @@ function ConditionPill({
 
   if (value) {
     return (
-      <button
-        onClick={() => {
-          setDraft(value);
-          setEditing(true);
-        }}
-        className="inline-flex items-center rounded-full border border-[#abefc6] bg-[#ecfdf3] px-[10px] py-[3px] font-sans font-bold text-[12px] leading-[16px] text-[#067647] hover:bg-[#d1fadf] transition-colors"
-      >
-        {def.format(value)}
-      </button>
+      <span className="inline-flex items-center rounded-full border border-[#abefc6] bg-[#ecfdf3] pl-[10px] pr-[6px] py-[3px] gap-[4px] hover:bg-[#d1fadf] transition-colors">
+        <button
+          onClick={() => { setDraft(value); setEditing(true); }}
+          className="font-sans font-bold text-[12px] leading-[16px] text-[#067647]"
+        >
+          {def.format(value)}
+        </button>
+        <button
+          onClick={(e) => { e.stopPropagation(); onChange(""); }}
+          className="flex items-center justify-center text-[#067647] opacity-50 hover:opacity-100 transition-opacity"
+        >
+          <svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M8 2L2 8M2 2L8 8" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5"/></svg>
+        </button>
+      </span>
     );
   }
 
   return (
     <button
-      onClick={() => {
-        setDraft("");
-        setEditing(true);
-      }}
+      onClick={() => { setDraft(""); setEditing(true); }}
       className="inline-flex items-center rounded-full border border-dashed border-[#d0d5dd] bg-white px-[10px] py-[3px] font-sans font-normal text-[12px] leading-[16px] text-rdj-text-tertiary hover:border-[#98a2b3] hover:text-[#344054] transition-colors"
     >
       {def.label}
@@ -1153,11 +1156,15 @@ function DateConditionPill({
   if (value) {
     return (
       <DatePickerPopover value={pickerValue} onChange={handleDateChange}>
-        <button
-          className={`inline-flex items-center rounded-full border px-[10px] py-[3px] font-sans font-bold text-[12px] leading-[16px] transition-colors ${filledClass}`}
-        >
-          {def.format(value)}
-        </button>
+        <span className={`inline-flex items-center rounded-full border pl-[10px] pr-[6px] py-[3px] gap-[4px] transition-colors cursor-pointer ${filledClass}`}>
+          <span className="font-sans font-bold text-[12px] leading-[16px]">{def.format(value)}</span>
+          <button
+            onClick={(e) => { e.stopPropagation(); onChange(""); }}
+            className="flex items-center justify-center opacity-50 hover:opacity-100 transition-opacity"
+          >
+            <svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M8 2L2 8M2 2L8 8" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5"/></svg>
+          </button>
+        </span>
       </DatePickerPopover>
     );
   }
@@ -1631,7 +1638,14 @@ function LadingConditionsSection({
         </div>
         <div className="flex items-center gap-[4px] flex-wrap">
           {CONDITION_DEFS.map(def =>
-            def.isDate ? (
+            def.isTermijn ? (
+              <TermijnPill
+                key={def.key}
+                label={def.label}
+                value={conditions?.[def.key]}
+                onChange={value => onConditionChange(def.key, value)}
+              />
+            ) : def.isDate ? (
               <DateConditionPill
                 key={def.key}
                 def={def}
@@ -1663,7 +1677,15 @@ function LadingConditionsSection({
           </div>
           <div className="flex items-center gap-[4px] flex-wrap">
             {CONDITION_DEFS.map(def =>
-              def.isDate ? (
+              def.isTermijn ? (
+                <TermijnPill
+                  key={def.key}
+                  label={def.label}
+                  value={bidConditions?.[def.key]}
+                  onChange={value => onBidConditionChange(def.key, value)}
+                  variant="bid"
+                />
+              ) : def.isDate ? (
                 <DateConditionPill
                   key={def.key}
                   def={def}
@@ -1940,14 +1962,14 @@ function QuickAddLading({
   onCancel,
 }: {
   inputRef: React.RefObject<HTMLInputElement | null>;
-  onSave: (data: { titel: string; tonnage: string; product: string; laadhaven: string; loshaven: string; laaddatum: string; losdatum: string }) => void;
+  onSave: (data: { titel: string; tonnage: string; product: string; laadlocatie: string; loslocatie: string; laaddatum: string; losdatum: string }) => void;
   onCancel: () => void;
 }) {
   const [titel, setTitel] = useState("");
   const [tonnage, setTonnage] = useState("");
   const [product, setProduct] = useState("");
-  const [laadhaven, setLaadhaven] = useState("");
-  const [loshaven, setLoshaven] = useState("");
+  const [laadlocatie, setLaadlocatie] = useState("");
+  const [loslocatie, setLoslocatie] = useState("");
   const [laaddatum, setLaaddatum] = useState("");
   const [losdatum, setLosdatum] = useState("");
 
@@ -1959,8 +1981,8 @@ function QuickAddLading({
       titel: titel.trim(),
       tonnage: tonnage.trim() || "– ton",
       product: product.trim() || "–",
-      laadhaven: laadhaven.trim(),
-      loshaven: loshaven.trim(),
+      laadlocatie: laadlocatie.trim(),
+      loslocatie: loslocatie.trim(),
       laaddatum: laaddatum.trim(),
       losdatum: losdatum.trim(),
     });
@@ -1979,11 +2001,11 @@ function QuickAddLading({
         <QuickInput value={product} onChange={setProduct} onKeyDown={handleKeyDown} placeholder="Product" className="flex-[1_1_80px]" />
       </div>
       <div className="flex flex-wrap gap-[8px] mt-[6px]">
-        <QuickInput value={laadhaven} onChange={setLaadhaven} onKeyDown={handleKeyDown} placeholder="Laadhaven" className="flex-1" />
+        <QuickInput value={laadlocatie} onChange={setLaadlocatie} onKeyDown={handleKeyDown} placeholder="Laadlocatie" className="flex-1" />
         <QuickInput value={laaddatum} onChange={setLaaddatum} onKeyDown={handleKeyDown} placeholder="Datum laden" className="flex-1" />
       </div>
       <div className="flex flex-wrap gap-[8px] mt-[6px]">
-        <QuickInput value={loshaven} onChange={setLoshaven} onKeyDown={handleKeyDown} placeholder="Loshaven" className="flex-1" />
+        <QuickInput value={loslocatie} onChange={setLoslocatie} onKeyDown={handleKeyDown} placeholder="Loslocatie" className="flex-1" />
         <QuickInput value={losdatum} onChange={setLosdatum} onKeyDown={handleKeyDown} placeholder="Datum lossen" className="flex-1" />
       </div>
       <div className="flex items-center gap-[8px] mt-[8px]">

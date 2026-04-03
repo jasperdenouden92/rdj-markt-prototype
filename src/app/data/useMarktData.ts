@@ -80,8 +80,10 @@ function getInitials(naam: string): string {
   return naam.split(" ").map(w => w[0]).filter(Boolean).slice(0, 2).join("").toUpperCase();
 }
 
-function formatTonnage(t: number): string {
-  return t >= 1000 ? `${(t / 1000).toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ".")}.000` : `${t}`;
+function formatTonnage(t: number | { min: number; max: number }): string {
+  const fmt = (n: number) => n >= 1000 ? `${(n / 1000).toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ".")}.000` : `${n}`;
+  if (typeof t === "object") return `${fmt(t.min)}–${fmt(t.max)}`;
+  return fmt(t);
 }
 
 function formatDate(d: string | null | undefined): string {
@@ -104,6 +106,7 @@ function formatDate(d: string | null | undefined): string {
 export interface InboxLadingRow {
   id: string;
   title: string;
+  tonnage: string;
   relation: string;
   relationLink: string;
   loadLocation: string;
@@ -141,8 +144,8 @@ export function useInboxLadingen() {
         const soort = maps.ladingSoorten.get(item.ladingSoortId);
         const subsoort = maps.ladingSubsoorten.get(item.subsoortId);
         const relatie = maps.relaties.get(item.relatieId);
-        const laadhaven = maps.havens.get(item.laadhavenId);
-        const loshaven = maps.havens.get(item.loshavenId);
+        const laadlocatie = maps.havens.get(item.laadlocatieId);
+        const loslocatie = maps.havens.get(item.loslocatieId);
         const bron = maps.bronnen.get(item.bronId);
         const eigenaar = item.eigenaarId ? maps.gebruikers.get(item.eigenaarId) : null;
 
@@ -154,18 +157,18 @@ export function useInboxLadingen() {
         const soortLabel = subsoort
           ? `${soort?.naam || ""} (${subsoort.naam})`
           : soort?.naam || "";
-        const title = item.opmerking
-          ? `${item.opmerking} ton ${soortLabel}`
-          : `${formatTonnage(item.tonnage)} ton ${soortLabel}`;
+        const title = item.opmerking || soortLabel;
+        const tonnage = `${formatTonnage(item.tonnage)} ton`;
 
         return {
           id: item.id,
           title,
+          tonnage,
           relation: relatie?.naam || "",
           relationLink: contactPersoon?.naam || "",
-          loadLocation: laadhaven?.naam || "",
+          loadLocation: laadlocatie?.naam || "",
           loadDate: formatDate((item as any).laaddatum),
-          unloadLocation: loshaven?.naam || "Af te stemmen",
+          unloadLocation: loslocatie?.naam || "Af te stemmen",
           unloadDate: (item as any).losdatum ? formatDate((item as any).losdatum) : "",
           source: bron?.titel || "",
           sourceDate: bron?.datum ? formatDate(bron.datum) : "",
@@ -371,8 +374,8 @@ export function useBevrachtingData() {
         const soort = partij ? maps.ladingSoorten.get(partij.ladingSoortId) : null;
         const subsoort = partij ? maps.ladingSubsoorten.get(partij.subsoortId) : null;
         const ex = partij?.exId ? maps.exen.get(partij.exId) : null;
-        const laadhaven = partij ? maps.havens.get(partij.laadhavenId) : null;
-        const loshaven = subpartij ? maps.havens.get(subpartij.loshavenId) : null;
+        const laadlocatie = partij ? maps.havens.get(partij.laadlocatieId) : null;
+        const loslocatie = subpartij ? maps.havens.get(subpartij.loslocatieId) : null;
 
         const soortLabel = subsoort ? `${soort?.naam || ""} (${subsoort.naam})` : soort?.naam || "";
         const cargoStr = `${formatTonnage(item.tonnage)} ton ${soortLabel}`;
@@ -396,8 +399,8 @@ export function useBevrachtingData() {
           status,
           cargo: cargoStr,
           weight: cargoStr,
-          from: laadhaven?.naam || "",
-          to: loshaven?.naam || "",
+          from: laadlocatie?.naam || "",
+          to: loslocatie?.naam || "",
           fromDate: formatDate(subpartij?.laaddatum),
           toDate: subpartij?.losdatum ? formatDate(subpartij.losdatum) : "",
           matches: 0,

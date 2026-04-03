@@ -43,11 +43,11 @@ function isDateExpired(dateStr?: string, daysThreshold = 14): boolean {
 
 function getRouteSummary(contract: Contract): string {
   if (contract.type === "spot") {
-    return [contract.laadhavenNaam, contract.loshavenNaam].filter(Boolean).join(" → ") || "—";
+    return [contract.laadlocatieNaam, contract.loslocatieNaam].filter(Boolean).join(" → ") || "—";
   }
   if (contract.routes && contract.routes.length > 0) {
     const first = contract.routes[0];
-    const label = [first.laadhavenNaam, first.loshavenNaam].filter(Boolean).join(" → ");
+    const label = [first.laadlocatieNaam, first.loslocatieNaam].filter(Boolean).join(" → ");
     return contract.routes.length > 1 ? `${label} +${contract.routes.length - 1}` : label;
   }
   return "—";

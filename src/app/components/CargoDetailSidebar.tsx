@@ -14,11 +14,11 @@ interface CargoDetailSidebarProps {
     soortelijkGewicht: string;
     inhoud: string;
     bijzonderheden: string[];
-    laadhaven: string;
-    laadhavenCity: string;
+    laadlocatie: string;
+    laadlocatieCity: string;
     laaddatum: string;
-    loshaven: string;
-    loshavenCity: string;
+    loslocatie: string;
+    loslocatieCity: string;
     losdatum: string;
     relatie: string;
     contactpersoon: string;
@@ -79,16 +79,16 @@ export default function CargoDetailSidebar({
             editable
           />
           <DetailRow
-            label="Laadhaven"
-            value={cargoData.laadhaven}
-            subtext={cargoData.laadhavenCity}
+            label="Laadlocatie"
+            value={cargoData.laadlocatie}
+            subtext={cargoData.laadlocatieCity}
             editable
           />
           <DetailRow label="Laaddatum" value={cargoData.laaddatum} editable />
           <DetailRow
-            label="Loshaven"
-            value={cargoData.loshaven}
-            subtext={cargoData.loshavenCity}
+            label="Loslocatie"
+            value={cargoData.loslocatie}
+            subtext={cargoData.loslocatieCity}
             editable
           />
           <DetailRow label="Losdatum" value={cargoData.losdatum} editable />

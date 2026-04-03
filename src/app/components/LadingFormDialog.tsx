@@ -42,12 +42,12 @@ export default function LadingFormDialog({ onSave, onClose }: LadingFormDialogPr
   const [notitie, setNotitie] = useState("");
 
   // Step 2 fields
-  const [laadhaven, setLaadhaven] = useState("");
+  const [laadlocatie, setLaadlocatie] = useState("");
   const [laadterminal, setLaadterminal] = useState("");
   const [aankomst, setAankomst] = useState("");
   const [startLaden, setStartLaden] = useState("");
   const [enkeleBestemming, setEnkeleBestemming] = useState(true);
-  const [loshaven, setLoshaven] = useState("");
+  const [loslocatie, setLoslocatie] = useState("");
   const [losterminal, setLosterminal] = useState("");
   const [lostermijn, setLostermijn] = useState("");
   const [startLossen, setStartLossen] = useState("");
@@ -188,8 +188,8 @@ export default function LadingFormDialog({ onSave, onClose }: LadingFormDialogPr
       ladingSoortId: ladingSoortId || undefined,
       subsoortId: subsoortId || undefined,
       titel,
-      laadhaven: laadhaven.trim() || "—",
-      loshaven: loshaven.trim() || "—",
+      laadlocatie: laadlocatie.trim() || "—",
+      loslocatie: loslocatie.trim() || "—",
       tonnage: tonnage.trim() || "—",
       product: ls?.naam || "—",
       laaddatum: aankomst ? aankomst.split("T")[0] : new Date().toISOString().split("T")[0],
@@ -531,13 +531,13 @@ export default function LadingFormDialog({ onSave, onClose }: LadingFormDialogPr
 
         {step === 2 && (
           <form onSubmit={handleSubmit} className="flex flex-col gap-[20px] pt-[8px]">
-            {/* Laadhaven + Laadterminal */}
+            {/* Laadlocatie + Laadterminal */}
             <div className="grid grid-cols-2 gap-[12px]">
               <div className="flex flex-col gap-[6px]">
-                <Label className="font-sans font-bold text-[14px] text-[#344054]">Laadhaven</Label>
+                <Label className="font-sans font-bold text-[14px] text-[#344054]">Laadlocatie</Label>
                 <Input
-                  value={laadhaven}
-                  onChange={(e) => setLaadhaven(e.target.value)}
+                  value={laadlocatie}
+                  onChange={(e) => setLaadlocatie(e.target.value)}
                   placeholder="Bijv. IJmuiden Buitenspuikanaal"
                   autoFocus
                 />
@@ -587,15 +587,15 @@ export default function LadingFormDialog({ onSave, onClose }: LadingFormDialogPr
               <span className="font-sans text-[14px] text-rdj-text-primary">Partij heeft maar 1 bestemming</span>
             </label>
 
-            {/* Loshaven + Losterminal — shown when NOT enkelebestemming or always? In the design it expands. Let's show when checkbox is checked (has 1 destination) */}
+            {/* Loslocatie + Losterminal — shown when NOT enkelebestemming or always? In the design it expands. Let's show when checkbox is checked (has 1 destination) */}
             <div className="grid grid-cols-2 gap-[12px]">
               <div className="flex flex-col gap-[6px]">
                 <Label className="font-sans font-bold text-[14px] text-[#344054]">
-                  Loshaven <span className="font-normal text-rdj-text-tertiary">(optioneel)</span>
+                  Loslocatie <span className="font-normal text-rdj-text-tertiary">(optioneel)</span>
                 </Label>
                 <Input
-                  value={loshaven}
-                  onChange={(e) => setLoshaven(e.target.value)}
+                  value={loslocatie}
+                  onChange={(e) => setLoslocatie(e.target.value)}
                   placeholder="Bijv. IJmuiden Buitenspuikanaal"
                 />
               </div>

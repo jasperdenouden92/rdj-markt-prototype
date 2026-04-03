@@ -2521,7 +2521,7 @@ function MessageBubble() {
     <div className="relative rounded-bl-[8px] rounded-br-[8px] rounded-tr-[8px] shrink-0 w-full" data-name="Message bubble">
       <div aria-hidden="true" className="absolute border border-[#eaecf0] border-solid inset-0 pointer-events-none rounded-bl-[8px] rounded-br-[8px] rounded-tr-[8px] shadow-[0px_1px_2px_0px_rgba(16,24,40,0.05)]" />
       <div className="content-stretch flex items-start px-[12px] py-[10px] relative w-full">
-        <p className="flex-[1_0_0] font-sans font-normal leading-[20px] min-h-px min-w-px relative text-[#344054] text-[14px]">“Gebeld met de laadhaven. Loopt volgens planning.”</p>
+        <p className="flex-[1_0_0] font-sans font-normal leading-[20px] min-h-px min-w-px relative text-[#344054] text-[14px]">“Gebeld met de laadlocatie. Loopt volgens planning.”</p>
       </div>
     </div>
   );
@@ -2967,7 +2967,7 @@ function Row6() {
 function Row7() {
   return (
     <div className="content-stretch flex gap-[16px] items-center relative shrink-0 w-full" data-name="Row">
-      <p className="font-sans font-normal leading-[20px] relative shrink-0 text-[#475467] text-[14px] w-[144px]">Laadhaven</p>
+      <p className="font-sans font-normal leading-[20px] relative shrink-0 text-[#475467] text-[14px] w-[144px]">Laadlocatie</p>
       <div className="bg-white flex-[1_0_0] min-h-px min-w-px relative rounded-[6px]" data-name="Label">
         <div className="flex flex-row items-center size-full">
           <div className="content-stretch flex items-center pl-[12px] pr-[6px] py-[8px] relative w-full">
@@ -3005,7 +3005,7 @@ function Row8() {
 function Row9() {
   return (
     <div className="content-stretch flex gap-[16px] items-center relative shrink-0 w-full" data-name="Row">
-      <p className="font-sans font-normal leading-[20px] relative shrink-0 text-[#475467] text-[14px] w-[144px]">Loshaven</p>
+      <p className="font-sans font-normal leading-[20px] relative shrink-0 text-[#475467] text-[14px] w-[144px]">Loslocatie</p>
       <div className="bg-white flex-[1_0_0] min-h-px min-w-px relative rounded-[6px]" data-name="Label">
         <div className="flex flex-row items-center size-full">
           <div className="content-stretch flex items-center pl-[12px] pr-[6px] py-[8px] relative w-full">

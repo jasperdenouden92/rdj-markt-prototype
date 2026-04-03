@@ -21,6 +21,7 @@ type InboxSubView = 'te-beoordelen' | 'interessant' | 'archief';
 interface InboxItem {
   id: string;
   title: string;
+  tonnage?: string;
   relation: string;
   relationLink: string;
   loadLocation: string;
@@ -293,6 +294,7 @@ export default function Inbox() {
   const inboxItems = localItems ?? apiItems.map(a => ({
     id: a.id,
     title: a.title,
+    tonnage: a.tonnage,
     relation: a.relation,
     relationLink: a.relationLink,
     loadLocation: a.loadLocation,
@@ -363,9 +365,10 @@ export default function Inbox() {
   const columns: Column[] = [
     { key: 'ladingSoort', header: 'Lading', type: 'leading-text', maxWidth: 'max-w-[480px]' },
     { key: 'tonnage', header: 'Tonnage', type: 'text', width: 'w-[120px]', align: 'right' },
-    { key: 'relation', header: 'Relatie', type: 'text', width: 'w-[180px]', textColor: 'text-rdj-text-brand', subtextKey: 'relationLink', onClickKey: 'onRelatieClick' },
     { key: 'loadLocation', header: 'Laden', type: 'text', width: 'w-[180px]', editable: true },
     { key: 'unloadLocation', header: 'Lossen', type: 'text', width: 'w-[180px]', editable: true },
+    { key: 'relation', header: 'Relatie', type: 'text', width: 'w-[180px]', textColor: 'text-rdj-text-brand', subtextKey: 'relationLink', onClickKey: 'onRelatieClick' },
+    { key: 'source', header: 'Bron', type: 'text', width: 'w-[180px]', subtextKey: 'sourceDate', featuredIconKey: 'sourceIcon', featuredIconVariantKey: 'sourceIconVariant', featuredIconDefaultVariant: 'grey' as const },
     {
       key: 'matches', header: 'Matches', type: 'custom', width: 'w-[120px]',
       render: (row) => {
@@ -403,19 +406,21 @@ export default function Inbox() {
   ];
 
   const tableData = filteredItems.map(item => {
-    // Split title like "2.500 ton Graan (0412)" into tonnage and lading soort
-    const tonnageMatch = item.title.match(/^([\d.,\s\-]+ton)\s+(.+)$/);
-    const tonnage = tonnageMatch ? tonnageMatch[1].trim() : '';
-    const ladingSoort = tonnageMatch ? tonnageMatch[2] : item.title;
     return {
     id: item.id,
-    ladingSoort,
-    tonnage,
+    ladingSoort: item.title,
+    tonnage: item.tonnage,
     relation: item.relation,
     relationLink: item.relationLink,
     onRelatieClick: () => { const rel = mockRelaties.find(r => r.naam === item.relation); if (rel) navigate(`/crm/relatie/${rel.id}`); },
     loadLocation: item.loadLocation,
     unloadLocation: item.unloadLocation,
+    source: item.source,
+    sourceDate: item.sourceDate,
+    sourceIcon: item.source === 'Handmatig ingevoerd'
+      ? <svg fill="none" viewBox="0 0 14.219 14.219"><path d="M0.917365 11.296C0.947994 11.0204 0.963308 10.8826 1.00501 10.7537C1.04201 10.6394 1.09429 10.5307 1.16043 10.4304C1.23497 10.3173 1.33304 10.2193 1.52916 10.0231L10.3334 1.21895C11.0697 0.482571 12.2636 0.482572 13 1.21895C13.7364 1.95533 13.7364 3.14924 13 3.88562L4.19582 12.6898C3.9997 12.8859 3.90164 12.984 3.7886 13.0585C3.6883 13.1247 3.57953 13.1769 3.46524 13.2139C3.33641 13.2556 3.19858 13.271 2.92292 13.3016L0.666671 13.5523L0.917365 11.296Z" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.33333"/></svg>
+      : <svg fill="none" viewBox="0 0 14.6667 12.0001"><path d="M1.00001 6.00009H3.25466C3.71146 6.00009 4.12906 6.25818 4.33335 6.66676C4.53764 7.07533 4.95523 7.33342 5.41204 7.33342H9.25466C9.71146 7.33342 10.1291 7.07533 10.3333 6.66676C10.5376 6.25818 10.9552 6.00009 11.412 6.00009H13.6667M5.31106 0.666756H9.35564C10.0736 0.666756 10.4325 0.666756 10.7494 0.776065C11.0297 0.87273 11.2849 1.03049 11.4967 1.23792C11.7362 1.47249 11.8967 1.79356 12.2178 2.43567L13.6622 5.32442C13.7882 5.57641 13.8512 5.70241 13.8956 5.83445C13.9351 5.95172 13.9635 6.0724 13.9807 6.19493C14 6.33291 14 6.47377 14 6.75551V8.13342C14 9.25353 14 9.81358 13.782 10.2414C13.5903 10.6177 13.2843 10.9237 12.908 11.1154C12.4802 11.3334 11.9201 11.3334 10.8 11.3334H3.86668C2.74658 11.3334 2.18652 11.3334 1.7587 11.1154C1.38238 10.9237 1.07641 10.6177 0.884668 10.2414C0.666681 9.81358 0.666681 9.25353 0.666681 8.13342V6.75551C0.666681 6.47377 0.666681 6.33291 0.685997 6.19493C0.703151 6.0724 0.731639 5.95172 0.771094 5.83445C0.815521 5.70241 0.87852 5.57641 1.00451 5.32442L2.44889 2.43567C2.76995 1.79355 2.93048 1.47249 3.16998 1.23792C3.38177 1.03049 3.63702 0.87273 3.91727 0.776065C4.23418 0.666756 4.59314 0.666756 5.31106 0.666756Z" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.33333"/></svg>,
+    sourceIconVariant: 'grey' as const,
     matches: item.matches,
     matchType: item.matchType,
     onderhandelingen: item.onderhandelingen,
