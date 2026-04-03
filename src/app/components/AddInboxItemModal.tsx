@@ -706,8 +706,8 @@ export default function AddInboxItemModal({ isOpen, onClose, onSubmit, itemType:
             </div>
           </div>
 
-          {/* Condities (zoekcriteria) */}
-          <div className="flex flex-col gap-[10px] pt-[4px]">
+          {/* Condities (zoekcriteria) — alleen voor lading */}
+          {itemType === 'lading' && <div className="flex flex-col gap-[10px] pt-[4px]">
             <div className="flex items-center gap-[12px]">
               <p className="font-sans font-bold leading-[20px] text-[#344054] text-[14px] shrink-0">
                 Zoekcriteria
@@ -725,7 +725,7 @@ export default function AddInboxItemModal({ isOpen, onClose, onSubmit, itemType:
                 )
               )}
             </div>
-          </div>
+          </div>}
         </div>
 
         {/* Footer */}
