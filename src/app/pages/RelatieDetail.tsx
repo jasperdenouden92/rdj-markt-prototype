@@ -274,6 +274,7 @@ export default function RelatieDetail() {
         onderhandelingen: l.onderhandelingen,
         statusLabel: s.label,
         statusVariant: s.variant,
+        detailUrl: `/crm/relatie/${id}/lading/${l.id}`,
       };
     });
 
@@ -305,6 +306,7 @@ export default function RelatieDetail() {
         bronBadgeVariant: "brand",
         ownerInitials: initials,
         priority: l.prioriteit,
+        detailUrl: `/markt/inbox/lading/${l.id}`,
       };
     });
 
@@ -558,7 +560,7 @@ export default function RelatieDetail() {
                           <Table
                             columns={sortedLadingenColumns}
                             data={sortedLadingenData}
-                            onRowClick={(row) => navigate(`/crm/relatie/${id}/lading/${row.id}`)}
+                            onRowClick={(row) => navigate(row.detailUrl as string)}
                           />
                         )}
                       </div>
