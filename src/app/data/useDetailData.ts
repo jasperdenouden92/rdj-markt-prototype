@@ -291,13 +291,16 @@ export function useLadingMarktDetail(id: string | undefined) {
           }) || null;
         } catch { /* no eigen data available */ }
 
+        const tonnageIsRange = typeof item.tonnage === "object";
         const resolved: ResolvedLadingMarkt = {
           raw: item,
-          tonnage: `${fmt(item.tonnage)} t`,
+          tonnage: tonnageIsRange
+            ? `${formatTonnage(item.tonnage)} t`
+            : `${fmt(item.tonnage as number)} t`,
           lading: soort?.naam || "—",
           subsoort: subsoort?.naam || "—",
           soortelijkGewicht: soort?.soortelijkGewicht ? `${soort.soortelijkGewicht.toFixed(2).replace(".", ",")} t/m³` : "—",
-          inhoud: item.tonnage && soort?.soortelijkGewicht ? `${Math.round(item.tonnage / soort.soortelijkGewicht).toLocaleString("nl-NL")} m³` : "—",
+          inhoud: !tonnageIsRange && item.tonnage && soort?.soortelijkGewicht ? `${Math.round((item.tonnage as number) / soort.soortelijkGewicht).toLocaleString("nl-NL")} m³` : "—",
           bijzonderheden: bijz,
           laadlocatie: laadlocatie?.naam || "—",
           laadlocatieCity: "",
@@ -888,8 +891,10 @@ export function useBevrachtingVaartuigSummary(id: string | undefined) {
   return { data, detectedType, loading, error };
 }
 
-function formatTonnage(t: number): string {
-  return t >= 1000 ? `${(t / 1000).toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ".")}.000` : `${t}`;
+function formatTonnage(t: number | { min: number; max: number }): string {
+  const fmtNum = (n: number) => n >= 1000 ? `${(n / 1000).toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ".")}.000` : `${n}`;
+  if (typeof t === "object") return `${fmtNum(t.min)}–${fmtNum(t.max)}`;
+  return fmtNum(t);
 }
 
 function formatDate(d: string): string {

@@ -21,6 +21,7 @@ type InboxSubView = 'te-beoordelen' | 'interessant' | 'archief';
 interface InboxItem {
   id: string;
   title: string;
+  tonnage?: string;
   relation: string;
   relationLink: string;
   loadLocation: string;
@@ -293,6 +294,7 @@ export default function Inbox() {
   const inboxItems = localItems ?? apiItems.map(a => ({
     id: a.id,
     title: a.title,
+    tonnage: a.tonnage,
     relation: a.relation,
     relationLink: a.relationLink,
     loadLocation: a.loadLocation,
@@ -403,14 +405,10 @@ export default function Inbox() {
   ];
 
   const tableData = filteredItems.map(item => {
-    // Split title like "2.500 ton Graan (0412)" into tonnage and lading soort
-    const tonnageMatch = item.title.match(/^([\d.,\s\-]+ton)\s+(.+)$/);
-    const tonnage = tonnageMatch ? tonnageMatch[1].trim() : '';
-    const ladingSoort = tonnageMatch ? tonnageMatch[2] : item.title;
     return {
     id: item.id,
-    ladingSoort,
-    tonnage,
+    ladingSoort: item.title,
+    tonnage: item.tonnage,
     relation: item.relation,
     relationLink: item.relationLink,
     onRelatieClick: () => { const rel = mockRelaties.find(r => r.naam === item.relation); if (rel) navigate(`/crm/relatie/${rel.id}`); },

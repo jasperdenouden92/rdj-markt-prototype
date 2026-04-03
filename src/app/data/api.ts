@@ -99,7 +99,7 @@ export interface Gebruiker {
 export interface LadingMarkt {
   id: string;
   opmerking: string;
-  tonnage: number;
+  tonnage: number | { min: number; max: number };
   ladingSoortId: string;
   subsoortId: string;
   bijzonderheidIds: string[];

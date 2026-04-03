@@ -208,8 +208,8 @@ export default function ConversationDialog({
           const soort = soortMap.get(lm.ladingSoortId)?.naam || "";
           return {
             id: lm.id,
-            title: soort || `${lm.tonnage.toLocaleString("nl-NL")} ton`,
-            subtitle: `${lm.tonnage.toLocaleString("nl-NL")} ton`,
+            title: soort || `${typeof lm.tonnage === "object" ? `${lm.tonnage.min.toLocaleString("nl-NL")}–${lm.tonnage.max.toLocaleString("nl-NL")}` : lm.tonnage.toLocaleString("nl-NL")} ton`,
+            subtitle: `${typeof lm.tonnage === "object" ? `${lm.tonnage.min.toLocaleString("nl-NL")}–${lm.tonnage.max.toLocaleString("nl-NL")}` : lm.tonnage.toLocaleString("nl-NL")} ton`,
             meta: "",
             source: "markt" as const,
             kind: "lading" as const,
