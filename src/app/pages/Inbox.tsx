@@ -14,6 +14,7 @@ import useTableSort from "../components/useTableSort";
 import svgPaths from "../../imports/svg-5yigdc067t";
 import { useInboxLadingen, updateLadingMarktPriority } from "../data/useMarktData";
 import { mockRelaties } from "../data/mock-relatie-data";
+import { buildRelatieHoverContent } from "../components/RelatieHoverCard";
 import * as apiClient from "../data/api";
 
 type InboxSubView = 'te-beoordelen' | 'interessant' | 'archief';
@@ -367,7 +368,7 @@ export default function Inbox() {
     { key: 'tonnage', header: 'Tonnage', type: 'text', width: 'w-[120px]', align: 'right' },
     { key: 'loadLocation', header: 'Laden', type: 'text', width: 'w-[180px]', editable: true, subtextKey: 'loadDate' },
     { key: 'unloadLocation', header: 'Lossen', type: 'text', width: 'w-[180px]', editable: true, subtextKey: 'unloadDate' },
-    { key: 'relation', header: 'Relatie', type: 'text', width: 'w-[180px]', textColor: 'text-rdj-text-brand', subtextKey: 'relationLink', onClickKey: 'onRelatieClick' },
+    { key: 'relation', header: 'Relatie', type: 'text', width: 'w-[180px]', textColor: 'text-rdj-text-brand', subtextKey: 'relationLink', onClickKey: 'onRelatieClick', hoverContentKey: 'relatieHoverContent' },
     { key: 'source', header: 'Bron', type: 'text', width: 'w-[180px]', subtextKey: 'sourceDate', featuredIconKey: 'sourceIcon', featuredIconVariantKey: 'sourceIconVariant', featuredIconDefaultVariant: 'grey' as const },
     {
       key: 'matches', header: 'Matches', type: 'custom', width: 'w-[120px]',
@@ -413,6 +414,7 @@ export default function Inbox() {
     relation: item.relation,
     relationLink: item.relationLink,
     onRelatieClick: () => { const rel = mockRelaties.find(r => r.naam === item.relation); if (rel) navigate(`/crm/relatie/${rel.id}`); },
+    relatieHoverContent: buildRelatieHoverContent(item.relation),
     loadLocation: item.loadLocation,
     loadDate: item.loadDate,
     unloadLocation: item.unloadLocation,

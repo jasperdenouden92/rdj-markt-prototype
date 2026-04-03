@@ -9,6 +9,7 @@ import { partijen, subpartijen, exen } from "../data/entities/partijen";
 import { ladingenEigen } from "../data/entities/ladingen-eigen";
 import { havens } from "../data/entities/havens";
 import { mockLadingSoorten, mockBijzonderheden } from "../data/mock-contract-data";
+import RelatieHoverCard, { buildRelatieHoverContentById } from "./RelatieHoverCard";
 
 /**
  * LadingEigenSidebar — detail sidebar for an eigen-lading.
@@ -109,6 +110,11 @@ export default function LadingEigenSidebar({ id, onEdit, collapsed }: LadingEige
       .map((b) => b!.naam);
     return { subpartij: s, laadlocatie, loslocatie, bijzonderheden: bijz };
   }, [data]);
+
+  const relatieHoverContent = useMemo(
+    () => (data ? buildRelatieHoverContentById(data.relatieId) : undefined),
+    [data],
+  );
 
   // Derive lot status
   const lotStatus = useMemo(() => {
@@ -350,7 +356,13 @@ export default function LadingEigenSidebar({ id, onEdit, collapsed }: LadingEige
             />
             <DetailRow label="Laden" value={data.laadlocatie} subtext={data.laaddatum} />
             <DetailRow label="Lossen" value={data.loslocatie} subtext={data.losdatum} />
-            <DetailRow label="Relatie" type="linked" value={data.opdrachtgever} onClick={() => navigate(`/crm/relatie/${data.relatieId}`)} />
+            <DetailRow
+              label="Relatie"
+              type="linked"
+              value={data.opdrachtgever}
+              onClick={() => navigate(`/crm/relatie/${data.relatieId}`)}
+              hoverContent={relatieHoverContent}
+            />
           </DetailsSidebarSection>
 
           {/* Divider */}
@@ -540,3 +552,4 @@ function SubpartijHoverCard({ title, status, laadlocatie, loslocatie, laaddatum,
     </div>
   );
 }
+
