@@ -788,6 +788,16 @@ export default function ConversationDialog({
         <div className="flex flex-1 min-h-0">
           {/* Left panel */}
           <div className="w-[50%] flex flex-col border-r border-rdj-border-secondary min-w-0">
+            <div className="px-[20px] py-[10px] border-b border-rdj-border-secondary bg-[#f9fafb] flex items-center justify-between gap-[12px]">
+              <div>
+                <p className="font-sans font-bold text-[13px] leading-[18px] text-rdj-text-secondary uppercase tracking-wide">
+                  {leftLabel}
+                </p>
+                <p className="font-sans font-normal text-[12px] leading-[16px] text-rdj-text-tertiary mt-[2px]">
+                  {leftItems.length} resultaten
+                </p>
+              </div>
+            </div>
             <div className="flex-1 overflow-y-auto divide-y divide-rdj-border-secondary">
               {leftItems.length === 0 && !addingItem ? (
                 <p className="font-sans font-normal text-[14px] text-rdj-text-tertiary py-[20px] text-center">
