@@ -469,10 +469,10 @@ export default function ConversationDialog({
     },
     "markt-ladingen": {
       leftItems: marktLadingen,
-      rightItems: showMarktVaartuigen ? [...eigenVaartuigen, ...marktVaartuigen] : eigenVaartuigen,
+      rightItems: relatieVaartuigenItems,
       leftLabel: "Marktladingen",
-      rightLabel: "Onze vaartuigen",
-      matchLabel: "Matches met onze vaartuigen",
+      rightLabel: `Vaartuigen ${relatieName}`,
+      matchLabel: `Matches met vaartuigen ${relatieName}`,
       matchMode: "no-buttons",
     },
   };
@@ -869,7 +869,7 @@ export default function ConversationDialog({
                       </p>
                     )}
                   </div>
-                  {activeTab !== "eigen-ladingen" && (
+                  {activeTab === "ladingen-relatie" && (
                     <MarktToggle
                       label="Marktvaartuigen"
                       checked={showMarktVaartuigen}
