@@ -28,10 +28,10 @@ import imgAvatar4 from "../../assets/9e45f45f537bea4bf653bc0307471e5ff5545f63.pn
 
 /* ── Mock vessel matches (ladingen die passen bij dit vaartuig) ── */
 const vesselMatches = [
-  { id: 'VM001', cargo: '3.000 ton Houtpellets (DSIT)', exNaam: 'Houtpellets Salzgitter', company: 'Provaart Logistics BV', contactPersoon: 'Jan de Vries', laadLocatie: 'Salzgitter Stichkanal', laadDatum: 'Vr 14 Mrt 10:00', losLocatie: 'Hamburg Veddelkanal', losDatum: 'Di 18 Mrt 14:00', matchPercentage: 92, isEigen: true, source: 'Laadplanning', sourceDate: 'Do 6 Mrt 12:44' },
-  { id: 'VM002', cargo: '3.000 ton Staal', company: 'Janlow B.V.', contactPersoon: 'Pieter Jansen', laadLocatie: 'Dordrecht', laadDatum: 'Za 15 Mrt 06:00', losLocatie: 'Antwerpen', losDatum: 'Ma 17 Mrt 14:00', matchPercentage: 85, isEigen: false, source: 'Automatische feed', sourceDate: 'Do 6 Mrt 15:45' },
-  { id: 'VM003', cargo: '3.500 ton Sojabonen', company: 'Cargill N.V.', contactPersoon: 'Sophie van Dam', laadLocatie: 'Rotterdam Botlek', laadDatum: 'Zo 16 Mrt 08:00', losLocatie: 'Basel', losDatum: 'Do 20 Mrt', matchPercentage: 78, isEigen: false, source: 'Automatische feed', sourceDate: 'Do 6 Mrt 10:30' },
-  { id: 'VM004', cargo: '3.000 ton Graan', company: 'Provaart Logistics BV', contactPersoon: 'Maria Bakker', laadLocatie: 'Rotterdam', laadDatum: 'Di 18 Mrt 08:00', losLocatie: 'Krefeld', losDatum: 'Vr 21 Mrt', matchPercentage: 65, isEigen: false, source: 'Automatische feed', sourceDate: 'Vr 7 Mrt 09:15' },
+  { id: 'VM001', ladingId: 'rl-001', cargo: '3.000 ton Houtpellets (DSIT)', exNaam: 'Houtpellets Salzgitter', company: 'Provaart Logistics BV', contactPersoon: 'Jan de Vries', laadLocatie: 'Salzgitter Stichkanal', laadDatum: 'Vr 14 Mrt 10:00', losLocatie: 'Hamburg Veddelkanal', losDatum: 'Di 18 Mrt 14:00', matchPercentage: 92, isEigen: true, source: 'Laadplanning', sourceDate: 'Do 6 Mrt 12:44' },
+  { id: 'VM002', ladingId: 'rl-004', cargo: '3.000 ton Staal', company: 'Janlow B.V.', contactPersoon: 'Pieter Jansen', laadLocatie: 'Dordrecht', laadDatum: 'Za 15 Mrt 06:00', losLocatie: 'Antwerpen', losDatum: 'Ma 17 Mrt 14:00', matchPercentage: 85, isEigen: false, source: 'Automatische feed', sourceDate: 'Do 6 Mrt 15:45' },
+  { id: 'VM003', ladingId: 'rl-006', cargo: '3.500 ton Sojabonen', company: 'Cargill N.V.', contactPersoon: 'Sophie van Dam', laadLocatie: 'Rotterdam Botlek', laadDatum: 'Zo 16 Mrt 08:00', losLocatie: 'Basel', losDatum: 'Do 20 Mrt', matchPercentage: 78, isEigen: false, source: 'Automatische feed', sourceDate: 'Do 6 Mrt 10:30' },
+  { id: 'VM004', ladingId: 'rl-002', cargo: '3.000 ton Graan', company: 'Provaart Logistics BV', contactPersoon: 'Maria Bakker', laadLocatie: 'Rotterdam', laadDatum: 'Di 18 Mrt 08:00', losLocatie: 'Krefeld', losDatum: 'Vr 21 Mrt', matchPercentage: 65, isEigen: false, source: 'Automatische feed', sourceDate: 'Vr 7 Mrt 09:15' },
 ];
 
 /* ── Mock onderhandelingen ── */
@@ -112,7 +112,7 @@ export default function VaartuigDetail() {
   const [hoveredRow, setHoveredRow] = useState<string | null>(null);
   const [selectedNegotiation, setSelectedNegotiation] = useState<{ id: string; status: string; bron: string; relatieName?: string; bemiddeling?: { inkoopRelatie: string; verkoopRelatie: string } } | null>(null);
   const setActiveTab = (tab: typeof activeTab) => { setActiveTabRaw(tab); setSelectedNegotiation(null); };
-  const [conversationDialog, setConversationDialog] = useState<{ relatieId: string; relatieName: string; matchName?: string } | null>(null);
+  const [conversationDialog, setConversationDialog] = useState<{ relatieId: string; relatieName: string; matchName?: string; matchLadingId?: string; isMatch?: boolean } | null>(null);
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [matchFilter, setMatchFilter] = useState("Alles");
   const [negFilter, setNegFilter] = useState("Actief");
@@ -356,18 +356,24 @@ export default function VaartuigDetail() {
                             onRowHover={setHoveredRow}
                             onRowClick={(row) => {
                               const relatie = mockRelaties.find(r => r.naam === row.company);
+                              const match = vesselMatches.find(m => m.id === row.id);
                               setConversationDialog({
                                 relatieId: relatie?.id || "rel-001",
                                 relatieName: (row.company as string) || "Onbekend",
                                 matchName: row.cargoTitle as string,
+                                matchLadingId: match?.ladingId,
+                                isMatch: true,
                               });
                             }}
                             onRowAction={(row) => {
                               const relatie = mockRelaties.find(r => r.naam === row.company);
+                              const match = vesselMatches.find(m => m.id === row.id);
                               setConversationDialog({
                                 relatieId: relatie?.id || "rel-001",
                                 relatieName: (row.company as string) || "Onbekend",
                                 matchName: row.cargoTitle as string,
+                                matchLadingId: match?.ladingId,
+                                isMatch: true,
                               });
                             }}
                           />
@@ -460,8 +466,10 @@ export default function VaartuigDetail() {
           relatieId={conversationDialog.relatieId}
           relatieName={conversationDialog.relatieName}
           preSelectedMatchName={conversationDialog.matchName}
-          preSelectedItemId={id}
-          preSelectedItemType="vaartuig"
+          preSelectedItemId={conversationDialog.isMatch ? undefined : id}
+          preSelectedLeftId={conversationDialog.isMatch ? conversationDialog.matchLadingId : undefined}
+          preSelectedOriginId={conversationDialog.isMatch ? id : undefined}
+          preSelectedItemType={conversationDialog.isMatch ? "relatie-lading" : "vaartuig"}
           onClose={() => setConversationDialog(null)}
         />
       )}
