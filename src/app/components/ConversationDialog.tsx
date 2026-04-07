@@ -75,6 +75,7 @@ interface ConversationDialogProps {
   preSelectedItemId?: string;
   preSelectedItemType?: "lading" | "vaartuig" | "relatie-vaartuig" | "relatie-lading";
   preSelectedMatchName?: string;
+  preSelectedLeftId?: string;
   preSelectedOriginId?: string;
   preSelectedRightName?: string;
   onClose: () => void;
@@ -89,6 +90,7 @@ export default function ConversationDialog({
   preSelectedItemId,
   preSelectedItemType,
   preSelectedMatchName,
+  preSelectedLeftId,
   preSelectedOriginId,
   preSelectedRightName,
   onClose,
@@ -123,6 +125,7 @@ export default function ConversationDialog({
 
   const initialTabRef = useRef(true);
   const matchAppliedRef = useRef(false);
+  const leftIdAppliedRef = useRef(false);
   const skipNextTabClearRef = useRef(false);
   const originAppliedRef = useRef(false);
 
@@ -386,6 +389,28 @@ export default function ConversationDialog({
     }
   }, [dataLoaded, preSelectedMatchName, preSelectedItemId, preSelectedItemType, relatieVaartuigenItems, eigenVaartuigen, relatieLadingenItems, eigenLadingen, marktLadingen, marktVaartuigen]);
 
+  // Select left panel item directly by ID (takes precedence over name-based matching)
+  useEffect(() => {
+    if (!dataLoaded || leftIdAppliedRef.current || !preSelectedLeftId) return;
+    const searchOrder: { list: DisplayItem[]; tab: TabValue }[] = [
+      { list: relatieLadingenItems, tab: "ladingen-relatie" },
+      { list: eigenLadingen, tab: "eigen-ladingen" },
+      { list: marktLadingen, tab: "markt-ladingen" },
+    ];
+    for (const { list, tab } of searchOrder) {
+      const found = list.find(item => item.id === preSelectedLeftId);
+      if (found) {
+        leftIdAppliedRef.current = true;
+        matchAppliedRef.current = true;
+        skipNextTabClearRef.current = true;
+        setActiveTab(tab);
+        setSelectedLeftId(found.id);
+        setExpandedConditions(new Set([found.id]));
+        return;
+      }
+    }
+  }, [dataLoaded, preSelectedLeftId, relatieLadingenItems, eigenLadingen, marktLadingen]);
+
   // After vessel is selected, expand origin cargo conditions on the right panel
   useEffect(() => {
     if (!preSelectedOriginId || originAppliedRef.current || !selectedLeftId || !dataLoaded) return;
@@ -584,21 +609,17 @@ export default function ConversationDialog({
   const matchItems = getMatchItems();
   const showMatches = selectedLeftId !== null && matchItems.length > 0;
 
-  // Bemiddeling logic: auto-detect when markt items are involved
   const selectedLeftItem = selectedLeftId ? leftItems.find(i => i.id === selectedLeftId) : null;
   const isLeftMarkt = selectedLeftItem?.source === "markt";
 
   // Helper: check if a specific right match is in bemiddeling
-  const isMatchBemiddeld = (matchId: string) => {
-    if (isLeftMarkt) return true; // left is markt → all matches are bemiddeling
-    return bemiddelingSet.has(matchId);
-  };
+  const isMatchBemiddeld = (matchId: string) => bemiddelingSet.has(matchId);
 
-  // Bemiddeling is active when left is markt OR any right match is manually bemiddeld
-  const isBemiddelingActive = isLeftMarkt || bemiddelingSet.size > 0;
+  // Bemiddeling is active when any right match is manually bemiddeld
+  const isBemiddelingActive = bemiddelingSet.size > 0;
 
   // Count stats for footer
-  const bemiddelingCount = bemiddelingSet.size + (isLeftMarkt ? matchItems.length : 0);
+  const bemiddelingCount = bemiddelingSet.size;
   const statusEntries = Array.from(itemStatuses.entries());
   const ladingenCount = statusEntries.filter(([id]) => {
     const item = [...leftItems, ...matchItems].find(i => i.id === id);
@@ -900,7 +921,7 @@ export default function ConversationDialog({
                         conditionsExpanded={expandedConditions.has(item.id)}
                         isBemiddelingActive={isMatchBemiddeld(item.id)}
                         isMarktItem={item.source === "markt"}
-                        showBemiddelingButton={item.source === "markt" && item.kind === "vaartuig"}
+                        showBemiddelingButton={(item.source === "markt" && item.kind === "vaartuig") || activeTab === "markt-ladingen"}
                         onBemiddelingToggle={() => {
                           setBemiddelingSet(prev => {
                             const next = new Set(prev);

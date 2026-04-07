@@ -15,7 +15,6 @@ import LadingMarktSidebar from "../components/LadingMarktSidebar";
 import StartNegotiationSidebar from "../components/StartNegotiationSidebar";
 import OnderhandelingSidepanel from "../components/OnderhandelingSidepanel";
 import ConversationDialog from "../components/ConversationDialog";
-import BrokerDialog from "../components/BrokerDialog";
 import ActivityFeed from "../components/ActivityFeed";
 import SectionHeader from "../components/SectionHeader";
 import LastActivityButton from "../components/LastActivityButton";
@@ -113,8 +112,7 @@ export default function InboxCargoDetail() {
   const [offeredMatches, setOfferedMatches] = useState<Set<string>>(new Set());
   const [selectedNegotiation, setSelectedNegotiation] = useState<{ id: string; status: string; bron: string; relatieName?: string; bemiddeling?: { inkoopRelatie: string; verkoopRelatie: string } } | null>(null);
   const setActiveTab = (tab: typeof activeTab) => { setActiveTabRaw(tab); setSelectedNegotiation(null); };
-  const [conversationDialog, setConversationDialog] = useState<{ relatieId: string; relatieName: string; matchName?: string; itemType?: "lading" | "vaartuig" | "relatie-vaartuig" | "relatie-lading"; rightName?: string } | null>(null);
-  const [brokerDialog, setBrokerDialog] = useState<{ relatieA: { id: string; name: string }; vesselName: string; vesselSubtitle: string; relatieB: { id: string; name: string }; cargoName: string; cargoSubtitle: string } | null>(null);
+  const [conversationDialog, setConversationDialog] = useState<{ relatieId: string; relatieName: string; matchName?: string; leftId?: string; itemType?: "lading" | "vaartuig" | "relatie-vaartuig" | "relatie-lading"; rightName?: string } | null>(null);
   const [hoveredRow, setHoveredRow] = useState<string | null>(null);
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [matchFilter, setMatchFilter] = useState("Alles");
@@ -339,15 +337,12 @@ export default function InboxCargoDetail() {
                                 rightName: row.name as string,
                               });
                             } else {
-                              // Markt vaartuig: open broker dialog (two relaties)
+                              // Markt vaartuig: open conversation dialog with markt lading pre-selected
                               const relatieA = mockRelaties.find(r => r.naam === row.company);
-                              setBrokerDialog({
-                                relatieA: { id: relatieA?.id || "", name: (row.company as string) || "Onbekend" },
-                                vesselName: row.name as string,
-                                vesselSubtitle: (row.subtype as string) || "",
-                                relatieB: { id: summary?.relatieId || "", name: summary?.relatieName || "Onbekend" },
-                                cargoName: summary?.title || "—",
-                                cargoSubtitle: summary?.subtitle || "",
+                              setConversationDialog({
+                                relatieId: relatieA?.id || "",
+                                relatieName: (row.company as string) || "Onbekend",
+                                leftId: id,
                               });
                             }
                           }}
@@ -441,22 +436,10 @@ export default function InboxCargoDetail() {
           relatieId={conversationDialog.relatieId}
           relatieName={conversationDialog.relatieName}
           preSelectedMatchName={conversationDialog.matchName}
+          preSelectedLeftId={conversationDialog.leftId}
           preSelectedItemType={conversationDialog.itemType}
           preSelectedRightName={conversationDialog.rightName}
           onClose={() => setConversationDialog(null)}
-        />
-      )}
-
-      {/* Broker dialog (markt-markt matches) */}
-      {brokerDialog && (
-        <BrokerDialog
-          relatieA={brokerDialog.relatieA}
-          vesselName={brokerDialog.vesselName}
-          vesselSubtitle={brokerDialog.vesselSubtitle}
-          relatieB={brokerDialog.relatieB}
-          cargoName={brokerDialog.cargoName}
-          cargoSubtitle={brokerDialog.cargoSubtitle}
-          onClose={() => setBrokerDialog(null)}
         />
       )}
     </>
