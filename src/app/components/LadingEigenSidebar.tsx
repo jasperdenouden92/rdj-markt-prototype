@@ -10,6 +10,7 @@ import { ladingenEigen } from "../data/entities/ladingen-eigen";
 import { havens } from "../data/entities/havens";
 import { mockLadingSoorten, mockBijzonderheden } from "../data/mock-contract-data";
 import RelatieHoverCard, { buildRelatieHoverContentById } from "./RelatieHoverCard";
+import { formatDate } from "../utils/formatDate";
 
 /**
  * LadingEigenSidebar — detail sidebar for an eigen-lading.
@@ -354,8 +355,8 @@ export default function LadingEigenSidebar({ id, onEdit, collapsed }: LadingEige
                 if (n != null) { await api.patch("lading_eigen", baseId, { tonnage: n }); refetch(); }
               }}
             />
-            <DetailRow label="Laden" value={data.laadlocatie} subtext={data.laaddatum} />
-            <DetailRow label="Lossen" value={data.loslocatie} subtext={data.losdatum} />
+            <DetailRow label="Laden" value={data.laadlocatie} subtext={formatDate(data.laaddatum)} />
+            <DetailRow label="Lossen" value={data.loslocatie} subtext={formatDate(data.losdatum)} />
             <DetailRow
               label="Relatie"
               type="linked"
@@ -372,7 +373,7 @@ export default function LadingEigenSidebar({ id, onEdit, collapsed }: LadingEige
             <DetailRow label="Eigenaar" type="user" value={data.eigenaar} avatarSrc={data.eigenaarFoto} avatarInitials={data.eigenaarInitials} />
             <DetailRow
               label="Deadline"
-              value={data.deadline}
+              value={formatDate(data.deadline)}
               editValue={data.raw.deadline || ""}
               editable
               onSave={async (v) => {
@@ -436,7 +437,9 @@ export default function LadingEigenSidebar({ id, onEdit, collapsed }: LadingEige
 function formatShortDate(dateStr: string | null): string {
   if (!dateStr) return "—";
   const d = new Date(dateStr);
-  return d.toLocaleDateString("nl-NL", { day: "numeric", month: "short" });
+  const days = ["Zo", "Ma", "Di", "Wo", "Do", "Vr", "Za"];
+  const months = ["Jan", "Feb", "Mrt", "Apr", "Mei", "Jun", "Jul", "Aug", "Sep", "Okt", "Nov", "Dec"];
+  return `${days[d.getDay()]} ${d.getDate()} ${months[d.getMonth()]}`;
 }
 
 function PartijHoverCard({ title, ladingSoort, tonnage, laadlocatie, exNaam, exType, subpartijen: subs }: {

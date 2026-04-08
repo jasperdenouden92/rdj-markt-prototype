@@ -13,12 +13,7 @@ import { mockContracten, mockLadingSoorten, CONTRACT_SOORT_LABELS, CONTRACT_STAT
 import MailConversaties from "../components/MailConversaties";
 import TakenList from "../components/TakenList";
 import type { Contract } from "../data/api";
-
-function formatDate(dateStr?: string): string {
-  if (!dateStr) return "—";
-  const d = new Date(dateStr);
-  return d.toLocaleDateString("nl-NL", { day: "numeric", month: "short", year: "numeric" });
-}
+import { formatDate } from "../utils/formatDate";
 
 function formatCurrency(value?: number): string {
   if (value === undefined || value === null) return "—";

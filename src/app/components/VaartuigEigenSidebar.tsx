@@ -3,6 +3,7 @@ import { useNavigate } from "react-router";
 import DetailsSidebar, { DetailsSidebarSection } from "./DetailsSidebar";
 import DetailRow from "./DetailRow";
 import { useVaartuigEigenDetail } from "../data/useDetailData";
+import { formatDate } from "../utils/formatDate";
 
 /**
  * VaartuigEigenSidebar — detail sidebar for an eigen-vaartuig.
@@ -54,7 +55,7 @@ export default function VaartuigEigenSidebar({ id, onEdit, collapsed }: Vaartuig
   return (
     <DetailsSidebar activeTab={activeTab} onTabChange={setActiveTab} collapsed={collapsed}>
       <DetailsSidebarSection>
-        <DetailRow label="Beschikbaar vanaf" value={data.beschikbaarVanaf} editable onEdit={() => onEdit?.("beschikbaarVanaf")} />
+        <DetailRow label="Beschikbaar vanaf" value={formatDate(data.beschikbaarVanaf)} editable onEdit={() => onEdit?.("beschikbaarVanaf")} />
         <DetailRow label="Huidige locatie" value={data.huidigeLocatie} editable onEdit={() => onEdit?.("huidigeLocatie")} />
         <DetailRow label="ENI" value={data.eni} editable onEdit={() => onEdit?.("eni")} />
         <DetailRow label="Vlag" value={data.vlag} editable onEdit={() => onEdit?.("vlag")} />
@@ -73,7 +74,7 @@ export default function VaartuigEigenSidebar({ id, onEdit, collapsed }: Vaartuig
 
       <DetailsSidebarSection>
         <DetailRow label="Eigenaar" type="user" value={data.eigenaar} avatarSrc={data.eigenaarFoto} avatarInitials={data.eigenaarInitials} />
-        <DetailRow label="Deadline" value={data.deadline} editable onEdit={() => onEdit?.("deadline")} />
+        <DetailRow label="Deadline" value={formatDate(data.deadline)} editable onEdit={() => onEdit?.("deadline")} />
       </DetailsSidebarSection>
     </DetailsSidebar>
   );

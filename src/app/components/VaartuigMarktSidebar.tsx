@@ -5,6 +5,7 @@ import DetailRow from "./DetailRow";
 import Button from "./Button";
 import { useVaartuigMarktDetail } from "../data/useDetailData";
 import { RotateCcw } from "lucide-react";
+import { formatDate } from "../utils/formatDate";
 
 /**
  * VaartuigMarktSidebar — detail sidebar for a markt-vaartuig.
@@ -59,7 +60,7 @@ export default function VaartuigMarktSidebar({ id, onEdit, onResetToBron, collap
   return (
     <DetailsSidebar activeTab={activeTab} onTabChange={setActiveTab} collapsed={collapsed}>
       <DetailsSidebarSection>
-        <DetailRow label="Beschikbaar vanaf" value={data.beschikbaarVanaf} editable onEdit={() => onEdit?.("beschikbaarVanaf")} />
+        <DetailRow label="Beschikbaar vanaf" value={formatDate(data.beschikbaarVanaf)} editable onEdit={() => onEdit?.("beschikbaarVanaf")} />
         <DetailRow label="Huidige locatie" value={data.huidigeLocatie} editable onEdit={() => onEdit?.("huidigeLocatie")} />
         <DetailRow label="ENI" value={data.eni} editable onEdit={() => onEdit?.("eni")} />
         <DetailRow label="Vlag" value={data.vlag} editable onEdit={() => onEdit?.("vlag")} />

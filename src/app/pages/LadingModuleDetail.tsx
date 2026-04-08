@@ -9,12 +9,7 @@ import { mockContracten, mockLadingSoorten, mockLadingSubsoorten, mockBijzonderh
 import { partijen, subpartijen, exen } from "../data/entities/partijen";
 import { havens } from "../data/entities/havens";
 import { ladingenEigen } from "../data/entities/ladingen-eigen";
-
-function formatDate(dateStr?: string): string {
-  if (!dateStr) return "—";
-  const d = new Date(dateStr);
-  return d.toLocaleDateString("nl-NL", { weekday: "short", day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" });
-}
+import { formatDate } from "../utils/formatDate";
 
 const chevronSvg = (
   <svg className="block size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 5.33333 9.33333">

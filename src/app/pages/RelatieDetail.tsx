@@ -25,6 +25,7 @@ import { havens } from "../data/entities/havens";
 import MailConversaties from "../components/MailConversaties";
 import Gespreksverslagen from "../components/Gespreksverslagen";
 import type { Relatie } from "../data/api";
+import { formatDate } from "../utils/formatDate";
 
 const statusVariantMap: Record<string, "success" | "grey" | "brand"> = {
   actief: "success",
@@ -74,12 +75,6 @@ const negotiationStatusTypeMap: Record<string, "default" | "color"> = {
 };
 
 const activeNegStatuses = ["Via werklijst", "Bod verstuurd", "Bod ontvangen"];
-
-function formatDate(dateStr?: string): string {
-  if (!dateStr) return "—";
-  const d = new Date(dateStr);
-  return d.toLocaleDateString("nl-NL", { day: "numeric", month: "short", year: "numeric" });
-}
 
 const chevronSvg = (
   <svg className="block size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 5.33333 9.33333">

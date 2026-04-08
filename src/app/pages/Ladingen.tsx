@@ -11,12 +11,7 @@ import Button from "../components/Button";
 import LadingFormDialog from "../components/LadingFormDialog";
 import { mockRelaties, mockRelatieLadingen, type RelatieLading } from "../data/mock-relatie-data";
 import { mockContracten, mockLadingSoorten } from "../data/mock-contract-data";
-
-function formatDate(dateStr?: string): string {
-  if (!dateStr) return "—";
-  const d = new Date(dateStr);
-  return d.toLocaleDateString("nl-NL", { day: "numeric", month: "short", year: "numeric" });
-}
+import { formatDate } from "../utils/formatDate";
 
 export default function Ladingen() {
   const navigate = useNavigate();

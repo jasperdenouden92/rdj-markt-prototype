@@ -13,6 +13,7 @@ import {
 } from "../data/mock-relatie-data";
 import LastActivityButton from "./LastActivityButton";
 import DatePickerPopover, { formatDatePickerValue, type DatePickerValue } from "./DatePickerPopover";
+import { formatDate } from "../utils/formatDate";
 import { TermijnPill } from "./TermijnDropdown";
 
 /* ── Types ── */
@@ -2118,12 +2119,6 @@ const QuickInput = forwardRef<
 
 /* ── Helpers ── */
 
-function formatDate(dateStr: string): string {
-  if (!dateStr) return "—";
-  const d = new Date(dateStr);
-  if (isNaN(d.getTime())) return dateStr;
-  return d.toLocaleDateString("nl-NL", { day: "numeric", month: "short" });
-}
 
 function generateScore(idA: string, idB: string): number {
   let hash = 0;

@@ -15,6 +15,7 @@ import { DetailsSidebarSection } from "./DetailsSidebar";
 import DetailRow from "./DetailRow";
 import { useNavigate } from "react-router";
 import { useBevrachtingVaartuigSummary, useVaartuigEigenDetail, useVaartuigMarktDetail } from "../data/useDetailData";
+import { formatDate } from "../utils/formatDate";
 import { mockRelaties } from "../data/mock-relatie-data";
 import svgPaths from "../../imports/svg-62fj7rjvas";
 import imgAvatar from "../../assets/a2737d3b5b234fc04041650cb9f114889c6859da.png";
@@ -343,7 +344,7 @@ function VaartuigEigenSidebarContent({ id }: { id: string }) {
   return (
     <div className="flex flex-col gap-[16px] p-[24px] pt-[16px]">
       <DetailsSidebarSection>
-        <DetailRow label="Beschikbaar vanaf" value={data.beschikbaarVanaf} editable />
+        <DetailRow label="Beschikbaar vanaf" value={formatDate(data.beschikbaarVanaf)} editable />
         <DetailRow label="Huidige locatie" value={data.huidigeLocatie} editable />
         <DetailRow label="ENI" value={data.eni} editable />
         <DetailRow label="Vlag" value={data.vlag} editable />
@@ -361,7 +362,7 @@ function VaartuigEigenSidebarContent({ id }: { id: string }) {
       <div className="w-full h-px bg-rdj-border-secondary shrink-0" />
       <DetailsSidebarSection>
         <DetailRow label="Eigenaar" type="user" value={data.eigenaar} avatarSrc={data.eigenaarFoto} avatarInitials={data.eigenaarInitials} />
-        <DetailRow label="Deadline" value={data.deadline} editable />
+        <DetailRow label="Deadline" value={formatDate(data.deadline)} editable />
       </DetailsSidebarSection>
     </div>
   );
@@ -392,7 +393,7 @@ function VaartuigMarktSidebarContent({ id }: { id: string }) {
   return (
     <div className="flex flex-col gap-[16px] p-[24px] pt-[16px]">
       <DetailsSidebarSection>
-        <DetailRow label="Beschikbaar vanaf" value={data.beschikbaarVanaf} editable />
+        <DetailRow label="Beschikbaar vanaf" value={formatDate(data.beschikbaarVanaf)} editable />
         <DetailRow label="Huidige locatie" value={data.huidigeLocatie} editable />
         <DetailRow label="ENI" value={data.eni} editable />
         <DetailRow label="Vlag" value={data.vlag} editable />

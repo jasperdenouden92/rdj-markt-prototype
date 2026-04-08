@@ -15,6 +15,7 @@ import { DetailsSidebarSection } from "./DetailsSidebar";
 import DetailRow from "./DetailRow";
 import { useNavigate } from "react-router";
 import { useBevrachtingLadingSummary, useLadingEigenDetail, useLadingMarktDetail } from "../data/useDetailData";
+import { formatDate } from "../utils/formatDate";
 import { updateLadingMarktPriority } from "../data/useMarktData";
 import { mockMatches, mockNegotiations } from "../data/mock-data";
 import { mockRelaties } from "../data/mock-relatie-data";
@@ -363,16 +364,16 @@ function LadingEigenSidebarContent({ id }: { id: string }) {
             <DetailRow label="Inhoud" value={data.inhoud} editable />
             <DetailRow label="Bijzonderheden" type="badges" badges={data.bijzonderheden} editable />
             <DetailRow label="Laadlocatie" value={data.laadlocatie} editable />
-            <DetailRow label="Laaddatum" value={data.laaddatum} editable />
+            <DetailRow label="Laaddatum" value={formatDate(data.laaddatum)} editable />
             <DetailRow label="Loslocatie" value={data.loslocatie} editable />
-            <DetailRow label="Losdatum" value={data.losdatum} editable />
+            <DetailRow label="Losdatum" value={formatDate(data.losdatum)} editable />
             <DetailRow label="Relatie" type="linked" value={data.relatie} onClick={() => navigate(`/crm/relatie/${data.raw.relatieId}`)} />
             <DetailRow label="Contactpersoon" value={data.contactpersoon} />
           </DetailsSidebarSection>
           <div className="w-full h-px bg-rdj-border-secondary shrink-0" />
           <DetailsSidebarSection>
             <DetailRow label="Eigenaar" type="user" value={data.eigenaar} avatarSrc={data.eigenaarFoto} avatarInitials={data.eigenaarInitials} />
-            <DetailRow label="Deadline" value={data.deadline} editable />
+            <DetailRow label="Deadline" value={formatDate(data.deadline)} editable />
           </DetailsSidebarSection>
         </>
       )}
@@ -388,9 +389,9 @@ function LadingEigenSidebarContent({ id }: { id: string }) {
             <DetailRow label="Inhoud" value={marktData.inhoud} editable />
             <DetailRow label="Bijzonderheden" type="badges" badges={marktData.bijzonderheden} editable />
             <DetailRow label="Laadlocatie" value={marktData.laadlocatie} editable />
-            <DetailRow label="Laaddatum" value={marktData.laaddatum} editable />
+            <DetailRow label="Laaddatum" value={formatDate(marktData.laaddatum)} editable />
             <DetailRow label="Loslocatie" value={marktData.loslocatie} editable />
-            <DetailRow label="Losdatum" value={marktData.losdatum} editable />
+            <DetailRow label="Losdatum" value={formatDate(marktData.losdatum)} editable />
             <DetailRow label="Bron" value={marktData.bron} />
             <DetailRow label="Relatie" type="linked" value={marktData.relatie} onClick={() => navigate(`/crm/relatie/${marktData.raw.relatieId}`)} />
             <DetailRow label="Contactpersoon" value={marktData.contactpersoon} />

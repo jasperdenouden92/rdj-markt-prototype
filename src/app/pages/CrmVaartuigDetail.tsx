@@ -14,6 +14,7 @@ import ActivityFeed from "../components/ActivityFeed";
 import SectionHeader from "../components/SectionHeader";
 import ConversationDialog from "../components/ConversationDialog";
 import { mockRelaties, mockRelatieVaartuigen, mockRelatieVaartuigMatches } from "../data/mock-relatie-data";
+import { formatDate } from "../utils/formatDate";
 
 const vaartuigStatusMap: Record<string, { label: string; variant: "success" | "warning" | "brand" | "grey" }> = {
   beschikbaar: { label: "Beschikbaar", variant: "success" },
@@ -21,12 +22,6 @@ const vaartuigStatusMap: Record<string, { label: string; variant: "success" | "w
   beladen: { label: "Beladen", variant: "warning" },
   in_onderhoud: { label: "In onderhoud", variant: "grey" },
 };
-
-function formatDate(dateStr?: string): string {
-  if (!dateStr) return "—";
-  const d = new Date(dateStr);
-  return d.toLocaleDateString("nl-NL", { day: "numeric", month: "short", year: "numeric" });
-}
 
 const chevronSvg = (
   <svg className="block size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 5.33333 9.33333">

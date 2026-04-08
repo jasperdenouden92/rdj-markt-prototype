@@ -5,12 +5,7 @@ import Sidebar from "../components/Sidebar";
 import { subpartijen, partijen } from "../data/entities/partijen";
 import { havens } from "../data/entities/havens";
 import { mockBijzonderheden, mockLadingSoorten, mockLadingSubsoorten } from "../data/mock-contract-data";
-
-function formatDate(dateStr?: string | null): string {
-  if (!dateStr) return "—";
-  const d = new Date(dateStr);
-  return d.toLocaleDateString("nl-NL", { weekday: "short", day: "numeric", month: "short" });
-}
+import { formatDate } from "../utils/formatDate";
 
 const chevronSvg = (
   <svg className="block size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 5.33333 9.33333">

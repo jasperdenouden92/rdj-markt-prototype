@@ -18,15 +18,10 @@ import ContractFormDialog from "../components/ContractFormDialog";
 import { mockRelaties, mockGebruikers } from "../data/mock-relatie-data";
 import { mockContracten, CONTRACT_SOORT_LABELS, CONTRACT_STATUS_LABELS, CONTRACT_STATUS_VARIANT_MAP } from "../data/mock-contract-data";
 import type { Contract, ContractStatus } from "../data/api";
+import { formatDate } from "../utils/formatDate";
 
 function getInitials(name: string): string {
   return name.split(" ").map((w) => w[0]).filter(Boolean).slice(0, 2).join("").toUpperCase();
-}
-
-function formatDate(dateStr?: string): string {
-  if (!dateStr) return "—";
-  const d = new Date(dateStr);
-  return d.toLocaleDateString("nl-NL", { day: "numeric", month: "short", year: "numeric" });
 }
 
 function formatCurrency(value?: number): string {

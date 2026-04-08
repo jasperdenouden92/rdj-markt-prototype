@@ -5,6 +5,7 @@
 
 import { useState, useEffect, useRef } from "react";
 import * as api from "./api";
+import { formatDate } from "../utils/formatDate";
 import type {
   LadingMarkt, LadingEigen, VaartuigMarkt, VaartuigEigen,
   LadingSoort, LadingSubsoort, Haven, Bron, Gebruiker,
@@ -897,15 +898,3 @@ function formatTonnage(t: number | { min: number; max: number }): string {
   return fmtNum(t);
 }
 
-function formatDate(d: string): string {
-  if (!d) return "Af te stemmen";
-  try {
-    const date = new Date(d);
-    if (isNaN(date.getTime())) return d;
-    const days = ["Zo", "Ma", "Di", "Wo", "Do", "Vr", "Za"];
-    const months = ["Jan", "Feb", "Mrt", "Apr", "Mei", "Jun", "Jul", "Aug", "Sep", "Okt", "Nov", "Dec"];
-    return `${days[date.getDay()]} ${date.getDate()} ${months[date.getMonth()]}`;
-  } catch {
-    return d;
-  }
-}

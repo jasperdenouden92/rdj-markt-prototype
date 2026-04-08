@@ -8,13 +8,9 @@ import { mockTaken, TAAK_TYPE_LABELS, TAAK_TYPE_VARIANT_MAP } from "../data/mock
 import type { Taak } from "../data/mock-taken-data";
 import { mockRelaties } from "../data/mock-relatie-data";
 import { mockContracten } from "../data/mock-contract-data";
+import { formatDate } from "../utils/formatDate";
 
 const CURRENT_USER_ID = "usr-001";
-
-function formatDate(dateStr: string): string {
-  const d = new Date(dateStr);
-  return d.toLocaleDateString("nl-NL", { day: "numeric", month: "short", year: "numeric" });
-}
 
 function isOverdue(dateStr: string): boolean {
   return new Date(dateStr) < new Date(new Date().toDateString());
