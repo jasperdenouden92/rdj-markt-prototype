@@ -188,7 +188,7 @@ export default function LadingMarktSidebar({ id, onEdit, collapsed }: LadingMark
                 </p>
               </div>
               <div className="flex-[1_0_0] min-w-0">
-                <TermijnDropdown value={laadtermijn} onChange={setLaadtermijn} variant="sidebar" />
+                <TermijnDropdown value={laadtermijn} onChange={setLaadtermijn} variant="sidebar" hideMeldenBijAankomst />
               </div>
             </div>
             <DetailRow label="Loslocatie" value={data.loslocatie} editable onEdit={() => onEdit?.("loslocatie")} />
