@@ -776,7 +776,7 @@ export default function AddInboxItemModal({ isOpen, onClose, onSubmit, itemType:
                     value={loadTerms}
                     onChange={setLoadTerms}
                     placeholder="Selecteer termijn..."
-                    hideMeldenBijAankomst
+                    excludePresets={["melden-bij-aankomst", "opslag"]}
                   />
                 ) : (
                   <input

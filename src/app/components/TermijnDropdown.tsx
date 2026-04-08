@@ -269,7 +269,7 @@ function TermijnCalendarContent({
   onPickerYearChange,
   onYearRangeChange,
   onQuickSelect,
-  hideMeldenBijAankomst,
+  excludePresets,
 }: {
   selected: Date | undefined;
   granularity: TermijnGranularity;
@@ -286,7 +286,7 @@ function TermijnCalendarContent({
   onPickerYearChange: (year: number) => void;
   onYearRangeChange: (delta: number) => void;
   onQuickSelect: () => void;
-  hideMeldenBijAankomst?: boolean;
+  excludePresets?: string[];
 }) {
   const weekModifiers = granularity === "week" && selected
     ? { selectedWeek: (date: Date) => isSameWeek(date, selected, { weekStartsOn: 1 }) }
@@ -395,10 +395,10 @@ interface TermijnPillProps {
   value?: string;
   onChange: (displayValue: string) => void;
   variant?: "primary" | "bid";
-  hideMeldenBijAankomst?: boolean;
+  excludePresets?: string[];
 }
 
-export function TermijnPill({ label, value, onChange, variant = "primary", hideMeldenBijAankomst = false }: TermijnPillProps) {
+export function TermijnPill({ label, value, onChange, variant = "primary", excludePresets = [] }: TermijnPillProps) {
   const [open, setOpen] = useState(false);
   const [view, setView] = useState<"menu" | "calendar">("menu");
   const [granularity, setGranularity] = useState<TermijnGranularity>("dag");
@@ -504,7 +504,7 @@ export function TermijnPill({ label, value, onChange, variant = "primary", hideM
       >
         {view === "menu" ? (
           <div className="py-[4px] min-w-[200px]">
-            {PRESET_OPTIONS.filter(option => !(hideMeldenBijAankomst && option.value === "melden-bij-aankomst")).map((option) => {
+            {PRESET_OPTIONS.filter(option => !excludePresets.includes(option.value)).map((option) => {
               const isSelected = value === option.label;
               return (
                 <button
@@ -545,7 +545,7 @@ export function TermijnPill({ label, value, onChange, variant = "primary", hideM
             onPickerYearChange={setPickerYear}
             onYearRangeChange={(delta) => setYearRangeCenter(c => c + delta)}
             onQuickSelect={handleQuickSelect}
-            hideMeldenBijAankomst={hideMeldenBijAankomst}
+            excludePresets={excludePresets}
           />
         )}
       </PopoverContent>
@@ -560,10 +560,10 @@ interface TermijnDropdownProps {
   onChange: (value: TermijnValue) => void;
   placeholder?: string;
   variant?: "default" | "sidebar";
-  hideMeldenBijAankomst?: boolean;
+  excludePresets?: string[];
 }
 
-export default function TermijnDropdown({ value, onChange, placeholder = "Selecteer...", variant = "default", hideMeldenBijAankomst = false }: TermijnDropdownProps) {
+export default function TermijnDropdown({ value, onChange, placeholder = "Selecteer...", variant = "default", excludePresets = [] }: TermijnDropdownProps) {
   const [open, setOpen] = useState(false);
   const [view, setView] = useState<"menu" | "calendar">("menu");
   const [granularity, setGranularity] = useState<TermijnGranularity>(
@@ -694,7 +694,7 @@ export default function TermijnDropdown({ value, onChange, placeholder = "Select
       >
         {view === "menu" ? (
           <div className="py-[4px] min-w-[200px]">
-            {PRESET_OPTIONS.filter(option => !(hideMeldenBijAankomst && option.value === "melden-bij-aankomst")).map((option) => {
+            {PRESET_OPTIONS.filter(option => !excludePresets.includes(option.value)).map((option) => {
               const isSelected = value?.type === "preset" && value.value === option.value;
               return (
                 <button
@@ -735,7 +735,7 @@ export default function TermijnDropdown({ value, onChange, placeholder = "Select
             onPickerYearChange={setPickerYear}
             onYearRangeChange={(delta) => setYearRangeCenter(c => c + delta)}
             onQuickSelect={handleQuickSelect}
-            hideMeldenBijAankomst={hideMeldenBijAankomst}
+            excludePresets={excludePresets}
           />
         )}
       </PopoverContent>
