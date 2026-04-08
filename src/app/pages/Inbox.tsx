@@ -487,7 +487,6 @@ export default function Inbox() {
                   value={subView}
                   onChange={(val) => setSubView(val as InboxSubView)}
                 />
-                <FilterDropdown label="Relatie" />
                 <FilterDropdown
                   label="Start laden: 13 Jan 2026 en eerder"
                   leadingIcon={
@@ -500,9 +499,11 @@ export default function Inbox() {
                     </div>
                   }
                 />
-                <FilterDropdown label="Laadregio" />
-                <FilterDropdown label="Losregio" />
-                <button className="content-stretch flex gap-[4px] items-center relative shrink-0"><div className="overflow-clip relative shrink-0 size-[20px]"><div className="absolute inset-[20.83%]"><div className="absolute inset-[-7.14%]"><svg className="block size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 13.3333 13.3333"><path d={svgPaths.p1b67fa00} stroke="#1567A4" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.66667" /></svg></div></div></div><div className="content-stretch flex items-center justify-center px-[2px] relative shrink-0"><p className="font-sans font-bold leading-[20px] relative shrink-0 text-[#145990] text-[14px] whitespace-nowrap">Filter</p></div></button>
+                <FilterDropdown
+                  label="Filter"
+                  variant="tertiary"
+                  options={['Relatie', 'Laadregio', 'Losregio', 'Ladingsoort', 'Tonnage', 'Deadline']}
+                />
               </>
             }
             filtersRight={
@@ -528,6 +529,13 @@ export default function Inbox() {
               </>
             }
           />
+
+          {/* Sub-filter row: Relatie / Laadregio / Losregio */}
+          <div className="px-[24px] pt-[12px] pb-[4px] flex gap-[8px] items-center">
+            <FilterDropdown label="Relatie" />
+            <FilterDropdown label="Laadregio" />
+            <FilterDropdown label="Losregio" />
+          </div>
 
           {/* Content: Table or Map */}
           {viewMode === 'map' ? (
