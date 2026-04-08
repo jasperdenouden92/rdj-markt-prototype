@@ -1,6 +1,6 @@
-import { useState, useRef, useEffect, useMemo } from "react";
+import { useState, useRef, useEffect, useMemo, type ReactNode } from "react";
 import { useNavigate, useLocation } from "react-router";
-import { Send, MailOpen, Check, X } from "lucide-react";
+import { Send, MailOpen, Check, X, Ship } from "lucide-react";
 import { Toaster } from "sonner";
 import Sidebar from "../components/Sidebar";
 import PageHeader from "../components/PageHeader";
@@ -15,6 +15,7 @@ import OnderhandelingSidepanel from "../components/OnderhandelingSidepanel";
 import svgPaths from "../../imports/svg-q07ncv0e2v";
 import imgAvatar from "../../assets/a2737d3b5b234fc04041650cb9f114889c6859da.png";
 import { buildRelatieHoverContent } from "../components/RelatieHoverCard";
+import { HoverCard, HoverCardTrigger, HoverCardContent } from "../components/ui/hover-card";
 
 /* ── Status badge mapping ── */
 const statusVariantMap: Record<string, string> = {
@@ -44,329 +45,346 @@ const statusTypeMap: Record<string, "default" | "color"> = {
 /** Filter groups: "actief" = Via werklijst + Bod ontvangen + Bod verstuurd */
 const activeStatuses = ["Via werklijst", "Bod ontvangen", "Bod verstuurd"];
 
-/* ── Mock data for Ladingen-tab ── */
-const mockLadingenOnderhandelingen = [
+/* ── Condities types ── */
+interface Condities {
+  prijs: number;
+  laadtijd: number;
+  liggeldLaden: number;
+  lostijd: number;
+  liggeldLossen: number;
+  overig?: string;
+}
+
+/* ── Condities hover card component ── */
+function ConditiesCell({ condities }: { condities: Condities | null }) {
+  if (!condities) return <span className="text-rdj-text-tertiary">—</span>;
+
+  const extraCount = [condities.laadtijd, condities.liggeldLaden, condities.lostijd, condities.liggeldLossen, condities.overig].filter(v => v != null).length;
+
+  return (
+    <HoverCard openDelay={200} closeDelay={100}>
+      <HoverCardTrigger asChild>
+        <button className="text-left cursor-default">
+          <p className="font-sans font-normal text-[14px] leading-[20px] text-rdj-text-primary whitespace-nowrap">
+            € {condities.prijs.toFixed(2).replace(".", ",")} /t
+          </p>
+          {extraCount > 0 && (
+            <p className="font-sans font-normal text-[12px] leading-[18px] text-rdj-text-tertiary whitespace-nowrap">
+              + {extraCount} condities
+            </p>
+          )}
+        </button>
+      </HoverCardTrigger>
+      <HoverCardContent side="top" align="start" className="w-auto min-w-[200px] p-0 border-rdj-border-secondary">
+        <div className="p-[12px] flex flex-col gap-[8px]">
+          <div className="flex justify-between gap-[16px]">
+            <span className="font-sans text-[12px] text-rdj-text-secondary">Vrachtprijs</span>
+            <span className="font-sans text-[12px] font-bold text-rdj-text-primary">€ {condities.prijs.toFixed(2).replace(".", ",")} /t</span>
+          </div>
+          <div className="border-t border-rdj-border-secondary" />
+          <div className="flex justify-between gap-[16px]">
+            <span className="font-sans text-[12px] text-rdj-text-secondary">Laadtijd</span>
+            <span className="font-sans text-[12px] font-bold text-rdj-text-primary">{condities.laadtijd} uur</span>
+          </div>
+          <div className="flex justify-between gap-[16px]">
+            <span className="font-sans text-[12px] text-rdj-text-secondary">Liggeld laden</span>
+            <span className="font-sans text-[12px] font-bold text-rdj-text-primary">€ {condities.liggeldLaden.toFixed(2).replace(".", ",")} /u</span>
+          </div>
+          <div className="border-t border-rdj-border-secondary" />
+          <div className="flex justify-between gap-[16px]">
+            <span className="font-sans text-[12px] text-rdj-text-secondary">Lostijd</span>
+            <span className="font-sans text-[12px] font-bold text-rdj-text-primary">{condities.lostijd} uur</span>
+          </div>
+          <div className="flex justify-between gap-[16px]">
+            <span className="font-sans text-[12px] text-rdj-text-secondary">Liggeld lossen</span>
+            <span className="font-sans text-[12px] font-bold text-rdj-text-primary">€ {condities.liggeldLossen.toFixed(2).replace(".", ",")} /u</span>
+          </div>
+          {condities.overig && (
+            <>
+              <div className="border-t border-rdj-border-secondary" />
+              <div className="flex flex-col gap-[2px]">
+                <span className="font-sans text-[12px] text-rdj-text-secondary">Overig</span>
+                <span className="font-sans text-[12px] text-rdj-text-primary">{condities.overig}</span>
+              </div>
+            </>
+          )}
+        </div>
+      </HoverCardContent>
+    </HoverCard>
+  );
+}
+
+/* ── Mock data ── */
+const mockOnderhandelingen = [
   {
     id: "ond-l-1",
-    ladingLabel: "Grind",
-    tonnage: "1.200 t",
+    // Lading – eigen
+    bron: "eigen",
+    ladingLabel: "m/v Abis Dover",
+    ladingSubtext: "SP-001 · Grind",
     ladingBadge: undefined as string | undefined,
-    ladingSubtext: "Ex Eur-01 · SP-001",
-    vaartuig: "MS Adriana",
-    vaartuigType: "Motorschip",
-    vaartuigEni: "02332456",
-    vrachtprijs: "€ 8,50 /t",
-    vrachtprijsDiff: "+4,2%",
-    relatie: "Rederij de Jong",
+    ladingIcon: "vaartuig" as string | undefined,
+    // Tonnage
+    tonnage: "1.200 t",
+    // Ladingaanbieder
+    ladingaanbieder: "Rederij de Jong",
+    // Vaartuigaanbieder
+    vaartuigaanbieder: "Rijn Transport BV",
+    vaartuigaanbiederSubtext: "MS Adriana" as string | undefined,
+    // Condities
+    inkoopcondities: { prijs: 8.50, laadtijd: 24, liggeldLaden: 12.50, lostijd: 16, liggeldLossen: 15.00, overig: "Voorkeur laden vóór 10:00" } as Condities | null,
+    verkoopcondities: { prijs: 7.20, laadtijd: 18, liggeldLaden: 10.00, lostijd: 14, liggeldLossen: 12.00 } as Condities | null,
+    // Laden / Lossen
     laadLocatie: "Rotterdam",
     laadDatum: "15 jan 2026, 08:00",
     losLocatie: "Antwerpen",
     losDatum: "16 jan 2026, 14:00",
+    // Rest
     deadline: "17 jan 2026",
     status: "Bod verstuurd",
-    updateUser: "",
     updateUserInitials: "KN",
     updateUserAvatar: imgAvatar as string | undefined,
     updateDate: "14 jan 2026, 16:32",
-    bron: "eigen",
   },
   {
     id: "ond-l-2",
+    // Lading – markt
+    bron: "markt",
     ladingLabel: "Zand",
-    tonnage: "850 t",
-    ladingBadge: "Markt" as string | undefined,
     ladingSubtext: "",
-    vaartuig: "MS De Hoop",
-    vaartuigType: "Motorschip",
-    vaartuigEni: "02334567",
-    vrachtprijs: "€ 7,20 /t",
-    vrachtprijsDiff: "-2,1%",
-    relatie: "Rijn Transport BV",
+    ladingBadge: "Markt" as string | undefined,
+    ladingIcon: undefined as string | undefined,
+    // Tonnage (range)
+    tonnage: "800 – 1.000 t",
+    // Ladingaanbieder
+    ladingaanbieder: "Schippers & Co",
+    // Vaartuigaanbieder
+    vaartuigaanbieder: "Rederij de Jong",
+    vaartuigaanbiederSubtext: undefined as string | undefined,
+    // Condities
+    inkoopcondities: { prijs: 7.20, laadtijd: 12, liggeldLaden: 10.00, lostijd: 8, liggeldLossen: 10.00 } as Condities | null,
+    verkoopcondities: { prijs: 6.80, laadtijd: 10, liggeldLaden: 8.50, lostijd: 8, liggeldLossen: 9.00 } as Condities | null,
+    // Laden / Lossen
     laadLocatie: "Duisburg",
     laadDatum: "18 jan 2026, 06:00",
     losLocatie: "Dordrecht",
     losDatum: "19 jan 2026, 10:00",
+    // Rest
     deadline: "20 jan 2026",
     status: "Bod ontvangen",
-    updateUser: "",
     updateUserInitials: "PJ",
     updateUserAvatar: undefined as string | undefined,
     updateDate: "13 jan 2026, 09:15",
-    bron: "markt",
   },
   {
     id: "ond-l-3",
-    ladingLabel: "Steenkool",
-    tonnage: "2.000 t",
+    // Lading – eigen
+    bron: "eigen",
+    ladingLabel: "m/v Maran Future",
+    ladingSubtext: "SP-003 · Steenkool",
     ladingBadge: undefined as string | undefined,
-    ladingSubtext: "Ex Eur-02 · SP-003",
-    vaartuig: "MS Fortuna",
-    vaartuigType: "Motorschip",
-    vaartuigEni: "02335678",
-    vrachtprijs: "€ 9,10 /t",
-    vrachtprijsDiff: "+1,8%",
-    relatie: "Rederij de Jong",
+    ladingIcon: "vaartuig" as string | undefined,
+    // Tonnage
+    tonnage: "2.000 t",
+    // Ladingaanbieder
+    ladingaanbieder: "Rederij de Jong",
+    // Vaartuigaanbieder
+    vaartuigaanbieder: "Noord-Zuid Bevrachting",
+    vaartuigaanbiederSubtext: "MS Fortuna" as string | undefined,
+    // Condities
+    inkoopcondities: { prijs: 9.10, laadtijd: 16, liggeldLaden: 14.00, lostijd: 12, liggeldLossen: 13.00 } as Condities | null,
+    verkoopcondities: { prijs: 8.20, laadtijd: 14, liggeldLaden: 11.50, lostijd: 10, liggeldLossen: 11.00 } as Condities | null,
+    // Laden / Lossen
     laadLocatie: "Amsterdam",
     laadDatum: "20 jan 2026, 07:00",
     losLocatie: "Gent",
     losDatum: "21 jan 2026, 15:00",
+    // Rest
     deadline: "22 jan 2026",
     status: "Goedgekeurd",
-    updateUser: "",
     updateUserInitials: "PJ",
     updateUserAvatar: imgAvatar as string | undefined,
     updateDate: "15 jan 2026, 11:45",
-    bron: "eigen",
   },
   {
     id: "ond-l-4",
+    // Lading – markt
+    bron: "markt",
     ladingLabel: "Mais",
-    tonnage: "600 t",
-    ladingBadge: "Markt" as string | undefined,
     ladingSubtext: "",
-    vaartuig: "MS Catharina",
-    vaartuigType: "Duwbak",
-    vaartuigEni: "02336789",
-    vrachtprijs: "€ 11,00 /t",
-    vrachtprijsDiff: "-5,3%",
-    relatie: "Schippers & Co",
+    ladingBadge: "Markt" as string | undefined,
+    ladingIcon: undefined as string | undefined,
+    // Tonnage (range)
+    tonnage: "500 – 700 t",
+    // Ladingaanbieder
+    ladingaanbieder: "IJsseldelta Scheepvaart",
+    // Vaartuigaanbieder
+    vaartuigaanbieder: "Rederij de Jong",
+    vaartuigaanbiederSubtext: "MS Catharina" as string | undefined,
+    // Condities
+    inkoopcondities: { prijs: 11.00, laadtijd: 8, liggeldLaden: 20.00, lostijd: 8, liggeldLossen: 20.00 } as Condities | null,
+    verkoopcondities: { prijs: 10.20, laadtijd: 8, liggeldLaden: 18.00, lostijd: 6, liggeldLossen: 16.00, overig: "Alleen bij daglicht lossen" } as Condities | null,
+    // Laden / Lossen
     laadLocatie: "Terneuzen",
     laadDatum: "22 jan 2026, 09:00",
     losLocatie: "Luik",
     losDatum: "23 jan 2026, 12:00",
+    // Rest
     deadline: "24 jan 2026",
     status: "Afgewezen",
-    updateUser: "",
     updateUserInitials: "EN",
     updateUserAvatar: undefined as string | undefined,
     updateDate: "16 jan 2026, 14:20",
-    bron: "markt",
   },
   {
     id: "ond-l-5",
-    ladingLabel: "Klinker",
-    tonnage: "1.500 t",
+    // Lading – eigen
+    bron: "eigen",
+    ladingLabel: "m/v A2B Future",
+    ladingSubtext: "SP-005 · Klinker",
     ladingBadge: undefined as string | undefined,
-    ladingSubtext: "Ex Eur-03 · SP-005",
-    vaartuig: "MS Orion",
-    vaartuigType: "Motorschip",
-    vaartuigEni: "02337890",
-    vrachtprijs: "€ 10,25 /t",
-    vrachtprijsDiff: "+2,5%",
-    relatie: "Rederij de Jong",
+    ladingIcon: "vaartuig" as string | undefined,
+    // Tonnage
+    tonnage: "1.500 t",
+    // Ladingaanbieder
+    ladingaanbieder: "Rederij de Jong",
+    // Vaartuigaanbieder
+    vaartuigaanbieder: "Schippers & Co",
+    vaartuigaanbiederSubtext: undefined as string | undefined,
+    // Condities
+    inkoopcondities: { prijs: 10.25, laadtijd: 20, liggeldLaden: 15.00, lostijd: 16, liggeldLossen: 14.00 } as Condities | null,
+    verkoopcondities: { prijs: 9.50, laadtijd: 18, liggeldLaden: 12.00, lostijd: 14, liggeldLossen: 12.50 } as Condities | null,
+    // Laden / Lossen
     laadLocatie: "Nijmegen",
     laadDatum: "25 jan 2026, 06:30",
     losLocatie: "Rotterdam",
     losDatum: "25 jan 2026, 18:00",
+    // Rest
     deadline: "26 jan 2026",
     status: "Bod verstuurd",
-    updateUser: "",
     updateUserInitials: "JK",
     updateUserAvatar: imgAvatar as string | undefined,
     updateDate: "17 jan 2026, 08:00",
-    bron: "eigen",
   },
   {
     id: "ond-l-6",
+    // Lading – markt
+    bron: "markt",
     ladingLabel: "Graan",
-    tonnage: "900 t",
-    ladingBadge: "Markt" as string | undefined,
     ladingSubtext: "",
-    vaartuig: "MS Petronella",
-    vaartuigType: "Motorschip",
-    vaartuigEni: "02338901",
-    vrachtprijs: "€ 6,80 /t",
-    vrachtprijsDiff: "-1,0%",
-    relatie: "Noord-Zuid Bevrachting",
+    ladingBadge: "Markt" as string | undefined,
+    ladingIcon: undefined as string | undefined,
+    // Tonnage
+    tonnage: "900 t",
+    // Ladingaanbieder
+    ladingaanbieder: "Noord-Zuid Bevrachting",
+    // Vaartuigaanbieder
+    vaartuigaanbieder: "Rederij de Jong",
+    vaartuigaanbiederSubtext: undefined as string | undefined,
+    // Condities
+    inkoopcondities: { prijs: 6.80, laadtijd: 12, liggeldLaden: 8.00, lostijd: 10, liggeldLossen: 9.00, overig: "Schip moet kruiphoogte < 7m hebben" } as Condities | null,
+    verkoopcondities: { prijs: 6.20, laadtijd: 10, liggeldLaden: 7.50, lostijd: 8, liggeldLossen: 8.00 } as Condities | null,
+    // Laden / Lossen
     laadLocatie: "Mannheim",
     laadDatum: "28 jan 2026, 07:00",
     losLocatie: "Vlissingen",
     losDatum: "30 jan 2026, 09:00",
+    // Rest
     deadline: "31 jan 2026",
     status: "Bod ontvangen",
-    updateUser: "",
     updateUserInitials: "KN",
     updateUserAvatar: imgAvatar as string | undefined,
     updateDate: "18 jan 2026, 10:10",
-    bron: "markt",
   },
   {
     id: "ond-l-7",
-    ladingLabel: "Houtpellets",
-    tonnage: "1.800 t",
+    // Lading – eigen
+    bron: "eigen",
+    ladingLabel: "m/v Merganser",
+    ladingSubtext: "SP-007 · Houtpellets",
     ladingBadge: undefined as string | undefined,
-    ladingSubtext: "Ex Eur-04 · SP-007",
-    vaartuig: "—",
-    vaartuigType: undefined as string | undefined,
-    vaartuigEni: undefined as string | undefined,
-    vrachtprijs: "—",
-    vrachtprijsDiff: "",
-    relatie: "Rederij de Jong",
+    ladingIcon: "vaartuig" as string | undefined,
+    // Tonnage (range)
+    tonnage: "1.600 – 2.000 t",
+    // Ladingaanbieder
+    ladingaanbieder: "Rederij de Jong",
+    // Vaartuigaanbieder
+    vaartuigaanbieder: "IJsseldelta Scheepvaart",
+    vaartuigaanbiederSubtext: "MS Petronella" as string | undefined,
+    // Condities – nog geen bod uitgewisseld
+    inkoopcondities: null as Condities | null,
+    verkoopcondities: null as Condities | null,
+    // Laden / Lossen
     laadLocatie: "Rotterdam",
     laadDatum: "2 feb 2026, 10:00",
     losLocatie: "Hamburg",
     losDatum: "5 feb 2026, 08:00",
+    // Rest
     deadline: "1 feb 2026",
     status: "Via werklijst",
-    updateUser: "",
     updateUserInitials: "KN",
     updateUserAvatar: imgAvatar as string | undefined,
     updateDate: "19 jan 2026, 14:30",
-    bron: "eigen",
   },
-];
-
-/* ── Mock data for Vaartuigen-tab ── */
-const mockVaartuigenOnderhandelingen = [
   {
-    id: "ond-v-1",
-    vaartuigLabel: "MS Adriana",
-    vaartuigBadge: undefined as string | undefined,
-    vaartuigSubtext: "Motorvaartuig · 02332456",
-    locatie: "Rotterdam",
-    locatieSubtext: "12 jan 2026, 08:00",
-    ladingLabel: "Grind",
-    tonnage: "1.200 t",
-    ladingSubtext: "Ex Eur-01 · SP-001",
-    vrachtprijs: "€ 8,50 /t",
-    relatie: "Rederij de Jong",
-    laadLocatie: "Rotterdam",
-    laadDatum: "15 jan 2026, 08:00",
-    losLocatie: "Antwerpen",
-    losDatum: "16 jan 2026, 14:00",
-    deadline: "17 jan 2026",
+    id: "ond-l-8",
+    // Bemiddeling – markt lading + markt vaartuig
+    bron: "bemiddeling",
+    ladingLabel: "Sojabonen",
+    ladingSubtext: "",
+    ladingBadge: "Bemiddeling" as string | undefined,
+    ladingIcon: undefined as string | undefined,
+    // Tonnage
+    tonnage: "3.500 t",
+    // Ladingaanbieder
+    ladingaanbieder: "Cargill European Trading",
+    // Vaartuigaanbieder
+    vaartuigaanbieder: "Rijn Transport BV",
+    vaartuigaanbiederSubtext: "MS De Hoop" as string | undefined,
+    // Condities
+    inkoopcondities: { prijs: 7.80, laadtijd: 16, liggeldLaden: 12.00, lostijd: 12, liggeldLossen: 11.00 } as Condities | null,
+    verkoopcondities: { prijs: 7.00, laadtijd: 14, liggeldLaden: 10.00, lostijd: 10, liggeldLossen: 10.00 } as Condities | null,
+    // Laden / Lossen
+    laadLocatie: "Rotterdam Botlek",
+    laadDatum: "3 feb 2026, 07:00",
+    losLocatie: "Basel",
+    losDatum: "7 feb 2026, 14:00",
+    // Rest
+    deadline: "2 feb 2026",
     status: "Bod verstuurd",
-    updateUser: "",
-    updateUserInitials: "KN",
+    updateUserInitials: "PJ",
     updateUserAvatar: imgAvatar as string | undefined,
-    updateDate: "14 jan 2026, 16:32",
-    bron: "eigen",
-    ladingBron: "eigen",
+    updateDate: "20 jan 2026, 09:30",
   },
   {
-    id: "ond-v-2",
-    vaartuigLabel: "MS De Hoop",
-    vaartuigBadge: "Markt" as string | undefined,
-    vaartuigSubtext: "Duwbak · 02334567",
-    locatie: "Duisburg",
-    locatieSubtext: "10 jan 2026, 14:00",
-    ladingLabel: "Zand",
-    tonnage: "850 t",
+    id: "ond-l-9",
+    // Bemiddeling – markt lading + markt vaartuig
+    bron: "bemiddeling",
+    ladingLabel: "Ijzererts",
     ladingSubtext: "",
-    vrachtprijs: "€ 7,20 /t",
-    relatie: "Rijn Transport BV",
-    laadLocatie: "Duisburg",
-    laadDatum: "18 jan 2026, 06:00",
-    losLocatie: "Dordrecht",
-    losDatum: "19 jan 2026, 10:00",
-    deadline: "20 jan 2026",
+    ladingBadge: "Bemiddeling" as string | undefined,
+    ladingIcon: undefined as string | undefined,
+    // Tonnage (range)
+    tonnage: "2.500 – 3.000 t",
+    // Ladingaanbieder
+    ladingaanbieder: "Schippers & Co",
+    // Vaartuigaanbieder
+    vaartuigaanbieder: "Noord-Zuid Bevrachting",
+    vaartuigaanbiederSubtext: "MS Orion" as string | undefined,
+    // Condities
+    inkoopcondities: { prijs: 9.40, laadtijd: 20, liggeldLaden: 16.00, lostijd: 14, liggeldLossen: 14.00, overig: "Dubbele bodem vereist" } as Condities | null,
+    verkoopcondities: { prijs: 8.60, laadtijd: 18, liggeldLaden: 14.00, lostijd: 12, liggeldLossen: 12.00 } as Condities | null,
+    // Laden / Lossen
+    laadLocatie: "IJmuiden",
+    laadDatum: "5 feb 2026, 06:00",
+    losLocatie: "Duisburg",
+    losDatum: "7 feb 2026, 10:00",
+    // Rest
+    deadline: "4 feb 2026",
     status: "Bod ontvangen",
-    updateUser: "",
-    updateUserInitials: "PJ",
-    updateUserAvatar: undefined as string | undefined,
-    updateDate: "13 jan 2026, 09:15",
-    bron: "markt",
-    ladingBron: "markt",
-  },
-  {
-    id: "ond-v-3",
-    vaartuigLabel: "MS Fortuna",
-    vaartuigBadge: undefined as string | undefined,
-    vaartuigSubtext: "Motorvaartuig · 02335678",
-    locatie: "Amsterdam",
-    locatieSubtext: "14 jan 2026, 06:00",
-    ladingLabel: "Steenkool",
-    tonnage: "2.000 t",
-    ladingSubtext: "Ex Eur-02 · SP-003",
-    vrachtprijs: "€ 9,10 /t",
-    relatie: "Rederij de Jong",
-    laadLocatie: "Amsterdam",
-    laadDatum: "20 jan 2026, 07:00",
-    losLocatie: "Gent",
-    losDatum: "21 jan 2026, 15:00",
-    deadline: "22 jan 2026",
-    status: "Goedgekeurd",
-    updateUser: "",
-    updateUserInitials: "PJ",
-    updateUserAvatar: imgAvatar as string | undefined,
-    updateDate: "15 jan 2026, 11:45",
-    bron: "eigen",
-    ladingBron: "eigen",
-  },
-  {
-    id: "ond-v-4",
-    vaartuigLabel: "MS Catharina",
-    vaartuigBadge: "Markt" as string | undefined,
-    vaartuigSubtext: "Duwbak · 02336789",
-    locatie: "Terneuzen",
-    locatieSubtext: "16 jan 2026, 10:00",
-    ladingLabel: "Mais",
-    tonnage: "600 t",
-    ladingSubtext: "",
-    vrachtprijs: "€ 11,00 /t",
-    relatie: "Schippers & Co",
-    laadLocatie: "Terneuzen",
-    laadDatum: "22 jan 2026, 09:00",
-    losLocatie: "Luik",
-    losDatum: "23 jan 2026, 12:00",
-    deadline: "24 jan 2026",
-    status: "Afgewezen",
-    updateUser: "",
     updateUserInitials: "EN",
     updateUserAvatar: undefined as string | undefined,
-    updateDate: "16 jan 2026, 14:20",
-    bron: "markt",
-    ladingBron: "markt",
-  },
-  {
-    id: "ond-v-5",
-    vaartuigLabel: "MS Orion",
-    vaartuigBadge: undefined as string | undefined,
-    vaartuigSubtext: "Motorvaartuig · 02337890",
-    locatie: "Nijmegen",
-    locatieSubtext: "18 jan 2026, 12:00",
-    ladingLabel: "Klinker",
-    tonnage: "1.500 t",
-    ladingSubtext: "Ex Eur-03 · SP-005",
-    vrachtprijs: "€ 10,25 /t",
-    relatie: "Rederij de Jong",
-    laadLocatie: "Nijmegen",
-    laadDatum: "25 jan 2026, 06:30",
-    losLocatie: "Rotterdam",
-    losDatum: "25 jan 2026, 18:00",
-    deadline: "26 jan 2026",
-    status: "Bod verstuurd",
-    updateUser: "",
-    updateUserInitials: "JK",
-    updateUserAvatar: imgAvatar as string | undefined,
-    updateDate: "17 jan 2026, 08:00",
-    bron: "eigen",
-    ladingBron: "eigen",
-  },
-  {
-    id: "ond-v-6",
-    vaartuigLabel: "MS Petronella",
-    vaartuigBadge: "Markt" as string | undefined,
-    vaartuigSubtext: "Motorvaartuig · 02338901",
-    locatie: "Mannheim",
-    locatieSubtext: "20 jan 2026, 06:00",
-    ladingLabel: "—",
-    tonnage: "—",
-    ladingSubtext: "",
-    vrachtprijs: "—",
-    relatie: "IJsseldelta Scheepvaart",
-    laadLocatie: "—",
-    laadDatum: "",
-    losLocatie: "—",
-    losDatum: "",
-    deadline: "3 feb 2026",
-    status: "Via werklijst",
-    updateUser: "",
-    updateUserInitials: "PJ",
-    updateUserAvatar: imgAvatar as string | undefined,
-    updateDate: "20 jan 2026, 11:00",
-    bron: "markt",
-    ladingBron: "markt",
+    updateDate: "21 jan 2026, 15:45",
   },
 ];
 
@@ -487,9 +505,6 @@ const PlusIcon = (
 export default function Onderhandelingen() {
   const navigate = useNavigate();
   const location = useLocation();
-  const activeTab = location.pathname.includes("/vaartuigen")
-    ? "vaartuigen"
-    : "ladingen";
 
   const [statusFilter, setStatusFilter] = useState("actief");
   const [sourceFilter, setSourceFilter] = useState("alles");
@@ -497,7 +512,7 @@ export default function Onderhandelingen() {
   const [currentPage, setCurrentPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(50);
   const [hoveredRow, setHoveredRow] = useState<string | null>(null);
-  const [selectedNegotiation, setSelectedNegotiation] = useState<{ id: string; status: string; bron: string; relatieName?: string } | null>(
+  const [selectedNegotiation, setSelectedNegotiation] = useState<{ id: string; status: string; bron: string; relatieName?: string; ladingaanbieder?: string; vaartuigaanbieder?: string } | null>(
     null
   );
   const [statusOverrides, setStatusOverrides] = useState<Record<string, string>>({});
@@ -507,21 +522,14 @@ export default function Onderhandelingen() {
     setSelectedNegotiation(prev => prev ? { ...prev, status: newStatus } : null);
   };
 
-  // Close sidepanel on tab switch
-  useEffect(() => { setSelectedNegotiation(null); }, [activeTab]);
-
   // Apply status overrides to mock data
-  const ladingenWithOverrides = mockLadingenOnderhandelingen.map(item => ({
-    ...item,
-    status: statusOverrides[item.id] || item.status,
-  }));
-  const vaartuigenWithOverrides = mockVaartuigenOnderhandelingen.map(item => ({
+  const dataWithOverrides = mockOnderhandelingen.map(item => ({
     ...item,
     status: statusOverrides[item.id] || item.status,
   }));
 
-  /* ── Filter logic: Ladingen ── */
-  const filteredLadingen = ladingenWithOverrides.filter((item) => {
+  /* ── Filter logic ── */
+  const filteredData = dataWithOverrides.filter((item) => {
     if (statusFilter === "actief" && !activeStatuses.includes(item.status))
       return false;
     if (statusFilter === "goedgekeurd" && item.status !== "Goedgekeurd")
@@ -532,49 +540,29 @@ export default function Onderhandelingen() {
       const q = searchQuery.toLowerCase();
       if (
         !item.ladingLabel.toLowerCase().includes(q) &&
-        !item.relatie.toLowerCase().includes(q) &&
-        !item.vaartuig.toLowerCase().includes(q)
+        !item.ladingaanbieder.toLowerCase().includes(q) &&
+        !item.vaartuigaanbieder.toLowerCase().includes(q)
       )
         return false;
     }
     return true;
   });
 
-  /* ── Filter logic: Vaartuigen ── */
-  const filteredVaartuigen = vaartuigenWithOverrides.filter((item) => {
-    if (statusFilter === "actief" && !activeStatuses.includes(item.status))
-      return false;
-    if (statusFilter === "goedgekeurd" && item.status !== "Goedgekeurd")
-      return false;
-    if (statusFilter === "afgewezen" && item.status !== "Afgewezen") return false;
-    if (sourceFilter !== "alles" && item.bron !== sourceFilter) return false;
-    if (searchQuery) {
-      const q = searchQuery.toLowerCase();
-      if (
-        !item.vaartuigLabel.toLowerCase().includes(q) &&
-        !item.relatie.toLowerCase().includes(q) &&
-        !item.ladingLabel.toLowerCase().includes(q)
-      )
-        return false;
-    }
-    return true;
-  });
-
-  const activeData = activeTab === "ladingen" ? filteredLadingen : filteredVaartuigen;
-  const totalItems = activeData.length;
+  const totalItems = filteredData.length;
   const indexOfLast = currentPage * rowsPerPage;
   const indexOfFirst = indexOfLast - rowsPerPage;
-  const currentLadingen = filteredLadingen.slice(indexOfFirst, indexOfLast);
-  const currentVaartuigen = filteredVaartuigen.slice(indexOfFirst, indexOfLast);
+  const currentData = filteredData.slice(indexOfFirst, indexOfLast);
 
-  /* ── Ladingen table columns ── */
-  const ladingenColumns: Column[] = [
+  /* ── Table columns ── */
+  const columns: Column[] = [
     {
       key: "lading",
       header: "Lading",
       type: "leading-text",
       subtextKey: "ladingSubtext",
       badgeKey: "ladingBadge",
+      badgeStyleKey: "ladingBadgeStyle",
+      iconKey: "ladingIcon",
     },
     {
       key: "tonnage",
@@ -584,29 +572,35 @@ export default function Onderhandelingen() {
       align: "right",
     },
     {
-      key: "vaartuig",
-      header: "Vaartuig",
-      type: "text",
-      width: "w-[160px]",
-      subtextKey: "vaartuigSubtext",
-    },
-    {
-      key: "vrachtprijs",
-      header: "Vrachtprijs",
-      type: "text",
-      width: "w-[140px]",
-      subtextKey: "vrachtprijsDiff",
-      subtextColorKey: "vrachtprijsDiffColor",
-      subtextTooltipKey: "vrachtprijsDiffTooltip",
-      align: "right",
-    },
-    {
-      key: "relatie",
-      header: "Relatie",
+      key: "ladingaanbieder",
+      header: "Ladingaanbieder",
       type: "text",
       width: "w-[180px]",
       textColor: "text-rdj-text-brand",
-      hoverContentKey: "relatieHoverContent",
+      hoverContentKey: "ladingaanbiederHoverContent",
+    },
+    {
+      key: "vaartuigaanbieder",
+      header: "Vaartuigaanbieder",
+      type: "text",
+      width: "w-[180px]",
+      subtextKey: "vaartuigaanbiederSubtext",
+      textColor: "text-rdj-text-brand",
+      hoverContentKey: "vaartuigaanbiederHoverContent",
+    },
+    {
+      key: "inkoopcondities",
+      header: "Inkoopcondities",
+      type: "custom",
+      width: "w-[160px]",
+      render: (row) => <ConditiesCell condities={row._inkoopcondities} />,
+    },
+    {
+      key: "verkoopcondities",
+      header: "Verkoopcondities",
+      type: "custom",
+      width: "w-[160px]",
+      render: (row) => <ConditiesCell condities={row._verkoopcondities} />,
     },
     {
       key: "laden",
@@ -649,109 +643,25 @@ export default function Onderhandelingen() {
     },
   ];
 
-  /* ── Vaartuigen table columns ── */
-  const vaartuigenColumns: Column[] = [
-    {
-      key: "vaartuig",
-      header: "Vaartuig",
-      type: "leading-text",
-      subtextKey: "vaartuigSubtext",
-      badgeKey: "vaartuigBadge",
-    },
-    {
-      key: "locatie",
-      header: "Locatie",
-      type: "text",
-      width: "w-[160px]",
-      subtextKey: "locatieSubtext",
-    },
-    {
-      key: "lading",
-      header: "Lading",
-      type: "text",
-      width: "w-[180px]",
-      subtextKey: "ladingSubtext",
-    },
-    {
-      key: "tonnage",
-      header: "Tonnage",
-      type: "text",
-      width: "w-[120px]",
-      align: "right",
-    },
-    {
-      key: "vrachtprijs",
-      header: "Vrachtprijs",
-      type: "text",
-      width: "w-[120px]",
-      align: "right",
-    },
-    {
-      key: "relatie",
-      header: "Relatie",
-      type: "text",
-      width: "w-[180px]",
-      textColor: "text-rdj-text-brand",
-      hoverContentKey: "relatieHoverContent",
-    },
-    {
-      key: "laden",
-      header: "Laden",
-      type: "text",
-      width: "w-[180px]",
-      subtextKey: "ladenDate",
-    },
-    {
-      key: "lossen",
-      header: "Lossen",
-      type: "text",
-      width: "w-[180px]",
-      subtextKey: "lossenDate",
-    },
-    {
-      key: "deadline",
-      header: "Deadline",
-      type: "text",
-      width: "w-[140px]",
-    },
-    {
-      key: "status",
-      header: "Status",
-      type: "status",
-      width: "w-[160px]",
-      variantKey: "statusVariant",
-      iconKey: "statusIcon",
-      typeKey: "statusType",
-      defaultVariant: "grey" as const,
-    },
-    {
-      key: "updateUser",
-      header: "Laatste update",
-      type: "text",
-      width: "w-[180px]",
-      subtextKey: "updateDate",
-      avatarSrcKey: "updateUserAvatar",
-      avatarInitialsKey: "updateUserInitials",
-    },
-  ];
-
-  /* ── Map ladingen rows ── */
-  const ladingenRows = currentLadingen.map((item) => ({
+  /* ── Map rows ── */
+  const rows = currentData.map((item) => ({
     id: item.id,
     lading: item.ladingLabel,
     ladingSubtext: item.ladingSubtext || undefined,
     ladingBadge: item.ladingBadge,
+    ladingBadgeStyle: item.ladingBadge === "Bemiddeling" ? { backgroundColor: '#EFF8FF', color: '#175CD3', borderColor: '#B2DDFF' } : undefined,
+    ladingIcon: item.ladingIcon,
     tonnage: item.tonnage,
-    vaartuig: item.vaartuig,
-    vaartuigSubtext: item.vaartuigEni || undefined,
-    vrachtprijs: item.vrachtprijs,
-    vrachtprijsDiff: item.vrachtprijsDiff,
-    vrachtprijsDiffColor: item.bron === "eigen"
-      ? (item.vrachtprijsDiff?.startsWith("+") ? "#F79009" : undefined)
-      : (item.vrachtprijsDiff?.startsWith("-") ? "#F79009" : undefined),
-    vrachtprijsDiffTooltip: item.vrachtprijsDiff && item.vrachtprijsDiff !== "" ? (item.bron === "eigen" ? "Vergeleken met verkoop" : "Vergeleken met inkoop") : undefined,
-    relatie: item.relatie,
-    relatieHoverContent: buildRelatieHoverContent(item.relatie),
+    ladingaanbieder: item.ladingaanbieder,
+    ladingaanbiederHoverContent: buildRelatieHoverContent(item.ladingaanbieder),
+    vaartuigaanbieder: item.vaartuigaanbieder,
+    vaartuigaanbiederSubtext: item.vaartuigaanbiederSubtext,
+    vaartuigaanbiederHoverContent: item.vaartuigaanbieder !== "—" ? buildRelatieHoverContent(item.vaartuigaanbieder) : undefined,
+    // Store condities objects for custom render
+    _inkoopcondities: item.inkoopcondities,
+    _verkoopcondities: item.verkoopcondities,
+    inkoopcondities: item.inkoopcondities ? `€ ${item.inkoopcondities.prijs.toFixed(2).replace(".", ",")} /t` : "—",
+    verkoopcondities: item.verkoopcondities ? `€ ${item.verkoopcondities.prijs.toFixed(2).replace(".", ",")} /t` : "—",
     laden: item.laadLocatie,
     ladenDate: item.laadDatum,
     lossen: item.losLocatie,
@@ -768,38 +678,7 @@ export default function Onderhandelingen() {
     bron: item.bron,
   }));
 
-  /* ── Map vaartuigen rows ── */
-  const vaartuigenRows = currentVaartuigen.map((item) => ({
-    id: item.id,
-    vaartuig: item.vaartuigLabel,
-    vaartuigSubtext: item.vaartuigSubtext,
-    vaartuigBadge: item.vaartuigBadge,
-    locatie: item.locatie,
-    locatieSubtext: item.locatieSubtext,
-    lading: item.ladingLabel,
-    ladingSubtext: item.ladingSubtext || undefined,
-    tonnage: item.tonnage,
-    vrachtprijs: item.vrachtprijs,
-    relatie: item.relatie,
-    relatieHoverContent: buildRelatieHoverContent(item.relatie),
-    laden: item.laadLocatie,
-    ladenDate: item.laadDatum,
-    lossen: item.losLocatie,
-    lossenDate: item.losDatum,
-    deadline: item.deadline,
-    status: item.status,
-    statusVariant: statusVariantMap[item.status],
-    statusIcon: statusIconMap[item.status],
-    statusType: statusTypeMap[item.status],
-    updateUser: "",
-    updateDate: item.updateDate,
-    updateUserAvatar: item.updateUserAvatar,
-    updateUserInitials: item.updateUserInitials,
-    bron: item.bron,
-  }));
-
-  const { sortedColumns: sortedLadingenColumns, sortedData: sortedLadingenData } = useTableSort(ladingenColumns, ladingenRows);
-  const { sortedColumns: sortedVaartuigenColumns, sortedData: sortedVaartuigenData } = useTableSort(vaartuigenColumns, vaartuigenRows);
+  const { sortedColumns, sortedData } = useTableSort(columns, rows);
 
   return (
     <div className="flex min-h-screen bg-rdj-bg-primary">
@@ -815,18 +694,6 @@ export default function Onderhandelingen() {
               leadingIcon={PlusIcon}
             />
           }
-          tabs={[
-            {
-              label: "Ladingen",
-              path: "/markt/onderhandelingen/ladingen",
-              isActive: activeTab === "ladingen",
-            },
-            {
-              label: "Vaartuigen",
-              path: "/markt/onderhandelingen/vaartuigen",
-              isActive: activeTab === "vaartuigen",
-            },
-          ]}
           filtersLeft={
             <>
               <StatusFilterDropdown
@@ -841,6 +708,7 @@ export default function Onderhandelingen() {
                   { value: "alles", label: "Alles" },
                   { value: "eigen", label: "Eigen" },
                   { value: "markt", label: "Markt" },
+                  { value: "bemiddeling", label: "Bemiddeling" },
                 ]}
                 value={sourceFilter}
                 onChange={(val) => {
@@ -960,31 +828,18 @@ export default function Onderhandelingen() {
             onRowsPerPageChange={setRowsPerPage}
           />
 
-          {activeTab === "ladingen" && (
-            <Table
-              columns={sortedLadingenColumns}
-              data={sortedLadingenData}
-              hoveredRowId={hoveredRow}
-              activeRowId={selectedNegotiation?.id ?? null}
-              onRowHover={setHoveredRow}
-              onRowClick={(row) => {
-                setSelectedNegotiation({ id: row.id, status: row.status as string, bron: row.bron as string, relatieName: row.company as string });
-              }}
-            />
-          )}
-
-          {activeTab === "vaartuigen" && (
-            <Table
-              columns={sortedVaartuigenColumns}
-              data={sortedVaartuigenData}
-              hoveredRowId={hoveredRow}
-              activeRowId={selectedNegotiation?.id ?? null}
-              onRowHover={setHoveredRow}
-              onRowClick={(row) => {
-                setSelectedNegotiation({ id: row.id, status: row.status as string, bron: row.bron as string, relatieName: row.company as string });
-              }}
-            />
-          )}
+          <Table
+            columns={sortedColumns}
+            data={sortedData}
+            hoveredRowId={hoveredRow}
+            activeRowId={selectedNegotiation?.id ?? null}
+            onRowHover={setHoveredRow}
+            onRowClick={(row) => {
+              const bron = row.bron as string;
+              const relatie = bron === "eigen" ? row.vaartuigaanbieder as string : row.ladingaanbieder as string;
+              setSelectedNegotiation({ id: row.id, status: row.status as string, bron, relatieName: relatie, ladingaanbieder: row.ladingaanbieder as string, vaartuigaanbieder: row.vaartuigaanbieder as string });
+            }}
+          />
 
           <Pagination
             currentPage={currentPage}
@@ -1001,9 +856,10 @@ export default function Onderhandelingen() {
         <OnderhandelingSidepanel
           negotiationId={selectedNegotiation.id}
           status={selectedNegotiation.status as "Via werklijst" | "Bod verstuurd" | "Bod ontvangen" | "Goedgekeurd" | "Afgewezen"}
-          bron={selectedNegotiation.bron as "eigen" | "markt"}
-          soort={activeTab === "vaartuigen" ? "vaartuig" : "lading"}
+          bron={selectedNegotiation.bron === "bemiddeling" ? "markt" : selectedNegotiation.bron as "eigen" | "markt"}
+          soort="lading"
           relatieName={selectedNegotiation.relatieName}
+          bemiddeling={selectedNegotiation.bron === "bemiddeling" ? { inkoopRelatie: selectedNegotiation.vaartuigaanbieder!, verkoopRelatie: selectedNegotiation.ladingaanbieder! } : undefined}
           onClose={() => setSelectedNegotiation(null)}
           onStatusChange={handleStatusChange}
         />
