@@ -587,18 +587,18 @@ export default function Onderhandelingen() {
       hoverContentKey: "vaartuigaanbiederHoverContent",
     },
     {
-      key: "inkoopcondities",
-      header: "Inkoopcondities",
-      type: "custom",
-      width: "w-[160px]",
-      render: (row) => <ConditiesCell condities={row._inkoopcondities} />,
-    },
-    {
       key: "verkoopcondities",
       header: "Verkoopcondities",
       type: "custom",
       width: "w-[160px]",
       render: (row) => <ConditiesCell condities={row._verkoopcondities} />,
+    },
+    {
+      key: "inkoopcondities",
+      header: "Inkoopcondities",
+      type: "custom",
+      width: "w-[160px]",
+      render: (row) => <ConditiesCell condities={row._inkoopcondities} />,
     },
     {
       key: "laden",
