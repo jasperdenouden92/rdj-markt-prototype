@@ -249,7 +249,7 @@ export default function Contracten() {
   return (
     <DndProvider backend={HTML5Backend}>
       <div className="flex min-h-screen bg-rdj-bg-primary">
-        <Sidebar />
+        <Sidebar data-annotation-id="contracten-navigatie" />
 
         <div className="flex-1 flex flex-col overflow-auto">
           <div className="pt-[32px] pb-[8px]">
@@ -346,14 +346,14 @@ export default function Contracten() {
             </div>
           ) : (
             <>
-              <Pagination
+              <Pagination data-annotation-id="contracten-paginering"
                 currentPage={currentPage}
                 totalItems={filtered.length}
                 rowsPerPage={rowsPerPage}
                 onPageChange={setCurrentPage}
                 onRowsPerPageChange={setRowsPerPage}
               />
-              <Table
+              <Table data-annotation-id="contracten-tabel"
                 columns={sortedColumns}
                 data={sortedData}
                 hoveredRowId={hoveredRow}

@@ -103,7 +103,7 @@ export default function VlootVaartuigDetail() {
   if (!vaartuig) {
     return (
       <div className="flex min-h-screen bg-white">
-        <Sidebar />
+        <Sidebar data-annotation-id="vlootvaartuigdetail-navigatie-2" />
         <div className="flex-1 flex items-center justify-center">
           <div className="text-center">
             <p className="font-sans font-bold text-[20px] text-rdj-text-primary">Vaartuig niet gevonden</p>
@@ -120,7 +120,7 @@ export default function VlootVaartuigDetail() {
 
   return (
     <div className="flex min-h-screen bg-white">
-      <Sidebar />
+      <Sidebar data-annotation-id="vlootvaartuigdetail-navigatie" />
 
       <div className="flex-1 flex min-h-0 min-w-0">
         <div className="flex-1 overflow-y-auto overflow-x-hidden min-w-0">
@@ -223,7 +223,7 @@ export default function VlootVaartuigDetail() {
                 {/* Reizen table */}
                 <div className="border border-rdj-border-secondary rounded-[12px] overflow-hidden">
                   <div className="overflow-x-auto">
-                    <table className="w-full">
+                    <table data-annotation-id="vlootvaartuigdetail-tabel-2" className="w-full">
                       <thead>
                         <tr className="border-b border-rdj-border-secondary bg-[#f9fafb]">
                           {["Subject", "Type lading", "Ladinggewicht", "Laaddatum", "Losdatum", "Laadlocatie", "Loslocatie", "Status"].map((h) => (
@@ -298,7 +298,7 @@ export default function VlootVaartuigDetail() {
 
                 {/* Niet beschikbaar table */}
                 <div className="border border-rdj-border-secondary rounded-[12px] overflow-hidden">
-                  <table className="w-full">
+                  <table data-annotation-id="vlootvaartuigdetail-tabel" className="w-full">
                     <thead>
                       <tr className="border-b border-rdj-border-secondary bg-[#f9fafb]">
                         {["Type", "Locatie", "Beschrijving", "Datum"].map((h) => (

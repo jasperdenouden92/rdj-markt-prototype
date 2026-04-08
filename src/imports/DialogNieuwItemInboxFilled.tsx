@@ -860,7 +860,7 @@ function InputDropdown() {
   return (
     <div className="content-stretch flex flex-col gap-[6px] items-start relative shrink-0 w-full" data-name="Input dropdown">
       <InputDropdown1 />
-      <List />
+      <List data-annotation-id="dialognieuwiteminboxfilled-lijst" />
     </div>
   );
 }
@@ -1515,7 +1515,7 @@ export default function DialogNieuwItemInboxFilled() {
   return (
     <div className="bg-white content-stretch flex gap-[100px] items-center justify-center relative size-full" data-name="Dialog - Nieuw item inbox - Filled">
       <BackgroundOverlay />
-      <Modal />
+      <Modal data-annotation-id="dialognieuwiteminboxfilled-modal" />
       <Modal1 />
     </div>
   );

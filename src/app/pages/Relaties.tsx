@@ -242,7 +242,7 @@ export default function Relaties() {
 
   return (
     <div className="flex min-h-screen bg-rdj-bg-primary">
-      <Sidebar />
+      <Sidebar data-annotation-id="relaties-navigatie" />
 
       <div className="flex-1 flex flex-col overflow-auto">
         <div className="pt-[32px] pb-[8px]">
@@ -311,7 +311,7 @@ export default function Relaties() {
           />
         </div>
 
-        <Pagination
+        <Pagination data-annotation-id="relaties-paginering"
           currentPage={currentPage}
           totalItems={filtered.length}
           rowsPerPage={rowsPerPage}
@@ -319,7 +319,7 @@ export default function Relaties() {
           onRowsPerPageChange={setRowsPerPage}
         />
 
-        <Table
+        <Table data-annotation-id="relaties-tabel"
           columns={columns}
           data={tableData}
           hoveredRowId={hoveredRow}

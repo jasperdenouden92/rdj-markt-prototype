@@ -167,7 +167,7 @@ export default function Taken() {
 
   return (
     <div className="flex min-h-screen bg-white">
-      <Sidebar />
+      <Sidebar data-annotation-id="taken-navigatie" />
 
       <div className="flex-1 overflow-auto">
         {breadcrumb}
@@ -217,7 +217,7 @@ export default function Taken() {
                   <>
                     {openTaken.length > 0 && (
                       <div className="border border-rdj-border-secondary rounded-[8px] overflow-hidden">
-                        <table className="w-full">
+                        <table data-annotation-id="taken-tabel-2" className="w-full">
                           <thead>
                             <tr className="border-b border-rdj-border-secondary bg-[#f9fafb]">
                               <th className="w-[40px]" />
@@ -247,7 +247,7 @@ export default function Taken() {
                         </button>
                         {showVoltooid && (
                           <div className="border border-rdj-border-secondary rounded-[8px] overflow-hidden mt-[8px]">
-                            <table className="w-full">
+                            <table data-annotation-id="taken-tabel" className="w-full">
                               <tbody>
                                 {voltooide.map(renderRow)}
                               </tbody>

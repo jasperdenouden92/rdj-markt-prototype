@@ -215,7 +215,7 @@ function Row1() {
       <button className="content-stretch cursor-pointer flex flex-col gap-[6px] items-start relative shrink-0 w-[160px]" data-name="Input field">
         <InputWithLabel1 />
       </button>
-      <List />
+      <List data-annotation-id="marktbevrachtingladingnaarwerklijst-lijst" />
     </div>
   );
 }
@@ -865,7 +865,7 @@ export default function MarktBevrachtingLadingNaarWerklijst() {
       <div className="absolute h-[2190px] left-0 top-0 w-[1920px]" data-name="Background overlay">
         <BackgroundOverlay />
       </div>
-      <Modal />
+      <Modal data-annotation-id="marktbevrachtingladingnaarwerklijst-modal" />
     </div>
   );
 }

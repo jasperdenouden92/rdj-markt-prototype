@@ -778,7 +778,7 @@ export default function ConversationDialog({
             </div>
           </div>
           <div className="mt-[16px] -mx-[32px] border-b border-rdj-border-secondary">
-            <Tabs value={activeTab} onValueChange={val => setActiveTab(val as TabValue)}>
+            <Tabs data-annotation-id="conversationdialog-tabs" value={activeTab} onValueChange={val => setActiveTab(val as TabValue)}>
               <TabsList className="bg-transparent p-0 h-auto rounded-none justify-start gap-0 pl-[32px]">
                 <TabsTrigger
                   value="ladingen-relatie"

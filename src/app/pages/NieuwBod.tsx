@@ -107,7 +107,7 @@ export default function NieuwBod() {
 
   return (
     <div className="flex min-h-screen bg-white">
-      <Sidebar />
+      <Sidebar data-annotation-id="nieuwbod-navigatie" />
       
       <div className="flex-1 flex">
         <div className="flex-1 flex flex-col overflow-hidden">

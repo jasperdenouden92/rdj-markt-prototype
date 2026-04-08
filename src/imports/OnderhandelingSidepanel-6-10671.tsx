@@ -324,7 +324,7 @@ function Content1() {
   return (
     <div className="content-stretch flex flex-[1_0_0] flex-col gap-[12px] items-start min-h-px min-w-px pb-[32px] relative" data-name="Content">
       <TextAndSupportingText1 />
-      <Card />
+      <Card data-annotation-id="onderhandelingsidepanel-6-10671-card" />
       <Bid />
     </div>
   );

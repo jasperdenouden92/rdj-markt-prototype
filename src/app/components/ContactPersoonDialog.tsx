@@ -27,13 +27,13 @@ export default function ContactPersoonDialog({ contact, onSave, onClose }: Conta
   };
 
   return (
-    <Dialog open onOpenChange={() => onClose()}>
+    <Dialog data-annotation-id="contactpersoondialog-modal" open onOpenChange={() => onClose()}>
       <DialogContent className="sm:max-w-[440px]">
         <DialogHeader>
           <DialogTitle>{isEdit ? "Contactpersoon bewerken" : "Contactpersoon toevoegen"}</DialogTitle>
         </DialogHeader>
 
-        <form onSubmit={handleSubmit} className="flex flex-col gap-[16px] pt-[8px]">
+        <form data-annotation-id="contactpersoondialog-formulier" onSubmit={handleSubmit} className="flex flex-col gap-[16px] pt-[8px]">
           <div className="flex flex-col gap-[6px]">
             <Label htmlFor="cp-naam" className="font-sans font-bold text-[14px] text-[#344054]">
               Naam *

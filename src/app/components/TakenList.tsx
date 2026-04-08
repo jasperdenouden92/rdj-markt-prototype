@@ -185,7 +185,7 @@ export default function TakenList({ relatieId, contractId, showRelatie = false, 
         </div>
       ) : (
         <div className="border border-rdj-border-secondary rounded-[8px] overflow-hidden">
-          <table className="w-full">
+          <table data-annotation-id="takenlist-tabel-2" className="w-full">
             <thead>
               <tr className="border-b border-rdj-border-secondary bg-[#f9fafb]">
                 <th className="w-[40px]" />
@@ -216,7 +216,7 @@ export default function TakenList({ relatieId, contractId, showRelatie = false, 
           </button>
           {showVoltooid && (
             <div className="border border-rdj-border-secondary rounded-[8px] overflow-hidden mt-[8px]">
-              <table className="w-full">
+              <table data-annotation-id="takenlist-tabel" className="w-full">
                 <tbody>
                   {voltooide.map(renderRow)}
                 </tbody>

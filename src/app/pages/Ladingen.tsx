@@ -129,7 +129,7 @@ export default function Ladingen() {
 
   return (
     <div className="flex min-h-screen bg-rdj-bg-primary">
-      <Sidebar />
+      <Sidebar data-annotation-id="ladingen-navigatie" />
 
       <div className="flex-1 flex flex-col overflow-auto">
         <div className="pt-[32px] pb-[8px]">
@@ -184,7 +184,7 @@ export default function Ladingen() {
           />
         </div>
 
-        <Pagination
+        <Pagination data-annotation-id="ladingen-paginering"
           currentPage={currentPage}
           totalItems={filtered.length}
           rowsPerPage={rowsPerPage}
@@ -192,7 +192,7 @@ export default function Ladingen() {
           onRowsPerPageChange={setRowsPerPage}
         />
 
-        <Table
+        <Table data-annotation-id="ladingen-tabel"
           columns={sortedColumns}
           data={sortedData}
           hoveredRowId={hoveredRow}

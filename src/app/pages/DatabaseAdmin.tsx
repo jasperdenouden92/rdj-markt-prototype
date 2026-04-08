@@ -79,7 +79,7 @@ export default function DatabaseAdmin() {
 
   return (
     <div className="flex h-screen bg-rdj-bg-primary overflow-hidden">
-      <Sidebar />
+      <Sidebar data-annotation-id="databaseadmin-navigatie" />
       <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
         <PageHeader
           title="Database"

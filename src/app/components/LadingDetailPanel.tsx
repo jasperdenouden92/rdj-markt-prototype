@@ -216,14 +216,14 @@ export default function LadingDetailPanel({ id, onClose }: LadingDetailPanelProp
           {/* Tab content */}
           {activeTab === 'matches' && (
             <>
-              <Pagination
+              <Pagination data-annotation-id="ladingdetailpanel-paginering-2"
                 currentPage={matchPage}
                 totalItems={mockMatches.length}
                 rowsPerPage={matchRowsPerPage}
                 onPageChange={setMatchPage}
                 onRowsPerPageChange={setMatchRowsPerPage}
               />
-              <Table
+              <Table data-annotation-id="ladingdetailpanel-tabel-2"
                 columns={sortedMatchColumns}
                 data={sortedMatchData}
                 hoveredRowId={hoveredRow}
@@ -242,14 +242,14 @@ export default function LadingDetailPanel({ id, onClose }: LadingDetailPanelProp
 
           {activeTab === 'onderhandelingen' && (
             <>
-              <Pagination
+              <Pagination data-annotation-id="ladingdetailpanel-paginering"
                 currentPage={negPage}
                 totalItems={mockNegotiations.length}
                 rowsPerPage={negRowsPerPage}
                 onPageChange={setNegPage}
                 onRowsPerPageChange={setNegRowsPerPage}
               />
-              <Table
+              <Table data-annotation-id="ladingdetailpanel-tabel"
                 columns={sortedNegColumns}
                 data={sortedNegData}
                 hoveredRowId={hoveredRow}

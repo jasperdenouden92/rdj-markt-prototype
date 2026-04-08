@@ -225,7 +225,7 @@ export default function Vloot() {
 
   return (
     <div className="flex min-h-screen bg-rdj-bg-primary">
-      <Sidebar />
+      <Sidebar data-annotation-id="vloot-navigatie" />
 
       <div className="flex-1 flex flex-col overflow-auto">
         <div className="pt-[32px] pb-[8px]">
@@ -323,7 +323,7 @@ export default function Vloot() {
           />
         </div>
 
-        <Pagination
+        <Pagination data-annotation-id="vloot-paginering-2"
           currentPage={currentPage}
           totalItems={mockTotal}
           rowsPerPage={rowsPerPage}
@@ -331,7 +331,7 @@ export default function Vloot() {
           onRowsPerPageChange={setRowsPerPage}
         />
 
-        <Table
+        <Table data-annotation-id="vloot-tabel"
           columns={sortedColumns}
           data={sortedData}
           selectable
@@ -345,7 +345,7 @@ export default function Vloot() {
           }}
         />
 
-        <Pagination
+        <Pagination data-annotation-id="vloot-paginering"
           currentPage={currentPage}
           totalItems={mockTotal}
           rowsPerPage={rowsPerPage}

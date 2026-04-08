@@ -371,7 +371,7 @@ export default function Bevrachting() {
     <DndProvider backend={HTML5Backend}>
       <Toaster position="top-right" richColors />
       <div className="flex min-h-screen bg-rdj-bg-primary">
-        <Sidebar />
+        <Sidebar data-annotation-id="bevrachting-navigatie" />
         
         <div className="flex-1 overflow-auto pt-[24px]">
           {/* Header Section */}
@@ -523,21 +523,21 @@ export default function Bevrachting() {
           </div>
           ) : (
           <div>
-            <Pagination
+            <Pagination data-annotation-id="bevrachting-paginering-2"
               currentPage={currentPage}
               totalItems={activeTab === 'ladingen' ? cargos.length : vessels.length}
               rowsPerPage={rowsPerPage}
               onPageChange={setCurrentPage}
               onRowsPerPageChange={setRowsPerPage}
             />
-            <Table
+            <Table data-annotation-id="bevrachting-tabel"
               columns={activeTab === 'ladingen' ? sortedCargoColumns : sortedVesselColumns}
               data={activeTab === 'ladingen' ? sortedCargoData : sortedVesselData}
               onRowClick={(row) => navigate(`/markt/bevrachting/${activeTab === 'ladingen' ? 'lading' : 'vaartuig'}/${row.id}`)}
               hoveredRowId={hoveredRow}
               onRowHover={setHoveredRow}
             />
-            <Pagination
+            <Pagination data-annotation-id="bevrachting-paginering"
               currentPage={currentPage}
               totalItems={activeTab === 'ladingen' ? cargos.length : vessels.length}
               rowsPerPage={rowsPerPage}

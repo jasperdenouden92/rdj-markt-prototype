@@ -243,7 +243,7 @@ export default function InboxCargoDetail() {
     <>
       <Toaster position="top-right" richColors />
       <div className="flex min-h-screen bg-white">
-        <Sidebar />
+        <Sidebar data-annotation-id="inboxcargodetail-navigatie" />
 
         <div className="flex-1 flex min-h-0 min-w-0">
           <div className="flex-1 overflow-y-auto overflow-x-hidden min-w-0">
@@ -314,14 +314,14 @@ export default function InboxCargoDetail() {
                           filterValue={matchFilter}
                           onFilterChange={setMatchFilter}
                         />
-                        <Pagination
+                        <Pagination data-annotation-id="inboxcargodetail-paginering-2"
                           currentPage={matchPage}
                           totalItems={filteredMatchRows.length}
                           rowsPerPage={matchRowsPerPage}
                           onPageChange={setMatchPage}
                           onRowsPerPageChange={setMatchRowsPerPage}
                         />
-                        <Table
+                        <Table data-annotation-id="inboxcargodetail-tabel-2"
                           columns={sortedMatchColumns}
                           data={sortedMatchData}
                           hoveredRowId={hoveredRow}
@@ -361,14 +361,14 @@ export default function InboxCargoDetail() {
                           onAdd={() => setConversationDialog({ relatieId: "", relatieName: "" })}
                           addTooltip="Onderhandeling starten"
                         />
-                        <Pagination
+                        <Pagination data-annotation-id="inboxcargodetail-paginering"
                           currentPage={negPage}
                           totalItems={filteredNegData.length}
                           rowsPerPage={negRowsPerPage}
                           onPageChange={setNegPage}
                           onRowsPerPageChange={setNegRowsPerPage}
                         />
-                        <Table
+                        <Table data-annotation-id="inboxcargodetail-tabel"
                           columns={sortedNegColumns}
                           data={sortedNegData}
                           hoveredRowId={hoveredRow}

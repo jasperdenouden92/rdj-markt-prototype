@@ -445,7 +445,7 @@ export default function Inbox() {
         itemType={itemType}
       />
       <div className="flex min-h-screen bg-rdj-bg-primary">
-        <Sidebar />
+        <Sidebar data-annotation-id="inbox-navigatie" />
         
         <div className={`flex-1 ${viewMode === 'map' ? 'flex flex-col overflow-hidden' : 'overflow-auto'} pt-[24px]`}>
           <PageHeader
@@ -541,14 +541,14 @@ export default function Inbox() {
             </div>
           ) : (
           <div className="">
-            <Pagination
+            <Pagination data-annotation-id="inbox-paginering-2"
               currentPage={currentPage}
               totalItems={totalItems}
               rowsPerPage={rowsPerPage}
               onPageChange={setCurrentPage}
               onRowsPerPageChange={setRowsPerPage}
             />
-            <Table
+            <Table data-annotation-id="inbox-tabel"
               columns={sortedColumns}
               data={sortedData}
               onRowClick={(row) => navigate(`/markt/inbox/lading/${row.id}`)}
@@ -556,7 +556,7 @@ export default function Inbox() {
               onRowHover={setHoveredRow}
             />
 
-            <Pagination
+            <Pagination data-annotation-id="inbox-paginering"
               currentPage={currentPage}
               totalItems={totalItems}
               rowsPerPage={rowsPerPage}

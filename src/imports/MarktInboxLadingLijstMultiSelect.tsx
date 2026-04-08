@@ -176,7 +176,7 @@ function Navigation1() {
 function Navigation() {
   return (
     <div className="content-stretch flex flex-col gap-[24px] items-start pt-[32px] relative shrink-0 w-full" data-name="Navigation">
-      <Header />
+      <Header data-annotation-id="marktinboxladinglijstmultiselect-navigatie-3" />
       <Navigation1 />
     </div>
   );
@@ -221,8 +221,8 @@ function Footer() {
 function Content() {
   return (
     <div className="content-stretch flex flex-[1_0_0] flex-col h-full items-start justify-between min-h-px min-w-px relative" data-name="Content">
-      <Navigation />
-      <Footer />
+      <Navigation data-annotation-id="marktinboxladinglijstmultiselect-navigatie-2" />
+      <Footer data-annotation-id="marktinboxladinglijstmultiselect-navigatie" />
     </div>
   );
 }
@@ -317,7 +317,7 @@ function HeaderSection() {
   return (
     <div className="content-stretch flex flex-col gap-[24px] items-start relative shrink-0 w-full" data-name="Header section">
       <Container />
-      <Tabs />
+      <Tabs data-annotation-id="marktinboxladinglijstmultiselect-tabs" />
     </div>
   );
 }
@@ -2694,7 +2694,7 @@ function Container1() {
   return (
     <div className="content-stretch flex flex-[1_0_0] flex-col gap-[24px] items-start min-h-px min-w-px relative w-[1848px]" data-name="Container">
       <SectionHeaderWrap />
-      <Pagination />
+      <Pagination data-annotation-id="marktinboxladinglijstmultiselect-paginering" />
       <Content7 />
       <Pagination1 />
     </div>

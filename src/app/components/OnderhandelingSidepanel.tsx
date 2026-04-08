@@ -396,7 +396,7 @@ export default function OnderhandelingSidepanel({ negotiationId, status: initial
               }}
             >
               <button className="flex items-center gap-[6px] hover:bg-rdj-bg-primary-hover rounded-[4px] px-[4px] py-[2px] -mx-[4px] transition-colors">
-                <Calendar size={14} className="text-rdj-text-tertiary shrink-0" />
+                <Calendar data-annotation-id="onderhandelingsidepanel-kalender-2" size={14} className="text-rdj-text-tertiary shrink-0" />
                 <p className="font-sans font-normal leading-[20px] text-rdj-text-secondary text-[14px]">
                   Laden: {laadgereed}
                 </p>
@@ -411,7 +411,7 @@ export default function OnderhandelingSidepanel({ negotiationId, status: initial
               }}
             >
               <button className="flex items-center gap-[6px] hover:bg-rdj-bg-primary-hover rounded-[4px] px-[4px] py-[2px] -mx-[4px] transition-colors">
-                <Calendar size={14} className="text-rdj-text-tertiary shrink-0" />
+                <Calendar data-annotation-id="onderhandelingsidepanel-kalender" size={14} className="text-rdj-text-tertiary shrink-0" />
                 <p className="font-sans font-normal leading-[20px] text-rdj-text-secondary text-[14px]">
                   Lossen: {losgereed}
                 </p>
@@ -1055,13 +1055,13 @@ function EditConditiesDialog({ fields, focusLabel, currentValues, laadgereedValu
   };
 
   return (
-    <Dialog open onOpenChange={() => onClose()}>
+    <Dialog data-annotation-id="onderhandelingsidepanel-modal" open onOpenChange={() => onClose()}>
       <DialogContent className="sm:max-w-[400px]">
         <DialogHeader>
           <DialogTitle>{focusLabel} bewerken</DialogTitle>
         </DialogHeader>
 
-        <form onSubmit={handleSubmit} className="flex flex-col gap-[12px] pt-[4px]">
+        <form data-annotation-id="onderhandelingsidepanel-formulier" onSubmit={handleSubmit} className="flex flex-col gap-[12px] pt-[4px]">
           {fields.map(field => (
             <div key={field} className="flex flex-col gap-[4px]">
               <Label htmlFor={`edit-${field}`} className="font-sans font-bold text-[13px] text-[#344054]">

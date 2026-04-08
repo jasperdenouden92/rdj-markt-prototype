@@ -98,7 +98,7 @@ function InputDropdown() {
   return (
     <div className="content-stretch flex flex-col gap-[6px] items-start relative shrink-0 w-full" data-name="Input dropdown">
       <InputDropdown1 />
-      <List />
+      <List data-annotation-id="modal-lijst" />
     </div>
   );
 }

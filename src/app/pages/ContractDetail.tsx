@@ -52,7 +52,7 @@ export default function ContractDetail() {
   if (!contract) {
     return (
       <div className="flex min-h-screen bg-white">
-        <Sidebar />
+        <Sidebar data-annotation-id="contractdetail-navigatie-2" />
         <div className="flex-1 flex items-center justify-center">
           <div className="text-center">
             <p className="font-sans font-bold text-[20px] text-rdj-text-primary">Deal niet gevonden</p>
@@ -130,7 +130,7 @@ export default function ContractDetail() {
 
   return (
     <div className="flex min-h-screen bg-white">
-      <Sidebar />
+      <Sidebar data-annotation-id="contractdetail-navigatie" />
 
       <div className="flex-1 flex min-h-0 min-w-0">
         <div className="flex-1 overflow-y-auto overflow-x-hidden min-w-0">
@@ -248,7 +248,7 @@ export default function ContractDetail() {
                             <p className="font-sans font-bold text-[16px] leading-[24px] text-rdj-text-primary mb-[12px]">Periode & routes</p>
                             {contract.routes && contract.routes.length > 0 && (
                               <div className="border border-rdj-border-secondary rounded-[8px] overflow-hidden">
-                                <table className="w-full">
+                                <table data-annotation-id="contractdetail-tabel" className="w-full">
                                   <thead>
                                     <tr className="border-b border-rdj-border-secondary bg-[#f9fafb]">
                                       <th className="text-left px-[12px] py-[8px] font-sans font-bold text-[12px] text-rdj-text-secondary">Laadlocatie</th>

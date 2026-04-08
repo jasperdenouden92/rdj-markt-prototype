@@ -181,7 +181,7 @@ function Navigation1() {
 function Navigation() {
   return (
     <div className="content-stretch flex flex-col gap-[24px] items-start pt-[32px] relative shrink-0 w-full" data-name="Navigation">
-      <Header />
+      <Header data-annotation-id="subpartijdetaildetailsdesktop-1-53159-navigatie-3" />
       <Navigation1 />
     </div>
   );
@@ -226,8 +226,8 @@ function Footer() {
 function Content() {
   return (
     <div className="content-stretch flex flex-[1_0_0] flex-col h-full items-start justify-between min-h-px min-w-px relative" data-name="Content">
-      <Navigation />
-      <Footer />
+      <Navigation data-annotation-id="subpartijdetaildetailsdesktop-1-53159-navigatie-2" />
+      <Footer data-annotation-id="subpartijdetaildetailsdesktop-1-53159-navigatie" />
     </div>
   );
 }
@@ -380,7 +380,7 @@ function Content5() {
   return (
     <div className="content-stretch flex gap-[20px] items-start relative shrink-0 w-full" data-name="Content">
       <div className="content-stretch flex items-center pl-[24px] relative shrink-0" data-name="Breadcrumbs">
-        <Tabs />
+        <Tabs data-annotation-id="subpartijdetaildetailsdesktop-1-53159-tabs" />
       </div>
       <Buttons />
     </div>
@@ -3427,7 +3427,7 @@ function Container() {
   return (
     <div className="content-stretch flex flex-[1_0_0] items-start min-h-px min-w-px relative" data-name="Container">
       <Dropdown />
-      <Modal />
+      <Modal data-annotation-id="subpartijdetaildetailsdesktop-1-53159-modal" />
     </div>
   );
 }

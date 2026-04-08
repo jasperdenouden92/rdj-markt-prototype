@@ -97,7 +97,7 @@ export default function Subpartijen() {
 
   return (
     <div className="flex min-h-screen bg-rdj-bg-primary">
-      <Sidebar />
+      <Sidebar data-annotation-id="subpartijen-navigatie" />
 
       <div className="flex-1 flex flex-col overflow-auto">
         <div className="pt-[32px] pb-[8px]">
@@ -122,7 +122,7 @@ export default function Subpartijen() {
           />
         </div>
 
-        <Pagination
+        <Pagination data-annotation-id="subpartijen-paginering"
           currentPage={currentPage}
           totalItems={filtered.length}
           rowsPerPage={rowsPerPage}
@@ -130,7 +130,7 @@ export default function Subpartijen() {
           onRowsPerPageChange={setRowsPerPage}
         />
 
-        <Table
+        <Table data-annotation-id="subpartijen-tabel"
           columns={sortedColumns}
           data={sortedData}
           hoveredRowId={hoveredRow}

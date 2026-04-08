@@ -10,7 +10,7 @@ import { Button, buttonVariants } from "./button";
 
 function Pagination({ className, ...props }: React.ComponentProps<"nav">) {
   return (
-    <nav
+    <nav data-annotation-id="pagination-navigatie"
       role="navigation"
       aria-label="pagination"
       data-slot="pagination"

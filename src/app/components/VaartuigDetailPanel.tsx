@@ -244,14 +244,14 @@ export default function VaartuigDetailPanel({ id, onClose }: VaartuigDetailPanel
           {/* Tab content */}
           {activeTab === 'matches' && (
             <>
-              <Pagination
+              <Pagination data-annotation-id="vaartuigdetailpanel-paginering-2"
                 currentPage={matchPage}
                 totalItems={vesselMatches.length}
                 rowsPerPage={matchRowsPerPage}
                 onPageChange={setMatchPage}
                 onRowsPerPageChange={setMatchRowsPerPage}
               />
-              <Table
+              <Table data-annotation-id="vaartuigdetailpanel-tabel-2"
                 columns={sortedMatchColumns}
                 data={sortedMatchData}
                 hoveredRowId={hoveredRow}
@@ -270,14 +270,14 @@ export default function VaartuigDetailPanel({ id, onClose }: VaartuigDetailPanel
 
           {activeTab === 'onderhandelingen' && (
             <>
-              <Pagination
+              <Pagination data-annotation-id="vaartuigdetailpanel-paginering"
                 currentPage={negPage}
                 totalItems={vesselNegotiations.length}
                 rowsPerPage={negRowsPerPage}
                 onPageChange={setNegPage}
                 onRowsPerPageChange={setNegRowsPerPage}
               />
-              <Table
+              <Table data-annotation-id="vaartuigdetailpanel-tabel"
                 columns={sortedNegColumns}
                 data={sortedNegData}
                 hoveredRowId={hoveredRow}
