@@ -28,9 +28,8 @@ export function formatDatePickerValue(value: DatePickerValue | undefined): strin
   const dayName = DAY_NAMES_NL[d.getDay()];
   const day = d.getDate();
   const month = MONTH_NAMES_NL[d.getMonth()];
-  const prefix = value.mode === "ingeschat" ? "±" : "";
   const timeStr = value.time ? ` ${value.time}` : "";
-  return `${prefix}${dayName} ${day} ${month}${timeStr}`;
+  return `${dayName} ${day} ${month}${timeStr}`;
 }
 
 /* ── Component ── */
