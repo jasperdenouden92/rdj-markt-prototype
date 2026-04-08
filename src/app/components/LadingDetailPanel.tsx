@@ -1,5 +1,5 @@
 import { useState, useMemo } from "react";
-import { Send, MailOpen, Check, X } from "lucide-react";
+import { Send, MailOpen, Check, X, ListTodo } from "lucide-react";
 import ModelessPanel from "./ModelessPanel";
 import type { PageTab } from "./PageHeader";
 import Badge from "./Badge";
@@ -36,7 +36,7 @@ const negotiationStatusVariantMap: Record<string, string> = {
 };
 
 const negotiationStatusIconMap: Record<string, React.ReactNode | null> = {
-  "Via werklijst": null,
+  "Via werklijst": <ListTodo strokeWidth={2.5} />,
   "Bod verstuurd": <Send strokeWidth={2.5} />,
   "Bod ontvangen": <MailOpen strokeWidth={2.5} />,
   "Goedgekeurd": <Check strokeWidth={2.5} />,
