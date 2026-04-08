@@ -17,14 +17,13 @@ import Pagination from "../components/Pagination";
 import useTableSort from "../components/useTableSort";
 import OnderhandelingSidepanel from "../components/OnderhandelingSidepanel";
 import ConversationDialog from "../components/ConversationDialog";
-import { mockRelaties, mockContactPersonen, mockRelatieLadingen, mockRelatieVaartuigen, mockMailConversaties, mockGespreksverslagen, mockRelatieOnderhandelingen, mockGebruikers, VAARTUIG_STATUS_MAP } from "../data/mock-relatie-data";
+import { mockRelaties, mockContactPersonen, mockMailConversaties, mockGespreksverslagen, mockRelatieOnderhandelingen, mockGebruikers } from "../data/mock-relatie-data";
 import type { Gespreksverslag } from "../data/mock-relatie-data";
-import { mockContracten, CONTRACT_STATUS_LABELS, CONTRACT_STATUS_VARIANT_MAP, mockLadingSoorten, mockLadingSubsoorten } from "../data/mock-contract-data";
-import { ladingenMarkt } from "../data/entities/ladingen-markt";
-import { havens } from "../data/entities/havens";
+import { mockContracten, CONTRACT_STATUS_LABELS, CONTRACT_STATUS_VARIANT_MAP } from "../data/mock-contract-data";
 import MailConversaties from "../components/MailConversaties";
 import Gespreksverslagen from "../components/Gespreksverslagen";
 import type { Relatie } from "../data/api";
+import { useInboxLadingen, updateLadingMarktPriority, useInboxVaartuigen, updateVaartuigMarktPriority } from "../data/useMarktData";
 import { formatDate } from "../utils/formatDate";
 
 const statusVariantMap: Record<string, "success" | "grey" | "brand"> = {
@@ -33,19 +32,7 @@ const statusVariantMap: Record<string, "success" | "grey" | "brand"> = {
   prospect: "brand",
 };
 
-const ladingStatusMap: Record<string, { label: string; variant: "success" | "warning" | "brand" | "grey" }> = {
-  intake: { label: "Intake", variant: "brand" },
-  werklijst: { label: "Werklijst", variant: "warning" },
-  markt: { label: "In de markt", variant: "success" },
-  gesloten: { label: "Gesloten", variant: "grey" },
-};
 
-const vaartuigStatusMap: Record<string, { label: string; variant: "success" | "warning" | "brand" | "grey" }> = {
-  beschikbaar: { label: "Beschikbaar", variant: "success" },
-  onderweg: { label: "Onderweg", variant: "brand" },
-  beladen: { label: "Beladen", variant: "warning" },
-  in_onderhoud: { label: "In onderhoud", variant: "grey" },
-};
 
 const negotiationStatusVariantMap: Record<string, string> = {
   "Via werklijst": "brand",
@@ -114,23 +101,15 @@ export default function RelatieDetail() {
     () => mockContracten.filter((c) => c.relatieId === id),
     [id]
   );
-  const relatieLadingen = useMemo(
-    () => mockRelatieLadingen.filter((l) => l.relatieId === id),
-    [id]
+  const { data: allInboxLadingen } = useInboxLadingen();
+  const relatieInboxLadingen = useMemo(
+    () => allInboxLadingen.filter((l) => l.relation === relatie?.naam),
+    [allInboxLadingen, relatie?.naam]
   );
-  const relatieMarktLadingen = useMemo(
-    () => ladingenMarkt.filter((l) => l.relatieId === id),
-    [id]
-  );
-
-  // Lookup maps for resolving markt lading IDs
-  const havenMap = useMemo(() => new Map(havens.map((h) => [h.id, h.naam])), []);
-  const soortMap = useMemo(() => new Map(mockLadingSoorten.map((s) => [s.id, s])), []);
-  const subsoortMap = useMemo(() => new Map(mockLadingSubsoorten.map((s) => [s.id, s])), []);
-  const gebruikerMap = useMemo(() => new Map(mockGebruikers.map((g) => [g.id, g])), []);
-  const relatieVaartuigen = useMemo(
-    () => mockRelatieVaartuigen.filter((v) => v.relatieId === id),
-    [id]
+  const { data: allInboxVaartuigen } = useInboxVaartuigen();
+  const relatieInboxVaartuigen = useMemo(
+    () => allInboxVaartuigen.filter((v) => v.relation === relatie?.naam),
+    [allInboxVaartuigen, relatie?.naam]
   );
   const [mailConversaties, setMailConversaties] = useState(mockMailConversaties);
   const relatieMail = useMemo(
@@ -212,22 +191,27 @@ export default function RelatieDetail() {
   const { sortedData: sortedNegData, sortedColumns: sortedNegColumns } = useTableSort(negColumns, filteredNegData);
 
   /* ── Ladingen table ── */
+  const handleLadingRate = useCallback((rowId: string, value: number) => {
+    updateLadingMarktPriority(rowId, value).catch(console.error);
+  }, []);
+
   const ladingenColumns: Column[] = useMemo(() => [
-    { key: "titel", header: "Lading", type: "leading-text", subtextKey: "product", maxWidth: "max-w-[480px]", badgeKey: "bronBadge", badgeVariantKey: "bronBadgeVariant" },
-    { key: "tonnage", header: "Tonnage", type: "text", width: "w-[120px]", align: "right" },
-    { key: "laadhaven", header: "Laden", type: "text", width: "w-[180px]", subtextKey: "loadDate" },
-    { key: "loshaven", header: "Lossen", type: "text", width: "w-[180px]", subtextKey: "unloadDate" },
+    { key: 'ladingSoort', header: 'Lading', type: 'leading-text', maxWidth: 'max-w-[480px]' },
+    { key: 'tonnage', header: 'Tonnage', type: 'text', width: 'w-[120px]', align: 'right' },
+    { key: 'loadLocation', header: 'Laden', type: 'text', width: 'w-[180px]', subtextKey: 'loadDate' },
+    { key: 'unloadLocation', header: 'Lossen', type: 'text', width: 'w-[180px]', subtextKey: 'unloadDate' },
+    { key: 'source', header: 'Bron', type: 'text', width: 'w-[180px]', subtextKey: 'sourceDate', featuredIconKey: 'sourceIcon', featuredIconVariantKey: 'sourceIconVariant', featuredIconDefaultVariant: 'grey' as const },
     {
-      key: "matches", header: "Matches", type: "custom", width: "w-[120px]",
+      key: 'matches', header: 'Matches', type: 'custom', width: 'w-[120px]',
       render: (row) => {
         const count = row.matches as number;
         const matchType = row.matchType as string;
         if (!count) return null;
-        const bg = matchType === "eigen"
-          ? "bg-[#eff8ff] text-[#175cd3] border-[#b2ddff]"
-          : matchType === "interessant"
-          ? "bg-[#fffaeb] text-[#b54708] border-[#fedf89]"
-          : "bg-white text-[#344054] border-[#d0d5dd]";
+        const bg = matchType === 'eigen'
+          ? 'bg-[#eff8ff] text-[#175cd3] border-[#b2ddff]'
+          : matchType === 'interessant'
+          ? 'bg-[#fffaeb] text-[#b54708] border-[#fedf89]'
+          : 'bg-white text-[#344054] border-[#d0d5dd]';
         return (
           <span className={`inline-flex items-center gap-[4px] rounded-full border px-[10px] py-[2px] font-sans font-bold text-[13px] leading-[20px] ${bg}`}>
             <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M5.25 6.417h3.5M5.25 8.75h2.333M9.333 2.917H11.2c.653 0 .98 0 1.232.127.222.112.403.293.515.515.127.252.127.578.127 1.232v5.834c0 .653 0 .98-.127 1.232a1.167 1.167 0 0 1-.515.515c-.252.128-.579.128-1.232.128H2.8c-.653 0-.98 0-1.232-.128a1.167 1.167 0 0 1-.515-.515C.927 11.605.927 11.278.927 10.625V4.79c0-.654 0-.98.127-1.232.112-.222.293-.403.515-.515.252-.127.579-.127 1.232-.127h1.866m0-1.75h4.666c.327 0 .49 0 .616.064.11.056.201.146.258.258.063.126.063.29.063.616v.812c0 .327 0 .49-.063.616a.583.583 0 0 1-.258.258c-.126.063-.29.063-.616.063H4.667c-.327 0-.49 0-.616-.063a.583.583 0 0 1-.258-.258c-.063-.126-.063-.29-.063-.616v-.812c0-.327 0-.49.063-.616a.583.583 0 0 1 .258-.258c.126-.064.29-.064.616-.064Z" stroke="currentColor" strokeWidth="1.17" strokeLinecap="round" strokeLinejoin="round"/></svg>
@@ -237,7 +221,7 @@ export default function RelatieDetail() {
       },
     },
     {
-      key: "onderhandelingen", header: "Onderhandelingen", type: "custom", width: "w-[140px]",
+      key: 'onderhandelingen', header: 'Onderhandelingen', type: 'custom', width: 'w-[140px]',
       render: (row) => {
         const count = row.onderhandelingen as number;
         if (!count) return null;
@@ -249,101 +233,105 @@ export default function RelatieDetail() {
         );
       },
     },
-    { key: "statusLabel", header: "Status", type: "status", variantKey: "statusVariant", defaultVariant: "grey", width: "w-[120px]" },
-  ], []);
+    { key: 'ownerLabel', header: 'Eigenaar', type: 'text', width: 'w-[80px]', avatarInitialsKey: 'ownerInitials' },
+    { key: 'priority', header: 'Prioriteit', type: 'rating', width: 'w-[140px]', onRate: handleLadingRate },
+  ], [handleLadingRate]);
 
-  const ladingenData: RowData[] = useMemo(() => {
-    const crmRows: RowData[] = relatieLadingen.map((l) => {
-      const s = ladingStatusMap[l.status] || { label: l.status, variant: "grey" };
-      return {
-        id: l.id,
-        titel: l.titel,
-        product: l.product,
-        tonnage: String(l.tonnage),
-        laadhaven: l.laadlocatie,
-        loshaven: l.loslocatie,
-        loadDate: formatDate(l.laaddatum),
-        unloadDate: formatDate(l.losdatum),
-        matches: l.matches,
-        matchType: "none",
-        onderhandelingen: l.onderhandelingen,
-        statusLabel: s.label,
-        statusVariant: s.variant,
-        detailUrl: `/crm/relatie/${id}/lading/${l.id}`,
-      };
-    });
-
-    const marktRows: RowData[] = relatieMarktLadingen.map((l) => {
-      const soort = soortMap.get(l.ladingSoortId);
-      const subsoort = subsoortMap.get(l.subsoortId);
-      const soortLabel = subsoort ? `${soort?.naam || ""} (${subsoort.naam})` : soort?.naam || "";
-      const titel = l.opmerking || soortLabel;
-      const tonnageVal = typeof l.tonnage === "number"
-        ? `${l.tonnage.toLocaleString("nl-NL")} ton`
-        : `${(l.tonnage as any).min.toLocaleString("nl-NL")}–${(l.tonnage as any).max.toLocaleString("nl-NL")} ton`;
-      const eigenaar = l.eigenaarId ? gebruikerMap.get(l.eigenaarId) : null;
-      const initials = eigenaar ? eigenaar.naam.split(" ").filter(Boolean).map((w: string) => w[0]).join("").substring(0, 2).toUpperCase() : undefined;
-      return {
-        id: l.id,
-        titel,
-        product: soortLabel,
-        tonnage: tonnageVal,
-        laadhaven: havenMap.get(l.laadlocatieId) || "",
-        loshaven: havenMap.get(l.loslocatieId) || "Af te stemmen",
-        loadDate: formatDate(l.laaddatum),
-        unloadDate: formatDate(l.losdatum),
-        matches: l.matches ?? 0,
-        matchType: l.matchType ?? "none",
-        onderhandelingen: l.onderhandelingen ?? 0,
-        statusLabel: "In de markt",
-        statusVariant: "success",
-        bronBadge: "Markt",
-        bronBadgeVariant: "brand",
-        ownerInitials: initials,
-        priority: l.prioriteit,
-        detailUrl: `/markt/inbox/lading/${l.id}`,
-      };
-    });
-
-    return [...crmRows, ...marktRows];
-  }, [relatieLadingen, relatieMarktLadingen, havenMap, soortMap, subsoortMap, gebruikerMap]);
+  const ladingenData: RowData[] = useMemo(() => relatieInboxLadingen.map((item) => ({
+    id: item.id,
+    ladingSoort: item.title,
+    tonnage: item.tonnage,
+    loadLocation: item.loadLocation,
+    loadDate: item.loadDate,
+    unloadLocation: item.unloadLocation,
+    unloadDate: item.unloadDate,
+    source: item.source,
+    sourceDate: item.sourceDate,
+    sourceIconVariant: 'grey' as const,
+    matches: item.matches,
+    matchType: item.matchType,
+    onderhandelingen: item.onderhandelingen,
+    ownerLabel: '',
+    ownerInitials: item.ownerInitials,
+    priority: item.priority,
+  })), [relatieInboxLadingen]);
 
   const { sortedData: sortedLadingenData, sortedColumns: sortedLadingenColumns } = useTableSort(ladingenColumns, ladingenData);
 
   /* ── Vaartuigen table ── */
-  const vaartuigenColumns: Column[] = useMemo(() => [
-    { key: "naam", header: "Vaartuig", type: "leading-text", actionLabel: "Openen", extraActionsKey: "extraActions" },
-    { key: "type", header: "Type", type: "text", width: "w-[160px]" },
-    { key: "capaciteit", header: "Capaciteit", type: "text", width: "w-[120px]" },
-    { key: "locatie", header: "Locatie", type: "text", width: "w-[160px]" },
-    { key: "matches", header: "Matches", type: "text", width: "w-[120px]" },
-    { key: "statusLabel", header: "Status", type: "status", variantKey: "statusVariant", defaultVariant: "grey", width: "w-[120px]" },
-  ], []);
+  const handleVaartuigRate = useCallback((rowId: string, value: number) => {
+    updateVaartuigMarktPriority(rowId, value).catch(console.error);
+  }, []);
 
-  const vaartuigenData: RowData[] = useMemo(() => relatieVaartuigen.map((v) => {
-    const s = vaartuigStatusMap[v.status] || { label: v.status, variant: "grey" };
+  const vaartuigenColumns: Column[] = useMemo(() => [
+    { key: 'name', header: 'Naam', type: 'leading-text', subtextKey: 'typeWithEni', dotKey: 'isNew' },
+    { key: 'location', header: 'Locatie', type: 'text', width: 'w-[140px]' },
+    { key: 'availableFromDate', header: 'Beschikbaar vanaf', type: 'text', width: 'w-[140px]', subtextKey: 'availableFromTime' },
+    { key: 'cargoTypesBadges', header: 'Bijzonderheden', type: 'badges', width: 'w-[160px]' },
+    { key: 'tonnage', header: 'Groottonnage', type: 'text', width: 'w-[100px]', align: 'right' },
+    { key: 'capacity', header: 'Inhoud', type: 'text', width: 'w-[90px]', align: 'right' },
+    { key: 'source', header: 'Bron', type: 'text', width: 'w-[140px]', subtextKey: 'sourceDate', featuredIconKey: 'sourceIcon', featuredIconVariantKey: 'sourceIconVariant', featuredIconDefaultVariant: 'grey' as const },
+    {
+      key: 'matches', header: 'Matches', type: 'custom', width: 'w-[100px]',
+      render: (row) => {
+        const count = row.matches as number;
+        const matchType = row.matchType as string;
+        if (!count) return null;
+        const bg = matchType === 'eigen'
+          ? 'bg-[#eff8ff] text-[#175cd3] border-[#b2ddff]'
+          : matchType === 'interessant'
+          ? 'bg-[#fffaeb] text-[#b54708] border-[#fedf89]'
+          : 'bg-white text-[#344054] border-[#d0d5dd]';
+        return (
+          <span className={`inline-flex items-center gap-[4px] rounded-full border px-[10px] py-[2px] font-sans font-bold text-[13px] leading-[20px] ${bg}`}>
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M5.25 6.417h3.5M5.25 8.75h2.333M9.333 2.917H11.2c.653 0 .98 0 1.232.127.222.112.403.293.515.515.127.252.127.578.127 1.232v5.834c0 .653 0 .98-.127 1.232a1.167 1.167 0 0 1-.515.515c-.252.128-.579.128-1.232.128H2.8c-.653 0-.98 0-1.232-.128a1.167 1.167 0 0 1-.515-.515C.927 11.605.927 11.278.927 10.625V4.79c0-.654 0-.98.127-1.232.112-.222.293-.403.515-.515.252-.127.579-.127 1.232-.127h1.866m0-1.75h4.666c.327 0 .49 0 .616.064.11.056.201.146.258.258.063.126.063.29.063.616v.812c0 .327 0 .49-.063.616a.583.583 0 0 1-.258.258c-.126.063-.29.063-.616.063H4.667c-.327 0-.49 0-.616-.063a.583.583 0 0 1-.258-.258c-.063-.126-.063-.29-.063-.616v-.812c0-.327 0-.49.063-.616a.583.583 0 0 1 .258-.258c.126-.064.29-.064.616-.064Z" stroke="currentColor" strokeWidth="1.17" strokeLinecap="round" strokeLinejoin="round"/></svg>
+            {count}
+          </span>
+        );
+      },
+    },
+    {
+      key: 'onderhandelingen', header: 'Onderhandelingen', type: 'custom', width: 'w-[140px]',
+      render: (row) => {
+        const count = row.onderhandelingen as number;
+        if (!count) return null;
+        return (
+          <span className="inline-flex items-center gap-[4px] rounded-full border px-[10px] py-[2px] font-sans font-bold text-[13px] leading-[20px] bg-white text-[#344054] border-[#d0d5dd]">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M4.667 5.25h4.666M4.667 7.583h2.916M7 12.25c2.9 0 5.25-2.35 5.25-5.25S9.9 1.75 7 1.75 1.75 4.1 1.75 7c0 .93.243 1.804.669 2.56.09.16.135.24.152.305a.52.52 0 0 1 .015.165c-.008.068-.037.14-.094.286l-.742 1.855c-.082.204-.123.306-.098.38a.292.292 0 0 0 .164.164c.074.025.176-.016.38-.098l1.855-.742c.145-.058.218-.087.286-.094a.52.52 0 0 1 .165.015c.065.017.145.062.305.152A5.222 5.222 0 0 0 7 12.25Z" stroke="currentColor" strokeWidth="1.17" strokeLinecap="round" strokeLinejoin="round"/></svg>
+            {count}
+          </span>
+        );
+      },
+    },
+    { key: 'ownerLabel', header: 'Eigenaar', type: 'text', width: 'w-[80px]', avatarInitialsKey: 'ownerInitials' },
+    { key: 'priority', header: 'Prioriteit', type: 'rating', width: 'w-[140px]', onRate: handleVaartuigRate },
+  ], [handleVaartuigRate]);
+
+  const vaartuigenData: RowData[] = useMemo(() => relatieInboxVaartuigen.map((item) => {
+    const parts = item.availableFrom.match(/^(.+?)(\s+\d{1,2}:\d{2})?$/);
+    const availableFromDate = parts ? parts[1] : item.availableFrom;
+    const availableFromTime = parts && parts[2] ? parts[2].trim() : undefined;
     return {
-      id: v.id,
-      naam: v.naam,
-      type: v.type,
-      capaciteit: v.capaciteit,
-      locatie: v.locatie,
-      matches: v.matches > 0 ? `${v.matches} match${v.matches !== 1 ? "es" : ""}` : "—",
-      statusLabel: s.label,
-      statusVariant: s.variant,
-      extraActions: (
-        <Button
-          variant="secondary"
-          size="sm"
-          leadingIcon={<MessageSquare size={14} strokeWidth={2.5} />}
-          onClick={(e: React.MouseEvent) => {
-            e.stopPropagation();
-            setConversationDialog({ relatieId: id!, relatieName: relatie?.naam || "", itemId: v.id, itemType: "vaartuig" });
-          }}
-        />
-      ),
+      id: item.id,
+      name: item.name,
+      typeWithEni: [item.type, item.eni].filter(Boolean).join(' · '),
+      location: item.location,
+      availableFromDate,
+      availableFromTime,
+      cargoTypesBadges: item.cargoTypes,
+      tonnage: item.tonnage,
+      capacity: item.capacity,
+      source: item.source,
+      sourceDate: item.sourceDate,
+      sourceIconVariant: 'grey' as const,
+      matches: item.matches,
+      matchType: item.matchType,
+      onderhandelingen: item.onderhandelingen,
+      ownerLabel: '',
+      ownerInitials: item.ownerInitials,
+      priority: item.priority,
     };
-  }), [relatieVaartuigen, id, relatie?.naam]);
+  }), [relatieInboxVaartuigen]);
 
   const { sortedData: sortedVaartuigenData, sortedColumns: sortedVaartuigenColumns } = useTableSort(vaartuigenColumns, vaartuigenData);
 
@@ -451,8 +439,8 @@ export default function RelatieDetail() {
   const tabs: PageTab[] = [
     { label: "Overzicht", path: "#overzicht", isActive: activeTab === "overzicht" },
     { label: "Onderhandelingen", path: "#onderhandelingen", isActive: activeTab === "onderhandelingen", badge: String(relatieOnderhandelingen.length) },
-    { label: "Ladingen", path: "#ladingen", isActive: activeTab === "ladingen", badge: String(relatieLadingen.length + relatieMarktLadingen.length) },
-    { label: "Vaartuigen", path: "#vaartuigen", isActive: activeTab === "vaartuigen", badge: String(relatieVaartuigen.length) },
+    { label: "Ladingen", path: "#ladingen", isActive: activeTab === "ladingen", badge: String(relatieInboxLadingen.length) },
+    { label: "Vaartuigen", path: "#vaartuigen", isActive: activeTab === "vaartuigen", badge: String(relatieInboxVaartuigen.length) },
     { label: "Deals", path: "#deals", isActive: activeTab === "deals", badge: String(relatieAllDeals.length) },
     { label: "Mail", path: "#mail", isActive: activeTab === "mail", badge: String(relatieMail.length) },
     { label: "Gesprekken", path: "#gesprekken", isActive: activeTab === "gesprekken", badge: String(verslagen.length) },
@@ -564,7 +552,7 @@ export default function RelatieDetail() {
                     {activeTab === "vaartuigen" && (
                       <div className="w-full pb-[32px]">
                         <SectionHeader title="Vaartuigen" onAdd={() => {}} addTooltip="Vaartuig toevoegen" />
-                        {relatieVaartuigen.length === 0 ? (
+                        {relatieInboxVaartuigen.length === 0 ? (
                           <div className="py-[48px] text-center">
                             <p className="font-sans font-normal text-[14px] text-rdj-text-tertiary">
                               Nog geen vaartuigen gekoppeld aan deze relatie.
