@@ -883,13 +883,13 @@ function ConditiesTab({ bron, soort, overig, onOverigChange, overrides, onEditSa
               <p className="font-sans font-normal leading-[20px] text-rdj-text-secondary text-[14px]">Laadgereed</p>
               <p className="font-sans font-bold leading-[20px] text-rdj-text-primary text-[14px]">{laadgereedVerkoop}</p>
               <p className="font-sans font-bold leading-[20px] text-rdj-text-primary text-[14px]">{laadgereedZoek}</p>
-              <DateCell value={laadgereedInkoop} pickerValue={laadgereedPickerInkoop} onPickerChange={setLaadgereedPickerInkoop} onValueChange={setLaadgereedInkoop} px />
+              <div className="px-[8px]"><DateCell value={laadgereedInkoop} pickerValue={laadgereedPickerInkoop} onPickerChange={setLaadgereedPickerInkoop} onValueChange={setLaadgereedInkoop} /></div>
             </div>
             <div className={`relative grid ${gridCols} gap-[8px] py-[8px] px-[4px]`}>
               <p className="font-sans font-normal leading-[20px] text-rdj-text-secondary text-[14px]">Losgereed</p>
               <p className="font-sans font-bold leading-[20px] text-rdj-text-primary text-[14px]">{losgereedVerkoop}</p>
               <p className="font-sans font-bold leading-[20px] text-rdj-text-primary text-[14px]">{losgereedZoek}</p>
-              <DateCell value={losgereedInkoop} pickerValue={losgereedPickerInkoop} onPickerChange={setLosgereedPickerInkoop} onValueChange={setLosgereedInkoop} px />
+              <div className="px-[8px]"><DateCell value={losgereedInkoop} pickerValue={losgereedPickerInkoop} onPickerChange={setLosgereedPickerInkoop} onValueChange={setLosgereedInkoop} /></div>
             </div>
           </>
         ) : modeB ? (
@@ -897,12 +897,12 @@ function ConditiesTab({ bron, soort, overig, onOverigChange, overrides, onEditSa
             <div className={`relative grid ${gridCols} gap-[8px] py-[8px] px-[4px]`}>
               <p className="font-sans font-normal leading-[20px] text-rdj-text-secondary text-[14px]">Laadgereed</p>
               <p className="font-sans font-bold leading-[20px] text-rdj-text-primary text-[14px]">{laadgereedVerkoop}</p>
-              <DateCell value={laadgereedInkoop} pickerValue={laadgereedPickerInkoop} onPickerChange={setLaadgereedPickerInkoop} onValueChange={setLaadgereedInkoop} px />
+              <div className="px-[8px]"><DateCell value={laadgereedInkoop} pickerValue={laadgereedPickerInkoop} onPickerChange={setLaadgereedPickerInkoop} onValueChange={setLaadgereedInkoop} /></div>
             </div>
             <div className={`relative grid ${gridCols} gap-[8px] py-[8px] px-[4px]`}>
               <p className="font-sans font-normal leading-[20px] text-rdj-text-secondary text-[14px]">Losgereed</p>
               <p className="font-sans font-bold leading-[20px] text-rdj-text-primary text-[14px]">{losgereedVerkoop}</p>
-              <DateCell value={losgereedInkoop} pickerValue={losgereedPickerInkoop} onPickerChange={setLosgereedPickerInkoop} onValueChange={setLosgereedInkoop} px />
+              <div className="px-[8px]"><DateCell value={losgereedInkoop} pickerValue={losgereedPickerInkoop} onPickerChange={setLosgereedPickerInkoop} onValueChange={setLosgereedInkoop} /></div>
             </div>
           </>
         ) : (
@@ -910,12 +910,12 @@ function ConditiesTab({ bron, soort, overig, onOverigChange, overrides, onEditSa
             <div className={`relative grid ${gridCols} gap-[8px] py-[8px] px-[4px]`}>
               <p className="font-sans font-normal leading-[20px] text-rdj-text-secondary text-[14px]">Laadgereed</p>
               <p className="font-sans font-bold leading-[20px] text-rdj-text-primary text-[14px]">{laadgereedZoek}</p>
-              <DateCell value={laadgereedVerkoop} pickerValue={laadgereedPickerVerkoop} onPickerChange={setLaadgereedPickerVerkoop} onValueChange={setLaadgereedVerkoop} px />
+              <div className="px-[8px]"><DateCell value={laadgereedVerkoop} pickerValue={laadgereedPickerVerkoop} onPickerChange={setLaadgereedPickerVerkoop} onValueChange={setLaadgereedVerkoop} /></div>
             </div>
             <div className={`relative grid ${gridCols} gap-[8px] py-[8px] px-[4px]`}>
               <p className="font-sans font-normal leading-[20px] text-rdj-text-secondary text-[14px]">Losgereed</p>
               <p className="font-sans font-bold leading-[20px] text-rdj-text-primary text-[14px]">{losgereedZoek}</p>
-              <DateCell value={losgereedVerkoop} pickerValue={losgereedPickerVerkoop} onPickerChange={setLosgereedPickerVerkoop} onValueChange={setLosgereedVerkoop} px />
+              <div className="px-[8px]"><DateCell value={losgereedVerkoop} pickerValue={losgereedPickerVerkoop} onPickerChange={setLosgereedPickerVerkoop} onValueChange={setLosgereedVerkoop} /></div>
             </div>
           </>
         )}
