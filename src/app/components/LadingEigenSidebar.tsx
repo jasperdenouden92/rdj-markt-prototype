@@ -195,7 +195,7 @@ export default function LadingEigenSidebar({ id, onEdit, collapsed }: LadingEige
     if (field === "prijs") return fmtPrice(v as number | null);
     if (field === "laadtijd" || field === "lostijd") return fmtHours(v as number | null);
     if (field === "liggeldLaden" || field === "liggeldLossen") return fmtLiggeld(v);
-    if (field === "deadline") return v ? String(v) : "—";
+    if (field === "deadline") return v ? formatDate(String(v)) : "—";
     return fmtCurrency(v as number | null);
   };
 
