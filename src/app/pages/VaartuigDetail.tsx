@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useParams, Link, useNavigate } from "react-router";
-import { Send, MailOpen, Check, X, PanelRight } from "lucide-react";
+import { Send, MailOpen, Check, X, PanelRight, ListTodo } from "lucide-react";
 import Sidebar from "../components/Sidebar";
 import PageHeader from "../components/PageHeader";
 import type { PageTab } from "../components/PageHeader";
@@ -51,7 +51,7 @@ const statusVariantMap: Record<string, string> = {
 };
 
 const statusIconMap: Record<string, React.ReactNode | null> = {
-  "Via werklijst": null,
+  "Via werklijst": <ListTodo strokeWidth={2.5} />,
   "Bod verstuurd": <Send strokeWidth={2.5} />,
   "Bod ontvangen": <MailOpen strokeWidth={2.5} />,
   "Goedgekeurd": <Check strokeWidth={2.5} />,

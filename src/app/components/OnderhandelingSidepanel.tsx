@@ -216,7 +216,7 @@ type NegotiationStatus = "Via werklijst" | "Bod verstuurd" | "Bod ontvangen" | "
 const activeStatuses: NegotiationStatus[] = ["Via werklijst", "Bod verstuurd", "Bod ontvangen", "Openstaand bod", "In onderhandeling"];
 
 const statusBadgeConfig: Record<NegotiationStatus, { variant: BadgeVariant; type: BadgeType; icon: React.ReactNode | null }> = {
-  "Via werklijst": { variant: "brand", type: "default", icon: null },
+  "Via werklijst": { variant: "brand", type: "default", icon: <ListTodo strokeWidth={2.5} /> },
   "Bod verstuurd": { variant: "brand", type: "color", icon: <Send strokeWidth={2.5} /> },
   "Bod ontvangen": { variant: "brand", type: "color", icon: <MailOpen strokeWidth={2.5} /> },
   "Openstaand bod": { variant: "brand", type: "color", icon: <Send strokeWidth={2.5} /> },
