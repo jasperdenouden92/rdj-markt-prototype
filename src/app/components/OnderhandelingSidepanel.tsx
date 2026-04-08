@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { X, Check, ArrowRight, Send, MailOpen, PenLine, ListTodo, Calendar, Pencil, MessageSquare, FileText, Truck, ShoppingBag, UserX } from "lucide-react";
+import { X, Check, ArrowRight, Send, MailOpen, PenLine, ListTodo, Calendar, Pencil, MessageSquare, FileText, ClipboardList, ShoppingBag, UserX } from "lucide-react";
 import { toast } from "sonner";
 import ApprovalConfirmationDialog, { type ApprovalOptions } from "./ApprovalConfirmationDialog";
 import ModelessPanel from "./ModelessPanel";
@@ -44,9 +44,15 @@ const mockCondities: Record<ConditiesField, { inkoop: number | null; verkoop: nu
   liggeldLossen: { inkoop: 15.00, verkoop: 12.00, zoekcriteria: 13.50 },
 };
 
+const mockOverig: { inkoop: string | null; verkoop: string | null; zoekcriteria: string | null } = {
+  inkoop: "Voorkeur laden vóór 10:00",
+  verkoop: null,
+  zoekcriteria: "Schip moet kruiphoogte < 7m hebben",
+};
+
 /* ── Mock negotiation meta ── */
 const mockNegotiationMeta = {
-  laadgereed: "±Wo 15 Jan",
+  laadgereed: "Wo 15 Jan",
   losgereed: "Do 16 Jan",
   eigenaar: "Khoa Nguyen",
   eigenaarInitials: "KN",
@@ -97,7 +103,7 @@ const mockLading = {
   eigenaar: "Eric Nieuwkoop",
   eigenaarInitials: "EN",
   eigenaarFoto: imgEricNieuwkoop,
-  laadgereed: "±Wo 15 Jan",
+  laadgereed: "Wo 15 Jan",
   losgereed: "Do 16 Jan",
 };
 
@@ -248,7 +254,7 @@ type ApprovalAction = "generateCharter" | "sendToLoadPlanning" | "removeFromMark
 
 const approvalActionConfig: { key: ApprovalAction; label: string; icon: React.ReactNode; toastMsg: (relatieName?: string) => string }[] = [
   { key: "generateCharter", label: "Charter genereren & verzenden", icon: <FileText size={16} strokeWidth={2.5} />, toastMsg: (r) => `Charter gegenereerd en verstuurd naar ${r || "relatie"}` },
-  { key: "sendToLoadPlanning", label: "Doorsturen naar laadplanning", icon: <Truck size={16} strokeWidth={2.5} />, toastMsg: () => "Lading doorgestuurd naar laadplanning" },
+  { key: "sendToLoadPlanning", label: "Doorsturen naar laadplanning", icon: <ClipboardList size={16} strokeWidth={2.5} />, toastMsg: () => "Lading doorgestuurd naar laadplanning" },
   { key: "removeFromMarket", label: "Partij uit de markt halen", icon: <ShoppingBag size={16} strokeWidth={2.5} />, toastMsg: () => "Partij uit de markt gehaald" },
   { key: "rejectOtherBids", label: "Andere biedingen afwijzen", icon: <UserX size={16} strokeWidth={2.5} />, toastMsg: () => "Andere biedingen afgewezen" },
 ];
@@ -368,7 +374,7 @@ export default function OnderhandelingSidepanel({ negotiationId, status: initial
 
   return (<>
     <ModelessPanel
-      initialWidth={600}
+      initialWidth={900}
       resizable
       title={isBemiddeling ? `Bemiddeling met ${bemiddeling.inkoopRelatie} en ${bemiddeling.verkoopRelatie}` : `Onderhandeling met ${relatieName || "Rederij Alfa"}`}
       subtitle={
@@ -425,7 +431,7 @@ export default function OnderhandelingSidepanel({ negotiationId, status: initial
       onClose={onClose}
       footer={
         dealBevestigd ? (
-          <div className="border-t border-rdj-border-secondary px-[24px] py-[16px] flex flex-col gap-[8px]">
+          <div className="border-t border-rdj-border-secondary px-[24px] py-[16px] flex flex-col gap-[4px] items-start">
             {filteredApprovalActions.map(action => {
               const done = completedActions.has(action.key);
               return done ? (
@@ -436,51 +442,46 @@ export default function OnderhandelingSidepanel({ negotiationId, status: initial
               ) : (
                 <Button
                   key={action.key}
-                  variant="secondary"
+                  variant="tertiary"
                   label={action.label}
                   leadingIcon={action.icon}
-                  fullWidth
                   onClick={() => handlePostApprovalAction(action)}
                 />
               );
             })}
           </div>
         ) : bothApproved ? (
-          <div className="border-t border-rdj-border-secondary px-[24px] py-[16px] flex gap-[12px]">
+          <div className="border-t border-rdj-border-secondary px-[24px] py-[16px] flex gap-[12px] justify-end">
             <Button
               variant="secondary-destructive"
               label="Deal afwijzen"
               leadingIcon={<X strokeWidth={2.5} />}
-              fullWidth
               onClick={handleReject}
             />
             <Button
               variant="primary"
               label="Deal bevestigen"
               leadingIcon={<Check strokeWidth={2.5} />}
-              fullWidth
               onClick={() => setShowApprovalDialog(true)}
             />
           </div>
         ) : isBemiddeling ? undefined : isActive ? (
-          <div className="border-t border-rdj-border-secondary px-[24px] py-[16px] flex gap-[12px]">
+          <div className="border-t border-rdj-border-secondary px-[24px] py-[16px] flex gap-[12px] justify-end">
             <Button
               variant="secondary-destructive"
               label="Afwijzen"
               leadingIcon={<X strokeWidth={2.5} />}
-              fullWidth
               onClick={handleReject}
             />
             <Button
               variant="primary"
               label="Goedkeuren"
               leadingIcon={<Check strokeWidth={2.5} />}
-              fullWidth
               onClick={() => setShowApprovalDialog(true)}
             />
           </div>
         ) : currentStatus === "Goedgekeurd" ? (
-          <div className="border-t border-rdj-border-secondary px-[24px] py-[16px] flex flex-col gap-[8px]">
+          <div className="border-t border-rdj-border-secondary px-[24px] py-[16px] flex flex-col gap-[4px] items-start">
             {filteredApprovalActions.map(action => {
               const done = completedActions.has(action.key);
               return done ? (
@@ -491,10 +492,9 @@ export default function OnderhandelingSidepanel({ negotiationId, status: initial
               ) : (
                 <Button
                   key={action.key}
-                  variant="secondary"
+                  variant="tertiary"
                   label={action.label}
                   leadingIcon={action.icon}
-                  fullWidth
                   onClick={() => handlePostApprovalAction(action)}
                 />
               );
@@ -694,6 +694,19 @@ function ConditiesTab({ bron, soort, overig, onOverigChange, overrides, onEditSa
             <div className="px-[8px]"><DateCell value={losgereedInkoop} pickerValue={losgereedPickerInkoop} onPickerChange={setLosgereedPickerInkoop} onValueChange={setLosgereedInkoop} /></div>
           </div>
 
+          {/* Overig row — last before status */}
+          {(mockOverig.verkoop || mockOverig.inkoop) && (
+            <div className="relative grid grid-cols-[1fr_1fr_1fr] gap-[8px] py-[8px] px-[4px]">
+              <p className="font-sans font-normal leading-[20px] text-rdj-text-secondary text-[14px]">Overig</p>
+              <div className="px-[8px]">
+                <p className="font-sans font-normal leading-[20px] text-rdj-text-primary text-[14px]">{mockOverig.verkoop || "—"}</p>
+              </div>
+              <div className="px-[8px]">
+                <p className="font-sans font-normal leading-[20px] text-rdj-text-primary text-[14px]">{mockOverig.inkoop || "—"}</p>
+              </div>
+            </div>
+          )}
+
           {/* Status row */}
           <div className="relative w-full h-px bg-rdj-border-secondary my-[4px]" />
           <div className="relative grid grid-cols-[1fr_1fr_1fr] gap-[8px] py-[8px] px-[4px]">
@@ -709,7 +722,7 @@ function ConditiesTab({ bron, soort, overig, onOverigChange, overrides, onEditSa
 
         <div className="w-full h-px bg-rdj-border-secondary" />
 
-        <DetailsSidebarSection title="Overig">
+        <DetailsSidebarSection title="Opmerkingen">
           <textarea
             value={overig}
             onChange={(e) => onOverigChange(e.target.value)}
@@ -919,12 +932,42 @@ function ConditiesTab({ bron, soort, overig, onOverigChange, overrides, onEditSa
             </div>
           </>
         )}
+
+        {/* Overig row — always last */}
+        {modeA && (mockOverig.verkoop || mockOverig.zoekcriteria || mockOverig.inkoop) && (
+          <div className={`relative grid ${gridCols} gap-[8px] py-[8px] px-[4px]`}>
+            <p className="font-sans font-normal leading-[20px] text-rdj-text-secondary text-[14px]">Overig</p>
+            <p className="font-sans font-normal leading-[20px] text-rdj-text-primary text-[14px]">{mockOverig.verkoop || "—"}</p>
+            <p className="font-sans font-normal leading-[20px] text-rdj-text-primary text-[14px]">{mockOverig.zoekcriteria || "—"}</p>
+            <div className="px-[8px]">
+              <p className="font-sans font-normal leading-[20px] text-rdj-text-primary text-[14px]">{mockOverig.inkoop || "—"}</p>
+            </div>
+          </div>
+        )}
+        {modeB && (mockOverig.verkoop || mockOverig.inkoop) && (
+          <div className={`relative grid ${gridCols} gap-[8px] py-[8px] px-[4px]`}>
+            <p className="font-sans font-normal leading-[20px] text-rdj-text-secondary text-[14px]">Overig</p>
+            <p className="font-sans font-normal leading-[20px] text-rdj-text-primary text-[14px]">{mockOverig.verkoop || "—"}</p>
+            <div className="px-[8px]">
+              <p className="font-sans font-normal leading-[20px] text-rdj-text-primary text-[14px]">{mockOverig.inkoop || "—"}</p>
+            </div>
+          </div>
+        )}
+        {!modeA && !modeB && (mockOverig.zoekcriteria || mockOverig.verkoop) && (
+          <div className={`relative grid ${gridCols} gap-[8px] py-[8px] px-[4px]`}>
+            <p className="font-sans font-normal leading-[20px] text-rdj-text-secondary text-[14px]">Overig</p>
+            <p className="font-sans font-normal leading-[20px] text-rdj-text-primary text-[14px]">{mockOverig.zoekcriteria || "—"}</p>
+            <div className="px-[8px]">
+              <p className="font-sans font-normal leading-[20px] text-rdj-text-primary text-[14px]">{mockOverig.verkoop || "—"}</p>
+            </div>
+          </div>
+        )}
       </div>
 
-      {/* Divider before overig */}
+      {/* Divider before opmerkingen */}
       <div className="w-full h-px bg-rdj-border-secondary" />
 
-      <DetailsSidebarSection title="Overig">
+      <DetailsSidebarSection title="Opmerkingen">
         <textarea
           value={overig}
           onChange={(e) => onOverigChange(e.target.value)}

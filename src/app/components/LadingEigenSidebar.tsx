@@ -84,7 +84,9 @@ export default function LadingEigenSidebar({ id, onEdit, collapsed }: LadingEige
   const baseId = id.replace(/-(rest|[1-9]\d*)$/, '');
   const { data, loading, error, refetch } = useLadingEigenDetail(id);
   const [activeTab, setActiveTab] = useState<string>("details");
-  const [overig, setOverig] = useState("");
+  const [overigVerkoop, setOverigVerkoop] = useState("");
+  const [overigZoekcriteria, setOverigZoekcriteria] = useState("");
+  const [opmerkingen, setOpmerkingen] = useState("");
 
   // Resolve partij/subpartij data from lading module entities
   const partijData = useMemo(() => {
@@ -418,9 +420,27 @@ export default function LadingEigenSidebar({ id, onEdit, collapsed }: LadingEige
 
           {/* Overig */}
           <DetailsSidebarSection title="Overig">
+            <DetailRow
+              label="Verkoop"
+              value={overigVerkoop || undefined}
+              editValue={overigVerkoop}
+              editable
+              onSave={(v) => setOverigVerkoop(v)}
+            />
+            <DetailRow
+              label="Zoekcriteria"
+              value={overigZoekcriteria || undefined}
+              editValue={overigZoekcriteria}
+              editable
+              onSave={(v) => setOverigZoekcriteria(v)}
+            />
+          </DetailsSidebarSection>
+
+          {/* Opmerkingen */}
+          <DetailsSidebarSection title="Opmerkingen">
             <textarea
-              value={overig}
-              onChange={(e) => setOverig(e.target.value)}
+              value={opmerkingen}
+              onChange={(e) => setOpmerkingen(e.target.value)}
               placeholder="Voeg opmerkingen toe..."
               rows={3}
               className="w-full px-[12px] py-[8px] font-sans font-normal leading-[20px] text-rdj-text-primary text-[14px] bg-transparent border border-transparent rounded-[6px] outline-none resize-none transition-all hover:border-rdj-border-primary hover:bg-rdj-bg-secondary-hover focus:border-rdj-border-brand focus:bg-white placeholder:text-rdj-text-tertiary"

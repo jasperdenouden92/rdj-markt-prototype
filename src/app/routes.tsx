@@ -140,10 +140,6 @@ export const router = createBrowserRouter([
         path: "markt/onderhandelingen/ladingen",
         Component: Onderhandelingen,
       },
-      {
-        path: "markt/onderhandelingen/vaartuigen",
-        Component: Onderhandelingen,
-      },
       // Legacy deals route redirect
       {
         path: "markt/deals",
