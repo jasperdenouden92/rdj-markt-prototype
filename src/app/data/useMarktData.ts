@@ -415,7 +415,7 @@ export function useBevrachtingData() {
       });
 
       // Transform vaartuigen to bevrachting vessel format
-      const vesselRows: BevrachtingVessel[] = [...vaartuigenMarkt, ...vaartuigenEigen].map(item => {
+      const vesselRows: BevrachtingVessel[] = vaartuigenEigen.map(item => {
         const locatie = maps.havens.get(item.huidigeLocatieId);
         const status: "intake" | "werklijst" | "markt" | "gesloten" =
           (item as any).status || "intake";
