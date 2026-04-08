@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router";
 import Button from "./Button";
+import { formatDateRelative } from "../utils/formatDate";
 import StackedAvatars from "./StackedAvatars";
 import imgEricNieuwkoop from "../../assets/a2737d3b5b234fc04041650cb9f114889c6859da.png";
 import imgKhoaNguyen from "../../assets/3627de284acb374a4d9313b3c2dbaeeb87a48224.png";
@@ -22,17 +23,11 @@ function formatRelativeDatum(dateStr: string): string {
   if (diffHours < 24) return `${diffHours} uur geleden`;
   if (diffDays === 1) return "Gisteren";
   if (diffDays < 7) return `${diffDays} dagen geleden`;
-  return d.toLocaleDateString("nl-NL", { day: "numeric", month: "short" });
+  const days = ["Zo", "Ma", "Di", "Wo", "Do", "Vr", "Za"];
+  const months = ["Jan", "Feb", "Mrt", "Apr", "Mei", "Jun", "Jul", "Aug", "Sep", "Okt", "Nov", "Dec"];
+  return `${days[d.getDay()]} ${d.getDate()} ${months[d.getMonth()]}`;
 }
 
-function formatDatumFull(dateStr: string): string {
-  const d = new Date(dateStr);
-  const now = new Date();
-  const diffDays = Math.floor((now.getTime() - d.getTime()) / (1000 * 60 * 60 * 24));
-  if (diffDays === 0) return `Vandaag, ${d.toLocaleTimeString("nl-NL", { hour: "2-digit", minute: "2-digit" })}`;
-  if (diffDays === 1) return `Gisteren, ${d.toLocaleTimeString("nl-NL", { hour: "2-digit", minute: "2-digit" })}`;
-  return d.toLocaleDateString("nl-NL", { day: "numeric", month: "short", year: "numeric", hour: "2-digit", minute: "2-digit" });
-}
 
 /* ── Types ── */
 
@@ -129,7 +124,7 @@ export default function LastActivityButton({ relatieId, onNavigateAway, maxAvata
                       {event.action}
                     </p>
                     <p className="font-sans font-normal text-rdj-text-tertiary text-[12px] mt-[2px]">
-                      {formatDatumFull(event.timestamp)}
+                      {formatDateRelative(event.timestamp)}
                     </p>
                     {event.detail && (
                       <div className="mt-[6px] bg-rdj-bg-secondary rounded-[6px] px-[10px] py-[6px]">

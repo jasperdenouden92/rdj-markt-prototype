@@ -4,6 +4,7 @@ import ContactPersonenSection from "./ContactPersonenSection";
 import TakenList from "./TakenList";
 import type { Relatie, ContactPersoon } from "../data/api";
 import { mockGebruikers, SOORT_RELATIE_OPTIES } from "../data/mock-relatie-data";
+import { formatDate } from "../utils/formatDate";
 import { mockTaken } from "../data/mock-taken-data";
 
 interface RelatieDetailSidebarProps {
@@ -18,12 +19,6 @@ const frequentieLabels: Record<string, string> = {
   kwartaal: "Per kwartaal",
   geen: "Geen",
 };
-
-function formatDate(dateStr?: string): string {
-  if (!dateStr) return "—";
-  const d = new Date(dateStr);
-  return d.toLocaleDateString("nl-NL", { day: "numeric", month: "long", year: "numeric" });
-}
 
 export default function RelatieDetailSidebar({ relatie, contactPersonen, collapsed = false }: RelatieDetailSidebarProps) {
   const [activeTab, setActiveTab] = useState<"details" | "contactpersonen" | "taken">("details");

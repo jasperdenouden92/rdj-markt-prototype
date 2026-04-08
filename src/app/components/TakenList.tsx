@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Link } from "react-router";
 import Badge from "./Badge";
+import { formatDate } from "../utils/formatDate";
 import TaakFormDialog from "./TaakFormDialog";
 import { mockTaken, TAAK_TYPE_LABELS, TAAK_TYPE_VARIANT_MAP } from "../data/mock-taken-data";
 import type { Taak } from "../data/mock-taken-data";
@@ -15,10 +16,6 @@ interface TakenListProps {
   compact?: boolean;
 }
 
-function formatDate(dateStr: string): string {
-  const d = new Date(dateStr);
-  return d.toLocaleDateString("nl-NL", { day: "numeric", month: "short", year: "numeric" });
-}
 
 function isOverdue(dateStr: string): boolean {
   return new Date(dateStr) < new Date(new Date().toDateString());

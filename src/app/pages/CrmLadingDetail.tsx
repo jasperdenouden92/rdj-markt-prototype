@@ -14,6 +14,7 @@ import ActivityFeed from "../components/ActivityFeed";
 import SectionHeader from "../components/SectionHeader";
 import ConversationDialog from "../components/ConversationDialog";
 import { mockRelaties, mockRelatieLadingen, mockRelatieLadingMatches } from "../data/mock-relatie-data";
+import { formatDate } from "../utils/formatDate";
 
 const ladingStatusMap: Record<string, { label: string; variant: "success" | "warning" | "brand" | "grey" }> = {
   intake: { label: "Intake", variant: "brand" },
@@ -21,12 +22,6 @@ const ladingStatusMap: Record<string, { label: string; variant: "success" | "war
   markt: { label: "In de markt", variant: "success" },
   gesloten: { label: "Gesloten", variant: "grey" },
 };
-
-function formatDate(dateStr?: string): string {
-  if (!dateStr) return "—";
-  const d = new Date(dateStr);
-  return d.toLocaleDateString("nl-NL", { day: "numeric", month: "short", year: "numeric" });
-}
 
 const chevronSvg = (
   <svg className="block size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 5.33333 9.33333">

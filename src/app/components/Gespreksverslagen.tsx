@@ -2,6 +2,7 @@ import { useState, useRef, useEffect } from "react";
 import type { ContactPersoon } from "../data/api";
 import type { Gespreksverslag } from "../data/mock-relatie-data";
 import { mockGebruikers } from "../data/mock-relatie-data";
+import { formatDateRelative } from "../utils/formatDate";
 
 interface GespreksverslagenProps {
   verslagen: Gespreksverslag[];
@@ -9,15 +10,6 @@ interface GespreksverslagenProps {
   onAdd: (verslag: Omit<Gespreksverslag, "id" | "aanmaakDatum">) => void;
 }
 
-function formatDatum(dateStr: string): string {
-  const d = new Date(dateStr);
-  const now = new Date();
-  const diffDays = Math.floor((now.getTime() - d.getTime()) / (1000 * 60 * 60 * 24));
-
-  if (diffDays === 0) return `Vandaag, ${d.toLocaleTimeString("nl-NL", { hour: "2-digit", minute: "2-digit" })}`;
-  if (diffDays === 1) return `Gisteren, ${d.toLocaleTimeString("nl-NL", { hour: "2-digit", minute: "2-digit" })}`;
-  return d.toLocaleDateString("nl-NL", { day: "numeric", month: "short", year: "numeric", hour: "2-digit", minute: "2-digit" });
-}
 
 function getInitials(naam: string): string {
   return naam.split(" ").map((w) => w[0]).filter(Boolean).slice(0, 2).join("").toUpperCase();
@@ -113,7 +105,7 @@ export default function Gespreksverslagen({ verslagen, contactPersonen, onAdd }:
 
                   <div className="shrink-0 flex flex-col items-end gap-[2px]">
                     <p className="font-sans font-normal text-[12px] text-rdj-text-tertiary whitespace-nowrap">
-                      {formatDatum(v.datum)}
+                      {formatDateRelative(v.datum)}
                     </p>
                     <p className="font-sans font-normal text-[11px] text-rdj-text-tertiary whitespace-nowrap">
                       {mockGebruikers.find((g) => g.id === v.gebruikerId)?.naam || "Onbekend"}

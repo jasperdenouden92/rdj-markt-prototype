@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import type { Contract } from "../data/api";
 import type { MailConversatie, MailBericht } from "../data/mock-relatie-data";
+import { formatDateRelative } from "../utils/formatDate";
 
 interface MailConversatiesProps {
   conversaties: MailConversatie[];
@@ -8,15 +9,6 @@ interface MailConversatiesProps {
   onLinkDeal?: (mailId: string, dealId: string | undefined) => void;
 }
 
-function formatDatum(dateStr: string): string {
-  const d = new Date(dateStr);
-  const now = new Date();
-  const diffDays = Math.floor((now.getTime() - d.getTime()) / (1000 * 60 * 60 * 24));
-
-  if (diffDays === 0) return `Vandaag, ${d.toLocaleTimeString("nl-NL", { hour: "2-digit", minute: "2-digit" })}`;
-  if (diffDays === 1) return `Gisteren, ${d.toLocaleTimeString("nl-NL", { hour: "2-digit", minute: "2-digit" })}`;
-  return d.toLocaleDateString("nl-NL", { day: "numeric", month: "short", year: "numeric", hour: "2-digit", minute: "2-digit" });
-}
 
 function getInitials(naam: string): string {
   return naam.split(" ").map((w) => w[0]).filter(Boolean).slice(0, 2).join("").toUpperCase();
@@ -125,7 +117,7 @@ export default function MailConversaties({ conversaties, deals, onLinkDeal }: Ma
 
                 <div className="shrink-0 flex flex-col items-end gap-[4px]">
                   <p className="font-sans font-normal text-[12px] text-rdj-text-tertiary whitespace-nowrap">
-                    {formatDatum(conv.laatsteDatum)}
+                    {formatDateRelative(conv.laatsteDatum)}
                   </p>
                   <span className="font-sans font-normal text-[11px] text-rdj-text-tertiary bg-[#f2f4f7] rounded-full px-[6px] py-[1px]">
                     {conv.berichten.length}
@@ -297,7 +289,7 @@ function BerichtItem({
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-[8px]">
             <p className="font-sans font-bold text-[13px] text-rdj-text-primary">{bericht.van.naam}</p>
-            <p className="font-sans font-normal text-[12px] text-rdj-text-tertiary">{formatDatum(bericht.datum)}</p>
+            <p className="font-sans font-normal text-[12px] text-rdj-text-tertiary">{formatDateRelative(bericht.datum)}</p>
           </div>
           {!isExpanded && (
             <p className="font-sans font-normal text-[13px] text-rdj-text-secondary truncate mt-[2px]">

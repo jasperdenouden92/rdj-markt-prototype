@@ -14,6 +14,7 @@ import { mockRelaties, mockContactPersonen, mockGebruikers, LADINGGROEP_SUGGESTI
 import type { Gespreksverslag } from "../data/mock-relatie-data";
 import { mockTaken } from "../data/mock-taken-data";
 import type { Relatie } from "../data/api";
+import { formatDate } from "../utils/formatDate";
 
 function getInitials(name: string): string {
   return name
@@ -23,12 +24,6 @@ function getInitials(name: string): string {
     .slice(0, 2)
     .join("")
     .toUpperCase();
-}
-
-function formatDate(dateStr?: string): string {
-  if (!dateStr) return "—";
-  const d = new Date(dateStr);
-  return d.toLocaleDateString("nl-NL", { day: "numeric", month: "short", year: "numeric" });
 }
 
 function isDateExpired(dateStr?: string, daysThreshold = 30): boolean {

@@ -1,6 +1,7 @@
 import { useState } from "react";
 import DetailsSidebar, { DetailsSidebarSection } from "./DetailsSidebar";
 import DetailRow from "./DetailRow";
+import { formatDate } from "../utils/formatDate";
 
 interface CargoDetailSidebarProps {
   cargoData: {
@@ -84,14 +85,14 @@ export default function CargoDetailSidebar({
             subtext={cargoData.laadlocatieCity}
             editable
           />
-          <DetailRow label="Laaddatum" value={cargoData.laaddatum} editable />
+          <DetailRow label="Laaddatum" value={formatDate(cargoData.laaddatum)} editable />
           <DetailRow
             label="Loslocatie"
             value={cargoData.loslocatie}
             subtext={cargoData.loslocatieCity}
             editable
           />
-          <DetailRow label="Losdatum" value={cargoData.losdatum} editable />
+          <DetailRow label="Losdatum" value={formatDate(cargoData.losdatum)} editable />
           <DetailRow label="Relatie" value={cargoData.relatie} />
           <DetailRow label="Contactpersoon" value={cargoData.contactpersoon} />
           <DetailRow

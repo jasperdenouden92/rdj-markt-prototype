@@ -7,6 +7,7 @@ import type { RelatieLading, RelatieVaartuig } from "../data/mock-relatie-data";
 import { mockLadingSoorten } from "../data/mock-contract-data";
 import { mockTaken } from "../data/mock-taken-data";
 import type { Taak } from "../data/mock-taken-data";
+import { formatDateShort } from "../utils/formatDate";
 
 type Tab = "aanbieden" | "ladinguitvraag";
 type AanbiedStatus = "aangeboden" | "niet-geinteresseerd" | "geinteresseerd";
@@ -53,21 +54,10 @@ function legeUitvraagRij(): LadingUitvraagRij {
   return { id: `lr-${Date.now()}-${Math.random()}`, tonnage: "", ladingType: "", van: "", naar: "", prijs: "", condities: "", toonCondities: false };
 }
 
-function formatShortDate(dateStr?: string): string {
-  if (!dateStr) return "";
-  const d = new Date(dateStr);
-  return d.toLocaleDateString("nl-NL", { day: "numeric", month: "short" });
-}
-
 function formatRoute(laadlocatie: string, laaddatum?: string, loslocatie?: string, losdatum?: string): string {
-  const laad = laaddatum ? `${laadlocatie} (${formatShortDate(laaddatum)})` : laadlocatie;
-  const los = loslocatie ? (losdatum ? `${loslocatie} (${formatShortDate(losdatum)})` : loslocatie) : "";
+  const laad = laaddatum ? `${laadlocatie} (${formatDateShort(laaddatum)})` : laadlocatie;
+  const los = loslocatie ? (losdatum ? `${loslocatie} (${formatDateShort(losdatum)})` : loslocatie) : "";
   return los ? `${laad} → ${los}` : laad;
-}
-
-function formatDeadline(dateStr: string): string {
-  const d = new Date(dateStr);
-  return d.toLocaleDateString("nl-NL", { day: "numeric", month: "short" });
 }
 
 function isOverdue(dateStr: string): boolean {
@@ -367,7 +357,7 @@ export default function GespreksverslagQuickDialog({
                         {taak.omschrijving}
                       </p>
                       <p className={`font-sans font-normal text-[11px] mt-[2px] ${isOverdue(taak.deadline) && taak.status === "open" ? "text-[#d92d20]" : "text-rdj-text-tertiary"}`}>
-                        {formatDeadline(taak.deadline)}
+                        {formatDateShort(taak.deadline)}
                       </p>
                     </div>
                   </div>
@@ -503,7 +493,7 @@ export default function GespreksverslagQuickDialog({
                               key={vaartuig.id}
                               id={vaartuig.id}
                               label={`${vaartuig.naam} · ${vaartuig.capaciteit}`}
-                              route={`${vaartuig.locatie} (${formatShortDate(vaartuig.beschikbaarVanaf)})`}
+                              route={`${vaartuig.locatie} (${formatDateShort(vaartuig.beschikbaarVanaf)})`}
                               badge={badge}
                               currentStatus={currentStatus}
                               onSetStatus={setAanbiedStatus}

@@ -9,12 +9,7 @@ import Pagination from "../components/Pagination";
 import { subpartijen, partijen } from "../data/entities/partijen";
 import { havens } from "../data/entities/havens";
 import { mockBijzonderheden } from "../data/mock-contract-data";
-
-function formatDate(dateStr?: string | null): string {
-  if (!dateStr) return "—";
-  const d = new Date(dateStr);
-  return d.toLocaleDateString("nl-NL", { day: "numeric", month: "short", year: "numeric" });
-}
+import { formatDate } from "../utils/formatDate";
 
 export default function Subpartijen() {
   const navigate = useNavigate();

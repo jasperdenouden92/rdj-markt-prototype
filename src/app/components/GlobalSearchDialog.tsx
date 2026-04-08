@@ -9,6 +9,7 @@ import { mockRelaties, mockRelatieLadingen, mockRelatieVaartuigen, mockContactPe
 import type { RelatieLading, RelatieVaartuig } from "../data/mock-relatie-data";
 import type { Relatie } from "../data/api";
 import GespreksverslagQuickDialog from "./GespreksverslagQuickDialog";
+import { formatDate } from "../utils/formatDate";
 import { mockVlootData } from "../data/mock-vloot-data";
 import type { VlootVaartuig } from "../data/mock-vloot-data";
 
@@ -529,7 +530,7 @@ export default function GlobalSearchDialog({ open, onOpenChange }: GlobalSearchD
                         </div>
                         <div className="flex items-center justify-between">
                           <span className="font-sans text-[12px] text-rdj-text-tertiary">Laaddatum</span>
-                          <span className="font-sans text-[13px] text-rdj-text-primary">{selectedResult.meta.laaddatum}</span>
+                          <span className="font-sans text-[13px] text-rdj-text-primary">{formatDate(selectedResult.meta.laaddatum)}</span>
                         </div>
                         <div className="flex items-center justify-between">
                           <span className="font-sans text-[12px] text-rdj-text-tertiary">Status</span>

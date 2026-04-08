@@ -1,6 +1,7 @@
 import { Link } from "react-router";
 import { useDrag } from "react-dnd";
 import Badge from "./Badge";
+import { formatDate } from "../utils/formatDate";
 import type { Contract } from "../data/api";
 import { CONTRACT_SOORT_LABELS } from "../data/mock-contract-data";
 import { mockRelaties, mockGebruikers } from "../data/mock-relatie-data";
@@ -15,11 +16,6 @@ function formatCurrency(value?: number): string {
   return new Intl.NumberFormat("nl-NL", { style: "currency", currency: "EUR", maximumFractionDigits: 0 }).format(value);
 }
 
-function formatDate(dateStr?: string): string {
-  if (!dateStr) return "";
-  const d = new Date(dateStr);
-  return d.toLocaleDateString("nl-NL", { day: "numeric", month: "short" });
-}
 
 function getInitials(name: string): string {
   return name.split(" ").map((w) => w[0]).filter(Boolean).slice(0, 2).join("").toUpperCase();

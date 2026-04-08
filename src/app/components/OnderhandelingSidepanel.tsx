@@ -55,7 +55,7 @@ const mockNegotiationMeta = {
 
 /* ── Mock vaartuig data ── */
 const mockVaartuig = {
-  beschikbaarVanaf: "12 jan 2026, 08:00",
+  beschikbaarVanaf: "Ma 12 Jan, 08:00",
   huidigeLocatie: "Rotterdam",
   eni: "02333517",
   vlag: "NL",
@@ -88,9 +88,9 @@ const mockLading = {
   inhoud: "727 m³",
   bijzonderheden: ["Stofvrij"],
   laadlocatie: "Rotterdam Waalhaven",
-  laaddatum: "15 jan 2026, 08:00",
+  laaddatum: "Do 15 Jan, 08:00",
   loslocatie: "Antwerpen",
-  losdatum: "16 jan 2026, 14:00",
+  losdatum: "Vr 16 Jan, 14:00",
   opdrachtgever: "Rederij de Jong",
   opdrachtgeverId: "rel-2",
   opdrachtgeverContact: "Pieter Jansen",
