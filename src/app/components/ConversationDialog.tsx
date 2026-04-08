@@ -65,7 +65,7 @@ const CONDITION_DEFS: { key: ConditionKey; label: string; placeholder?: string; 
   { key: "lostijd", label: "Lostijd", placeholder: "bijv. 8", format: v => `${v} uur lossen` },
   { key: "losgereed", label: "Losgereed", placeholder: "datum", format: v => `losgereed ${v}`, isDate: true },
   { key: "liggeldLossen", label: "Liggeld lossen", placeholder: "bijv. 25 of NLW", format: v => fmtLiggeld(v, "liggeld lossen") },
-  { key: "deadline", label: "Deadline", placeholder: "bijv. 21-03", format: v => `deadline ${v}` },
+  { key: "deadline", label: "Deadline", placeholder: "datum", format: v => `deadline ${v}`, isDate: true },
   { key: "overig", label: "Overig", placeholder: "vrije tekst", format: v => v },
 ];
 
