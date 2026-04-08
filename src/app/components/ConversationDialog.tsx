@@ -885,92 +885,95 @@ export default function ConversationDialog({
 
           {/* Right panel */}
           <div className="w-[50%] flex flex-col min-w-0">
-            {selectedLeftId ? (
-              <>
-                <div className="px-[20px] py-[10px] border-b border-rdj-border-secondary bg-[#f9fafb] flex items-center justify-between gap-[12px]">
-                  <div>
-                    <p className="font-sans font-bold text-[13px] leading-[18px] text-rdj-text-secondary uppercase tracking-wide">
-                      {showMatches ? matchLabel : rightLabel}
-                    </p>
-                    {showMatches && (
-                      <p className="font-sans font-normal text-[12px] leading-[16px] text-rdj-text-tertiary mt-[2px]">
-                        {matchItems.length} resultaten
-                      </p>
-                    )}
-                  </div>
-                  {activeTab === "ladingen-relatie" && (
-                    <MarktToggle
-                      label="Marktvaartuigen"
-                      checked={showMarktVaartuigen}
-                      onChange={setShowMarktVaartuigen}
-                    />
-                  )}
+            <>
+              <div className="px-[20px] py-[10px] border-b border-rdj-border-secondary bg-[#f9fafb] flex items-center justify-between gap-[12px]">
+                <div>
+                  <p className="font-sans font-bold text-[13px] leading-[18px] text-rdj-text-secondary uppercase tracking-wide">
+                    {showMatches ? matchLabel : rightLabel}
+                  </p>
+                  <p className="font-sans font-normal text-[12px] leading-[16px] text-rdj-text-tertiary mt-[2px]">
+                    {showMatches ? matchItems.length : rightItems.length} resultaten
+                  </p>
                 </div>
-                <div className="flex-1 overflow-y-auto divide-y divide-rdj-border-secondary">
-                  {showMatches ? (
-                    matchItems.map(item => (
-                      <MatchRow
-                        key={item.id}
-                        item={item}
-                        mode={matchMode}
-                        status={itemStatuses.get(item.id)}
-                        conditions={itemConditions.get(item.id)}
-                        bidConditions={itemBidConditions.get(item.id)}
-                        conditionsExpanded={expandedConditions.has(item.id)}
-                        isBemiddelingActive={isMatchBemiddeld(item.id)}
-                        isMarktItem={item.source === "markt"}
-                        showBemiddelingButton={(item.source === "markt" && item.kind === "vaartuig") || activeTab === "markt-ladingen"}
-                        onBemiddelingToggle={() => {
-                          setBemiddelingSet(prev => {
-                            const next = new Set(prev);
-                            if (next.has(item.id)) {
-                              next.delete(item.id);
-                            } else {
-                              next.add(item.id);
-                              // Auto-set "aangeboden" status on the match item
-                              setStatus(item.id, "aangeboden");
-                              if (item.kind === "lading") {
-                                setExpandedConditions(p => new Set(p).add(item.id));
-                              }
-                              // Also set status on the left item and expand its conditions
-                              if (selectedLeftId && selectedLeftItem?.kind === "lading") {
-                                setStatus(selectedLeftId, "aangeboden");
-                                setExpandedConditions(p => new Set(p).add(selectedLeftId));
-                              }
+                {activeTab === "ladingen-relatie" && (
+                  <MarktToggle
+                    label="Marktvaartuigen"
+                    checked={showMarktVaartuigen}
+                    onChange={setShowMarktVaartuigen}
+                  />
+                )}
+              </div>
+              <div className="flex-1 overflow-y-auto divide-y divide-rdj-border-secondary">
+                {showMatches ? (
+                  matchItems.map(item => (
+                    <MatchRow
+                      key={item.id}
+                      item={item}
+                      mode={matchMode}
+                      status={itemStatuses.get(item.id)}
+                      conditions={itemConditions.get(item.id)}
+                      bidConditions={itemBidConditions.get(item.id)}
+                      conditionsExpanded={expandedConditions.has(item.id)}
+                      isBemiddelingActive={isMatchBemiddeld(item.id)}
+                      isMarktItem={item.source === "markt"}
+                      showBemiddelingButton={(item.source === "markt" && item.kind === "vaartuig") || activeTab === "markt-ladingen"}
+                      onBemiddelingToggle={() => {
+                        setBemiddelingSet(prev => {
+                          const next = new Set(prev);
+                          if (next.has(item.id)) {
+                            next.delete(item.id);
+                          } else {
+                            next.add(item.id);
+                            // Auto-set "aangeboden" status on the match item
+                            setStatus(item.id, "aangeboden");
+                            if (item.kind === "lading") {
+                              setExpandedConditions(p => new Set(p).add(item.id));
                             }
-                            return next;
-                          });
-                        }}
-                        onStatusChange={status => {
-                          setStatus(item.id, status);
-                          if ((status === "aangeboden" || status === "interesse") && item.kind === "lading") {
-                            setExpandedConditions(prev => new Set(prev).add(item.id));
-                          } else if (status === "geen-interesse" && item.kind === "lading") {
-                            setExpandedConditions(prev => { const next = new Set(prev); next.delete(item.id); return next; });
-                          }
-                          // Auto-bemiddeling for markt items on "aangeboden"
-                          if (item.source === "markt" && status === "aangeboden") {
-                            setBemiddelingSet(prev => new Set(prev).add(item.id));
+                            // Also set status on the left item and expand its conditions
                             if (selectedLeftId && selectedLeftItem?.kind === "lading") {
                               setStatus(selectedLeftId, "aangeboden");
                               setExpandedConditions(p => new Set(p).add(selectedLeftId));
                             }
-                          } else if (item.source === "markt" && status !== "aangeboden") {
-                            setBemiddelingSet(prev => { const next = new Set(prev); next.delete(item.id); return next; });
                           }
-                        }}
-                        onToggleConditions={() => toggleConditionsExpanded(item.id)}
-                        onConditionChange={(key, value) => setConditionValue(item.id, key, value)}
-                        onBidConditionChange={(key, value) => setBidConditionValue(item.id, key, value)}
-                        selectedLeftItem={selectedLeftItem ?? undefined}
-                        conversationRelatieName={relatieName}
-                      />
-                    ))
+                          return next;
+                        });
+                      }}
+                      onStatusChange={status => {
+                        setStatus(item.id, status);
+                        if ((status === "aangeboden" || status === "interesse") && item.kind === "lading") {
+                          setExpandedConditions(prev => new Set(prev).add(item.id));
+                        } else if (status === "geen-interesse" && item.kind === "lading") {
+                          setExpandedConditions(prev => { const next = new Set(prev); next.delete(item.id); return next; });
+                        }
+                        // Auto-bemiddeling for markt items on "aangeboden"
+                        if (item.source === "markt" && status === "aangeboden") {
+                          setBemiddelingSet(prev => new Set(prev).add(item.id));
+                          if (selectedLeftId && selectedLeftItem?.kind === "lading") {
+                            setStatus(selectedLeftId, "aangeboden");
+                            setExpandedConditions(p => new Set(p).add(selectedLeftId));
+                          }
+                        } else if (item.source === "markt" && status !== "aangeboden") {
+                          setBemiddelingSet(prev => { const next = new Set(prev); next.delete(item.id); return next; });
+                        }
+                      }}
+                      onToggleConditions={() => toggleConditionsExpanded(item.id)}
+                      onConditionChange={(key, value) => setConditionValue(item.id, key, value)}
+                      onBidConditionChange={(key, value) => setBidConditionValue(item.id, key, value)}
+                      selectedLeftItem={selectedLeftItem ?? undefined}
+                      conversationRelatieName={relatieName}
+                    />
+                  ))
+                ) : (
+                  rightItems.length === 0 ? (
+                    <p className="font-sans font-normal text-[14px] text-rdj-text-tertiary py-[20px] text-center">
+                      Geen items gevonden
+                    </p>
                   ) : (
                     rightItems.map(item => (
                       <ItemRow
                         key={item.id}
                         item={item}
+                        hideRadio
                         status={itemStatuses.get(item.id)}
                         conditions={itemConditions.get(item.id)}
                         bidConditions={itemBidConditions.get(item.id)}
@@ -988,18 +991,10 @@ export default function ConversationDialog({
                         onBidConditionChange={(key, value) => setBidConditionValue(item.id, key, value)}
                       />
                     ))
-                  )}
-                </div>
-              </>
-            ) : (
-              <div className="flex-1 flex items-center justify-center">
-                <div className="text-center px-[32px]">
-                  <p className="font-sans font-normal text-[14px] leading-[20px] text-rdj-text-tertiary">
-                    Selecteer een item links om matches te bekijken
-                  </p>
-                </div>
+                  )
+                )}
               </div>
-            )}
+            </>
           </div>
         </div>
 
@@ -1189,6 +1184,7 @@ function ItemRow({
   isSelected,
   onClick,
   hideMarktBadge,
+  hideRadio,
 }: {
   item: DisplayItem;
   bestMatch?: number;
@@ -1206,6 +1202,7 @@ function ItemRow({
   isSelected?: boolean;
   onClick?: () => void;
   hideMarktBadge?: boolean;
+  hideRadio?: boolean;
 }) {
   const isEigen = item.source === "eigen";
   const isLading = item.kind === "lading";
@@ -1228,9 +1225,11 @@ function ItemRow({
     >
       {/* Main row */}
       <div className="flex items-start gap-[10px]">
-        <div className="shrink-0 pt-[2px]">
-          <RadioButton checked={isSelected ?? false} />
-        </div>
+        {!hideRadio && (
+          <div className="shrink-0 pt-[2px]">
+            <RadioButton checked={isSelected ?? false} />
+          </div>
+        )}
 
         {bestMatch != null && (
           <div className="shrink-0">
