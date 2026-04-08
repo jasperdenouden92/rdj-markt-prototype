@@ -7,6 +7,7 @@ import VesselMapView from "../components/VesselMapView";
 import SegmentedButtonGroup from "../components/SegmentedButtonGroup";
 import PageHeader from "../components/PageHeader";
 import FilterDropdown from "../components/FilterDropdown";
+import AddInboxItemModal from "../components/AddInboxItemModal";
 import Pagination from "../components/Pagination";
 import Table from "../components/Table";
 import type { Column } from "../components/Table";
@@ -332,6 +333,7 @@ export default function InboxVessels() {
   }));
   const [hoveredRow, setHoveredRow] = useState<string | null>(null);
   const [subView, setSubView] = useState<InboxSubView>('te-beoordelen');
+  const [showAddModal, setShowAddModal] = useState(false);
   const filteredItems = vesselItems.filter(item => {
     if (subView === 'te-beoordelen') return item.priority === 0;
     if (subView === 'interessant') return item.priority >= 3;
@@ -447,7 +449,7 @@ export default function InboxVessels() {
           <PageHeader
             title="Markt aanbod"
             actions={
-              <button className="bg-[#1567a4] relative rounded-[6px] shrink-0 hover:opacity-90">
+              <button onClick={() => setShowAddModal(true)} className="bg-[#1567a4] relative rounded-[6px] shrink-0 hover:opacity-90">
                 <div className="content-stretch flex gap-[4px] items-center justify-center overflow-clip px-[14px] py-[10px] relative rounded-[inherit]">
                   <div className="overflow-clip relative shrink-0 size-[20px]"><div className="absolute inset-[16.67%]"><div className="absolute inset-[-6.25%]"><svg className="block size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 18 18"><path d="M9 3.75V14.25M3.75 9H14.25" stroke="white" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.66667" /></svg></div></div></div>
                   <div className="content-stretch flex items-center justify-center px-[2px] relative shrink-0"><p className="font-sans font-bold leading-[20px] relative shrink-0 text-[14px] text-white whitespace-nowrap">Toevoegen</p></div>
@@ -470,8 +472,11 @@ export default function InboxVessels() {
                   value={subView}
                   onChange={(val) => setSubView(val as InboxSubView)}
                 />
-                <FilterDropdown label="Relatie" />
-                <button className="bg-white relative rounded-[6px] shrink-0"><div className="content-stretch flex gap-[4px] items-center justify-center overflow-clip px-[14px] py-[8px] relative rounded-[inherit]"><div className="overflow-clip relative shrink-0 size-[20px]"><div className="absolute inset-[8.33%]"><div className="absolute inset-[-5%]"><svg className="block size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 22 22"><path d={svgPaths.p2bfa7100} stroke="#344054" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" /></svg></div></div></div><p className="font-sans font-bold leading-[20px] relative shrink-0 text-[#344054] text-[14px] whitespace-nowrap">Filter</p></div><div aria-hidden="true" className="absolute border border-[#d0d5dd] border-solid inset-0 pointer-events-none rounded-[6px] shadow-[0px_1px_2px_0px_rgba(16,24,40,0.05)]" /></button>
+                <FilterDropdown
+                  label="Filter"
+                  variant="tertiary"
+                  options={['Relatie', 'Regio', 'Tonnage', 'Type vaartuig', 'Beschikbaarheid']}
+                />
               </>
             }
             filtersRight={
@@ -488,6 +493,12 @@ export default function InboxVessels() {
               </>
             }
           />
+
+          {/* Sub-filter row: Relatie / Regio */}
+          <div className="px-[24px] pt-[12px] pb-[4px] flex gap-[8px] items-center">
+            <FilterDropdown label="Relatie" />
+            <FilterDropdown label="Regio" />
+          </div>
 
           {/* Content: Map or Table */}
           {viewMode === 'map' ? (
@@ -523,6 +534,13 @@ export default function InboxVessels() {
           )}
         </div>
       </div>
+
+      <AddInboxItemModal
+        isOpen={showAddModal}
+        onClose={() => setShowAddModal(false)}
+        onSubmit={() => { setShowAddModal(false); toast.success('Vaartuig toegevoegd aan inbox'); }}
+        itemType="vaartuig"
+      />
     </>
   );
 }

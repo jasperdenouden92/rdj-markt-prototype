@@ -21,6 +21,8 @@ interface FilterDropdownProps {
   allLabel?: string;
   /** Additional class names */
   className?: string;
+  /** 'tertiary' renders as a text-only button with blue text and no border/background */
+  variant?: 'default' | 'tertiary';
 }
 
 export default function FilterDropdown({
@@ -34,6 +36,7 @@ export default function FilterDropdown({
   onMultiSelect,
   allLabel,
   className = "",
+  variant = 'default',
 }: FilterDropdownProps) {
   const [isOpen, setIsOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
@@ -124,6 +127,21 @@ export default function FilterDropdown({
 
   return (
     <div ref={ref} className={`relative ${className}`}>
+      {variant === 'tertiary' ? (
+        <button
+          onClick={handleClick}
+          className="content-stretch flex gap-[4px] items-center relative shrink-0 cursor-pointer hover:opacity-70 transition-opacity"
+        >
+          <div className="overflow-clip relative shrink-0 size-[20px]">
+            <svg className="block size-full" fill="none" viewBox="0 0 20 20">
+              <path d="M10 4v12M4 10h12" stroke="#1567a4" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.67" />
+            </svg>
+          </div>
+          <p className="font-sans font-bold leading-[20px] relative shrink-0 text-[#1567a4] text-[14px] whitespace-nowrap">
+            {displayLabel}
+          </p>
+        </button>
+      ) : (
       <button
         onClick={handleClick}
         className="bg-rdj-bg-primary relative rounded-[6px] shrink-0 cursor-pointer"
@@ -156,6 +174,7 @@ export default function FilterDropdown({
           className={`absolute border border-solid inset-0 pointer-events-none rounded-[6px] shadow-[0px_1px_2px_0px_rgba(16,24,40,0.05)] ${isActiveFilter ? 'border-[#1567a4]' : 'border-rdj-border-primary'}`}
         />
       </button>
+      )}
 
       {/* Dropdown menu */}
       {isOpen && options && options.length > 0 && (

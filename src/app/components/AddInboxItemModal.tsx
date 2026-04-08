@@ -1,7 +1,7 @@
 import { useState, useMemo, useRef, useEffect } from "react";
 import svgPaths from "../../imports/svg-hstiyx955m";
-import { type Relatie } from "../data/api";
-import { mockRelaties } from "../data/mock-relatie-data";
+import { type Relatie, type ContactPersoon } from "../data/api";
+import { mockRelaties, mockContactPersonen, mockGebruikers } from "../data/mock-relatie-data";
 import Button from "./Button";
 import Checkbox from "./Checkbox";
 import SegmentedButtonGroup from "./SegmentedButtonGroup";
@@ -103,18 +103,18 @@ function DateConditionPill({ def, value, onChange }: { def: (typeof CONDITION_DE
 }
 
 // Simulated IVR Hull Database
-interface IvrVessel { eni: string; naam: string; eigenaar: string }
+interface IvrVessel { eni: string; naam: string; eigenaar: string; groottonnage?: number }
 const ivrDatabase: IvrVessel[] = [
-  { eni: "02332456", naam: "Emily", eigenaar: "Van der Berg Shipping B.V." },
-  { eni: "02334567", naam: "S.S. Anna", eigenaar: "Rijnvaart Transport N.V." },
-  { eni: "02335678", naam: "Bregje", eigenaar: "De Vries Binnenvaart" },
-  { eni: "02336789", naam: "Hercules", eigenaar: "Duwvaart Nederland B.V." },
-  { eni: "02331111", naam: "Antonia V", eigenaar: "Visscher & Zonen" },
-  { eni: "02332222", naam: "Duwbak Alfa-1", eigenaar: "Alfa Duwvaart B.V." },
-  { eni: "02333333", naam: "Duwbak Alfa-2", eigenaar: "Alfa Duwvaart B.V." },
-  { eni: "02337890", naam: "Orion", eigenaar: "Stervaart Logistics B.V." },
-  { eni: "02338901", naam: "Cornelia", eigenaar: "Janssen Scheepvaart" },
-  { eni: "02339012", naam: "De Hoop", eigenaar: "Combinatie De Hoop V.O.F." },
+  { eni: "02332456", naam: "Emily", eigenaar: "Van der Berg Shipping B.V.", groottonnage: 2850 },
+  { eni: "02334567", naam: "S.S. Anna", eigenaar: "Rijnvaart Transport N.V.", groottonnage: 3120 },
+  { eni: "02335678", naam: "Bregje", eigenaar: "De Vries Binnenvaart", groottonnage: 1980 },
+  { eni: "02336789", naam: "Hercules", eigenaar: "Duwvaart Nederland B.V.", groottonnage: 4400 },
+  { eni: "02331111", naam: "Antonia V", eigenaar: "Visscher & Zonen", groottonnage: 2200 },
+  { eni: "02332222", naam: "Duwbak Alfa-1", eigenaar: "Alfa Duwvaart B.V.", groottonnage: 3600 },
+  { eni: "02333333", naam: "Duwbak Alfa-2", eigenaar: "Alfa Duwvaart B.V.", groottonnage: 3600 },
+  { eni: "02337890", naam: "Orion", eigenaar: "Stervaart Logistics B.V.", groottonnage: 2750 },
+  { eni: "02338901", naam: "Cornelia", eigenaar: "Janssen Scheepvaart", groottonnage: 1650 },
+  { eni: "02339012", naam: "De Hoop", eigenaar: "Combinatie De Hoop V.O.F.", groottonnage: 3100 },
 ];
 
 interface AddInboxItemModalProps {
@@ -132,12 +132,23 @@ export default function AddInboxItemModal({ isOpen, onClose, onSubmit, itemType:
   const [eniQuery, setEniQuery] = useState('');
   const [selectedVessel, setSelectedVessel] = useState<IvrVessel | null>(null);
   const [showDropdown, setShowDropdown] = useState(false);
+  const [grossTonnage, setGrossTonnage] = useState('');
   const eniInputRef = useRef<HTMLInputElement>(null);
   const [relatieQuery, setRelatieQuery] = useState('');
   const [selectedRelatie, setSelectedRelatie] = useState<Relatie | null>(null);
   const [showRelatieDropdown, setShowRelatieDropdown] = useState(false);
   const [showNieuweRelatie, setShowNieuweRelatie] = useState(false);
   const relatieInputRef = useRef<HTMLInputElement>(null);
+  const [contactQuery, setContactQuery] = useState('');
+  const [selectedContact, setSelectedContact] = useState<ContactPersoon | null>(null);
+  const [showContactDropdown, setShowContactDropdown] = useState(false);
+  const [showNewContact, setShowNewContact] = useState(false);
+  const contactInputRef = useRef<HTMLInputElement>(null);
+  const [eigenaarQuery, setEigenaarQuery] = useState('');
+  const [selectedEigenaar, setSelectedEigenaar] = useState<{ id: string; naam: string; profielfoto?: string } | null>(null);
+  const [showEigenaarDropdown, setShowEigenaarDropdown] = useState(false);
+  const [showNewEigenaar, setShowNewEigenaar] = useState(false);
+  const eigenaarInputRef = useRef<HTMLInputElement>(null);
   const [formData, setFormData] = useState({
     relation: '',
     contactPerson: '',
@@ -171,6 +182,37 @@ export default function AddInboxItemModal({ isOpen, onClose, onSubmit, itemType:
     );
   }, [relatieQuery]);
 
+  const contactSearchResults = useMemo(() => {
+    const pool = selectedRelatie
+      ? mockContactPersonen.filter(c => c.relatieId === selectedRelatie.id)
+      : [];
+    if (!contactQuery) return pool;
+    const q = contactQuery.toLowerCase();
+    return pool.filter(c => c.naam.toLowerCase().includes(q) || c.functie?.toLowerCase().includes(q));
+  }, [contactQuery, selectedRelatie]);
+
+  const eigenaarSearchResults = useMemo(() => {
+    if (!eigenaarQuery) return mockGebruikers;
+    const q = eigenaarQuery.toLowerCase();
+    return mockGebruikers.filter(g => g.naam.toLowerCase().includes(q));
+  }, [eigenaarQuery]);
+
+  // Auto-fill groottonnage from IVR when vessel is selected/deselected
+  useEffect(() => {
+    if (selectedVessel?.groottonnage) {
+      setGrossTonnage(String(selectedVessel.groottonnage));
+    } else if (!selectedVessel) {
+      setGrossTonnage('');
+    }
+  }, [selectedVessel]);
+
+  // Reset contactpersoon when relatie changes
+  useEffect(() => {
+    setSelectedContact(null);
+    setShowNewContact(false);
+    setContactQuery('');
+  }, [selectedRelatie?.id]);
+
   // Auto-fill relatie from IVR eigenaar when vessel is selected
   useEffect(() => {
     if (selectedVessel && !selectedRelatie) {
@@ -190,13 +232,20 @@ export default function AddInboxItemModal({ isOpen, onClose, onSubmit, itemType:
   if (!isOpen) return null;
 
   const handleSubmit = () => {
-    onSubmit({ ...formData, eniNumber: selectedVessel?.eni, ivrNaam: selectedVessel?.naam, relatieId: selectedRelatie?.id, relatieNaam: selectedRelatie?.naam ?? (showNieuweRelatie ? relatieQuery : undefined), loadTerms, unloadTerms, tonnageMax: isRange ? formData.tonnageMax : '', type: itemType, conditions, beschikbaarVanaf: beschikbaarVanaf ? formatSmartDatePickerValue(beschikbaarVanaf) : undefined });
+    onSubmit({ ...formData, eniNumber: selectedVessel?.eni, ivrNaam: selectedVessel?.naam, relatieId: selectedRelatie?.id, relatieNaam: selectedRelatie?.naam ?? (showNieuweRelatie ? relatieQuery : undefined), contactPersonId: selectedContact?.id, contactPersonNaam: selectedContact?.naam ?? (showNewContact ? contactQuery : undefined), ownerId: selectedEigenaar?.id, ownerNaam: selectedEigenaar?.naam ?? (showNewEigenaar ? eigenaarQuery : undefined), loadTerms, unloadTerms, tonnageMax: isRange ? formData.tonnageMax : '', type: itemType, conditions, grossTonnage, beschikbaarVanaf: beschikbaarVanaf ? formatSmartDatePickerValue(beschikbaarVanaf) : undefined });
     // Reset form
     setEniQuery('');
     setSelectedVessel(null);
+    setGrossTonnage('');
     setRelatieQuery('');
     setSelectedRelatie(null);
     setShowNieuweRelatie(false);
+    setContactQuery('');
+    setSelectedContact(null);
+    setShowNewContact(false);
+    setEigenaarQuery('');
+    setSelectedEigenaar(null);
+    setShowNewEigenaar(false);
     setFormData({
       relation: '',
       contactPerson: '',
@@ -269,11 +318,11 @@ export default function AddInboxItemModal({ isOpen, onClose, onSubmit, itemType:
         {/* Form Content */}
         <div className="px-[24px] py-[24px]">
           <div className="flex flex-col gap-[20px]">
-            {/* ENI Lookup (vaartuig only) */}
+            {/* Vaartuig Lookup (vaartuig only) */}
             {itemType === 'vaartuig' && (
               <div className="flex flex-col gap-[6px]">
                 <p className="font-sans font-bold leading-[20px] text-[#344054] text-[14px]">
-                  {selectedVessel ? 'Geselecteerd vaartuig' : 'ENI-nummer'}
+                  Vaartuig (optioneel)
                 </p>
 
                 {selectedVessel ? (
@@ -314,7 +363,7 @@ export default function AddInboxItemModal({ isOpen, onClose, onSubmit, itemType:
                       onFocus={() => setShowDropdown(true)}
                       onBlur={() => setTimeout(() => setShowDropdown(false), 150)}
                       className="w-full px-[12px] py-[8px] rounded-[6px] border border-[#d0d5dd] font-sans font-normal leading-[20px] text-[#101828] text-[14px] focus:outline-none focus:ring-2 focus:ring-[#1567a4]"
-                      placeholder="Zoek op ENI-nummer of naam..."
+                      placeholder="Zoek op vaartuignaam of ENI-nummer..."
                     />
                     {showDropdown && eniQuery.length >= 2 && (
                       <div className="absolute z-10 top-[calc(100%+4px)] left-0 w-full bg-white rounded-[8px] border border-[#d0d5dd] shadow-[0px_12px_16px_-4px_rgba(16,24,40,0.08),0px_4px_6px_-2px_rgba(16,24,40,0.03)] max-h-[200px] overflow-auto">
@@ -348,6 +397,34 @@ export default function AddInboxItemModal({ isOpen, onClose, onSubmit, itemType:
                       </div>
                     )}
                   </div>
+                )}
+              </div>
+            )}
+
+            {/* Groottonnage (vaartuig only) */}
+            {itemType === 'vaartuig' && (
+              <div className="flex flex-col gap-[6px]">
+                <p className="font-sans font-bold leading-[20px] text-[#344054] text-[14px]">
+                  Groottonnage
+                </p>
+                <div className="bg-white content-stretch flex items-start relative rounded-[6px] shrink-0 w-[160px]">
+                  <div aria-hidden="true" className="absolute border border-solid inset-0 pointer-events-none rounded-[6px] shadow-[0px_1px_2px_0px_rgba(16,24,40,0.05)] border-[#d0d5dd]" />
+                  <input
+                    type="text"
+                    value={grossTonnage}
+                    onChange={(e) => { if (!selectedVessel) setGrossTonnage(e.target.value); }}
+                    readOnly={!!selectedVessel}
+                    className={`flex-1 px-[12px] py-[8px] font-sans font-normal leading-[20px] text-[14px] bg-transparent outline-none rounded-l-[6px] w-0 ${selectedVessel ? 'text-[#475467]' : 'text-[#101828]'}`}
+                    placeholder="Bijv. 2850"
+                  />
+                  <div className="content-stretch flex items-center px-[12px] py-[8px] relative shrink-0">
+                    <p className="font-sans font-bold leading-[20px] relative shrink-0 text-[#475467] text-[14px] whitespace-nowrap">ton</p>
+                  </div>
+                </div>
+                {selectedVessel && (
+                  <p className="font-sans font-normal leading-[18px] text-[#475467] text-[13px]">
+                    Automatisch ingevuld vanuit IVR
+                  </p>
                 )}
               </div>
             )}
@@ -454,18 +531,85 @@ export default function AddInboxItemModal({ isOpen, onClose, onSubmit, itemType:
                 )}
               </div>
               <div className="flex-1 flex flex-col gap-[6px]">
-                <p className="font-sans font-bold leading-[20px] text-[#344054] text-[14px]">
+                <p className={`font-sans font-bold leading-[20px] text-[14px] ${!selectedRelatie && !showNieuweRelatie ? 'text-[#98a2b3]' : 'text-[#344054]'}`}>
                   Contactpersoon (optioneel)
                 </p>
-                <div className="bg-white relative rounded-[6px] w-full">
-                  <input
-                    type="text"
-                    value={formData.contactPerson}
-                    onChange={(e) => setFormData({ ...formData, contactPerson: e.target.value })}
-                    className="w-full px-[12px] py-[8px] rounded-[6px] border border-[#d0d5dd] font-sans font-normal leading-[20px] text-[#101828] text-[14px] focus:outline-none focus:ring-2 focus:ring-[#1567a4]"
-                    placeholder="Selecteer contactpersoon..."
-                  />
-                </div>
+                {!selectedRelatie && !showNieuweRelatie ? (
+                  <div className="w-full px-[12px] py-[8px] rounded-[6px] border border-[#eaecf0] bg-[#f9fafb] font-sans font-normal leading-[20px] text-[#98a2b3] text-[14px] cursor-not-allowed select-none">
+                    Selecteer eerst een relatie
+                  </div>
+                ) : selectedContact || showNewContact ? (
+                  <>
+                    <div className="relative w-full">
+                      <div className="w-full px-[12px] py-[8px] pr-[36px] rounded-[6px] border border-[#d0d5dd] font-sans font-normal leading-[20px] text-[#101828] text-[14px] bg-white truncate">
+                        {selectedContact?.naam ?? contactQuery}
+                      </div>
+                      {selectedContact?.functie && (
+                        <span className="absolute left-[12px] top-full mt-[2px] font-sans font-normal text-[12px] leading-[16px] text-[#667085]">{selectedContact.functie}</span>
+                      )}
+                      <button
+                        type="button"
+                        onClick={() => { setSelectedContact(null); setShowNewContact(false); setContactQuery(''); setTimeout(() => contactInputRef.current?.focus(), 0); }}
+                        className="absolute right-[10px] top-1/2 -translate-y-1/2 size-[16px] flex items-center justify-center text-[#667085] hover:text-[#344054]"
+                      >
+                        <svg className="block size-[10px]" fill="none" viewBox="0 0 10 10">
+                          <path d={svgPaths.p1ddb9c00} stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.33" />
+                        </svg>
+                      </button>
+                    </div>
+                    {showNewContact && (
+                      <p className="font-sans font-normal leading-[18px] text-[#475467] text-[13px] mt-[4px]">
+                        Wordt aangemaakt als nieuw contactpersoon.
+                      </p>
+                    )}
+                  </>
+                ) : (
+                  <div className="relative">
+                    <input
+                      ref={contactInputRef}
+                      type="text"
+                      value={contactQuery}
+                      onChange={(e) => { setContactQuery(e.target.value); setShowContactDropdown(true); }}
+                      onFocus={() => setShowContactDropdown(true)}
+                      onBlur={() => setTimeout(() => setShowContactDropdown(false), 150)}
+                      className="w-full px-[12px] py-[8px] rounded-[6px] border border-[#d0d5dd] font-sans font-normal leading-[20px] text-[#101828] text-[14px] focus:outline-none focus:ring-2 focus:ring-[#1567a4]"
+                      placeholder="Zoek contactpersoon..."
+                    />
+                    {showContactDropdown && (
+                      <div className="absolute z-10 top-[calc(100%+4px)] left-0 w-full bg-white rounded-[8px] border border-[#d0d5dd] shadow-[0px_12px_16px_-4px_rgba(16,24,40,0.08),0px_4px_6px_-2px_rgba(16,24,40,0.03)] max-h-[240px] overflow-auto">
+                        {contactSearchResults.map((contact) => (
+                          <button
+                            key={contact.id}
+                            onMouseDown={(e) => e.preventDefault()}
+                            onClick={() => { setSelectedContact(contact); setContactQuery(''); setShowContactDropdown(false); }}
+                            className="w-full text-left px-[12px] py-[8px] hover:bg-[#f2f4f7] flex flex-col gap-[1px] cursor-pointer first:rounded-t-[8px] last:rounded-b-[8px]"
+                          >
+                            <p className="font-sans font-bold leading-[20px] text-[#101828] text-[14px] truncate">{contact.naam}</p>
+                            {contact.functie && (
+                              <p className="font-sans font-normal leading-[18px] text-[#475467] text-[13px]">{contact.functie}</p>
+                            )}
+                          </button>
+                        ))}
+                        {contactQuery.length >= 2 && (
+                          <button
+                            onMouseDown={(e) => e.preventDefault()}
+                            onClick={() => { setShowNewContact(true); setShowContactDropdown(false); }}
+                            className="w-full text-left px-[12px] py-[8px] hover:bg-[#f2f4f7] flex items-center gap-[8px] cursor-pointer border-t border-[#eaecf0] last:rounded-b-[8px]"
+                          >
+                            <div className="overflow-clip shrink-0 size-[16px]">
+                              <svg className="block size-full" fill="none" viewBox="0 0 16 16">
+                                <path d="M8 3.33v9.34M3.33 8h9.34" stroke="#1567A4" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.33" />
+                              </svg>
+                            </div>
+                            <p className="font-sans font-bold leading-[20px] text-[#1567a4] text-[14px]">
+                              "{contactQuery}" toevoegen als nieuw
+                            </p>
+                          </button>
+                        )}
+                      </div>
+                    )}
+                  </div>
+                )}
               </div>
             </div>
 
@@ -594,7 +738,7 @@ export default function AddInboxItemModal({ isOpen, onClose, onSubmit, itemType:
 
             {/* Row 4: Laadlocatie & Laadtermijn */}
             <div className="flex gap-[12px] w-full">
-              <div className="flex-1 flex flex-col gap-[6px]">
+              <div className={`${itemType === 'vaartuig' ? 'w-[180px] shrink-0' : 'flex-1'} flex flex-col gap-[6px]`}>
                 <p className="font-sans font-bold leading-[20px] text-[#344054] text-[14px]">
                   {itemType === 'lading' ? 'Laadlocatie' : 'Beschikbaar vanaf'}
                 </p>
@@ -623,7 +767,7 @@ export default function AddInboxItemModal({ isOpen, onClose, onSubmit, itemType:
                   </SmartDatePicker>
                 )}
               </div>
-              <div className={`flex-1 flex flex-col gap-[6px]`}>
+              <div className="flex-1 flex flex-col gap-[6px]">
                 <p className="font-sans font-bold leading-[20px] text-[#344054] text-[14px]">
                   {itemType === 'lading' ? 'Laadtermijn' : 'Locatie (optioneel)'}
                 </p>
@@ -636,8 +780,8 @@ export default function AddInboxItemModal({ isOpen, onClose, onSubmit, itemType:
                 ) : (
                   <input
                     type="text"
-                    value={formData.loadPort}
-                    onChange={(e) => setFormData({ ...formData, loadPort: e.target.value })}
+                    value={formData.unloadPort}
+                    onChange={(e) => setFormData({ ...formData, unloadPort: e.target.value })}
                     className="w-full px-[12px] py-[8px] rounded-[6px] border border-[#d0d5dd] font-sans font-normal leading-[20px] text-[#101828] text-[14px] focus:outline-none focus:ring-2 focus:ring-[#1567a4] bg-white"
                     placeholder="Bijv. ARA gebied"
                   />
@@ -681,15 +825,78 @@ export default function AddInboxItemModal({ isOpen, onClose, onSubmit, itemType:
                 <p className="font-sans font-bold leading-[20px] text-[#344054] text-[14px]">
                   Eigenaar (optioneel)
                 </p>
-                <div className="bg-white relative rounded-[6px] w-full">
-                  <input
-                    type="text"
-                    value={formData.owner}
-                    onChange={(e) => setFormData({ ...formData, owner: e.target.value })}
-                    className="w-full px-[12px] py-[8px] rounded-[6px] border border-[#d0d5dd] font-sans font-normal leading-[20px] text-[#101828] text-[14px] focus:outline-none focus:ring-2 focus:ring-[#1567a4]"
-                    placeholder="Selecteer eigenaar..."
-                  />
-                </div>
+                {selectedEigenaar || showNewEigenaar ? (
+                  <>
+                    <div className="relative w-full">
+                      <div className="w-full px-[12px] py-[8px] pr-[36px] rounded-[6px] border border-[#d0d5dd] font-sans font-normal leading-[20px] text-[#101828] text-[14px] bg-white flex items-center gap-[8px]">
+                        {selectedEigenaar?.profielfoto && (
+                          <img src={selectedEigenaar.profielfoto} alt="" className="size-[20px] rounded-full object-cover shrink-0" />
+                        )}
+                        <span className="truncate">{selectedEigenaar?.naam ?? eigenaarQuery}</span>
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() => { setSelectedEigenaar(null); setShowNewEigenaar(false); setEigenaarQuery(''); setTimeout(() => eigenaarInputRef.current?.focus(), 0); }}
+                        className="absolute right-[10px] top-1/2 -translate-y-1/2 size-[16px] flex items-center justify-center text-[#667085] hover:text-[#344054]"
+                      >
+                        <svg className="block size-[10px]" fill="none" viewBox="0 0 10 10">
+                          <path d={svgPaths.p1ddb9c00} stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.33" />
+                        </svg>
+                      </button>
+                    </div>
+                    {showNewEigenaar && (
+                      <p className="font-sans font-normal leading-[18px] text-[#475467] text-[13px] mt-[4px]">
+                        Wordt aangemaakt als nieuwe eigenaar.
+                      </p>
+                    )}
+                  </>
+                ) : (
+                  <div className="relative">
+                    <input
+                      ref={eigenaarInputRef}
+                      type="text"
+                      value={eigenaarQuery}
+                      onChange={(e) => { setEigenaarQuery(e.target.value); setShowEigenaarDropdown(true); }}
+                      onFocus={() => setShowEigenaarDropdown(true)}
+                      onBlur={() => setTimeout(() => setShowEigenaarDropdown(false), 150)}
+                      className="w-full px-[12px] py-[8px] rounded-[6px] border border-[#d0d5dd] font-sans font-normal leading-[20px] text-[#101828] text-[14px] focus:outline-none focus:ring-2 focus:ring-[#1567a4]"
+                      placeholder="Zoek eigenaar..."
+                    />
+                    {showEigenaarDropdown && (
+                      <div className="absolute z-10 top-[calc(100%+4px)] left-0 w-full bg-white rounded-[8px] border border-[#d0d5dd] shadow-[0px_12px_16px_-4px_rgba(16,24,40,0.08),0px_4px_6px_-2px_rgba(16,24,40,0.03)] max-h-[240px] overflow-auto">
+                        {eigenaarSearchResults.map((gebruiker) => (
+                          <button
+                            key={gebruiker.id}
+                            onMouseDown={(e) => e.preventDefault()}
+                            onClick={() => { setSelectedEigenaar(gebruiker); setEigenaarQuery(''); setShowEigenaarDropdown(false); }}
+                            className="w-full text-left px-[12px] py-[8px] hover:bg-[#f2f4f7] flex items-center gap-[8px] cursor-pointer first:rounded-t-[8px] last:rounded-b-[8px]"
+                          >
+                            {gebruiker.profielfoto && (
+                              <img src={gebruiker.profielfoto} alt="" className="size-[24px] rounded-full object-cover shrink-0" />
+                            )}
+                            <p className="font-sans font-bold leading-[20px] text-[#101828] text-[14px]">{gebruiker.naam}</p>
+                          </button>
+                        ))}
+                        {eigenaarQuery.length >= 2 && (
+                          <button
+                            onMouseDown={(e) => e.preventDefault()}
+                            onClick={() => { setShowNewEigenaar(true); setShowEigenaarDropdown(false); }}
+                            className={`w-full text-left px-[12px] py-[8px] hover:bg-[#f2f4f7] flex items-center gap-[8px] cursor-pointer last:rounded-b-[8px] ${eigenaarSearchResults.length > 0 ? 'border-t border-[#eaecf0]' : 'first:rounded-t-[8px]'}`}
+                          >
+                            <div className="overflow-clip shrink-0 size-[16px]">
+                              <svg className="block size-full" fill="none" viewBox="0 0 16 16">
+                                <path d="M8 3.33v9.34M3.33 8h9.34" stroke="#1567A4" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.33" />
+                              </svg>
+                            </div>
+                            <p className="font-sans font-bold leading-[20px] text-[#1567a4] text-[14px]">
+                              "{eigenaarQuery}" toevoegen als nieuw
+                            </p>
+                          </button>
+                        )}
+                      </div>
+                    )}
+                  </div>
+                )}
               </div>
               <div className="flex-1 flex flex-col gap-[6px]">
                 <p className="font-sans font-bold leading-[20px] text-[#344054] text-[14px]">
@@ -725,7 +932,7 @@ export default function AddInboxItemModal({ isOpen, onClose, onSubmit, itemType:
           </div>
 
           {/* Condities (zoekcriteria) — alleen voor lading */}
-          {itemType === 'lading' && <div className="flex flex-col gap-[10px] pt-[4px]">
+          {itemType === 'lading' && <div className="flex flex-col gap-[10px] pt-[20px]">
             <div className="flex items-center gap-[12px]">
               <p className="font-sans font-bold leading-[20px] text-[#344054] text-[14px] shrink-0">
                 Zoekcriteria
