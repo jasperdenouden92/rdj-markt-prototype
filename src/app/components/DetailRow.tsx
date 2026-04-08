@@ -167,7 +167,7 @@ export default function DetailRow({
     <div className="content-stretch flex gap-[16px] items-start relative shrink-0 w-full group/detail-row">
       {/* Label */}
       <div
-        className={`bg-white content-stretch flex items-center py-[8px] relative rounded-[6px] shrink-0 ${labelWidth}`}
+        className={`bg-white content-stretch flex items-center py-[6px] relative rounded-[6px] shrink-0 ${labelWidth}`}
       >
         <p className="flex-[1_0_0] font-sans font-normal leading-[20px] min-h-px min-w-px relative text-rdj-text-secondary text-[14px]">
           {label}
@@ -185,7 +185,7 @@ export default function DetailRow({
               onChange={(e) => setEditValue(e.target.value)}
               onBlur={handleCommit}
               onKeyDown={handleKeyDown}
-              className="w-full px-[12px] py-[7px] font-sans font-bold leading-[20px] text-rdj-text-primary text-[14px] bg-transparent outline-none rounded-[6px]"
+              className="w-full px-[12px] py-[5px] font-sans font-bold leading-[20px] text-rdj-text-primary text-[14px] bg-transparent outline-none rounded-[6px]"
             />
           </div>
         </div>
@@ -262,7 +262,7 @@ function DefaultValue({
   return (
     <div className="bg-white relative rounded-[6px] shrink-0 w-full">
       <div className="flex flex-row items-center size-full">
-        <div className="content-stretch flex flex-col justify-center pl-[12px] pr-[6px] py-[8px] relative w-full">
+        <div className="content-stretch flex flex-col justify-center pl-[12px] pr-[6px] py-[6px] relative w-full">
           <p className={`font-sans leading-[20px] text-[14px] ${isEmpty && editable ? "font-normal text-rdj-text-tertiary" : "font-bold text-rdj-text-primary"}`}>
             {isEmpty && editable ? "Voeg toe" : (value || "—")}
           </p>
@@ -289,7 +289,7 @@ function LinkedValue({
   onClick?: () => void;
 }) {
   return (
-    <div className="content-stretch flex flex-col items-start px-[12px] py-[8px] relative w-full">
+    <div className="content-stretch flex flex-col items-start px-[12px] py-[6px] relative w-full">
       <button
         onClick={onClick}
         className="content-stretch flex items-center gap-[6px] overflow-clip relative shrink-0 w-full group"
@@ -309,7 +309,7 @@ function LinkedValue({
 function BadgesValue({ badges, editable }: { badges?: string[]; editable?: boolean }) {
   if (!badges || badges.length === 0) {
     return (
-      <div className="px-[12px] py-[8px]">
+      <div className="px-[12px] py-[6px]">
         <p className="font-sans font-normal leading-[20px] text-rdj-text-tertiary text-[14px]">
           {editable ? "Voeg toe" : "—"}
         </p>
@@ -320,7 +320,7 @@ function BadgesValue({ badges, editable }: { badges?: string[]; editable?: boole
   return (
     <div className="bg-white relative rounded-[6px] shrink-0 w-full">
       <div className="flex flex-row items-center size-full">
-        <div className="content-stretch flex items-center pl-[12px] pr-[6px] py-[8px] relative w-full">
+        <div className="content-stretch flex items-center pl-[12px] pr-[6px] py-[6px] relative w-full">
           <div className="content-stretch flex flex-wrap gap-[4px] items-start relative w-full">
             {badges.map((badge, i) => (
               <div

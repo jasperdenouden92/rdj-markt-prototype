@@ -48,7 +48,7 @@ export default function DetailsSidebar({
       style={{ width: collapsed ? 0 : width }}
     >
       <div className="flex flex-col items-center h-full" style={{ width }}>
-        <div className="content-stretch flex flex-col gap-[16px] items-center pt-[16px] px-[24px] relative size-full overflow-y-auto">
+        <div className="content-stretch flex flex-col gap-[8px] items-center pt-[16px] px-[24px] relative size-full overflow-y-auto">
           {/* Tab bar */}
           {tabs && tabs.length > 0 && (
             <div className="content-stretch flex flex-col gap-[10px] items-start pb-[16px] relative shrink-0 w-full">
@@ -112,7 +112,7 @@ export function DetailsSidebarSection({
   children,
 }: DetailsSidebarSectionProps) {
   return (
-    <div className="content-stretch flex flex-col gap-[16px] items-start relative shrink-0 w-full pb-[16px]">
+    <div className="content-stretch flex flex-col gap-[8px] items-start relative shrink-0 w-full pb-[8px]">
       {title && (
         <p className="font-sans font-bold leading-[20px] text-rdj-text-primary text-[14px] w-full">
           {title}
@@ -123,7 +123,7 @@ export function DetailsSidebarSection({
           {description}
         </p>
       )}
-      <div className="content-stretch flex flex-col gap-[8px] items-center relative shrink-0 w-full">
+      <div className="content-stretch flex flex-col gap-[4px] items-center relative shrink-0 w-full">
         {children}
       </div>
     </div>
