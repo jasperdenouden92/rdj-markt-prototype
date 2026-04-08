@@ -130,7 +130,7 @@ export default function DatePickerPopover({ value, onChange, children, id }: Dat
           </div>
 
           {/* Calendar */}
-          <Calendar
+          <Calendar data-annotation-id="datepickerpopover-kalender"
             mode="single"
             selected={selected}
             onSelect={handleSelect}

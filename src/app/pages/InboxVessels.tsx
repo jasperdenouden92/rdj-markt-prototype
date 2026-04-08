@@ -443,7 +443,7 @@ export default function InboxVessels() {
     <>
       <Toaster position="top-right" richColors />
       <div className="flex min-h-screen bg-rdj-bg-primary">
-        <Sidebar />
+        <Sidebar data-annotation-id="inboxvessels-navigatie" />
         
         <div className={`flex-1 ${viewMode === 'map' ? 'flex flex-col overflow-hidden' : 'overflow-auto'} pt-[24px]`}>
           <PageHeader
@@ -507,7 +507,7 @@ export default function InboxVessels() {
             </div>
           ) : (
           <div className="">
-            <Pagination
+            <Pagination data-annotation-id="inboxvessels-paginering-2"
               currentPage={currentPage}
               totalItems={totalItems}
               rowsPerPage={rowsPerPage}
@@ -515,7 +515,7 @@ export default function InboxVessels() {
               onRowsPerPageChange={setRowsPerPage}
             />
 
-            <Table
+            <Table data-annotation-id="inboxvessels-tabel"
               columns={sortedColumns}
               data={sortedData}
               onRowClick={(row) => navigate(`/markt/inbox/vaartuig/${row.id}`)}
@@ -523,7 +523,7 @@ export default function InboxVessels() {
               onRowHover={setHoveredRow}
             />
 
-            <Pagination
+            <Pagination data-annotation-id="inboxvessels-paginering"
               currentPage={currentPage}
               totalItems={totalItems}
               rowsPerPage={rowsPerPage}

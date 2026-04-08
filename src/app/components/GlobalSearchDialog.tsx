@@ -331,7 +331,7 @@ export default function GlobalSearchDialog({ open, onOpenChange }: GlobalSearchD
 
   return (
     <>
-    <Dialog open={open} onOpenChange={onOpenChange}>
+    <Dialog data-annotation-id="globalsearchdialog-modal" open={open} onOpenChange={onOpenChange}>
       <DialogPortal>
         <DialogOverlay className="bg-black/40" />
         <DialogPrimitive.Content
@@ -340,7 +340,7 @@ export default function GlobalSearchDialog({ open, onOpenChange }: GlobalSearchD
         >
           {/* Search input */}
           <div className="flex items-center gap-[8px] px-[16px] py-[12px]">
-            <Search className="shrink-0 size-[20px]" stroke="#667085" strokeWidth={2} />
+            <Search data-annotation-id="globalsearchdialog-filter" className="shrink-0 size-[20px]" stroke="#667085" strokeWidth={2} />
             <input
               ref={inputRef}
               value={query}

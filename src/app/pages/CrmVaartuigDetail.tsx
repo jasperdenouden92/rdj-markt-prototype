@@ -49,7 +49,7 @@ export default function CrmVaartuigDetail() {
   if (!vaartuig) {
     return (
       <div className="flex min-h-screen bg-white">
-        <Sidebar />
+        <Sidebar data-annotation-id="crmvaartuigdetail-navigatie-2" />
         <div className="flex-1 flex items-center justify-center">
           <div className="text-center">
             <p className="font-sans font-bold text-[20px] text-rdj-text-primary">Vaartuig niet gevonden</p>
@@ -149,7 +149,7 @@ export default function CrmVaartuigDetail() {
 
   return (
     <div className="flex min-h-screen bg-white">
-      <Sidebar />
+      <Sidebar data-annotation-id="crmvaartuigdetail-navigatie" />
 
       <div className="flex-1 flex min-h-0 min-w-0">
         <div className="flex-1 overflow-y-auto overflow-x-hidden min-w-0">
@@ -182,14 +182,14 @@ export default function CrmVaartuigDetail() {
                           filterValue={matchFilter}
                           onFilterChange={setMatchFilter}
                         />
-                        <Pagination
+                        <Pagination data-annotation-id="crmvaartuigdetail-paginering"
                           currentPage={matchPage}
                           totalItems={filteredMatchData.length}
                           rowsPerPage={matchRowsPerPage}
                           onPageChange={setMatchPage}
                           onRowsPerPageChange={setMatchRowsPerPage}
                         />
-                        <Table
+                        <Table data-annotation-id="crmvaartuigdetail-tabel"
                           columns={sortedMatchColumns}
                           data={sortedMatchData}
                           hoveredRowId={hoveredRow}

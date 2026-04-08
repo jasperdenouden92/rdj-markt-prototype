@@ -176,7 +176,7 @@ function Navigation1() {
 function Navigation() {
   return (
     <div className="content-stretch flex flex-col gap-[24px] items-start pt-[32px] relative shrink-0 w-full" data-name="Navigation">
-      <Header />
+      <Header data-annotation-id="markteigenladingladingdetailbiedingbewerken-navigatie-3" />
       <Navigation1 />
     </div>
   );
@@ -221,8 +221,8 @@ function Footer() {
 function Content() {
   return (
     <div className="content-stretch flex flex-[1_0_0] flex-col h-full items-start justify-between min-h-px min-w-px relative" data-name="Content">
-      <Navigation />
-      <Footer />
+      <Navigation data-annotation-id="markteigenladingladingdetailbiedingbewerken-navigatie-2" />
+      <Footer data-annotation-id="markteigenladingladingdetailbiedingbewerken-navigatie" />
     </div>
   );
 }
@@ -289,7 +289,7 @@ function Content2() {
   return (
     <div className="content-stretch flex items-start relative shrink-0 w-full" data-name="Content">
       <div className="content-stretch flex items-center pl-[24px] relative shrink-0" data-name="Breadcrumbs">
-        <Tabs />
+        <Tabs data-annotation-id="markteigenladingladingdetailbiedingbewerken-tabs" />
       </div>
     </div>
   );
@@ -519,7 +519,7 @@ function List() {
 function InputDropdown() {
   return (
     <div className="content-stretch flex flex-[1_0_0] flex-col items-start min-h-px min-w-px relative" data-name="Input dropdown">
-      <List />
+      <List data-annotation-id="markteigenladingladingdetailbiedingbewerken-lijst" />
     </div>
   );
 }
@@ -1470,7 +1470,7 @@ function Frame2() {
       <div className="content-stretch flex flex-col gap-[20px] items-start pt-[24px] relative shrink-0 w-full" data-name="Page header">
         <Content4 />
       </div>
-      <Form />
+      <Form data-annotation-id="markteigenladingladingdetailbiedingbewerken-formulier" />
     </div>
   );
 }
@@ -2202,7 +2202,7 @@ function Modal() {
 function Container() {
   return (
     <div className="content-stretch flex flex-[1_0_0] flex-col items-start min-h-px min-w-px relative" data-name="Container">
-      <Modal />
+      <Modal data-annotation-id="markteigenladingladingdetailbiedingbewerken-modal" />
     </div>
   );
 }

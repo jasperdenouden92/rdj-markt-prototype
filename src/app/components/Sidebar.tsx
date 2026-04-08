@@ -277,7 +277,7 @@ export default function Sidebar() {
                   {/* Zoeken */}
                   <div onClick={() => setShowSearch(true)} className="content-stretch flex flex-col gap-[4px] items-center relative shrink-0 group cursor-pointer" data-name="Item">
                     <div className="content-stretch flex items-center justify-center overflow-clip p-[8px] relative rounded-[4px] shrink-0 size-[40px] group-hover:bg-rdj-bg-secondary-hover" data-name="_Nav item button">
-                      <Search className="shrink-0 size-[24px]" stroke="#667085" strokeWidth={2} />
+                      <Search data-annotation-id="sidebar-filter" className="shrink-0 size-[24px]" stroke="#667085" strokeWidth={2} />
                     </div>
                     <p className="font-sans font-normal leading-[18px] relative shrink-0 text-[#344054] text-[12px] whitespace-nowrap">Zoeken</p>
                   </div>

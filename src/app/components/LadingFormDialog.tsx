@@ -215,7 +215,7 @@ export default function LadingFormDialog({ onSave, onClose }: LadingFormDialogPr
   };
 
   return (
-    <Dialog open onOpenChange={() => onClose()}>
+    <Dialog data-annotation-id="ladingformdialog-modal" open onOpenChange={() => onClose()}>
       <DialogContent className="sm:max-w-[560px] max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>{step === 1 ? "Vul de algemene gegevens in" : "Vul de laad- en los gegevens in"}</DialogTitle>
@@ -530,7 +530,7 @@ export default function LadingFormDialog({ onSave, onClose }: LadingFormDialogPr
         )}
 
         {step === 2 && (
-          <form onSubmit={handleSubmit} className="flex flex-col gap-[20px] pt-[8px]">
+          <form data-annotation-id="ladingformdialog-formulier" onSubmit={handleSubmit} className="flex flex-col gap-[20px] pt-[8px]">
             {/* Laadlocatie + Laadterminal */}
             <div className="grid grid-cols-2 gap-[12px]">
               <div className="flex flex-col gap-[6px]">

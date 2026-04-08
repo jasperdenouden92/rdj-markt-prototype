@@ -36,7 +36,7 @@ export default function TaakFormDialog({ taak, defaultRelatieId, defaultContract
     <div className="fixed inset-0 z-[100] flex items-center justify-center">
       <div className="absolute inset-0 bg-black/40" onClick={onClose} />
       <div className="relative bg-white rounded-[12px] shadow-xl w-full max-w-[520px] mx-[16px]">
-        <form onSubmit={handleSubmit}>
+        <form data-annotation-id="taakformdialog-formulier" onSubmit={handleSubmit}>
           <div className="flex items-center justify-between px-[24px] pt-[24px] pb-[16px] border-b border-rdj-border-secondary">
             <p className="font-sans font-bold text-[18px] text-rdj-text-primary">
               {taak ? "Taak bewerken" : "Taak toevoegen"}

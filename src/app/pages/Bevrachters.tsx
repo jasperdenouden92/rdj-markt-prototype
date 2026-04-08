@@ -195,7 +195,7 @@ export default function Bevrachters() {
 
   return (
     <div className="flex min-h-screen bg-rdj-bg-primary">
-      <Sidebar />
+      <Sidebar data-annotation-id="bevrachters-navigatie" />
 
       <div className="flex-1 flex flex-col overflow-auto">
         <div className="pt-[32px] pb-[8px]">
@@ -238,7 +238,7 @@ export default function Bevrachters() {
           />
         </div>
 
-        <Pagination
+        <Pagination data-annotation-id="bevrachters-paginering"
           currentPage={currentPage}
           totalItems={filtered.length}
           rowsPerPage={rowsPerPage}
@@ -246,7 +246,7 @@ export default function Bevrachters() {
           onRowsPerPageChange={setRowsPerPage}
         />
 
-        <Table
+        <Table data-annotation-id="bevrachters-tabel"
           columns={sortedColumns}
           data={pagedData}
           hoveredRowId={hoveredRow}

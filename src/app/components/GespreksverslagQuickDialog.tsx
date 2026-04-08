@@ -235,7 +235,7 @@ export default function GespreksverslagQuickDialog({
   ];
 
   return (
-    <Dialog open onOpenChange={(open) => { if (!open) onClose(); }}>
+    <Dialog data-annotation-id="gespreksverslagquickdialog-modal" open onOpenChange={(open) => { if (!open) onClose(); }}>
       <DialogContent className="sm:max-w-[1200px] p-0 gap-0 overflow-visible h-[85vh] flex flex-col">
         <DialogHeader className="px-[20px] pt-[20px] pb-0 shrink-0">
           <DialogTitle className="font-sans font-bold text-[16px] text-rdj-text-primary">

@@ -680,7 +680,7 @@ export default function Onderhandelingen() {
 
   return (
     <div className="flex min-h-screen bg-rdj-bg-primary">
-      <Sidebar />
+      <Sidebar data-annotation-id="onderhandelingen-navigatie" />
 
       <div className="flex-1 overflow-auto pt-[24px]">
         <PageHeader
@@ -817,7 +817,7 @@ export default function Onderhandelingen() {
 
         {/* Table area */}
         <div>
-          <Pagination
+          <Pagination data-annotation-id="onderhandelingen-paginering-2"
             currentPage={currentPage}
             totalItems={totalItems}
             rowsPerPage={rowsPerPage}
@@ -825,7 +825,7 @@ export default function Onderhandelingen() {
             onRowsPerPageChange={setRowsPerPage}
           />
 
-          <Table
+          <Table data-annotation-id="onderhandelingen-tabel"
             columns={sortedColumns}
             data={sortedData}
             hoveredRowId={hoveredRow}
@@ -847,7 +847,7 @@ export default function Onderhandelingen() {
             }}
           />
 
-          <Pagination
+          <Pagination data-annotation-id="onderhandelingen-paginering"
             currentPage={currentPage}
             totalItems={totalItems}
             rowsPerPage={rowsPerPage}

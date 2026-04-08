@@ -102,7 +102,7 @@ function InputDropdown() {
   return (
     <div className="content-stretch flex flex-col gap-[6px] items-start relative shrink-0 w-full" data-name="Input dropdown">
       <InputDropdown1 />
-      <List />
+      <List data-annotation-id="marktbevrachtingverzenden-lijst" />
     </div>
   );
 }
@@ -561,7 +561,7 @@ export default function MarktBevrachtingVerzenden() {
       <div className="absolute h-[2190px] left-0 top-0 w-[1920px]" data-name="Background overlay">
         <BackgroundOverlay />
       </div>
-      <Modal />
+      <Modal data-annotation-id="marktbevrachtingverzenden-modal" />
     </div>
   );
 }

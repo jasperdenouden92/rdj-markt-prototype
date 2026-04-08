@@ -371,7 +371,7 @@ export default function RelatieDetail() {
   if (!relatie) {
     return (
       <div className="flex min-h-screen bg-white">
-        <Sidebar />
+        <Sidebar data-annotation-id="relatiedetail-navigatie-2" />
         <div className="flex-1 flex items-center justify-center">
           <div className="text-center">
             <p className="font-sans font-bold text-[20px] text-rdj-text-primary">Relatie niet gevonden</p>
@@ -463,7 +463,7 @@ export default function RelatieDetail() {
 
   return (
     <div className="flex min-h-screen bg-rdj-bg-primary">
-      <Sidebar />
+      <Sidebar data-annotation-id="relatiedetail-navigatie" />
 
       <div className="flex-1 flex min-h-0 min-w-0">
         <div className="flex-1 overflow-y-auto overflow-x-hidden min-w-0">
@@ -494,7 +494,7 @@ export default function RelatieDetail() {
                           onAdd={() => setConversationDialog({ relatieId: id!, relatieName: relatie.naam })}
                           addTooltip="Onderhandeling starten"
                         />
-                        <Pagination
+                        <Pagination data-annotation-id="relatiedetail-paginering"
                           currentPage={negPage}
                           totalItems={sortedNegData.length}
                           rowsPerPage={negRowsPerPage}
@@ -508,7 +508,7 @@ export default function RelatieDetail() {
                             </p>
                           </div>
                         ) : (
-                          <Table
+                          <Table data-annotation-id="relatiedetail-tabel-4"
                             columns={sortedNegColumns}
                             data={sortedNegData}
                             activeRowId={selectedNegotiation?.id ?? null}
@@ -540,7 +540,7 @@ export default function RelatieDetail() {
                             </p>
                           </div>
                         ) : (
-                          <Table
+                          <Table data-annotation-id="relatiedetail-tabel-3"
                             columns={sortedLadingenColumns}
                             data={sortedLadingenData}
                             onRowClick={(row) => navigate(row.detailUrl as string)}
@@ -559,7 +559,7 @@ export default function RelatieDetail() {
                             </p>
                           </div>
                         ) : (
-                          <Table
+                          <Table data-annotation-id="relatiedetail-tabel-2"
                             columns={sortedVaartuigenColumns}
                             data={sortedVaartuigenData}
                             onRowClick={(row) => navigate(`/crm/relatie/${id}/vaartuig/${row.id}`)}
@@ -589,7 +589,7 @@ export default function RelatieDetail() {
                             </p>
                           </div>
                         ) : (
-                          <Table
+                          <Table data-annotation-id="relatiedetail-tabel"
                             columns={sortedDealsColumns}
                             data={sortedDealsData}
                             onRowClick={(row) => navigate(`/crm/deal/${row.id}`)}

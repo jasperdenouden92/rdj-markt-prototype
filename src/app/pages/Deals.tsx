@@ -4,7 +4,7 @@ import PageHeader from "../components/PageHeader";
 export default function Deals() {
   return (
     <div className="flex h-screen bg-rdj-bg-primary">
-      <Sidebar />
+      <Sidebar data-annotation-id="deals-navigatie" />
       <div className="flex-1 flex flex-col overflow-hidden pt-[24px]">
         <PageHeader title="Deals" />
         <div className="flex-1 overflow-auto">

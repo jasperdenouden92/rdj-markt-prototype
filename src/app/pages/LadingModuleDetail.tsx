@@ -81,7 +81,7 @@ export default function LadingModuleDetail() {
   if (!lading) {
     return (
       <div className="flex min-h-screen bg-white">
-        <Sidebar />
+        <Sidebar data-annotation-id="ladingmoduledetail-navigatie-2" />
         <div className="flex-1 flex items-center justify-center">
           <div className="text-center">
             <p className="font-sans font-bold text-[20px] text-rdj-text-primary">Lading niet gevonden</p>
@@ -102,7 +102,7 @@ export default function LadingModuleDetail() {
 
   return (
     <div className="flex min-h-screen bg-white">
-      <Sidebar />
+      <Sidebar data-annotation-id="ladingmoduledetail-navigatie" />
 
       <div className="flex-1 flex min-h-0 min-w-0">
         <div className="flex-1 overflow-y-auto overflow-x-hidden min-w-0">

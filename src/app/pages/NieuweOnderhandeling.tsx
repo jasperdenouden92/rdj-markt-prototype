@@ -195,7 +195,7 @@ export default function NieuweOnderhandeling() {
   return (
     <div className="flex min-h-screen bg-white">
       <Toaster position="top-right" richColors />
-      <Sidebar />
+      <Sidebar data-annotation-id="nieuweonderhandeling-navigatie" />
       
       <div className="flex-1 flex">
         {/* Main content area - Form */}

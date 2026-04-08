@@ -166,7 +166,7 @@ export default function SmartDatePicker({ value, onChange, children }: SmartDate
 
           {/* Calendar */}
           {mode === "dag" ? (
-            <Calendar
+            <Calendar data-annotation-id="smartdatepicker-kalender-2"
               mode="single"
               selected={selected}
               onSelect={handleDaySelect}
@@ -180,7 +180,7 @@ export default function SmartDatePicker({ value, onChange, children }: SmartDate
               }}
             />
           ) : (
-            <Calendar
+            <Calendar data-annotation-id="smartdatepicker-kalender"
               mode="single"
               selected={selected}
               onSelect={handleWeekSelect}

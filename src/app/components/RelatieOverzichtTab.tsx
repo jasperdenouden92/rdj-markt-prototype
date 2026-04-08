@@ -193,7 +193,7 @@ export default function RelatieOverzichtTab({ relatie, contactPersonen }: Relati
           <p className="font-sans font-normal text-[14px] text-rdj-text-tertiary">Geen contactpersonen.</p>
         ) : (
           <div className="border border-rdj-border-secondary rounded-[8px] overflow-hidden">
-            <table className="w-full">
+            <table data-annotation-id="relatieoverzichttab-tabel" className="w-full">
               <thead>
                 <tr className="border-b border-rdj-border-secondary bg-[#f9fafb]">
                   <th className="text-left px-[12px] py-[8px] font-sans font-bold text-[12px] text-rdj-text-secondary">Naam</th>

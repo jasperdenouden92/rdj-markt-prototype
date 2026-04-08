@@ -308,7 +308,7 @@ export default function VaartuigDetail() {
 
   return (
     <div className="flex min-h-screen bg-white">
-      <Sidebar />
+      <Sidebar data-annotation-id="vaartuigdetail-navigatie" />
 
       <div className="flex-1 flex min-h-0 min-w-0">
         <div className="flex-1 overflow-y-auto overflow-x-hidden min-w-0">
@@ -342,14 +342,14 @@ export default function VaartuigDetail() {
                             filterValue={matchFilter}
                             onFilterChange={setMatchFilter}
                           />
-                          <Pagination
+                          <Pagination data-annotation-id="vaartuigdetail-paginering-2"
                             currentPage={matchPage}
                             totalItems={filteredMatchData.length}
                             rowsPerPage={matchRowsPerPage}
                             onPageChange={setMatchPage}
                             onRowsPerPageChange={setMatchRowsPerPage}
                           />
-                          <Table
+                          <Table data-annotation-id="vaartuigdetail-tabel-2"
                             columns={sortedMatchColumns}
                             data={sortedMatchData}
                             hoveredRowId={hoveredRow}
@@ -391,14 +391,14 @@ export default function VaartuigDetail() {
                             onAdd={() => setConversationDialog({ relatieId: "", relatieName: "" })}
                             addTooltip="Onderhandeling starten"
                           />
-                          <Pagination
+                          <Pagination data-annotation-id="vaartuigdetail-paginering"
                             currentPage={negPage}
                             totalItems={filteredNegData.length}
                             rowsPerPage={negRowsPerPage}
                             onPageChange={setNegPage}
                             onRowsPerPageChange={setNegRowsPerPage}
                           />
-                          <Table
+                          <Table data-annotation-id="vaartuigdetail-tabel"
                             columns={sortedNegColumns}
                             data={sortedNegData}
                             hoveredRowId={hoveredRow}

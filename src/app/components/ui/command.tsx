@@ -39,7 +39,7 @@ function CommandDialog({
   description?: string;
 }) {
   return (
-    <Dialog {...props}>
+    <Dialog data-annotation-id="command-modal" {...props}>
       <DialogHeader className="sr-only">
         <DialogTitle>{title}</DialogTitle>
         <DialogDescription>{description}</DialogDescription>

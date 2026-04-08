@@ -328,7 +328,7 @@ function TermijnCalendarContent({
       {/* Selection area — fixed height to prevent layout shift */}
       <div className="h-[280px] flex flex-col">
         {granularity === "dag" && (
-          <Calendar
+          <Calendar data-annotation-id="termijndropdown-kalender-2"
             mode="single"
             selected={selected}
             onSelect={onDaySelect}
@@ -343,7 +343,7 @@ function TermijnCalendarContent({
           />
         )}
         {granularity === "week" && (
-          <Calendar
+          <Calendar data-annotation-id="termijndropdown-kalender"
             mode="single"
             selected={selected}
             onSelect={onWeekSelect}

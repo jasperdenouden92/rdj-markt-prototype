@@ -156,13 +156,13 @@ export default function ContractFormDialog({ contract, onSave, onClose }: Contra
   };
 
   return (
-    <Dialog open onOpenChange={() => onClose()}>
+    <Dialog data-annotation-id="contractformdialog-modal" open onOpenChange={() => onClose()}>
       <DialogContent className="sm:max-w-[640px] max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>{isEdit ? "Deal bewerken" : "Nieuwe deal"}</DialogTitle>
         </DialogHeader>
 
-        <form onSubmit={handleSubmit} className="flex flex-col gap-[20px] pt-[8px]">
+        <form data-annotation-id="contractformdialog-formulier" onSubmit={handleSubmit} className="flex flex-col gap-[20px] pt-[8px]">
           {/* Titel */}
           <div className="flex flex-col gap-[6px]">
             <Label htmlFor="ctr-titel" className="font-sans font-bold text-[14px] text-[#344054]">
