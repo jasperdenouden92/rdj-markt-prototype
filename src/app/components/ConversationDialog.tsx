@@ -750,11 +750,8 @@ export default function ConversationDialog({
 
   return (
     <div className="fixed inset-0 z-50 flex">
-      {/* Backdrop */}
-      <div className="absolute inset-0 bg-black/40" onClick={onClose} />
-
-      {/* Slide-in panel */}
-      <div className="relative ml-auto flex flex-col bg-white w-full max-w-[1400px] h-full shadow-[0px_20px_24px_-4px_rgba(16,24,40,0.08),0px_8px_8px_-4px_rgba(16,24,40,0.03)]">
+      {/* Full-screen panel */}
+      <div className="relative flex flex-col bg-white w-full h-full">
         {/* Header */}
         <div className="px-[32px] pt-[20px] shrink-0">
           <div className="flex items-start justify-between">
