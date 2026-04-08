@@ -511,7 +511,7 @@ export default function Inbox() {
                 {viewMode === 'list' && (
                   <>
                     <p className="font-sans font-normal leading-[20px] relative shrink-0 text-[#344054] text-[14px] whitespace-nowrap">Groeperen:</p>
-                    <FilterDropdown label="Geen groupering" />
+                    <FilterDropdown label="Geen groepering" />
                   </>
                 )}
                 {viewMode === 'map' && (
@@ -530,12 +530,7 @@ export default function Inbox() {
             }
           />
 
-          {/* Sub-filter row: Relatie / Laadregio / Losregio */}
-          <div className="px-[24px] pt-[12px] pb-[4px] flex gap-[8px] items-center">
-            <FilterDropdown label="Relatie" />
-            <FilterDropdown label="Laadregio" />
-            <FilterDropdown label="Losregio" />
-          </div>
+          {/* Sub-filter row: shown when filters are active */}
 
           {/* Content: Table or Map */}
           {viewMode === 'map' ? (
