@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
-import { X, Check, ArrowRight, Send, MailOpen, PenLine, ListTodo, Calendar, Pencil, MessageSquare, FileText, ClipboardList, ShoppingBag, UserX } from "lucide-react";
+import { X, Check, ArrowRight, Send, MailOpen, PenLine, ListTodo, Calendar, Pencil, MessageSquare, FileText, ClipboardList, ShoppingBag, UserX, MoreHorizontal, Download, Upload, ExternalLink } from "lucide-react";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "./ui/dropdown-menu";
 import { toast } from "sonner";
 import ApprovalConfirmationDialog, { type ApprovalOptions } from "./ApprovalConfirmationDialog";
 import ModelessPanel from "./ModelessPanel";
@@ -250,14 +251,6 @@ interface OnderhandelingSidepanelProps {
   onStatusChange?: (id: string, newStatus: string) => void;
 }
 
-type ApprovalAction = "generateCharter" | "sendToLoadPlanning" | "removeFromMarket" | "rejectOtherBids";
-
-const approvalActionConfig: { key: ApprovalAction; label: string; icon: React.ReactNode; toastMsg: (relatieName?: string) => string }[] = [
-  { key: "generateCharter", label: "Charter genereren & verzenden", icon: <FileText size={16} strokeWidth={2.5} />, toastMsg: (r) => `Charter gegenereerd en verstuurd naar ${r || "relatie"}` },
-  { key: "sendToLoadPlanning", label: "Doorsturen naar laadplanning", icon: <ClipboardList size={16} strokeWidth={2.5} />, toastMsg: () => "Lading doorgestuurd naar laadplanning" },
-  { key: "removeFromMarket", label: "Partij uit de markt halen", icon: <ShoppingBag size={16} strokeWidth={2.5} />, toastMsg: () => "Partij uit de markt gehaald" },
-  { key: "rejectOtherBids", label: "Andere biedingen afwijzen", icon: <UserX size={16} strokeWidth={2.5} />, toastMsg: () => "Andere biedingen afgewezen" },
-];
 
 type BemiddelingStatus = "Aangeboden" | "Goedgekeurd" | "Afgewezen";
 const bemiddelingStatusOptions: BemiddelingStatus[] = ["Aangeboden", "Goedgekeurd", "Afgewezen"];
@@ -281,12 +274,21 @@ export default function OnderhandelingSidepanel({ negotiationId, status: initial
   const [extraEvents, setExtraEvents] = useState<ActivityEvent[]>([]);
   const allEvents = [...extraEvents, ...mockActiviteit];
   const [showApprovalDialog, setShowApprovalDialog] = useState(false);
-  const [completedActions, setCompletedActions] = useState<Set<ApprovalAction>>(new Set());
   const [bemiddelingInkoopStatus, setBemiddelingInkoopStatus] = useState<BemiddelingStatus>("Aangeboden");
   const [bemiddelingVerkoopStatus, setBemiddelingVerkoopStatus] = useState<BemiddelingStatus>("Aangeboden");
   const bothApproved = isBemiddeling && bemiddelingInkoopStatus === "Goedgekeurd" && bemiddelingVerkoopStatus === "Goedgekeurd";
   const [dealBevestigd, setDealBevestigd] = useState(false);
-  const filteredApprovalActions = bron === "markt" ? approvalActionConfig.filter(a => a.key !== "removeFromMarket") : approvalActionConfig;
+
+  // --- Post-approval action states ---
+  type CharterStatus = "not_generated" | "generated" | "sent";
+  type ActionRowStatus = "pending" | "completed";
+  const [charterStatus, setCharterStatus] = useState<CharterStatus>("not_generated");
+  const [laadplanningStatus, setLaadplanningStatus] = useState<ActionRowStatus>("pending");
+  const [rejectBidsStatus, setRejectBidsStatus] = useState<ActionRowStatus>("pending");
+  const [removeMarketStatus, setRemoveMarketStatus] = useState<ActionRowStatus>("pending");
+  const [showRejectEmailModal, setShowRejectEmailModal] = useState(false);
+  const [showCharterSendModal, setShowCharterSendModal] = useState(false);
+  const [charterSentMeta, setCharterSentMeta] = useState<{ timestamp: string; user: string } | null>(null);
 
   const handleApprove = (options: ApprovalOptions) => {
     setShowApprovalDialog(false);
@@ -294,24 +296,22 @@ export default function OnderhandelingSidepanel({ negotiationId, status: initial
     onStatusChange?.(negotiationId, "Goedgekeurd");
     if (isBemiddeling) setDealBevestigd(true);
 
-    const completed = new Set<ApprovalAction>();
     if (options.generateCharter) {
-      completed.add("generateCharter");
-      toast.success("Charter gegenereerd", { description: `Verstuurd naar ${relatieName || "relatie"}` });
+      setCharterStatus("generated");
+      toast.success("Charter gegenereerd");
     }
     if (options.sendToLoadPlanning) {
-      completed.add("sendToLoadPlanning");
+      setLaadplanningStatus("completed");
       toast.success("Lading doorgestuurd naar laadplanning");
     }
     if (options.removeFromMarket) {
-      completed.add("removeFromMarket");
+      setRemoveMarketStatus("completed");
       toast.success("Partij uit de markt gehaald");
     }
     if (options.rejectOtherBids) {
-      completed.add("rejectOtherBids");
+      setRejectBidsStatus("completed");
       toast.success("Andere biedingen afgewezen", { description: options.sendRejectionEmail ? "Afwijzingsmails verstuurd" : undefined });
     }
-    setCompletedActions(completed);
 
     // Add activity event
     setExtraEvents(prev => [{
@@ -338,10 +338,6 @@ export default function OnderhandelingSidepanel({ negotiationId, status: initial
     }, ...prev]);
   };
 
-  const handlePostApprovalAction = (action: typeof approvalActionConfig[number]) => {
-    setCompletedActions(prev => new Set(prev).add(action.key));
-    toast.success(action.toastMsg(relatieName));
-  };
 
   const handleConditiesSave = (updates: Partial<Record<ConditiesField, number | null>>, opmerking: string) => {
     setConditiesOverrides(prev => ({ ...prev, ...updates }));
@@ -371,6 +367,216 @@ export default function OnderhandelingSidepanel({ negotiationId, status: initial
     { id: "vaartuig", label: "Vaartuig" },
     { id: "lading", label: "Lading" },
   ];
+
+  // Count completed post-approval actions
+  const completedCount = [
+    charterStatus === "sent" ? 1 : 0,
+    laadplanningStatus === "completed" ? 1 : 0,
+    rejectBidsStatus === "completed" ? 1 : 0,
+    removeMarketStatus === "completed" ? 1 : 0,
+  ].reduce((a, b) => a + b, 0);
+  const showRemoveMarket = bron !== "markt";
+  const totalActions = showRemoveMarket ? 4 : 3;
+
+  const charterFileName = `charter_${negotiationId.slice(0, 8)}.pdf`;
+
+  const actionRowIcon = (done: boolean) =>
+    done ? (
+      <div className="flex items-center justify-center size-[32px] rounded-full bg-[#ECFDF3] shrink-0">
+        <Check size={16} strokeWidth={2.5} className="text-[#17B26A]" />
+      </div>
+    ) : (
+      <FeaturedIcon icon={<X strokeWidth={2.5} />} variant="grey" size={32} />
+    );
+
+  const approvedActionsFooter = (
+    <div className="border-t border-rdj-border-secondary">
+      {/* Header */}
+      <div className="px-[24px] pt-[16px] pb-[8px] flex items-center justify-between">
+        <p className="font-sans font-bold text-[14px] leading-[20px] text-rdj-text-primary">Acties</p>
+        <p className="font-sans font-normal text-[12px] leading-[16px] text-rdj-text-tertiary">{completedCount} van {totalActions}</p>
+      </div>
+
+      {/* Charter row */}
+      <div className="px-[24px] py-[10px] flex items-start gap-[12px]">
+        {charterStatus === "sent" ? (
+          <div className="flex items-center justify-center size-[32px] rounded-full bg-[#ECFDF3] shrink-0">
+            <Check size={16} strokeWidth={2.5} className="text-[#17B26A]" />
+          </div>
+        ) : charterStatus === "generated" ? (
+          <FeaturedIcon icon={<FileText strokeWidth={2.5} />} variant="brand" size={32} />
+        ) : (
+          <FeaturedIcon icon={<X strokeWidth={2.5} />} variant="grey" size={32} />
+        )}
+        <div className="flex-1 min-w-0">
+          <p className="font-sans font-bold text-[14px] leading-[20px] text-rdj-text-primary">Charter</p>
+          <p className="font-sans font-normal text-[12px] leading-[16px] text-rdj-text-tertiary">
+            {charterStatus === "not_generated"
+              ? "Nog niet gegenereerd"
+              : charterStatus === "generated"
+                ? "Versie 1 gegenereerd"
+                : charterSentMeta
+                  ? `Versie 1 verstuurd op ${charterSentMeta.timestamp} door ${charterSentMeta.user}`
+                  : `Versie 1 verstuurd naar ${relatieName || "relatie"}`}
+          </p>
+        </div>
+        {charterStatus !== "not_generated" && (
+          <button
+            onClick={() => toast.success("Document geopend")}
+            className="flex items-center gap-[6px] shrink-0 group/file"
+          >
+            <FileText size={14} strokeWidth={2} className="text-rdj-text-tertiary shrink-0" />
+            <span className="font-sans font-normal text-[13px] leading-[18px] text-rdj-text-brand group-hover/file:underline whitespace-nowrap">
+              {charterFileName}
+            </span>
+          </button>
+        )}
+        {charterStatus === "not_generated" ? (
+          <Button
+            variant="secondary"
+            size="sm"
+            label="Genereren"
+            leadingIcon={<FileText size={14} strokeWidth={2.5} />}
+            onClick={() => {
+              setCharterStatus("generated");
+              toast.success("Charter gegenereerd");
+            }}
+          />
+        ) : (
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <button className="p-[6px] rounded-[6px] hover:bg-rdj-bg-primary-hover transition-colors shrink-0">
+                <MoreHorizontal size={16} className="text-rdj-text-tertiary" />
+              </button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="min-w-[200px] border-[#eaecf0] bg-white shadow-[0px_4px_6px_-2px_rgba(16,24,40,0.03),0px_12px_16px_-4px_rgba(16,24,40,0.08)]">
+              {charterStatus === "generated" && (
+                <DropdownMenuItem onClick={() => setShowCharterSendModal(true)}>
+                  <Send size={14} className="mr-2" />
+                  Verzenden
+                </DropdownMenuItem>
+              )}
+              {charterStatus === "generated" && (
+                <DropdownMenuItem onClick={() => {
+                  const now = new Date();
+                  const ts = now.toLocaleDateString("nl-NL", { day: "numeric", month: "short", year: "numeric" }) + " " + now.toLocaleTimeString("nl-NL", { hour: "2-digit", minute: "2-digit" });
+                  setCharterSentMeta({ timestamp: ts, user: mockNegotiationMeta.eigenaar });
+                  setCharterStatus("sent");
+                  toast.success("Charter gemarkeerd als verzonden");
+                }}>
+                  <Check size={14} className="mr-2" />
+                  Markeer als verzonden
+                </DropdownMenuItem>
+              )}
+              {charterStatus === "sent" && (
+                <DropdownMenuItem onClick={() => {
+                  setCharterStatus("generated");
+                  setCharterSentMeta(null);
+                  toast.success("Charter gemarkeerd als niet verzonden");
+                }}>
+                  <X size={14} className="mr-2" />
+                  Markeer als niet verzonden
+                </DropdownMenuItem>
+              )}
+              <DropdownMenuItem onClick={() => toast.success("Charter gedownload")}>
+                <Download size={14} className="mr-2" />
+                Downloaden
+              </DropdownMenuItem>
+              <DropdownMenuItem className="text-[#D92D20] focus:text-[#D92D20]" onClick={() => {
+                setCharterStatus("not_generated");
+                toast.success("Charter verwijderd");
+              }}>
+                <X size={14} className="mr-2" />
+                Verwijderen
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        )}
+      </div>
+
+      {/* Laadplanning row */}
+      <div className="px-[24px] py-[10px] flex items-center gap-[12px]">
+        {actionRowIcon(laadplanningStatus === "completed")}
+        <div className="flex-1 min-w-0">
+          <p className="font-sans font-bold text-[14px] leading-[20px] text-rdj-text-primary">Laadplanning</p>
+          <p className="font-sans font-normal text-[12px] leading-[16px] text-rdj-text-tertiary">
+            {laadplanningStatus === "completed" ? "Doorgestuurd naar laadplanning" : "Nog niet doorgestuurd"}
+          </p>
+        </div>
+        {laadplanningStatus === "pending" ? (
+          <Button
+            variant="secondary"
+            size="sm"
+            label="Doorsturen"
+            leadingIcon={<ClipboardList size={14} strokeWidth={2.5} />}
+            onClick={() => {
+              setLaadplanningStatus("completed");
+              toast.success("Lading doorgestuurd naar laadplanning");
+            }}
+          />
+        ) : (
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <button className="p-[6px] rounded-[6px] hover:bg-rdj-bg-primary-hover transition-colors shrink-0">
+                <MoreHorizontal size={16} className="text-rdj-text-tertiary" />
+              </button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="min-w-[200px] border-[#eaecf0] bg-white shadow-[0px_4px_6px_-2px_rgba(16,24,40,0.03),0px_12px_16px_-4px_rgba(16,24,40,0.08)]">
+              <DropdownMenuItem onClick={() => toast.success("Navigeren naar laadplanning...")}>
+                <ExternalLink size={14} className="mr-2" />
+                Bekijk in laadplanning
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        )}
+      </div>
+
+      {/* Andere biedingen afwijzen row */}
+      <div className="px-[24px] py-[10px] flex items-center gap-[12px]">
+        {actionRowIcon(rejectBidsStatus === "completed")}
+        <div className="flex-1 min-w-0">
+          <p className="font-sans font-bold text-[14px] leading-[20px] text-rdj-text-primary">Andere biedingen afwijzen</p>
+          <p className="font-sans font-normal text-[12px] leading-[16px] text-rdj-text-tertiary">
+            {rejectBidsStatus === "completed" ? "Afwijzingsmails verstuurd" : "Nog niet afgewezen"}
+          </p>
+        </div>
+        {rejectBidsStatus === "pending" && (
+          <Button
+            variant="secondary"
+            size="sm"
+            label="Afwijzen"
+            leadingIcon={<UserX size={14} strokeWidth={2.5} />}
+            onClick={() => setShowRejectEmailModal(true)}
+          />
+        )}
+      </div>
+
+      {/* Partij uit markt halen row */}
+      {showRemoveMarket && (
+        <div className="px-[24px] py-[10px] pb-[16px] flex items-center gap-[12px]">
+          {actionRowIcon(removeMarketStatus === "completed")}
+          <div className="flex-1 min-w-0">
+            <p className="font-sans font-bold text-[14px] leading-[20px] text-rdj-text-primary">Partij uit de markt halen</p>
+            <p className="font-sans font-normal text-[12px] leading-[16px] text-rdj-text-tertiary">
+              {removeMarketStatus === "completed" ? "Partij uit de markt gehaald" : "Partij staat nog in de markt"}
+            </p>
+          </div>
+          {removeMarketStatus === "pending" && (
+            <Button
+              variant="secondary"
+              size="sm"
+              label="Uit markt halen"
+              leadingIcon={<ShoppingBag size={14} strokeWidth={2.5} />}
+              onClick={() => {
+                setRemoveMarketStatus("completed");
+                toast.success("Partij uit de markt gehaald");
+              }}
+            />
+          )}
+        </div>
+      )}
+    </div>
+  );
 
   return (<>
     <ModelessPanel
@@ -431,25 +637,7 @@ export default function OnderhandelingSidepanel({ negotiationId, status: initial
       onClose={onClose}
       footer={
         dealBevestigd ? (
-          <div className="border-t border-rdj-border-secondary px-[24px] py-[16px] flex flex-col gap-[4px] items-start">
-            {filteredApprovalActions.map(action => {
-              const done = completedActions.has(action.key);
-              return done ? (
-                <div key={action.key} className="flex items-center gap-[8px] px-[12px] py-[8px] rounded-[6px] bg-rdj-bg-secondary">
-                  <Check size={16} strokeWidth={2.5} className="text-[#17B26A] shrink-0" />
-                  <span className="font-sans font-normal text-rdj-text-tertiary text-[14px] leading-[20px]">{action.label}</span>
-                </div>
-              ) : (
-                <Button
-                  key={action.key}
-                  variant="tertiary"
-                  label={action.label}
-                  leadingIcon={action.icon}
-                  onClick={() => handlePostApprovalAction(action)}
-                />
-              );
-            })}
-          </div>
+          approvedActionsFooter
         ) : bothApproved ? (
           <div className="border-t border-rdj-border-secondary px-[24px] py-[16px] flex gap-[12px] justify-end">
             <Button
@@ -481,25 +669,7 @@ export default function OnderhandelingSidepanel({ negotiationId, status: initial
             />
           </div>
         ) : currentStatus === "Goedgekeurd" ? (
-          <div className="border-t border-rdj-border-secondary px-[24px] py-[16px] flex flex-col gap-[4px] items-start">
-            {filteredApprovalActions.map(action => {
-              const done = completedActions.has(action.key);
-              return done ? (
-                <div key={action.key} className="flex items-center gap-[8px] px-[12px] py-[8px] rounded-[6px] bg-rdj-bg-secondary">
-                  <Check size={16} strokeWidth={2.5} className="text-[#17B26A] shrink-0" />
-                  <span className="font-sans font-normal text-rdj-text-tertiary text-[14px] leading-[20px]">{action.label}</span>
-                </div>
-              ) : (
-                <Button
-                  key={action.key}
-                  variant="tertiary"
-                  label={action.label}
-                  leadingIcon={action.icon}
-                  onClick={() => handlePostApprovalAction(action)}
-                />
-              );
-            })}
-          </div>
+          approvedActionsFooter
         ) : undefined
       }
       sidebar={
@@ -557,6 +727,31 @@ export default function OnderhandelingSidepanel({ negotiationId, status: initial
       relatieName={relatieName}
       hideRemoveFromMarket={bron === "markt"}
     />
+    {showRejectEmailModal && (
+      <RejectBidsEmailModal
+        onClose={() => setShowRejectEmailModal(false)}
+        onSend={() => {
+          setRejectBidsStatus("completed");
+          toast.success("Afwijzingsmails verstuurd");
+          setShowRejectEmailModal(false);
+        }}
+      />
+    )}
+    {showCharterSendModal && (
+      <CharterSendEmailModal
+        relatieName={relatieName || "Rederij Alfa"}
+        charterFileName={charterFileName}
+        onClose={() => setShowCharterSendModal(false)}
+        onSend={() => {
+          const now = new Date();
+          const ts = now.toLocaleDateString("nl-NL", { day: "numeric", month: "short", year: "numeric" }) + " " + now.toLocaleTimeString("nl-NL", { hour: "2-digit", minute: "2-digit" });
+          setCharterSentMeta({ timestamp: ts, user: mockNegotiationMeta.eigenaar });
+          setCharterStatus("sent");
+          toast.success("Charter verzonden", { description: `Verstuurd naar ${relatieName || "relatie"}` });
+          setShowCharterSendModal(false);
+        }}
+      />
+    )}
   </>
   );
 }
@@ -1274,5 +1469,363 @@ function ActiviteitTab({ events }: { events: ActivityEvent[] }) {
         </div>
       ))}
     </div>
+  );
+}
+
+/* ── Reject Bids Email Modal ── */
+
+const MOCK_OTHER_BIDDERS = [
+  { name: "Van Oord B.V.", email: "bevrachting@vanoord.nl" },
+  { name: "Boskalis", email: "chartering@boskalis.com" },
+  { name: "Damen Shipyards", email: "logistics@damen.com" },
+];
+
+function RejectBidsEmailModal({ onClose, onSend }: { onClose: () => void; onSend: () => void }) {
+  const [recipients, setRecipients] = useState(MOCK_OTHER_BIDDERS.map(b => b.email));
+  const [removedRecipients, setRemovedRecipients] = useState<string[]>([]);
+  const [subject] = useState("Afwijzing bieding — 1.200 t Grind, Rotterdam → Antwerpen");
+  const [message] = useState(`Geachte relatie,
+
+Hierbij delen wij u mede dat uw bieding op bovengenoemde lading helaas niet is geaccepteerd. De opdracht is aan een andere partij gegund.
+
+Wij hopen in de toekomst opnieuw met u samen te kunnen werken.
+
+Met vriendelijke groet,
+Rederij de Jong`);
+
+  const removeRecipient = (email: string) => {
+    setRecipients(prev => prev.filter(r => r !== email));
+    setRemovedRecipients(prev => [...prev, email]);
+  };
+
+  const addRecipient = (email: string) => {
+    setRecipients(prev => [...prev, email]);
+    setRemovedRecipients(prev => prev.filter(r => r !== email));
+  };
+
+  return (
+    <>
+      <div className="fixed inset-0 bg-[#0c111d] opacity-70 z-40" onClick={onClose} />
+      <div className="fixed inset-0 flex items-center justify-center z-50 p-4">
+        <div className="bg-white rounded-[10px] max-w-[600px] w-full max-h-[90vh] overflow-auto shadow-[0px_20px_24px_-4px_rgba(16,24,40,0.08),0px_8px_8px_-4px_rgba(16,24,40,0.03)]">
+          {/* Header */}
+          <div className="relative shrink-0 w-full">
+            <div className="content-stretch flex gap-[16px] items-start pt-[24px] px-[24px] relative w-full">
+              <div className="content-stretch flex flex-[1_0_0] flex-col gap-[4px] items-start min-h-px min-w-px relative">
+                <p className="font-sans font-bold leading-[26px] text-[#101828] text-[18px] w-full">
+                  Andere biedingen afwijzen
+                </p>
+                <p className="font-sans font-normal leading-[20px] text-[#475467] text-[14px] w-full">
+                  Verstuur een afwijzingsmail naar de andere bieders op deze partij.
+                </p>
+              </div>
+              <button onClick={onClose} className="absolute flex items-center justify-center p-[8px] right-[12px] rounded-[6px] size-[44px] top-[12px] hover:bg-rdj-bg-primary-hover transition-colors">
+                <X size={20} className="text-[#98A2B3]" />
+              </button>
+            </div>
+            <div className="h-[20px] shrink-0 w-full" />
+            <div className="h-px w-full bg-[#eaecf0]" />
+          </div>
+
+          {/* Content */}
+          <div className="flex flex-col gap-[24px] p-[24px] w-full">
+            {/* Ontvangers */}
+            <div className="flex flex-col gap-[8px] w-full">
+              <div className="flex items-center justify-between w-full">
+                <p className="font-sans font-bold leading-[20px] text-[#344054] text-[14px]">Ontvangers</p>
+                {removedRecipients.length > 0 && (
+                  <div className="flex gap-[8px] items-center">
+                    {removedRecipients.map(email => {
+                      const bidder = MOCK_OTHER_BIDDERS.find(b => b.email === email);
+                      return (
+                        <button
+                          key={email}
+                          onClick={() => addRecipient(email)}
+                          className="flex gap-[4px] items-center text-[#1567a4] hover:underline"
+                        >
+                          <span className="font-sans font-bold text-[12px] leading-[16px]">+ {bidder?.name || email}</span>
+                        </button>
+                      );
+                    })}
+                  </div>
+                )}
+              </div>
+              {recipients.length > 0 ? (
+                <div className="bg-white relative rounded-[6px] w-full">
+                  <div className="flex flex-row items-center overflow-clip rounded-[inherit] size-full">
+                    <div className="flex gap-[8px] items-center px-[12px] py-[8px] w-full">
+                      <div className="flex flex-[1_0_0] flex-wrap gap-[6px] items-center min-w-0">
+                        {recipients.map(email => {
+                          const bidder = MOCK_OTHER_BIDDERS.find(b => b.email === email);
+                          return (
+                            <div key={email} className="bg-white flex gap-[3px] items-center pl-[9px] pr-[4px] py-[2px] rounded-[4px] shrink-0 relative">
+                              <div aria-hidden="true" className="absolute border border-[#d0d5dd] inset-0 pointer-events-none rounded-[4px]" />
+                              <p className="font-sans font-bold leading-[20px] text-[#344054] text-[14px] whitespace-nowrap">
+                                {bidder?.name || email}
+                              </p>
+                              <p className="font-sans font-normal leading-[20px] text-[#667085] text-[12px] whitespace-nowrap">
+                                ({email})
+                              </p>
+                              <button onClick={() => removeRecipient(email)} className="flex flex-col items-start p-[2px] rounded-[3px] shrink-0">
+                                <X size={12} className="text-[#98A2B3]" />
+                              </button>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  </div>
+                  <div aria-hidden="true" className="absolute border border-[#d0d5dd] inset-0 pointer-events-none rounded-[6px] shadow-[0px_1px_2px_0px_rgba(16,24,40,0.05)]" />
+                </div>
+              ) : (
+                <div className="flex flex-col gap-[6px] w-full">
+                  <div className="bg-white relative rounded-[6px] w-full">
+                    <div className="flex items-center px-[12px] py-[8px] w-full">
+                      <p className="font-sans font-normal leading-[20px] text-[#667085] text-[14px]">
+                        Geen ontvangers geselecteerd
+                      </p>
+                    </div>
+                    <div aria-hidden="true" className="absolute border border-[#fda29b] inset-0 pointer-events-none rounded-[6px] shadow-[0px_1px_2px_0px_rgba(16,24,40,0.05)]" />
+                  </div>
+                  <p className="font-sans font-normal leading-[20px] text-[#d92d20] text-[14px]">
+                    Selecteer ten minste 1 ontvanger.
+                  </p>
+                </div>
+              )}
+            </div>
+
+            {/* Onderwerp */}
+            <div className="flex flex-col gap-[6px] w-full">
+              <p className="font-sans font-bold leading-[20px] text-[#344054] text-[14px]">Onderwerp</p>
+              <div className="bg-white relative rounded-[6px] w-full">
+                <div aria-hidden="true" className="absolute border border-[#d0d5dd] inset-0 pointer-events-none rounded-[6px] shadow-[0px_1px_2px_0px_rgba(16,24,40,0.05)]" />
+                <div className="flex items-center px-[14px] py-[10px] w-full">
+                  <p className="font-sans font-normal leading-[20px] text-[#101828] text-[14px]">{subject}</p>
+                </div>
+              </div>
+            </div>
+
+            {/* Bericht */}
+            <div className="flex flex-col gap-[6px] h-[200px] w-full">
+              <p className="font-sans font-bold leading-[20px] text-[#344054] text-[14px]">Bericht</p>
+              <div className="bg-white flex-[1_0_0] relative rounded-[6px] w-full">
+                <div className="overflow-clip rounded-[inherit] size-full">
+                  <div className="flex items-start px-[14px] py-[12px] size-full">
+                    <p className="flex-[1_0_0] font-sans font-normal h-full leading-[20px] text-[#101828] text-[14px] whitespace-pre-wrap">
+                      {message}
+                    </p>
+                  </div>
+                </div>
+                <div aria-hidden="true" className="absolute border border-[#d0d5dd] inset-0 pointer-events-none rounded-[6px] shadow-[0px_1px_2px_0px_rgba(16,24,40,0.05)]" />
+              </div>
+            </div>
+          </div>
+
+          {/* Footer */}
+          <div className="h-px w-full bg-[#eaecf0]" />
+          <div className="flex items-center justify-end p-[24px] gap-[12px]">
+            <Button variant="secondary" label="Annuleren" onClick={onClose} />
+            <Button
+              variant="primary"
+              label="Verzenden"
+              leadingIcon={<Send size={16} strokeWidth={2.5} />}
+              disabled={recipients.length === 0}
+              onClick={onSend}
+            />
+          </div>
+        </div>
+      </div>
+    </>
+  );
+}
+
+/* ── Charter Send Email Modal ── */
+
+function CharterSendEmailModal({
+  relatieName,
+  charterFileName,
+  onClose,
+  onSend,
+}: {
+  relatieName: string;
+  charterFileName: string;
+  onClose: () => void;
+  onSend: () => void;
+}) {
+  const contactEmail = `bevrachting@${relatieName.toLowerCase().replace(/\s+/g, "")}.nl`;
+  const [recipients, setRecipients] = useState([contactEmail]);
+  const [removedRecipients, setRemovedRecipients] = useState<string[]>([]);
+  const [attachments, setAttachments] = useState([charterFileName]);
+  const [subject] = useState(`Charter — 1.200 t Grind, Rotterdam → Antwerpen`);
+  const [message] = useState(`Geachte ${relatieName},
+
+Bijgevoegd vindt u het chartercontract behorende bij bovengenoemde partij. Wij verzoeken u dit document te ondertekenen en retour te zenden.
+
+Mocht u vragen hebben, neem dan gerust contact met ons op.
+
+Met vriendelijke groet,
+Rederij de Jong`);
+
+  const removeRecipient = (email: string) => {
+    setRecipients(prev => prev.filter(r => r !== email));
+    setRemovedRecipients(prev => [...prev, email]);
+  };
+
+  const addRecipient = (email: string) => {
+    setRecipients(prev => [...prev, email]);
+    setRemovedRecipients(prev => prev.filter(r => r !== email));
+  };
+
+  const removeAttachment = (name: string) => {
+    setAttachments(prev => prev.filter(a => a !== name));
+  };
+
+  const addExtraAttachment = () => {
+    const name = `bijlage_${attachments.length}.pdf`;
+    setAttachments(prev => [...prev, name]);
+    toast.success(`${name} toegevoegd`);
+  };
+
+  return (
+    <>
+      <div className="fixed inset-0 bg-[#0c111d] opacity-70 z-40" onClick={onClose} />
+      <div className="fixed inset-0 flex items-center justify-center z-50 p-4">
+        <div className="bg-white rounded-[10px] max-w-[600px] w-full max-h-[90vh] overflow-auto shadow-[0px_20px_24px_-4px_rgba(16,24,40,0.08),0px_8px_8px_-4px_rgba(16,24,40,0.03)]">
+          {/* Header */}
+          <div className="relative shrink-0 w-full">
+            <div className="flex gap-[16px] items-start pt-[24px] px-[24px] w-full">
+              <div className="flex flex-[1_0_0] flex-col gap-[4px] items-start">
+                <p className="font-sans font-bold leading-[26px] text-[#101828] text-[18px] w-full">
+                  Charter verzenden
+                </p>
+                <p className="font-sans font-normal leading-[20px] text-[#475467] text-[14px] w-full">
+                  Verstuur het charter naar {relatieName}.
+                </p>
+              </div>
+              <button onClick={onClose} className="absolute flex items-center justify-center p-[8px] right-[12px] rounded-[6px] size-[44px] top-[12px] hover:bg-rdj-bg-primary-hover transition-colors">
+                <X size={20} className="text-[#98A2B3]" />
+              </button>
+            </div>
+            <div className="h-[20px] shrink-0 w-full" />
+            <div className="h-px w-full bg-[#eaecf0]" />
+          </div>
+
+          {/* Content */}
+          <div className="flex flex-col gap-[24px] p-[24px] w-full">
+            {/* Ontvangers */}
+            <div className="flex flex-col gap-[8px] w-full">
+              <div className="flex items-center justify-between w-full">
+                <p className="font-sans font-bold leading-[20px] text-[#344054] text-[14px]">Ontvangers</p>
+                {removedRecipients.length > 0 && (
+                  <div className="flex gap-[8px] items-center">
+                    {removedRecipients.map(email => (
+                      <button
+                        key={email}
+                        onClick={() => addRecipient(email)}
+                        className="flex gap-[4px] items-center text-[#1567a4] hover:underline"
+                      >
+                        <span className="font-sans font-bold text-[12px] leading-[16px]">+ {email}</span>
+                      </button>
+                    ))}
+                  </div>
+                )}
+              </div>
+              {recipients.length > 0 ? (
+                <div className="bg-white relative rounded-[6px] w-full">
+                  <div className="flex flex-row items-center overflow-clip rounded-[inherit] size-full">
+                    <div className="flex gap-[8px] items-center px-[12px] py-[8px] w-full">
+                      <div className="flex flex-[1_0_0] flex-wrap gap-[6px] items-center min-w-0">
+                        {recipients.map(email => (
+                          <div key={email} className="bg-white flex gap-[3px] items-center pl-[9px] pr-[4px] py-[2px] rounded-[4px] shrink-0 relative">
+                            <div aria-hidden="true" className="absolute border border-[#d0d5dd] inset-0 pointer-events-none rounded-[4px]" />
+                            <p className="font-sans font-bold leading-[20px] text-[#344054] text-[14px] whitespace-nowrap">{email}</p>
+                            <button onClick={() => removeRecipient(email)} className="flex items-start p-[2px] rounded-[3px] shrink-0">
+                              <X size={12} className="text-[#98A2B3]" />
+                            </button>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                  <div aria-hidden="true" className="absolute border border-[#d0d5dd] inset-0 pointer-events-none rounded-[6px] shadow-[0px_1px_2px_0px_rgba(16,24,40,0.05)]" />
+                </div>
+              ) : (
+                <div className="flex flex-col gap-[6px] w-full">
+                  <div className="bg-white relative rounded-[6px] w-full">
+                    <div className="flex items-center px-[12px] py-[8px] w-full">
+                      <p className="font-sans font-normal leading-[20px] text-[#667085] text-[14px]">Geen ontvangers geselecteerd</p>
+                    </div>
+                    <div aria-hidden="true" className="absolute border border-[#fda29b] inset-0 pointer-events-none rounded-[6px] shadow-[0px_1px_2px_0px_rgba(16,24,40,0.05)]" />
+                  </div>
+                  <p className="font-sans font-normal leading-[20px] text-[#d92d20] text-[14px]">Selecteer ten minste 1 ontvanger.</p>
+                </div>
+              )}
+            </div>
+
+            {/* Onderwerp */}
+            <div className="flex flex-col gap-[6px] w-full">
+              <p className="font-sans font-bold leading-[20px] text-[#344054] text-[14px]">Onderwerp</p>
+              <div className="bg-white relative rounded-[6px] w-full">
+                <div aria-hidden="true" className="absolute border border-[#d0d5dd] inset-0 pointer-events-none rounded-[6px] shadow-[0px_1px_2px_0px_rgba(16,24,40,0.05)]" />
+                <div className="flex items-center px-[14px] py-[10px] w-full">
+                  <p className="font-sans font-normal leading-[20px] text-[#101828] text-[14px]">{subject}</p>
+                </div>
+              </div>
+            </div>
+
+            {/* Bericht */}
+            <div className="flex flex-col gap-[6px] h-[180px] w-full">
+              <p className="font-sans font-bold leading-[20px] text-[#344054] text-[14px]">Bericht</p>
+              <div className="bg-white flex-[1_0_0] relative rounded-[6px] w-full">
+                <div className="overflow-clip rounded-[inherit] size-full">
+                  <div className="flex items-start px-[14px] py-[12px] size-full">
+                    <p className="flex-[1_0_0] font-sans font-normal h-full leading-[20px] text-[#101828] text-[14px] whitespace-pre-wrap">
+                      {message}
+                    </p>
+                  </div>
+                </div>
+                <div aria-hidden="true" className="absolute border border-[#d0d5dd] inset-0 pointer-events-none rounded-[6px] shadow-[0px_1px_2px_0px_rgba(16,24,40,0.05)]" />
+              </div>
+            </div>
+
+            {/* Bijlagen */}
+            <div className="flex flex-col gap-[8px] w-full">
+              <div className="flex items-center justify-between w-full">
+                <p className="font-sans font-bold leading-[20px] text-[#344054] text-[14px]">Bijlagen</p>
+                <button onClick={addExtraAttachment} className="flex gap-[4px] items-center text-[#1567a4] hover:underline">
+                  <span className="font-sans font-bold text-[13px] leading-[18px]">+ Bijlage toevoegen</span>
+                </button>
+              </div>
+              <div className="flex flex-col gap-[6px]">
+                {attachments.map(name => (
+                  <div key={name} className="flex items-center gap-[8px] px-[12px] py-[8px] bg-[#F9FAFB] rounded-[6px]">
+                    <FileText size={16} strokeWidth={2} className="text-rdj-text-tertiary shrink-0" />
+                    <span className="flex-1 font-sans font-normal text-[14px] leading-[20px] text-rdj-text-primary truncate">{name}</span>
+                    {name !== charterFileName && (
+                      <button onClick={() => removeAttachment(name)} className="shrink-0 p-[2px] hover:bg-rdj-bg-primary-hover rounded-[4px] transition-colors">
+                        <X size={14} className="text-[#98A2B3]" />
+                      </button>
+                    )}
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          {/* Footer */}
+          <div className="h-px w-full bg-[#eaecf0]" />
+          <div className="flex items-center justify-end p-[24px] gap-[12px]">
+            <Button variant="secondary" label="Annuleren" onClick={onClose} />
+            <Button
+              variant="primary"
+              label="Verzenden"
+              leadingIcon={<Send size={16} strokeWidth={2.5} />}
+              disabled={recipients.length === 0}
+              onClick={onSend}
+            />
+          </div>
+        </div>
+      </div>
+    </>
   );
 }
