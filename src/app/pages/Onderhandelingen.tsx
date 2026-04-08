@@ -510,7 +510,7 @@ export default function Onderhandelingen() {
   const [currentPage, setCurrentPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(50);
   const [hoveredRow, setHoveredRow] = useState<string | null>(null);
-  const [selectedNegotiation, setSelectedNegotiation] = useState<{ id: string; status: string; bron: string; relatieName?: string; ladingaanbieder?: string; vaartuigaanbieder?: string } | null>(
+  const [selectedNegotiation, setSelectedNegotiation] = useState<{ id: string; status: string; bron: string; relatieName?: string; ladingaanbieder?: string; vaartuigaanbieder?: string; bemiddeling?: { inkoopRelatie: string; verkoopRelatie: string } } | null>(
     null
   );
   const [statusOverrides, setStatusOverrides] = useState<Record<string, string>>({});
@@ -833,8 +833,17 @@ export default function Onderhandelingen() {
             onRowHover={setHoveredRow}
             onRowClick={(row) => {
               const bron = row.bron as string;
+              const isBemiddeling = row.ladingBadge === "Bemiddeling";
               const relatie = bron === "eigen" ? row.vaartuigaanbieder as string : row.ladingaanbieder as string;
-              setSelectedNegotiation({ id: row.id, status: row.status as string, bron, relatieName: relatie, ladingaanbieder: row.ladingaanbieder as string, vaartuigaanbieder: row.vaartuigaanbieder as string });
+              setSelectedNegotiation({
+                id: row.id,
+                status: row.status as string,
+                bron,
+                relatieName: relatie,
+                ladingaanbieder: row.ladingaanbieder as string,
+                vaartuigaanbieder: row.vaartuigaanbieder as string,
+                ...(isBemiddeling ? { bemiddeling: { inkoopRelatie: row.ladingaanbieder as string, verkoopRelatie: row.vaartuigaanbieder as string } } : {}),
+              });
             }}
           />
 
@@ -856,6 +865,7 @@ export default function Onderhandelingen() {
           bron={selectedNegotiation.bron as "eigen" | "markt"}
           soort="lading"
           relatieName={selectedNegotiation.relatieName}
+          bemiddeling={selectedNegotiation.bemiddeling}
           onClose={() => setSelectedNegotiation(null)}
           onStatusChange={handleStatusChange}
         />
