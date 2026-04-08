@@ -7,6 +7,7 @@ import Checkbox from "./Checkbox";
 import SegmentedButtonGroup from "./SegmentedButtonGroup";
 import TermijnDropdown, { type TermijnValue } from "./TermijnDropdown";
 import DatePickerPopover, { type DatePickerValue, formatDatePickerValue } from "./DatePickerPopover";
+import SmartDatePicker, { type SmartDatePickerValue, formatSmartDatePickerValue } from "./SmartDatePicker";
 import { TermijnPill } from "./TermijnDropdown";
 
 /* ── Condition pills (zoekcriteria) ── */
@@ -161,6 +162,7 @@ export default function AddInboxItemModal({ isOpen, onClose, onSubmit, itemType:
     owner: '',
     priority: 1,
   });
+  const [beschikbaarVanaf, setBeschikbaarVanaf] = useState<SmartDatePickerValue | undefined>();
   const [conditions, setConditions] = useState<ConditionValues>({});
   const setCondition = (key: ConditionKey, value: string) => setConditions(prev => ({ ...prev, [key]: value || undefined }));
 
@@ -230,7 +232,7 @@ export default function AddInboxItemModal({ isOpen, onClose, onSubmit, itemType:
   if (!isOpen) return null;
 
   const handleSubmit = () => {
-    onSubmit({ ...formData, eniNumber: selectedVessel?.eni, ivrNaam: selectedVessel?.naam, relatieId: selectedRelatie?.id, relatieNaam: selectedRelatie?.naam ?? (showNieuweRelatie ? relatieQuery : undefined), contactPersonId: selectedContact?.id, contactPersonNaam: selectedContact?.naam ?? (showNewContact ? contactQuery : undefined), ownerId: selectedEigenaar?.id, ownerNaam: selectedEigenaar?.naam ?? (showNewEigenaar ? eigenaarQuery : undefined), loadTerms, unloadTerms, tonnageMax: isRange ? formData.tonnageMax : '', type: itemType, conditions, grossTonnage });
+    onSubmit({ ...formData, eniNumber: selectedVessel?.eni, ivrNaam: selectedVessel?.naam, relatieId: selectedRelatie?.id, relatieNaam: selectedRelatie?.naam ?? (showNieuweRelatie ? relatieQuery : undefined), contactPersonId: selectedContact?.id, contactPersonNaam: selectedContact?.naam ?? (showNewContact ? contactQuery : undefined), ownerId: selectedEigenaar?.id, ownerNaam: selectedEigenaar?.naam ?? (showNewEigenaar ? eigenaarQuery : undefined), loadTerms, unloadTerms, tonnageMax: isRange ? formData.tonnageMax : '', type: itemType, conditions, grossTonnage, beschikbaarVanaf: beschikbaarVanaf ? formatSmartDatePickerValue(beschikbaarVanaf) : undefined });
     // Reset form
     setEniQuery('');
     setSelectedVessel(null);
@@ -259,6 +261,7 @@ export default function AddInboxItemModal({ isOpen, onClose, onSubmit, itemType:
     });
     setLoadTerms(undefined);
     setUnloadTerms(undefined);
+    setBeschikbaarVanaf(undefined);
     setConditions({});
     onClose();
   };
@@ -739,17 +742,32 @@ export default function AddInboxItemModal({ isOpen, onClose, onSubmit, itemType:
                 <p className="font-sans font-bold leading-[20px] text-[#344054] text-[14px]">
                   {itemType === 'lading' ? 'Laadlocatie' : 'Beschikbaar vanaf'}
                 </p>
-                <div className="bg-white relative rounded-[6px] w-full">
-                  <input
-                    type="text"
-                    value={formData.loadPort}
-                    onChange={(e) => setFormData({ ...formData, loadPort: e.target.value })}
-                    className="w-full px-[12px] py-[8px] rounded-[6px] border border-[#d0d5dd] font-sans font-normal leading-[20px] text-[#101828] text-[14px] focus:outline-none focus:ring-2 focus:ring-[#1567a4]"
-                    placeholder={itemType === 'lading' ? "Bijv. IJmuiden Buitenspuikanaal" : "Bijv. Week 12"}
-                  />
-                </div>
+                {itemType === 'lading' ? (
+                  <div className="bg-white relative rounded-[6px] w-full">
+                    <input
+                      type="text"
+                      value={formData.loadPort}
+                      onChange={(e) => setFormData({ ...formData, loadPort: e.target.value })}
+                      className="w-full px-[12px] py-[8px] rounded-[6px] border border-[#d0d5dd] font-sans font-normal leading-[20px] text-[#101828] text-[14px] focus:outline-none focus:ring-2 focus:ring-[#1567a4]"
+                      placeholder="Bijv. IJmuiden Buitenspuikanaal"
+                    />
+                  </div>
+                ) : (
+                  <SmartDatePicker value={beschikbaarVanaf} onChange={setBeschikbaarVanaf}>
+                    <button
+                      type="button"
+                      className="w-full px-[12px] py-[8px] rounded-[6px] border border-[#d0d5dd] font-sans font-normal leading-[20px] text-[14px] focus:outline-none focus:ring-2 focus:ring-[#1567a4] bg-white text-left"
+                    >
+                      {beschikbaarVanaf ? (
+                        <span className="text-[#101828]">{formatSmartDatePickerValue(beschikbaarVanaf)}</span>
+                      ) : (
+                        <span className="text-rdj-text-tertiary">Selecteer datum of week</span>
+                      )}
+                    </button>
+                  </SmartDatePicker>
+                )}
               </div>
-              <div className={`${itemType === 'vaartuig' ? 'flex-1' : 'w-[270px]'} flex flex-col gap-[6px]`}>
+              <div className="flex-1 flex flex-col gap-[6px]">
                 <p className="font-sans font-bold leading-[20px] text-[#344054] text-[14px]">
                   {itemType === 'lading' ? 'Laadtermijn' : 'Locatie (optioneel)'}
                 </p>
@@ -788,7 +806,7 @@ export default function AddInboxItemModal({ isOpen, onClose, onSubmit, itemType:
                     />
                   </div>
                 </div>
-                <div className="w-[270px] flex flex-col gap-[6px]">
+                <div className="flex-1 flex flex-col gap-[6px]">
                   <p className="font-sans font-bold leading-[20px] text-[#344054] text-[14px]">
                     Lostermijn
                   </p>
