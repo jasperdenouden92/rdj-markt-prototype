@@ -136,6 +136,9 @@ async function handlePost(req: VercelRequest, res: VercelResponse) {
         Label: {
           rich_text: [{ text: { content: label || "" } }],
         },
+        Pagina: {
+          rich_text: [{ text: { content: pagina || "" } }],
+        },
       },
     }),
   });
