@@ -328,8 +328,7 @@ const mockOnderhandelingen = [
   },
   {
     id: "ond-l-8",
-    // Bemiddeling – markt lading + markt vaartuig
-    bron: "bemiddeling",
+    bron: "markt",
     ladingLabel: "Sojabonen",
     ladingSubtext: "",
     ladingBadge: "Bemiddeling" as string | undefined,
@@ -358,8 +357,7 @@ const mockOnderhandelingen = [
   },
   {
     id: "ond-l-9",
-    // Bemiddeling – markt lading + markt vaartuig
-    bron: "bemiddeling",
+    bron: "markt",
     ladingLabel: "Ijzererts",
     ladingSubtext: "",
     ladingBadge: "Bemiddeling" as string | undefined,
@@ -708,7 +706,6 @@ export default function Onderhandelingen() {
                   { value: "alles", label: "Alles" },
                   { value: "eigen", label: "Eigen" },
                   { value: "markt", label: "Markt" },
-                  { value: "bemiddeling", label: "Bemiddeling" },
                 ]}
                 value={sourceFilter}
                 onChange={(val) => {
@@ -856,10 +853,9 @@ export default function Onderhandelingen() {
         <OnderhandelingSidepanel
           negotiationId={selectedNegotiation.id}
           status={selectedNegotiation.status as "Via werklijst" | "Bod verstuurd" | "Bod ontvangen" | "Goedgekeurd" | "Afgewezen"}
-          bron={selectedNegotiation.bron === "bemiddeling" ? "markt" : selectedNegotiation.bron as "eigen" | "markt"}
+          bron={selectedNegotiation.bron as "eigen" | "markt"}
           soort="lading"
           relatieName={selectedNegotiation.relatieName}
-          bemiddeling={selectedNegotiation.bron === "bemiddeling" ? { inkoopRelatie: selectedNegotiation.vaartuigaanbieder!, verkoopRelatie: selectedNegotiation.ladingaanbieder! } : undefined}
           onClose={() => setSelectedNegotiation(null)}
           onStatusChange={handleStatusChange}
         />
