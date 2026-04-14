@@ -13,6 +13,7 @@ import Button from "../components/Button";
 import VaartuigMarktSidebar from "../components/VaartuigMarktSidebar";
 import OnderhandelingSidepanel from "../components/OnderhandelingSidepanel";
 import ConversationDialog from "../components/ConversationDialog";
+import RelatieSelectDialog from "../components/RelatieSelectDialog";
 import BrokerDialog from "../components/BrokerDialog";
 import ActivityFeed from "../components/ActivityFeed";
 import SectionHeader from "../components/SectionHeader";
@@ -35,7 +36,7 @@ const negotiationStatusVariantMap: Record<string, string> = {
 
 /* ── Inbox status mapping ── */
 function toInboxStatus(raw: string): string {
-  if (raw === "Via werklijst" || raw === "Bod verstuurd" || raw === "Bod ontvangen") return "In onderhandeling";
+  if (raw === "Via werklijst" || raw === "In onderhandeling") return "In onderhandeling";
   if (raw === "Goedgekeurd") return "Geaccepteerd";
   if (raw === "Afgewezen" || raw === "Afgekeurd") return "Geweigerd";
   return raw;
@@ -111,6 +112,7 @@ export default function InboxVesselDetail() {
   const [selectedNegotiation, setSelectedNegotiation] = useState<{ id: string; status: string; bron: string; relatieName?: string; bemiddeling?: { inkoopRelatie: string; verkoopRelatie: string } } | null>(null);
   const setActiveTab = (tab: typeof activeTab) => { setActiveTabRaw(tab); setSelectedNegotiation(null); };
   const [conversationDialog, setConversationDialog] = useState<{ relatieId: string; relatieName: string; matchName?: string; itemType?: "lading" | "vaartuig" | "relatie-vaartuig" | "relatie-lading"; rightName?: string } | null>(null);
+  const [showRelatieSelect, setShowRelatieSelect] = useState(false);
   const [brokerDialog, setBrokerDialog] = useState<{ relatieA: { id: string; name: string }; vesselName: string; vesselSubtitle: string; relatieB: { id: string; name: string }; cargoName: string; cargoSubtitle: string } | null>(null);
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [matchFilter, setMatchFilter] = useState("Alles");
@@ -172,10 +174,10 @@ export default function InboxVesselDetail() {
 
   /* ── Vessel-specific negotiations with cargo info ── */
   const vesselNegotiations = [
-    { id: 'N001', aanbod: 'Houtpellets Salzgitter', aanbodSubtext: '2.000 ton Houtpellets', bron: 'eigen' as const, company: 'Provaart Logistics BV', freightPrice: '€3,50/ton', freightPriceDiff: '+12,5%', tonnage: '2.000 ton', deadline: 'Za 14 Mrt, 16:00', deadlineExpired: true, status: 'Bod verstuurd', contact: { name: 'Eric Nieuwkoop', date: 'Ma 9 Mrt 07:28' } },
-    { id: 'N002', aanbod: 'Staal Dordrecht', aanbodSubtext: '3.000 ton Staal', bron: 'markt' as const, company: 'Janlow B.V.', ladingRelatie: 'Janlow B.V.', freightPrice: '€3,00/ton', freightPriceDiff: '-3,2%', tonnage: '3.000 ton', deadline: 'Morgen, 9:00', deadlineExpired: true, status: 'Bod verstuurd', contact: { name: 'Pelger de Jong', date: 'Di 10 Mrt 19:53' }, bemiddeling: { inkoopRelatie: 'Janlow B.V.', verkoopRelatie: 'Provaart Logistics BV' } as const },
-    { id: 'N003', aanbod: 'Grind Amsterdam', aanbodSubtext: '1.200 ton Grind', bron: 'eigen' as const, company: 'Rederij Alfa', freightPrice: '€2,80/ton', freightPriceDiff: '-9,7%', tonnage: '1.200 ton', deadline: 'Morgen, 10:00', status: 'Bod verstuurd', contact: { name: 'Khoa Nguyen', date: 'Zo 8 Mrt 01:31' } },
-    { id: 'N004', aanbod: 'Sojabonen Rotterdam', aanbodSubtext: '3.500 ton Sojabonen', bron: 'markt' as const, company: 'Cargill N.V.', ladingRelatie: 'Cargill N.V.', freightPrice: '€3,00/ton', freightPriceDiff: '0,0%', tonnage: '3.500 ton', deadline: 'Morgen, 11:00', status: 'Bod ontvangen', contact: { name: 'Eric Nieuwkoop', date: 'Za 7 Mrt 18:39' } },
+    { id: 'N001', aanbod: 'Houtpellets Salzgitter', aanbodSubtext: '2.000 ton Houtpellets', bron: 'eigen' as const, company: 'Provaart Logistics BV', freightPrice: '€3,50/ton', freightPriceDiff: '+12,5%', tonnage: '2.000 ton', deadline: 'Za 14 Mrt, 16:00', deadlineExpired: true, status: 'In onderhandeling', contact: { name: 'Eric Nieuwkoop', date: 'Ma 9 Mrt 07:28' } },
+    { id: 'N002', aanbod: 'Staal Dordrecht', aanbodSubtext: '3.000 ton Staal', bron: 'markt' as const, company: 'Janlow B.V.', ladingRelatie: 'Janlow B.V.', freightPrice: '€3,00/ton', freightPriceDiff: '-3,2%', tonnage: '3.000 ton', deadline: 'Morgen, 9:00', deadlineExpired: true, status: 'In onderhandeling', contact: { name: 'Pelger de Jong', date: 'Di 10 Mrt 19:53' }, bemiddeling: { inkoopRelatie: 'Janlow B.V.', verkoopRelatie: 'Provaart Logistics BV' } as const },
+    { id: 'N003', aanbod: 'Grind Amsterdam', aanbodSubtext: '1.200 ton Grind', bron: 'eigen' as const, company: 'Rederij Alfa', freightPrice: '€2,80/ton', freightPriceDiff: '-9,7%', tonnage: '1.200 ton', deadline: 'Morgen, 10:00', status: 'In onderhandeling', contact: { name: 'Khoa Nguyen', date: 'Zo 8 Mrt 01:31' } },
+    { id: 'N004', aanbod: 'Sojabonen Rotterdam', aanbodSubtext: '3.500 ton Sojabonen', bron: 'markt' as const, company: 'Cargill N.V.', ladingRelatie: 'Cargill N.V.', freightPrice: '€3,00/ton', freightPriceDiff: '0,0%', tonnage: '3.500 ton', deadline: 'Morgen, 11:00', status: 'In onderhandeling', contact: { name: 'Eric Nieuwkoop', date: 'Za 7 Mrt 18:39' } },
     { id: 'N005', aanbod: 'Kunstmest Terneuzen', aanbodSubtext: '2.500 ton Kunstmest', bron: 'eigen' as const, company: 'Cargill N.V.', freightPrice: '€3,25/ton', freightPriceDiff: '+4,8%', tonnage: '2.500 ton', deadline: 'Do 19 Mrt, 11:15', status: 'Goedgekeurd', contact: { name: 'Pelger de Jong', date: 'Vr 6 Mrt 11:47' } },
   ];
 
@@ -374,7 +376,10 @@ export default function InboxVesselDetail() {
                           filterOptions={["Alles", "Actief", "Geaccepteerd", "Geweigerd"]}
                           filterValue={negFilter}
                           onFilterChange={setNegFilter}
-                          onAdd={() => setConversationDialog({ relatieId: "", relatieName: "" })}
+                          onAdd={() => setConversationDialog({
+                            relatieId: summary?.relatieId || "",
+                            relatieName: summary?.relatieName || "Onbekend",
+                          })}
                           addTooltip="Onderhandeling starten"
                           addPrimary
                         />
@@ -437,6 +442,17 @@ export default function InboxVesselDetail() {
           relatieName={selectedNegotiation.relatieName}
           bemiddeling={selectedNegotiation.bemiddeling}
           onClose={() => setSelectedNegotiation(null)}
+        />
+      )}
+
+      {/* Relatie select dialog */}
+      {showRelatieSelect && (
+        <RelatieSelectDialog
+          onSelect={(relatie) => {
+            setShowRelatieSelect(false);
+            setConversationDialog({ relatieId: relatie.id, relatieName: relatie.naam });
+          }}
+          onClose={() => setShowRelatieSelect(false)}
         />
       )}
 

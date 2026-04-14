@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect, useMemo, type ReactNode } from "react";
 import { useNavigate, useLocation } from "react-router";
-import { Send, MailOpen, Check, X, Ship, ListTodo } from "lucide-react";
+import { Send, Check, X, Ship, ListTodo } from "lucide-react";
 import { Toaster } from "sonner";
 import Sidebar from "../components/Sidebar";
 import PageHeader from "../components/PageHeader";
@@ -11,6 +11,8 @@ import Table from "../components/Table";
 import type { Column } from "../components/Table";
 import useTableSort from "../components/useTableSort";
 import Button from "../components/Button";
+import RelatieSelectDialog from "../components/RelatieSelectDialog";
+import ConversationDialog from "../components/ConversationDialog";
 import OnderhandelingSidepanel from "../components/OnderhandelingSidepanel";
 import svgPaths from "../../imports/svg-q07ncv0e2v";
 import imgAvatar from "../../assets/a2737d3b5b234fc04041650cb9f114889c6859da.png";
@@ -20,30 +22,27 @@ import { HoverCard, HoverCardTrigger, HoverCardContent } from "../components/ui/
 /* ── Status badge mapping ── */
 const statusVariantMap: Record<string, string> = {
   "Via werklijst": "brand",
-  "Bod verstuurd": "brand",
-  "Bod ontvangen": "brand",
+  "In onderhandeling": "brand",
   "Goedgekeurd": "success",
   "Afgewezen": "error",
 };
 
 const statusIconMap: Record<string, React.ReactNode | null> = {
   "Via werklijst": <ListTodo strokeWidth={2.5} />,
-  "Bod verstuurd": <Send strokeWidth={2.5} />,
-  "Bod ontvangen": <MailOpen strokeWidth={2.5} />,
+  "In onderhandeling": <Send strokeWidth={2.5} />,
   "Goedgekeurd": <Check strokeWidth={2.5} />,
   "Afgewezen": <X strokeWidth={2.5} />,
 };
 
 const statusTypeMap: Record<string, "default" | "color"> = {
   "Via werklijst": "default",
-  "Bod verstuurd": "color",
-  "Bod ontvangen": "color",
+  "In onderhandeling": "color",
   "Goedgekeurd": "color",
   "Afgewezen": "color",
 };
 
-/** Filter groups: "actief" = Via werklijst + Bod ontvangen + Bod verstuurd */
-const activeStatuses = ["Via werklijst", "Bod ontvangen", "Bod verstuurd"];
+/** Filter groups: "actief" = Via werklijst + In onderhandeling */
+const activeStatuses = ["Via werklijst", "In onderhandeling"];
 
 /* ── Condities types ── */
 interface Condities {
@@ -133,6 +132,7 @@ const mockOnderhandelingen = [
     vaartuigaanbiederSubtext: "MS Adriana" as string | undefined,
     // Condities
     inkoopcondities: { prijs: 8.50, laadtijd: 24, liggeldLaden: 12.50, lostijd: 16, liggeldLossen: 15.00, overig: "Voorkeur laden vóór 10:00" } as Condities | null,
+    zoekcriteria: { prijs: 7.80, laadtijd: 20, liggeldLaden: 11.00, lostijd: 14, liggeldLossen: 13.00 } as Condities | null,
     verkoopcondities: { prijs: 7.20, laadtijd: 18, liggeldLaden: 10.00, lostijd: 14, liggeldLossen: 12.00 } as Condities | null,
     // Laden / Lossen
     laadLocatie: "Rotterdam",
@@ -141,7 +141,7 @@ const mockOnderhandelingen = [
     losDatum: "16 jan 2026, 14:00",
     // Rest
     deadline: "17 jan 2026",
-    status: "Bod verstuurd",
+    status: "In onderhandeling",
     updateUserInitials: "KN",
     updateUserAvatar: imgAvatar as string | undefined,
     updateDate: "14 jan 2026, 16:32",
@@ -163,6 +163,7 @@ const mockOnderhandelingen = [
     vaartuigaanbiederSubtext: undefined as string | undefined,
     // Condities
     inkoopcondities: { prijs: 7.20, laadtijd: 12, liggeldLaden: 10.00, lostijd: 8, liggeldLossen: 10.00 } as Condities | null,
+    zoekcriteria: { prijs: 6.90, laadtijd: 11, liggeldLaden: 9.00, lostijd: 8, liggeldLossen: 9.50 } as Condities | null,
     verkoopcondities: { prijs: 6.80, laadtijd: 10, liggeldLaden: 8.50, lostijd: 8, liggeldLossen: 9.00 } as Condities | null,
     // Laden / Lossen
     laadLocatie: "Duisburg",
@@ -171,7 +172,7 @@ const mockOnderhandelingen = [
     losDatum: "19 jan 2026, 10:00",
     // Rest
     deadline: "20 jan 2026",
-    status: "Bod ontvangen",
+    status: "In onderhandeling",
     updateUserInitials: "PJ",
     updateUserAvatar: undefined as string | undefined,
     updateDate: "13 jan 2026, 09:15",
@@ -193,6 +194,7 @@ const mockOnderhandelingen = [
     vaartuigaanbiederSubtext: "MS Fortuna" as string | undefined,
     // Condities
     inkoopcondities: { prijs: 9.10, laadtijd: 16, liggeldLaden: 14.00, lostijd: 12, liggeldLossen: 13.00 } as Condities | null,
+    zoekcriteria: { prijs: 8.60, laadtijd: 15, liggeldLaden: 12.50, lostijd: 11, liggeldLossen: 12.00 } as Condities | null,
     verkoopcondities: { prijs: 8.20, laadtijd: 14, liggeldLaden: 11.50, lostijd: 10, liggeldLossen: 11.00 } as Condities | null,
     // Laden / Lossen
     laadLocatie: "Amsterdam",
@@ -223,6 +225,7 @@ const mockOnderhandelingen = [
     vaartuigaanbiederSubtext: "MS Catharina" as string | undefined,
     // Condities
     inkoopcondities: { prijs: 11.00, laadtijd: 8, liggeldLaden: 20.00, lostijd: 8, liggeldLossen: 20.00 } as Condities | null,
+    zoekcriteria: { prijs: 10.50, laadtijd: 8, liggeldLaden: 19.00, lostijd: 7, liggeldLossen: 18.00 } as Condities | null,
     verkoopcondities: { prijs: 10.20, laadtijd: 8, liggeldLaden: 18.00, lostijd: 6, liggeldLossen: 16.00, overig: "Alleen bij daglicht lossen" } as Condities | null,
     // Laden / Lossen
     laadLocatie: "Terneuzen",
@@ -253,6 +256,7 @@ const mockOnderhandelingen = [
     vaartuigaanbiederSubtext: undefined as string | undefined,
     // Condities
     inkoopcondities: { prijs: 10.25, laadtijd: 20, liggeldLaden: 15.00, lostijd: 16, liggeldLossen: 14.00 } as Condities | null,
+    zoekcriteria: { prijs: 9.80, laadtijd: 19, liggeldLaden: 13.50, lostijd: 15, liggeldLossen: 13.00 } as Condities | null,
     verkoopcondities: { prijs: 9.50, laadtijd: 18, liggeldLaden: 12.00, lostijd: 14, liggeldLossen: 12.50 } as Condities | null,
     // Laden / Lossen
     laadLocatie: "Nijmegen",
@@ -261,7 +265,7 @@ const mockOnderhandelingen = [
     losDatum: "25 jan 2026, 18:00",
     // Rest
     deadline: "26 jan 2026",
-    status: "Bod verstuurd",
+    status: "In onderhandeling",
     updateUserInitials: "JK",
     updateUserAvatar: imgAvatar as string | undefined,
     updateDate: "17 jan 2026, 08:00",
@@ -283,6 +287,7 @@ const mockOnderhandelingen = [
     vaartuigaanbiederSubtext: undefined as string | undefined,
     // Condities
     inkoopcondities: { prijs: 6.80, laadtijd: 12, liggeldLaden: 8.00, lostijd: 10, liggeldLossen: 9.00, overig: "Schip moet kruiphoogte < 7m hebben" } as Condities | null,
+    zoekcriteria: { prijs: 6.50, laadtijd: 11, liggeldLaden: 7.75, lostijd: 9, liggeldLossen: 8.50 } as Condities | null,
     verkoopcondities: { prijs: 6.20, laadtijd: 10, liggeldLaden: 7.50, lostijd: 8, liggeldLossen: 8.00 } as Condities | null,
     // Laden / Lossen
     laadLocatie: "Mannheim",
@@ -291,7 +296,7 @@ const mockOnderhandelingen = [
     losDatum: "30 jan 2026, 09:00",
     // Rest
     deadline: "31 jan 2026",
-    status: "Bod ontvangen",
+    status: "In onderhandeling",
     updateUserInitials: "KN",
     updateUserAvatar: imgAvatar as string | undefined,
     updateDate: "18 jan 2026, 10:10",
@@ -313,6 +318,7 @@ const mockOnderhandelingen = [
     vaartuigaanbiederSubtext: "MS Petronella" as string | undefined,
     // Condities – nog geen bod uitgewisseld
     inkoopcondities: null as Condities | null,
+    zoekcriteria: null as Condities | null,
     verkoopcondities: null as Condities | null,
     // Laden / Lossen
     laadLocatie: "Rotterdam",
@@ -342,6 +348,7 @@ const mockOnderhandelingen = [
     vaartuigaanbiederSubtext: "MS De Hoop" as string | undefined,
     // Condities
     inkoopcondities: { prijs: 7.80, laadtijd: 16, liggeldLaden: 12.00, lostijd: 12, liggeldLossen: 11.00 } as Condities | null,
+    zoekcriteria: { prijs: 7.40, laadtijd: 15, liggeldLaden: 11.00, lostijd: 11, liggeldLossen: 10.50 } as Condities | null,
     verkoopcondities: { prijs: 7.00, laadtijd: 14, liggeldLaden: 10.00, lostijd: 10, liggeldLossen: 10.00 } as Condities | null,
     // Laden / Lossen
     laadLocatie: "Rotterdam Botlek",
@@ -350,7 +357,7 @@ const mockOnderhandelingen = [
     losDatum: "7 feb 2026, 14:00",
     // Rest
     deadline: "2 feb 2026",
-    status: "Bod verstuurd",
+    status: "In onderhandeling",
     updateUserInitials: "PJ",
     updateUserAvatar: imgAvatar as string | undefined,
     updateDate: "20 jan 2026, 09:30",
@@ -371,6 +378,7 @@ const mockOnderhandelingen = [
     vaartuigaanbiederSubtext: "MS Orion" as string | undefined,
     // Condities
     inkoopcondities: { prijs: 9.40, laadtijd: 20, liggeldLaden: 16.00, lostijd: 14, liggeldLossen: 14.00, overig: "Dubbele bodem vereist" } as Condities | null,
+    zoekcriteria: { prijs: 9.00, laadtijd: 19, liggeldLaden: 15.00, lostijd: 13, liggeldLossen: 13.00 } as Condities | null,
     verkoopcondities: { prijs: 8.60, laadtijd: 18, liggeldLaden: 14.00, lostijd: 12, liggeldLossen: 12.00 } as Condities | null,
     // Laden / Lossen
     laadLocatie: "IJmuiden",
@@ -379,7 +387,7 @@ const mockOnderhandelingen = [
     losDatum: "7 feb 2026, 10:00",
     // Rest
     deadline: "4 feb 2026",
-    status: "Bod ontvangen",
+    status: "In onderhandeling",
     updateUserInitials: "EN",
     updateUserAvatar: undefined as string | undefined,
     updateDate: "21 jan 2026, 15:45",
@@ -514,6 +522,8 @@ export default function Onderhandelingen() {
     null
   );
   const [statusOverrides, setStatusOverrides] = useState<Record<string, string>>({});
+  const [showRelatieSelect, setShowRelatieSelect] = useState(false);
+  const [conversationDialog, setConversationDialog] = useState<{ relatieId: string; relatieName: string } | null>(null);
 
   const handleStatusChange = (id: string, newStatus: string) => {
     setStatusOverrides(prev => ({ ...prev, [id]: newStatus }));
@@ -594,6 +604,13 @@ export default function Onderhandelingen() {
       render: (row) => <ConditiesCell condities={row._verkoopcondities} />,
     },
     {
+      key: "zoekcriteria",
+      header: "Zoekcriteria",
+      type: "custom",
+      width: "w-[160px]",
+      render: (row) => <ConditiesCell condities={row._zoekcriteria} />,
+    },
+    {
       key: "inkoopcondities",
       header: "Inkoopcondities",
       type: "custom",
@@ -657,8 +674,10 @@ export default function Onderhandelingen() {
     vaartuigaanbiederHoverContent: item.vaartuigaanbieder !== "—" ? buildRelatieHoverContent(item.vaartuigaanbieder) : undefined,
     // Store condities objects for custom render
     _inkoopcondities: item.inkoopcondities,
+    _zoekcriteria: item.zoekcriteria,
     _verkoopcondities: item.verkoopcondities,
     inkoopcondities: item.inkoopcondities ? `€ ${item.inkoopcondities.prijs.toFixed(2).replace(".", ",")} /t` : "—",
+    zoekcriteria: item.zoekcriteria ? `€ ${item.zoekcriteria.prijs.toFixed(2).replace(".", ",")} /t` : "—",
     verkoopcondities: item.verkoopcondities ? `€ ${item.verkoopcondities.prijs.toFixed(2).replace(".", ",")} /t` : "—",
     laden: item.laadLocatie,
     ladenDate: item.laadDatum,
@@ -690,6 +709,7 @@ export default function Onderhandelingen() {
               variant="primary"
               label="Toevoegen"
               leadingIcon={PlusIcon}
+              onClick={() => setShowRelatieSelect(true)}
             />
           }
           filtersLeft={
@@ -861,7 +881,7 @@ export default function Onderhandelingen() {
       {selectedNegotiation && (
         <OnderhandelingSidepanel
           negotiationId={selectedNegotiation.id}
-          status={selectedNegotiation.status as "Via werklijst" | "Bod verstuurd" | "Bod ontvangen" | "Goedgekeurd" | "Afgewezen"}
+          status={selectedNegotiation.status as "Via werklijst" | "In onderhandeling" | "Goedgekeurd" | "Afgewezen"}
           bron={selectedNegotiation.bron as "eigen" | "markt"}
           soort="lading"
           relatieName={selectedNegotiation.relatieName}
@@ -870,6 +890,26 @@ export default function Onderhandelingen() {
           onStatusChange={handleStatusChange}
         />
       )}
+      {/* Conversation dialog */}
+      {conversationDialog && (
+        <ConversationDialog
+          relatieId={conversationDialog.relatieId}
+          relatieName={conversationDialog.relatieName}
+          onClose={() => setConversationDialog(null)}
+        />
+      )}
+
+      {/* Relatie select dialog */}
+      {showRelatieSelect && (
+        <RelatieSelectDialog
+          onSelect={(relatie) => {
+            setShowRelatieSelect(false);
+            setConversationDialog({ relatieId: relatie.id, relatieName: relatie.naam });
+          }}
+          onClose={() => setShowRelatieSelect(false)}
+        />
+      )}
+
       <Toaster position="top-right" richColors />
     </div>
   );

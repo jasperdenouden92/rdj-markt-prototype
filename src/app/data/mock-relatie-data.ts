@@ -343,6 +343,13 @@ export const mockRelatieLadingen: RelatieLading[] = [
   { id: "rl-011", relatieId: "rel-008", contractId: "ctr-009", ladingSoortId: "ls-006", titel: "HEI001", laadlocatie: "Maastricht", loslocatie: "Luik", tonnage: "2.200 ton", product: "Kolen", laaddatum: "2026-03-12", losdatum: "2026-03-13", status: "gesloten", matches: 0, onderhandelingen: 0 },
   { id: "rl-012", relatieId: "rel-010", contractId: "ctr-006", ladingSoortId: "ls-007", titel: "VIT001", laadlocatie: "Rotterdam Botlek", loslocatie: "Rotterdam Botlek", tonnage: "5.000 ton", product: "Sojabonen", laaddatum: "2026-03-21", status: "intake", matches: 0, onderhandelingen: 0 },
   { id: "rl-013", relatieId: "rel-012", ladingSoortId: "ls-008", titel: "DUI001", exNaam: "m/v Merganser", laadlocatie: "Rotterdam", loslocatie: "Duisburg", tonnage: "2.000 ton", product: "Containers", laaddatum: "2026-03-23", losdatum: "2026-03-25", status: "markt", matches: 4, onderhandelingen: 2 },
+  { id: "rl-014", relatieId: "rel-001", ladingSoortId: "ls-005", titel: "PRO006", laadlocatie: "Rotterdam Europoort", loslocatie: "Ludwigshafen", tonnage: "3.200 ton", product: "Meststoffen", laaddatum: "2026-03-25", losdatum: "2026-03-28", status: "markt", matches: 3, onderhandelingen: 1 },
+  { id: "rl-015", relatieId: "rel-001", ladingSoortId: "ls-006", titel: "PRO007", laadlocatie: "Amsterdam Westhaven", loslocatie: "Duisburg", tonnage: "2.800 ton", product: "Kolen", laaddatum: "2026-03-27", losdatum: "2026-03-30", status: "werklijst", matches: 2, onderhandelingen: 0 },
+  { id: "rl-016", relatieId: "rel-002", ladingSoortId: "ls-009", titel: "JAN005", laadlocatie: "Moerdijk", loslocatie: "Antwerpen", tonnage: "1.500 ton", product: "Grind", laaddatum: "2026-03-22", losdatum: "2026-03-23", status: "markt", matches: 2, onderhandelingen: 0 },
+  { id: "rl-017", relatieId: "rel-002", ladingSoortId: "ls-001", titel: "JAN006", exNaam: "m/v A2B Future", laadlocatie: "Rotterdam", loslocatie: "Mannheim", tonnage: "3.800 ton", product: "Graan", laaddatum: "2026-03-26", losdatum: "2026-03-30", status: "werklijst", matches: 3, onderhandelingen: 1 },
+  { id: "rl-018", relatieId: "rel-003", ladingSoortId: "ls-005", titel: "CAR004", laadlocatie: "Rotterdam Botlek", loslocatie: "Karlsruhe", tonnage: "2.500 ton", product: "Meststoffen", laaddatum: "2026-03-19", losdatum: "2026-03-23", status: "markt", matches: 4, onderhandelingen: 1 },
+  { id: "rl-019", relatieId: "rel-003", ladingSoortId: "ls-002", titel: "CAR005", laadlocatie: "Terneuzen", loslocatie: "Rotterdam Europoort", tonnage: "4.500 ton", product: "Zand", laaddatum: "2026-03-21", losdatum: "2026-03-22", status: "werklijst", matches: 1, onderhandelingen: 0 },
+  { id: "rl-020", relatieId: "rel-001", ladingSoortId: "ls-007", titel: "PRO008", laadlocatie: "Gent", loslocatie: "Rotterdam Botlek", tonnage: "3.000 ton", product: "Sojabonen", laaddatum: "2026-03-29", losdatum: "2026-04-01", status: "markt", matches: 3, onderhandelingen: 0 },
   // Ladinguitvraag (bekende ladingen per relatie): inbox
   { id: "rl-101", relatieId: "rel-001", ladingSoortId: "ls-003", titel: "PRO004", laadlocatie: "Hamburg Veddelkanal", loslocatie: "Salzgitter Stichkanal", tonnage: "1.500 ton", product: "Houtpellets", laaddatum: "2026-03-20", losdatum: "2026-03-22", status: "inbox", prioriteit: 4, matches: 0, onderhandelingen: 0 },
   { id: "rl-102", relatieId: "rel-001", ladingSoortId: "ls-001", titel: "PRO005", laadlocatie: "Krefeld", loslocatie: "Rotterdam", tonnage: "2.000 ton", product: "Graan", status: "inbox", prioriteit: 2, matches: 0, onderhandelingen: 0 },
@@ -388,6 +395,12 @@ export const mockRelatieVaartuigen: RelatieVaartuig[] = [
   { id: "rv-009", relatieId: "rel-007", naam: "Merganser", type: "Motorschip", capaciteit: "2.000 ton", locatie: "Papendrecht", beschikbaarVanaf: "2026-03-18", status: "intake", matches: 3, onderhandelingen: 1 },
   { id: "rv-010", relatieId: "rel-010", naam: "Amber", type: "Motorschip", capaciteit: "4.500 ton", locatie: "Rotterdam Botlek", beschikbaarVanaf: "2026-03-20", status: "markt", matches: 4, onderhandelingen: 0 },
   { id: "rv-011", relatieId: "rel-012", naam: "Rhein Trader", type: "Motorschip", capaciteit: "2.800 ton", locatie: "Duisburg", beschikbaarVanaf: "2026-03-24", status: "werklijst", matches: 2, onderhandelingen: 1 },
+  { id: "rv-012", relatieId: "rel-001", naam: "Orion", type: "Motorschip", capaciteit: "3.500 ton", locatie: "Rotterdam Europoort", beschikbaarVanaf: "2026-03-20", status: "markt", matches: 4, onderhandelingen: 1 },
+  { id: "rv-013", relatieId: "rel-001", naam: "Kairos", type: "Duwbak", capaciteit: "2.200 ton", locatie: "Dordrecht", beschikbaarVanaf: "2026-03-18", status: "werklijst", matches: 2, onderhandelingen: 0 },
+  { id: "rv-014", relatieId: "rel-002", naam: "Fortuna", type: "Motorschip", capaciteit: "3.200 ton", locatie: "Antwerpen", beschikbaarVanaf: "2026-03-17", status: "markt", matches: 3, onderhandelingen: 1 },
+  { id: "rv-015", relatieId: "rel-002", naam: "De Hoop", type: "Motorschip", capaciteit: "1.800 ton", locatie: "Rotterdam", beschikbaarVanaf: "2026-03-22", status: "werklijst", matches: 1, onderhandelingen: 0 },
+  { id: "rv-016", relatieId: "rel-003", naam: "Commodore", type: "Motorschip", capaciteit: "4.000 ton", locatie: "Mannheim", beschikbaarVanaf: "2026-03-19", status: "markt", matches: 5, onderhandelingen: 2 },
+  { id: "rv-017", relatieId: "rel-003", naam: "Veerman", type: "Duwbak", capaciteit: "2.500 ton", locatie: "Dordrecht", beschikbaarVanaf: "2026-03-25", status: "intake", matches: 1, onderhandelingen: 0 },
 ];
 
 /** Mock lading matches (vaartuigen die passen bij een lading) */
@@ -420,6 +433,15 @@ export const mockRelatieLadingMatches: RelatieLadingMatch[] = [
   { id: "rlm-009", ladingId: "rl-006", vaartuigNaam: "Emily", vaartuigType: "Motorschip", relatie: "Provaart Logistics BV", contactPersoon: "Jan de Vries", locatie: "Waalhaven", locatieDatum: "Ma 10 Mrt", groottonnage: "3.000 mt", inhoud: "3.800 m³", bron: "Automatische feed", bronDatum: "Vr 7 Mrt 14:00", matchPercentage: 82, isEigen: false },
   { id: "rlm-010", ladingId: "rl-009", vaartuigNaam: "Duwbak Alfa-2", vaartuigType: "Duwbak", relatie: "Rederij Alfa", contactPersoon: "Anne Mulder", locatie: "Moerdijk", locatieDatum: "Di 11 Mrt", groottonnage: "2.000 mt", inhoud: "2.400 m³", bron: "Eigen vloot", bronDatum: "Do 6 Mrt 09:00", matchPercentage: 80, isEigen: true },
   { id: "rlm-011", ladingId: "rl-013", vaartuigNaam: "Rhein Trader", vaartuigType: "Motorschip", relatie: "Duisburg Hafen AG", contactPersoon: "Klaus Müller", locatie: "Duisburg", locatieDatum: "Do 13 Mrt", groottonnage: "2.800 mt", inhoud: "3.500 m³", bron: "Eigen vloot", bronDatum: "Vr 7 Mrt 11:30", matchPercentage: 90, isEigen: true },
+  { id: "rlm-012", ladingId: "rl-014", vaartuigNaam: "Orion", vaartuigType: "Motorschip", relatie: "Provaart Logistics BV", contactPersoon: "Jan de Vries", locatie: "Rotterdam Europoort", locatieDatum: "Di 25 Mrt", groottonnage: "3.500 mt", inhoud: "4.200 m³", bron: "Eigen vloot", bronDatum: "Ma 10 Mrt 09:00", matchPercentage: 91, isEigen: true },
+  { id: "rlm-013", ladingId: "rl-014", vaartuigNaam: "Emily", vaartuigType: "Motorschip", relatie: "Provaart Logistics BV", contactPersoon: "Jan de Vries", locatie: "Waalhaven", locatieDatum: "Ma 24 Mrt", groottonnage: "3.000 mt", inhoud: "3.800 m³", bron: "Eigen vloot", bronDatum: "Ma 10 Mrt 11:15", matchPercentage: 83, isEigen: true },
+  { id: "rlm-014", ladingId: "rl-015", vaartuigNaam: "Agaat", vaartuigType: "Motorschip", relatie: "Provaart Logistics BV", contactPersoon: "Jan de Vries", locatie: "Krefeld", locatieDatum: "Do 27 Mrt", groottonnage: "2.500 mt", inhoud: "3.200 m³", bron: "Eigen vloot", bronDatum: "Di 11 Mrt 08:30", matchPercentage: 79, isEigen: true },
+  { id: "rlm-015", ladingId: "rl-016", vaartuigNaam: "Fortuna", vaartuigType: "Motorschip", relatie: "Janlow B.V.", contactPersoon: "Pieter Jansen", locatie: "Antwerpen", locatieDatum: "Za 22 Mrt", groottonnage: "3.200 mt", inhoud: "4.000 m³", bron: "Automatische feed", bronDatum: "Ma 10 Mrt 14:00", matchPercentage: 87, isEigen: false },
+  { id: "rlm-016", ladingId: "rl-016", vaartuigNaam: "De Hoop", vaartuigType: "Motorschip", relatie: "Janlow B.V.", contactPersoon: "Pieter Jansen", locatie: "Rotterdam", locatieDatum: "Vr 21 Mrt", groottonnage: "1.800 mt", inhoud: "2.200 m³", bron: "Automatische feed", bronDatum: "Di 11 Mrt 10:00", matchPercentage: 74, isEigen: false },
+  { id: "rlm-017", ladingId: "rl-018", vaartuigNaam: "Commodore", vaartuigType: "Motorschip", relatie: "Cargill N.V.", contactPersoon: "Sophie van Dam", locatie: "Mannheim", locatieDatum: "Wo 19 Mrt", groottonnage: "4.000 mt", inhoud: "5.000 m³", bron: "Eigen vloot", bronDatum: "Do 13 Mrt 08:00", matchPercentage: 93, isEigen: true },
+  { id: "rlm-018", ladingId: "rl-018", vaartuigNaam: "Bregje", vaartuigType: "Motorschip", relatie: "Cargill N.V.", contactPersoon: "Sophie van Dam", locatie: "Rotterdam Botlek", locatieDatum: "Di 18 Mrt", groottonnage: "3.000 mt", inhoud: "3.800 m³", bron: "Eigen vloot", bronDatum: "Do 13 Mrt 10:30", matchPercentage: 85, isEigen: true },
+  { id: "rlm-019", ladingId: "rl-020", vaartuigNaam: "Kairos", vaartuigType: "Duwbak", relatie: "Provaart Logistics BV", contactPersoon: "Jan de Vries", locatie: "Dordrecht", locatieDatum: "Za 29 Mrt", groottonnage: "2.200 mt", inhoud: "2.800 m³", bron: "Eigen vloot", bronDatum: "Vr 14 Mrt 09:00", matchPercentage: 76, isEigen: true },
+  { id: "rlm-020", ladingId: "rl-017", vaartuigNaam: "S.S. Anna", vaartuigType: "Motorschip", relatie: "Janlow B.V.", contactPersoon: "Pieter Jansen", locatie: "Bremerhaven", locatieDatum: "Wo 26 Mrt", groottonnage: "2.500 mt", inhoud: "3.000 m³", bron: "Automatische feed", bronDatum: "Ma 10 Mrt 15:30", matchPercentage: 81, isEigen: false },
 ];
 
 /** Mock vaartuig matches (ladingen die passen bij een vaartuig) */
@@ -451,6 +473,16 @@ export const mockRelatieVaartuigMatches: RelatieVaartuigMatch[] = [
   { id: "rvm-008", vaartuigId: "rv-008", ladingTitel: "2.000 ton Containers", tonnage: "2.000 ton", relatie: "Rederij Alfa", contactPersoon: "Anne Mulder", laadLocatie: "Rotterdam", laadDatum: "Wo 19 Mrt 08:00", losLocatie: "Antwerpen", losDatum: "Do 20 Mrt 14:00", bron: "Eigen", bronDatum: "Do 6 Mrt 09:00", matchPercentage: 80, isEigen: true },
   { id: "rvm-009", vaartuigId: "rv-009", ladingTitel: "3.000 ton Grind", tonnage: "3.000 ton", relatie: "Boskalis Nederland", contactPersoon: "Daan Peters", laadLocatie: "Papendrecht", laadDatum: "Ma 17 Mrt 06:00", losLocatie: "Rotterdam", losDatum: "Di 18 Mrt 10:00", bron: "Eigen", bronDatum: "Vr 7 Mrt 08:00", matchPercentage: 86, isEigen: true },
   { id: "rvm-010", vaartuigId: "rv-010", ladingTitel: "5.000 ton Sojabonen", tonnage: "5.000 ton", relatie: "Viterra Trading", contactPersoon: "Noor van den Berg", laadLocatie: "Rotterdam Botlek", laadDatum: "Vr 21 Mrt 08:00", losLocatie: "Rotterdam Botlek", losDatum: "Vr 21 Mrt 18:00", bron: "Eigen", bronDatum: "Do 6 Mrt 10:30", matchPercentage: 90, isEigen: true },
+  { id: "rvm-011", vaartuigId: "rv-012", ladingTitel: "3.200 ton Meststoffen", tonnage: "3.200 ton", relatie: "Provaart Logistics BV", contactPersoon: "Jan de Vries", laadLocatie: "Rotterdam Europoort", laadDatum: "Di 25 Mrt 08:00", losLocatie: "Ludwigshafen", losDatum: "Vr 28 Mrt", bron: "Eigen", bronDatum: "Ma 10 Mrt 09:00", matchPercentage: 91, isEigen: true },
+  { id: "rvm-012", vaartuigId: "rv-012", ladingTitel: "3.000 ton Sojabonen", tonnage: "3.000 ton", relatie: "Provaart Logistics BV", contactPersoon: "Jan de Vries", laadLocatie: "Gent", laadDatum: "Za 29 Mrt 06:00", losLocatie: "Rotterdam Botlek", losDatum: "Di 1 Apr", bron: "Eigen", bronDatum: "Ma 10 Mrt 11:15", matchPercentage: 83, isEigen: true },
+  { id: "rvm-013", vaartuigId: "rv-013", ladingTitel: "2.000 ton Houtpellets (DSIT)", tonnage: "2.000 ton", relatie: "Provaart Logistics BV", contactPersoon: "Jan de Vries", laadLocatie: "Salzgitter Stichkanal", laadDatum: "Di 18 Mrt 10:00", losLocatie: "Hamburg Veddelkanal", losDatum: "Vr 21 Mrt", bron: "Eigen", bronDatum: "Di 11 Mrt 08:30", matchPercentage: 77, isEigen: true },
+  { id: "rvm-014", vaartuigId: "rv-014", ladingTitel: "3.000 ton Staal", tonnage: "3.000 ton", relatie: "Janlow B.V.", contactPersoon: "Pieter Jansen", laadLocatie: "Dordrecht", laadDatum: "Za 15 Mrt 06:00", losLocatie: "Antwerpen", losDatum: "Ma 17 Mrt 14:00", bron: "Eigen", bronDatum: "Ma 10 Mrt 14:00", matchPercentage: 89, isEigen: true },
+  { id: "rvm-015", vaartuigId: "rv-014", ladingTitel: "1.500 ton Grind", tonnage: "1.500 ton", relatie: "Janlow B.V.", contactPersoon: "Pieter Jansen", laadLocatie: "Moerdijk", laadDatum: "Za 22 Mrt 08:00", losLocatie: "Antwerpen", losDatum: "Zo 23 Mrt", bron: "Eigen", bronDatum: "Di 11 Mrt 10:00", matchPercentage: 74, isEigen: true },
+  { id: "rvm-016", vaartuigId: "rv-015", ladingTitel: "1.500 ton Grind", tonnage: "1.500 ton", relatie: "Janlow B.V.", contactPersoon: "Pieter Jansen", laadLocatie: "Moerdijk", laadDatum: "Za 22 Mrt 08:00", losLocatie: "Antwerpen", losDatum: "Zo 23 Mrt", bron: "Eigen", bronDatum: "Di 11 Mrt 10:00", matchPercentage: 82, isEigen: true },
+  { id: "rvm-017", vaartuigId: "rv-016", ladingTitel: "2.500 ton Meststoffen", tonnage: "2.500 ton", relatie: "Cargill N.V.", contactPersoon: "Sophie van Dam", laadLocatie: "Rotterdam Botlek", laadDatum: "Wo 19 Mrt 08:00", losLocatie: "Karlsruhe", losDatum: "Za 22 Mrt", bron: "Eigen", bronDatum: "Do 13 Mrt 08:00", matchPercentage: 93, isEigen: true },
+  { id: "rvm-018", vaartuigId: "rv-016", ladingTitel: "3.500 ton Sojabonen", tonnage: "3.500 ton", relatie: "Cargill N.V.", contactPersoon: "Sophie van Dam", laadLocatie: "Rotterdam Botlek", laadDatum: "Zo 16 Mrt 08:00", losLocatie: "Basel", losDatum: "Do 20 Mrt", bron: "Eigen", bronDatum: "Do 13 Mrt 10:30", matchPercentage: 87, isEigen: true },
+  { id: "rvm-019", vaartuigId: "rv-016", ladingTitel: "4.500 ton Zand", tonnage: "4.500 ton", relatie: "Cargill N.V.", contactPersoon: "Sophie van Dam", laadLocatie: "Terneuzen", laadDatum: "Vr 21 Mrt 06:00", losLocatie: "Rotterdam Europoort", losDatum: "Za 22 Mrt", bron: "Eigen", bronDatum: "Vr 14 Mrt 09:00", matchPercentage: 79, isEigen: true },
+  { id: "rvm-020", vaartuigId: "rv-017", ladingTitel: "3.000 ton Graan", tonnage: "3.000 ton", relatie: "Cargill N.V.", contactPersoon: "Tom Hendriks", laadLocatie: "Amsterdam", laadDatum: "Di 25 Mrt 08:00", losLocatie: "Strasbourg", losDatum: "Za 29 Mrt", bron: "Eigen", bronDatum: "Vr 14 Mrt 11:00", matchPercentage: 75, isEigen: true },
 ];
 
 /** Mock gebruikers (eigenaren) — supplement existing API data */
@@ -608,7 +640,7 @@ export const mockRelatieOnderhandelingen: RelatieOnderhandeling[] = [
     tonnage: "2.000 ton",
     deadline: "Za 14 Mrt, 16:00",
     deadlineExpired: true,
-    status: "Bod ontvangen",
+    status: "In onderhandeling",
     contact: { naam: "Eric Nieuwkoop", datum: "Ma 9 Mrt 07:28", gebruikerId: "usr-001" },
   },
   {
@@ -621,7 +653,7 @@ export const mockRelatieOnderhandelingen: RelatieOnderhandeling[] = [
     vrachtprijsDiff: "-3,2%",
     tonnage: "3.500 ton",
     deadline: "Morgen, 10:00",
-    status: "Bod verstuurd",
+    status: "In onderhandeling",
     contact: { naam: "Khoa Nguyen", datum: "Di 10 Mrt 19:53", gebruikerId: "usr-002" },
   },
   {
@@ -648,7 +680,7 @@ export const mockRelatieOnderhandelingen: RelatieOnderhandeling[] = [
     tonnage: "3.500 ton",
     deadline: "Morgen, 9:00",
     deadlineExpired: true,
-    status: "Bod ontvangen",
+    status: "In onderhandeling",
     contact: { naam: "Pelger de Jong", datum: "Di 10 Mrt 12:04", gebruikerId: "usr-003" },
   },
   {
@@ -699,7 +731,7 @@ export const mockRelatieOnderhandelingen: RelatieOnderhandeling[] = [
     vrachtprijsDiff: "+2,0%",
     tonnage: "2.000 ton",
     deadline: "Morgen, 11:00",
-    status: "Bod verstuurd",
+    status: "In onderhandeling",
     contact: { naam: "Khoa Nguyen", datum: "Zo 8 Mrt 01:31", gebruikerId: "usr-002" },
   },
   {
@@ -762,7 +794,7 @@ export const mockRelatieOnderhandelingen: RelatieOnderhandeling[] = [
     vrachtprijs: "€3,80 per ton",
     tonnage: "3.000 ton",
     deadline: "Morgen, 12:00",
-    status: "Bod verstuurd",
+    status: "In onderhandeling",
     contact: { naam: "Khoa Nguyen", datum: "Ma 9 Mrt 14:30", gebruikerId: "usr-002" },
   },
   {
@@ -788,7 +820,7 @@ export const mockRelatieOnderhandelingen: RelatieOnderhandeling[] = [
     vrachtprijsDiff: "+3,3%",
     tonnage: "2.000 ton",
     deadline: "Za 21 Mrt",
-    status: "Bod ontvangen",
+    status: "In onderhandeling",
     contact: { naam: "Pelger de Jong", datum: "Vr 6 Mrt 15:20", gebruikerId: "usr-003" },
   },
   {

@@ -1,4 +1,4 @@
-import { useState, useMemo, useCallback } from "react";
+import { useState, useMemo, useCallback, useEffect } from "react";
 import { useParams, useLocation, Link, useNavigate } from "react-router";
 import { Send, MailOpen, Check, X, MessageSquare, PanelRight, ListTodo } from "lucide-react";
 import Sidebar from "../components/Sidebar";
@@ -17,7 +17,8 @@ import Pagination from "../components/Pagination";
 import useTableSort from "../components/useTableSort";
 import OnderhandelingSidepanel from "../components/OnderhandelingSidepanel";
 import ConversationDialog from "../components/ConversationDialog";
-import { mockRelaties, mockContactPersonen, mockMailConversaties, mockGespreksverslagen, mockRelatieOnderhandelingen, mockGebruikers } from "../data/mock-relatie-data";
+import { mockContactPersonen, mockMailConversaties, mockGespreksverslagen, mockRelatieOnderhandelingen, mockGebruikers } from "../data/mock-relatie-data";
+import { list, update as updateEntity } from "../data/api";
 import type { Gespreksverslag } from "../data/mock-relatie-data";
 import { mockContracten, CONTRACT_STATUS_LABELS, CONTRACT_STATUS_VARIANT_MAP } from "../data/mock-contract-data";
 import MailConversaties from "../components/MailConversaties";
@@ -36,32 +37,26 @@ const statusVariantMap: Record<string, "success" | "grey" | "brand"> = {
 
 const negotiationStatusVariantMap: Record<string, string> = {
   "Via werklijst": "brand",
-  "Bod verstuurd": "brand",
-  "Bod ontvangen": "brand",
+  "In onderhandeling": "brand",
   "Goedgekeurd": "success",
   "Afgewezen": "error",
-  "Afgekeurd": "error",
 };
 
 const negotiationStatusIconMap: Record<string, React.ReactNode | null> = {
   "Via werklijst": <ListTodo strokeWidth={2.5} />,
-  "Bod verstuurd": <Send strokeWidth={2.5} />,
-  "Bod ontvangen": <MailOpen strokeWidth={2.5} />,
+  "In onderhandeling": <Send strokeWidth={2.5} />,
   "Goedgekeurd": <Check strokeWidth={2.5} />,
   "Afgewezen": <X strokeWidth={2.5} />,
-  "Afgekeurd": <X strokeWidth={2.5} />,
 };
 
 const negotiationStatusTypeMap: Record<string, "default" | "color"> = {
   "Via werklijst": "default",
-  "Bod verstuurd": "color",
-  "Bod ontvangen": "color",
+  "In onderhandeling": "color",
   "Goedgekeurd": "color",
   "Afgewezen": "color",
-  "Afgekeurd": "color",
 };
 
-const activeNegStatuses = ["Via werklijst", "Bod verstuurd", "Bod ontvangen"];
+const activeNegStatuses = ["Via werklijst", "In onderhandeling"];
 
 const chevronSvg = (
   <svg className="block size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 5.33333 9.33333">
@@ -90,7 +85,11 @@ export default function RelatieDetail() {
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [showEditDialog, setShowEditDialog] = useState(false);
   const [conversationDialog, setConversationDialog] = useState<{ relatieId: string; relatieName: string; itemId?: string; itemType?: "lading" | "vaartuig" } | null>(null);
-  const [relaties, setRelaties] = useState<Relatie[]>(mockRelaties);
+  const [relaties, setRelaties] = useState<Relatie[]>([]);
+
+  useEffect(() => {
+    list<Relatie>("relatie").then(setRelaties);
+  }, []);
 
   const relatie = useMemo(() => relaties.find((r) => r.id === id), [relaties, id]);
   const contactPersonen = useMemo(
@@ -454,7 +453,10 @@ export default function RelatieDetail() {
     </>
   );
 
-  const handleSaveRelatie = (data: Partial<Relatie>) => {
+  const handleSaveRelatie = async (data: Partial<Relatie>) => {
+    if (id) {
+      await updateEntity<Relatie>("relatie", id, data);
+    }
     setRelaties((prev) =>
       prev.map((r) => (r.id === id ? { ...r, ...data } : r))
     );

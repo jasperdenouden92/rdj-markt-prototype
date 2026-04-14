@@ -15,6 +15,7 @@ import SectionHeader from "../components/SectionHeader";
 import LadingEigenSidebar from "../components/LadingEigenSidebar";
 import OnderhandelingSidepanel from "../components/OnderhandelingSidepanel";
 import ConversationDialog from "../components/ConversationDialog";
+import RelatieSelectDialog from "../components/RelatieSelectDialog";
 import { useBevrachtingLadingSummary } from "../data/useDetailData";
 import { mockMatches, mockNegotiations } from "../data/mock-data";
 import { mockRelaties } from "../data/mock-relatie-data";
@@ -29,29 +30,23 @@ import imgAvatar4 from "../../assets/9e45f45f537bea4bf653bc0307471e5ff5545f63.pn
 /* ── Status variant map ── */
 const negotiationStatusVariantMap: Record<string, string> = {
   "Via werklijst": "brand",
-  "Bod verstuurd": "brand",
-  "Bod ontvangen": "brand",
+  "In onderhandeling": "brand",
   "Goedgekeurd": "success",
   "Afgewezen": "error",
-  "Afgekeurd": "error",
 };
 
 const negotiationStatusIconMap: Record<string, React.ReactNode | null> = {
   "Via werklijst": <ListTodo strokeWidth={2.5} />,
-  "Bod verstuurd": <Send strokeWidth={2.5} />,
-  "Bod ontvangen": <MailOpen strokeWidth={2.5} />,
+  "In onderhandeling": <Send strokeWidth={2.5} />,
   "Goedgekeurd": <Check strokeWidth={2.5} />,
   "Afgewezen": <X strokeWidth={2.5} />,
-  "Afgekeurd": <X strokeWidth={2.5} />,
 };
 
 const negotiationStatusTypeMap: Record<string, "default" | "color"> = {
   "Via werklijst": "default",
-  "Bod verstuurd": "color",
-  "Bod ontvangen": "color",
+  "In onderhandeling": "color",
   "Goedgekeurd": "color",
   "Afgewezen": "color",
-  "Afgekeurd": "color",
 };
 
 /* ── Source icons ── */
@@ -99,6 +94,7 @@ export default function LadingDetail() {
   const [selectedNegotiation, setSelectedNegotiation] = useState<{ id: string; status: string; bron: string; relatieName?: string; bemiddeling?: { inkoopRelatie: string; verkoopRelatie: string } } | null>(null);
   const setActiveTab = (tab: typeof activeTab) => { setActiveTabRaw(tab); setSelectedNegotiation(null); };
   const [conversationDialog, setConversationDialog] = useState<{ relatieId: string; relatieName: string; matchName?: string } | null>(null);
+  const [showRelatieSelect, setShowRelatieSelect] = useState(false);
   const [sidebarKey, setSidebarKey] = useState(0);
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [matchFilter, setMatchFilter] = useState("Alles");
@@ -195,7 +191,7 @@ export default function LadingDetail() {
     { key: 'matchPercentage', header: 'Match', type: 'progress', align: 'right', width: 'w-[100px]' },
   ];
 
-  const activeNegStatuses = ["Via werklijst", "Bod verstuurd", "Bod ontvangen"];
+  const activeNegStatuses = ["Via werklijst", "In onderhandeling"];
 
   const matchTableData: RowData[] = mockMatches.map((match, idx) => {
     const src = match.source || match.cargoType;
@@ -379,7 +375,7 @@ export default function LadingDetail() {
                             filterOptions={["Alles", "Actief", "Goedgekeurd", "Afgewezen"]}
                             filterValue={negFilter}
                             onFilterChange={setNegFilter}
-                            onAdd={() => setConversationDialog({ relatieId: "", relatieName: "" })}
+                            onAdd={() => setShowRelatieSelect(true)}
                             addTooltip="Onderhandeling starten"
                           />
                           <Pagination data-annotation-id="ladingdetail-paginering"
@@ -439,6 +435,17 @@ export default function LadingDetail() {
           relatieName={selectedNegotiation.relatieName}
           bemiddeling={selectedNegotiation.bemiddeling}
           onClose={() => setSelectedNegotiation(null)}
+        />
+      )}
+
+      {/* Relatie select dialog */}
+      {showRelatieSelect && (
+        <RelatieSelectDialog
+          onSelect={(relatie) => {
+            setShowRelatieSelect(false);
+            setConversationDialog({ relatieId: relatie.id, relatieName: relatie.naam });
+          }}
+          onClose={() => setShowRelatieSelect(false)}
         />
       )}
 

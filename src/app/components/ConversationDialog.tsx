@@ -81,6 +81,7 @@ interface ConversationDialogProps {
   preSelectedLeftId?: string;
   preSelectedOriginId?: string;
   preSelectedRightName?: string;
+  initialShowMarktVaartuigen?: boolean;
   onClose: () => void;
   onSave?: () => void;
 }
@@ -96,6 +97,7 @@ export default function ConversationDialog({
   preSelectedLeftId,
   preSelectedOriginId,
   preSelectedRightName,
+  initialShowMarktVaartuigen,
   onClose,
   onSave,
 }: ConversationDialogProps) {
@@ -107,6 +109,7 @@ export default function ConversationDialog({
 
   const [activeTab, setActiveTab] = useState<TabValue>(getInitialTab);
   const [selectedLeftId, setSelectedLeftId] = useState<string | null>(preSelectedItemId ?? null);
+  const [selectedRightId, setSelectedRightId] = useState<string | null>(null);
   const [dataLoaded, setDataLoaded] = useState(false);
   const [itemStatuses, setItemStatuses] = useState<Map<string, ItemStatus>>(new Map());
   const [itemConditions, setItemConditions] = useState<Map<string, ConditionValues>>(new Map());
@@ -115,7 +118,7 @@ export default function ConversationDialog({
     preSelectedItemId ? new Set([preSelectedItemId]) : new Set()
   );
   const [addingItem, setAddingItem] = useState<"lading" | "vaartuig" | null>(null);
-  const [showMarktVaartuigen, setShowMarktVaartuigen] = useState(false);
+  const [showMarktVaartuigen, setShowMarktVaartuigen] = useState(initialShowMarktVaartuigen ?? false);
   const [bemiddelingSet, setBemiddelingSet] = useState<Set<string>>(new Set()); // set of rightId's that are in bemiddeling
 
   // Data
@@ -260,7 +263,7 @@ export default function ConversationDialog({
             next.set(preSelectedItemId, conditions);
             return next;
           });
-          // Also prefill "Hun" bid conditions from zoekcriteria
+          // Also prefill "Inkoop" bid conditions from zoekcriteria
           setItemBidConditions(prev => {
             const next = new Map(prev);
             next.set(preSelectedItemId, { ...conditions });
@@ -456,11 +459,31 @@ export default function ConversationDialog({
     });
   }, [dataLoaded, preSelectedItemId, preSelectedMatchName]);
 
-  // After left item is selected, find preSelectedRightName in right panel items and expand it
+  // After left item is selected, find preSelectedRightName in match results or right panel items
   const rightNameAppliedRef = useRef(false);
   useEffect(() => {
     if (!dataLoaded || rightNameAppliedRef.current || !preSelectedRightName || !selectedLeftId) return;
 
+    // First check match items (for auto-bemiddeling on markt flows — never for eigen-ladingen)
+    const matchItem = getMatchItems().find(item => item.title === preSelectedRightName);
+    if (matchItem) {
+      rightNameAppliedRef.current = true;
+      if (activeTab !== "eigen-ladingen") {
+        // Activate bemiddeling and set aangeboden on both items
+        setBemiddelingSet(new Set([matchItem.id]));
+        setStatus(matchItem.id, "aangeboden");
+        setStatus(selectedLeftId, "aangeboden");
+      }
+      setExpandedConditions(prev => {
+        const next = new Set(prev);
+        next.add(matchItem.id);
+        next.add(selectedLeftId);
+        return next;
+      });
+      return;
+    }
+
+    // Fallback: check all display items
     const allCandidates = [
       ...eigenLadingen,
       ...eigenVaartuigen,
@@ -478,13 +501,14 @@ export default function ConversationDialog({
 
   type MatchMode = "eigen-lading" | "relatie-lading" | "no-buttons";
 
-  const tabConfig: Record<TabValue, { leftItems: DisplayItem[]; rightItems: DisplayItem[]; leftLabel: string; rightLabel: string; matchLabel: string; matchMode: MatchMode }> = {
+  const tabConfig: Record<TabValue, { leftItems: DisplayItem[]; rightItems: DisplayItem[]; leftLabel: string; rightLabel: string; matchLabel: string; reverseMatchLabel: string; matchMode: MatchMode }> = {
     "ladingen-relatie": {
       leftItems: relatieLadingenItems,
       rightItems: showMarktVaartuigen ? [...eigenVaartuigen, ...marktVaartuigen] : eigenVaartuigen,
       leftLabel: `Ladingen ${relatieName}`,
       rightLabel: "Onze vaartuigen",
       matchLabel: "Matches met onze vaartuigen",
+      reverseMatchLabel: `Matches met ladingen ${relatieName}`,
       matchMode: "no-buttons",
     },
     "eigen-ladingen": {
@@ -493,6 +517,7 @@ export default function ConversationDialog({
       leftLabel: "Onze ladingen",
       rightLabel: `Vaartuigen ${relatieName}`,
       matchLabel: `Matches met vaartuigen ${relatieName}`,
+      reverseMatchLabel: "Matches met onze ladingen",
       matchMode: "no-buttons",
     },
     "markt-ladingen": {
@@ -501,11 +526,12 @@ export default function ConversationDialog({
       leftLabel: "Marktladingen",
       rightLabel: `Vaartuigen ${relatieName}`,
       matchLabel: `Matches met vaartuigen ${relatieName}`,
+      reverseMatchLabel: "Matches met marktladingen",
       matchMode: "no-buttons",
     },
   };
 
-  const { leftItems: unsortedLeftItems, rightItems, leftLabel, rightLabel, matchLabel, matchMode } = tabConfig[activeTab];
+  const { leftItems: unsortedLeftItems, rightItems, leftLabel, rightLabel, matchLabel, reverseMatchLabel, matchMode } = tabConfig[activeTab];
 
   // Pre-compute best match score for each left item
   const getBestMatch = (item: DisplayItem): number | undefined => {
@@ -522,12 +548,19 @@ export default function ConversationDialog({
     return undefined;
   };
 
-  // Sort left items by best match score (highest first)
-  const leftItems = [...unsortedLeftItems].sort((a, b) => {
-    const scoreA = getBestMatch(a) ?? -1;
-    const scoreB = getBestMatch(b) ?? -1;
-    return scoreB - scoreA;
-  });
+  // Sort left items by match score (highest first)
+  // When a right item is selected, sort by score against that specific item
+  const leftItems = selectedRightId
+    ? [...unsortedLeftItems].sort((a, b) => {
+        const scoreA = generateScore(a.id, selectedRightId);
+        const scoreB = generateScore(b.id, selectedRightId);
+        return scoreB - scoreA;
+      })
+    : [...unsortedLeftItems].sort((a, b) => {
+        const scoreA = getBestMatch(a) ?? -1;
+        const scoreB = getBestMatch(b) ?? -1;
+        return scoreB - scoreA;
+      });
 
   const getMatchItems = (): MatchDisplayItem[] => {
     if (!selectedLeftId) return [];
@@ -624,12 +657,13 @@ export default function ConversationDialog({
   // Count stats for footer
   const bemiddelingCount = bemiddelingSet.size;
   const statusEntries = Array.from(itemStatuses.entries());
+  const allVisibleItems = [...leftItems, ...matchItems];
   const ladingenCount = statusEntries.filter(([id]) => {
-    const item = [...leftItems, ...matchItems].find(i => i.id === id);
+    const item = allVisibleItems.find(i => i.id === id);
     return item?.kind === "lading";
   }).length;
   const vaartuigenCount = statusEntries.filter(([id]) => {
-    const item = [...leftItems, ...matchItems].find(i => i.id === id);
+    const item = allVisibleItems.find(i => i.id === id);
     return item?.kind === "vaartuig";
   }).length;
 
@@ -656,7 +690,7 @@ export default function ConversationDialog({
       }
       return next;
     });
-    // Prefill "Hun" bid conditions from "Ons" if not yet manually set
+    // Prefill "Inkoop" bid conditions from "Zoekcriteria" if not yet manually set
     if (value) {
       setItemBidConditions(prev => {
         const existing = prev.get(itemId) || {};
@@ -711,7 +745,14 @@ export default function ConversationDialog({
 
   const handleLeftItemClick = (id: string) => {
     setSelectedLeftId(prev => (prev === id ? null : id));
-    setBemiddelingSet(new Set()); // reset manual bemiddeling when switching left item
+    setSelectedRightId(null);
+    setBemiddelingSet(new Set());
+  };
+
+  const handleRightItemClick = (id: string) => {
+    setSelectedRightId(prev => (prev === id ? null : id));
+    setSelectedLeftId(null);
+    setBemiddelingSet(new Set());
   };
 
   const handleAddRelatieLading = (data: { tonnage: string; product: string; laadlocatie: string; loslocatie: string; laaddatum: string; losdatum: string }) => {
@@ -812,7 +853,7 @@ export default function ConversationDialog({
             <div className="px-[20px] py-[10px] border-b border-rdj-border-secondary bg-[#f9fafb] flex items-center justify-between gap-[12px]">
               <div>
                 <p className="font-sans font-bold text-[13px] leading-[18px] text-rdj-text-secondary uppercase tracking-wide">
-                  {leftLabel}
+                  {selectedRightId ? reverseMatchLabel : leftLabel}
                 </p>
                 <p className="font-sans font-normal text-[12px] leading-[16px] text-rdj-text-tertiary mt-[2px]">
                   {leftItems.length} resultaten
@@ -830,19 +871,17 @@ export default function ConversationDialog({
                     key={item.id}
                     hideMarktBadge={activeTab === "markt-ladingen"}
                     item={item}
+                    bestMatch={selectedRightId ? generateScore(item.id, selectedRightId) : undefined}
                     status={itemStatuses.get(item.id)}
                     conditions={itemConditions.get(item.id)}
                     bidConditions={itemBidConditions.get(item.id)}
                     conditionsExpanded={expandedConditions.has(item.id)}
                     bemiddelingMode={item.source === "markt" || (item.id === selectedLeftId && isBemiddelingActive)}
                     bemiddelingMatchRelatie={item.id === selectedLeftId ? (() => {
-                      // For markt items on left: the "other" relatie is the markt match's relatie
                       if (item.source === "markt") {
-                        // Find markt match relatie, or fall back to conversation relatie
                         const marktMatch = matchItems.find(m => m.source === "markt");
                         return marktMatch?.relatieName || relatieName;
                       }
-                      // For non-markt left items: the "other" relatie is the bemiddeld match's relatie
                       const bemiddeldMatch = matchItems.find(m => bemiddelingSet.has(m.id));
                       return bemiddeldMatch?.relatieName;
                     })() : undefined}
@@ -918,7 +957,7 @@ export default function ConversationDialog({
                       conditionsExpanded={expandedConditions.has(item.id)}
                       isBemiddelingActive={isMatchBemiddeld(item.id)}
                       isMarktItem={item.source === "markt"}
-                      showBemiddelingButton={(item.source === "markt" && item.kind === "vaartuig") || activeTab === "markt-ladingen"}
+                      showBemiddelingButton={activeTab !== "eigen-ladingen" && ((item.source === "markt" && item.kind === "vaartuig") || activeTab === "markt-ladingen")}
                       onBemiddelingToggle={() => {
                         setBemiddelingSet(prev => {
                           const next = new Set(prev);
@@ -963,6 +1002,10 @@ export default function ConversationDialog({
                       onBidConditionChange={(key, value) => setBidConditionValue(item.id, key, value)}
                       selectedLeftItem={selectedLeftItem ?? undefined}
                       conversationRelatieName={relatieName}
+                      onClick={() => {
+                        const rightItem = rightItems.find(ri => ri.title === item.title) ?? rightItems.find(ri => ri.id === item.id);
+                        if (rightItem) handleRightItemClick(rightItem.id);
+                      }}
                     />
                   ))
                 ) : (
@@ -975,7 +1018,6 @@ export default function ConversationDialog({
                       <ItemRow
                         key={item.id}
                         item={item}
-                        hideRadio
                         status={itemStatuses.get(item.id)}
                         conditions={itemConditions.get(item.id)}
                         bidConditions={itemBidConditions.get(item.id)}
@@ -991,6 +1033,8 @@ export default function ConversationDialog({
                         onToggleConditions={() => toggleConditionsExpanded(item.id)}
                         onConditionChange={(key, value) => setConditionValue(item.id, key, value)}
                         onBidConditionChange={(key, value) => setBidConditionValue(item.id, key, value)}
+                        isSelected={item.id === selectedRightId}
+                        onClick={() => handleRightItemClick(item.id)}
                       />
                     ))
                   )
@@ -1344,9 +1388,9 @@ function ItemRow({
           conditions={conditions}
           bidConditions={bidConditions}
           showBid={status === "aangeboden"}
-          primaryLabel={bemiddelingMode ? "Verkoop" : "Hun"}
+          primaryLabel={bemiddelingMode ? "Verkoop" : "Zoekcriteria"}
           primarySubLabel={bemiddelingMode ? conversationRelatieName : undefined}
-          secondaryLabel={bemiddelingMode ? "Inkoop" : "Ons"}
+          secondaryLabel={bemiddelingMode ? "Inkoop" : "Verkoop"}
           secondarySubLabel={bemiddelingMode ? bemiddelingMatchRelatie : undefined}
           onConditionChange={onConditionChange}
           onBidConditionChange={onBidConditionChange}
@@ -1360,9 +1404,9 @@ function ItemRow({
           conditions={conditions}
           bidConditions={bidConditions}
           showBid={bemiddelingMode ? (status === "aangeboden" || status === "interesse") : status === "interesse"}
-          primaryLabel={bemiddelingMode ? "Inkoop" : "Ons"}
+          primaryLabel={bemiddelingMode ? "Inkoop" : (isEigen ? "Zoekcriteria" : "Ons")}
           primarySubLabel={bemiddelingMode ? (isMarkt ? item.relatieName : undefined) : undefined}
-          secondaryLabel={bemiddelingMode ? "Verkoop" : "Hun"}
+          secondaryLabel={bemiddelingMode ? "Verkoop" : (isEigen ? "Inkoop" : "Hun")}
           secondarySubLabel={bemiddelingMode ? (isMarkt ? conversationRelatieName : bemiddelingMatchRelatie) : undefined}
           onConditionChange={onConditionChange}
           onBidConditionChange={onBidConditionChange}
@@ -1376,9 +1420,9 @@ function ItemRow({
           conditions={conditions}
           bidConditions={bidConditions}
           showBid={false}
-          primaryLabel={bemiddelingMode ? "Inkoop" : "Ons"}
+          primaryLabel={bemiddelingMode ? "Inkoop" : (isEigen ? "Zoekcriteria" : "Ons")}
           primarySubLabel={bemiddelingMode ? (isMarkt ? item.relatieName : undefined) : undefined}
-          secondaryLabel={bemiddelingMode ? "Verkoop" : "Hun"}
+          secondaryLabel={bemiddelingMode ? "Verkoop" : (isEigen ? "Inkoop" : "Hun")}
           secondarySubLabel={bemiddelingMode ? (isMarkt ? conversationRelatieName : bemiddelingMatchRelatie) : undefined}
           onConditionChange={onConditionChange}
           onBidConditionChange={onBidConditionChange}
@@ -1407,6 +1451,7 @@ function MatchRow({
   onBidConditionChange,
   selectedLeftItem,
   conversationRelatieName,
+  onClick,
 }: {
   item: MatchDisplayItem;
   mode: "eigen-lading" | "relatie-lading" | "no-buttons";
@@ -1424,22 +1469,24 @@ function MatchRow({
   onBidConditionChange: (key: ConditionKey, value: string) => void;
   selectedLeftItem?: DisplayItem;
   conversationRelatieName?: string;
+  onClick?: () => void;
 }) {
   const isLading = item.kind === "lading";
   const hasLocation = isLading && (item.laadlocatie || item.loslocatie);
   const filledConditions = conditions ? Object.keys(conditions).length : 0;
   const showButtons = mode !== "no-buttons" && isLading;
   const isEigenMode = mode === "eigen-lading";
+  const isRelatieMode = mode === "relatie-lading";
   // In bemiddeling: Inkoop = markt item relatie, Verkoop = conversation relatie or left item relatie
   const rightRelatie = item.relatieName ?? (item.source === "relatie" ? conversationRelatieName : undefined);
   const leftRelatie = selectedLeftItem?.source === "markt" ? selectedLeftItem.relatieName : conversationRelatieName;
-  const primaryLabel = isBemiddelingActive ? "Inkoop" : (isEigenMode ? "Ons" : "Hun");
+  const primaryLabel = isBemiddelingActive ? "Inkoop" : (isEigenMode ? "Zoekcriteria" : (isRelatieMode ? "Zoekcriteria" : "Hun"));
   const primarySubLabel = isBemiddelingActive ? rightRelatie : undefined;
-  const secondaryLabel = isBemiddelingActive ? "Verkoop" : (isEigenMode ? "Hun" : "Ons");
+  const secondaryLabel = isBemiddelingActive ? "Verkoop" : (isEigenMode ? "Inkoop" : (isRelatieMode ? "Verkoop" : "Ons"));
   const secondarySubLabel = isBemiddelingActive ? leftRelatie : undefined;
 
   return (
-    <div className="px-[16px] py-[10px] hover:bg-[#f9fafb] transition-colors">
+    <div className={`px-[16px] py-[10px] hover:bg-[#f9fafb] transition-colors ${onClick ? "cursor-pointer" : ""}`} onClick={onClick}>
       {/* Main row */}
       <div className="flex items-center gap-[10px]">
         <div className="shrink-0">
@@ -1492,7 +1539,7 @@ function MatchRow({
         </div>
 
         {/* Action buttons */}
-        <div className="shrink-0 flex items-center gap-[4px]">
+        <div className="shrink-0 flex items-center gap-[4px]" onClick={e => e.stopPropagation()}>
           {showBemiddelingButton && onBemiddelingToggle && (
             <Button
               variant={isBemiddelingActive ? "primary" : "secondary"}

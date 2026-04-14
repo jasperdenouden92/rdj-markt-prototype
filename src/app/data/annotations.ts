@@ -67,4 +67,13 @@ export const annotations: Annotation[] = [
     author: "Elwin",
     date: "2026-03-30",
   },
+  {
+    id: "ea14da61-d6cc-4f2f-be4d-f7e1e852905e",
+    target: "markt/bevrachting/ladingen",
+    elementId: "werklijst-email-button",
+    title: "Standaard ontvangers bij werklijst uitsturen",
+    body: "Bij het uitsturen van de werklijst worden de standaard ontvangers bepaald op basis van het type aanbod. Stuur je alleen ladingen uit, dan gaat de werklijst naar de standaard scheepseigenaren. Stuur je alleen vaartuigen uit, dan naar de standaard lading-eigenaren. Bij een gecombineerde werklijst (ladingen én vaartuigen) worden beide groepen toegevoegd. Of een relatie als standaard ontvanger fungeert, stel je in via het relatiescherm bij het toewijzen van de rol.",
+    author: "Jasper",
+    date: "2026-04-14",
+  },
 ];

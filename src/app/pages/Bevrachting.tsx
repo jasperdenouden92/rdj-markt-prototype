@@ -298,7 +298,6 @@ export default function Bevrachting() {
     { key: 'tonnage', header: 'Tonnage', type: 'text', width: 'w-[120px]', align: 'right' },
     { key: 'laden', header: 'Laden', type: 'text', width: 'w-[180px]', subtextKey: 'ladenDate' },
     { key: 'lossen', header: 'Lossen', type: 'text', width: 'w-[180px]', subtextKey: 'lossenDate' },
-    { key: 'relatie', header: 'Relatie', type: 'text', width: 'w-[180px]', textColor: 'text-rdj-text-brand', onClickKey: 'onRelatieClick', hoverContentKey: 'relatieHoverContent' },
     { key: 'biedingenBadges', header: 'Biedingen', type: 'badges', width: 'w-[100px]' },
     { key: 'matchesBadges', header: 'Matches', type: 'badges', width: 'w-[100px]' },
     { key: 'deadline', header: 'Deadline', type: 'text', width: 'w-[140px]' },
@@ -380,7 +379,7 @@ export default function Bevrachting() {
       eigenaarLabel: '',
       eigenaarInitials: owners[ownerIdx].initials || undefined,
       eigenaarFoto: owners[ownerIdx].foto || undefined,
-      leadingBadge: c.splitIndex != null ? `#${c.splitIndex}` : (c.status === 'markt' ? 'Markt' : undefined),
+      leadingBadge: c.splitIndex != null ? `#${c.splitIndex}` : undefined,
       leadingBadgeStyle: c.splitIndex != null && c.splitColorIndex != null ? (() => {
         const color = splitColors[c.splitColorIndex % splitColors.length];
         return { backgroundColor: color.bg, color: color.text, borderColor: color.border };
@@ -495,13 +494,15 @@ export default function Bevrachting() {
             }
             actions={
               <>
-                <button onClick={() => setShowEmailModal(true)} className="bg-rdj-bg-primary relative rounded-[6px] shrink-0">
-                  <div className="content-stretch flex gap-[4px] items-center justify-center overflow-clip px-[14px] py-[10px] relative rounded-[inherit]">
-                    <div className="overflow-clip relative shrink-0 size-[20px]"><div className="absolute inset-[9.96%_9.96%_9.91%_9.9%]"><div className="absolute inset-[-5.2%]"><svg className="block size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 17.6933 17.6933"><path d={svgPaths.p31aa2800} stroke="var(--stroke-0, #344054)" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.66667" /></svg></div></div></div>
-                    <div className="content-stretch flex items-center justify-center px-[2px] relative shrink-0"><p className="font-sans font-bold leading-[20px] relative shrink-0 text-[#344054] text-[14px] whitespace-nowrap">Werklijst e-mailen</p></div>
-                  </div>
-                  <div aria-hidden="true" className="absolute border border-rdj-border-primary border-solid inset-0 pointer-events-none rounded-[6px] shadow-[0px_1px_2px_0px_rgba(16,24,40,0.05)]" />
-                </button>
+                <AnnotationMarker annotationId="ea14da61-d6cc-4f2f-be4d-f7e1e852905e">
+                  <button onClick={() => setShowEmailModal(true)} className="bg-rdj-bg-primary relative rounded-[6px] shrink-0">
+                    <div className="content-stretch flex gap-[4px] items-center justify-center overflow-clip px-[14px] py-[10px] relative rounded-[inherit]">
+                      <div className="overflow-clip relative shrink-0 size-[20px]"><div className="absolute inset-[9.96%_9.96%_9.91%_9.9%]"><div className="absolute inset-[-5.2%]"><svg className="block size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 17.6933 17.6933"><path d={svgPaths.p31aa2800} stroke="var(--stroke-0, #344054)" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.66667" /></svg></div></div></div>
+                      <div className="content-stretch flex items-center justify-center px-[2px] relative shrink-0"><p className="font-sans font-bold leading-[20px] relative shrink-0 text-[#344054] text-[14px] whitespace-nowrap">Werklijst e-mailen</p></div>
+                    </div>
+                    <div aria-hidden="true" className="absolute border border-rdj-border-primary border-solid inset-0 pointer-events-none rounded-[6px] shadow-[0px_1px_2px_0px_rgba(16,24,40,0.05)]" />
+                  </button>
+                </AnnotationMarker>
                 <button onClick={() => setShowAddModal(true)} className="bg-[#1567a4] relative rounded-[6px] shrink-0">
                   <div className="content-stretch flex gap-[4px] items-center justify-center overflow-clip px-[14px] py-[10px] relative rounded-[inherit]">
                     <div className="overflow-clip relative shrink-0 size-[20px]"><div className="absolute inset-[20.83%]"><div className="absolute inset-[-7.14%]"><svg className="block size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 13.3333 13.3333"><path d={svgPaths.p1b67fa00} stroke="var(--stroke-0, white)" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.66667" /></svg></div></div></div>
@@ -537,7 +538,7 @@ export default function Bevrachting() {
                   <FilterDropdown label="Laadregio" />
                   <FilterDropdown label="Losregio" />
                 </div>
-                <button className="content-stretch flex gap-[4px] items-center relative shrink-0"><div className="overflow-clip relative shrink-0 size-[20px]"><div className="absolute inset-[12.5%]"><div className="absolute inset-[-5.56%]"><svg className="block size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 16.6667 16.6667"><path d={svgPaths.p3190da80} stroke="var(--stroke-0, #1567A4)" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.66667" /></svg></div></div></div><div className="content-stretch flex items-center justify-center px-[2px] relative shrink-0"><p className="font-sans font-bold leading-[20px] relative shrink-0 text-[#145990] text-[14px] whitespace-nowrap">Filter</p></div></button>
+                <button className="content-stretch flex gap-[4px] items-center relative shrink-0 cursor-pointer hover:opacity-70 transition-opacity"><div className="overflow-clip relative shrink-0 size-[20px]"><svg className="block size-full" fill="none" viewBox="0 0 20 20"><path d="M10 4v12M4 10h12" stroke="#1567a4" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.67" /></svg></div><p className="font-sans font-bold leading-[20px] relative shrink-0 text-[#1567a4] text-[14px] whitespace-nowrap">Filter</p></button>
                 <div className="content-stretch flex flex-[1_0_0] gap-[12px] items-center justify-end min-h-px min-w-px relative">
                   <SegmentedButtonGroup
                     items={[
