@@ -66,7 +66,7 @@ const mockTimelineEvents: TimelineEvent[] = [
   {
     id: "2",
     type: "sent",
-    title: "Bod verstuurd",
+    title: "In onderhandeling",
     timestamp: "6 uur geleden",
     avatar: imgAvatar,
     quote: '"Vrachtprijs nog even goed doorgenomen."',
@@ -90,7 +90,7 @@ const mockTimelineEvents: TimelineEvent[] = [
   {
     id: "4",
     type: "received",
-    title: "Bod ontvangen",
+    title: "In onderhandeling",
     timestamp: "6 uur geleden",
     avatar: imgAvatar,
     quote: '"Lading toegevoegd."',

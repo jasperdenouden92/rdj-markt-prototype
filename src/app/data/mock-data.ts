@@ -436,7 +436,7 @@ export const mockNegotiations: Negotiation[] = [
     company: 'Rederij Alfa',
     tonnage: '2.000 ton',
     deadline: 'Morgen, 10:00',
-    status: 'Bod verstuurd',
+    status: 'In onderhandeling',
     contact: {
       name: 'Khoa Nguyen',
       date: 'Zo 8 Mrt 01:31',
@@ -453,7 +453,7 @@ export const mockNegotiations: Negotiation[] = [
     company: 'Scheepvaartbedrijf Damen',
     tonnage: '2.000 ton',
     deadline: 'Morgen, 11:00',
-    status: 'Bod ontvangen',
+    status: 'In onderhandeling',
     contact: {
       name: 'Eric Nieuwkoop',
       date: 'Za 7 Mrt 18:39',
