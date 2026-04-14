@@ -214,6 +214,7 @@ export interface ResolvedVaartuigMarkt {
   eigenaarInitials: string;
   eigenaarFoto: string;
   prioriteit: number;
+  opmerkingMarkt: string;
 }
 
 export interface ResolvedVaartuigEigen {
@@ -238,6 +239,7 @@ export interface ResolvedVaartuigEigen {
   eigenaarInitials: string;
   eigenaarFoto: string;
   deadline: string;
+  opmerkingMarkt: string;
 }
 
 function getInitials(naam: string): string {
@@ -528,6 +530,7 @@ export function useVaartuigMarktDetail(id: string | undefined) {
           eigenaarInitials: eigenaar ? getInitials(eigenaar.naam) : "",
           eigenaarFoto: eigenaar?.profielfoto || "",
           prioriteit: item.prioriteit,
+          opmerkingMarkt: item.opmerkingMarkt || "",
         };
 
         if (mountedRef.current) setData(resolved);
@@ -593,6 +596,7 @@ export function useVaartuigEigenDetail(id: string | undefined) {
           eigenaarInitials: eigenaar ? getInitials(eigenaar.naam) : "",
           eigenaarFoto: eigenaar?.profielfoto || "",
           deadline: item.deadline || "—",
+          opmerkingMarkt: item.opmerkingMarkt || "",
         };
 
         if (mountedRef.current) setData(resolved);

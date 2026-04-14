@@ -172,6 +172,7 @@ export interface VaartuigMarkt {
   id: string;
   naam: string;
   opmerking: string;
+  opmerkingMarkt?: string;
   beschikbaarVanaf: string;
   huidigeLocatieId: string;
   eni: string;
@@ -194,6 +195,7 @@ export interface VaartuigEigen {
   id: string;
   naam: string;
   opmerking: string;
+  opmerkingMarkt?: string;
   beschikbaarVanaf: string;
   huidigeLocatieId: string;
   eni: string;

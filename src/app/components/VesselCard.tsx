@@ -84,6 +84,15 @@ export default function VesselCard({ vessel }: VesselCardProps) {
           </div>
         )}
 
+        {/* Remarks */}
+        {vessel.werklijstRemarks && (
+          <div className="mt-[8px]">
+            <p className="font-sans font-normal leading-[18px] text-rdj-text-secondary text-[12px] line-clamp-2">
+              {vessel.werklijstRemarks}
+            </p>
+          </div>
+        )}
+
         {/* Matches Footer */}
         {vessel.matches != null && vessel.matches > 0 && (
           <div className="mt-[12px] pt-[12px] border-t border-rdj-border-secondary">

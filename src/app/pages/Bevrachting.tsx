@@ -7,6 +7,7 @@ import Sidebar from "../components/Sidebar";
 import PageHeader from "../components/PageHeader";
 import DroppableColumn from "../components/DroppableColumn";
 import ConditionsModal, { ConditionsData } from "../components/ConditionsModal";
+import VesselRemarksModal from "../components/VesselRemarksModal";
 import EmailWerklijstModal from "../components/EmailWerklijstModal";
 import FilterDropdown from "../components/FilterDropdown";
 import SegmentedButtonGroup from "../components/SegmentedButtonGroup";
@@ -15,6 +16,7 @@ import type { Column } from "../components/Table";
 import useTableSort from "../components/useTableSort";
 import Pagination from "../components/Pagination";
 import { mockCargos, mockVessels, Cargo, Vessel } from "../data/mock-data";
+import * as api from "../data/api";
 import { splitColors } from "../utils/splitColors";
 import { mockRelaties } from "../data/mock-relatie-data";
 import { buildRelatieHoverContent } from "../components/RelatieHoverCard";
@@ -50,6 +52,7 @@ export default function Bevrachting() {
   const [vessels, setVessels] = useState<Vessel[]>([]);
   const [apiLoaded, setApiLoaded] = useState(false);
   const [modalCargo, setModalCargo] = useState<Cargo | null>(null);
+  const [modalVessel, setModalVessel] = useState<Vessel | null>(null);
   const [showEmailModal, setShowEmailModal] = useState(false);
   const [viewMode, setViewMode] = useState<'kanban' | 'table'>('kanban');
   const [selectedItems, setSelectedItems] = useState<string[]>([]);
@@ -84,9 +87,31 @@ export default function Bevrachting() {
   };
 
   const handleVesselDrop = (vesselId: string, newStatus: 'intake' | 'werklijst' | 'markt' | 'gesloten') => {
-    setVessels(vessels.map(v => 
+    const vessel = vessels.find(v => v.id === vesselId);
+    if (!vessel) return;
+
+    // If moving to werklijst, show remarks modal
+    if (newStatus === 'werklijst' && vessel.status !== 'werklijst') {
+      setModalVessel(vessel);
+      return;
+    }
+
+    setVessels(vessels.map(v =>
       v.id === vesselId ? { ...v, status: newStatus } : v
     ));
+  };
+
+  const handleSaveVesselRemarks = (remarks: string) => {
+    if (!modalVessel) return;
+    setVessels(vessels.map(v =>
+      v.id === modalVessel.id ? { ...v, status: 'werklijst' as const, werklijstRemarks: remarks } : v
+    ));
+    // Persist to in-memory store so the detail page picks it up
+    api.patch("vaartuig_eigen", modalVessel.id, { opmerkingMarkt: remarks }).catch(() => {
+      // Also try markt variant in case this vessel comes from there
+      api.patch("vaartuig_markt", modalVessel.id, { opmerkingMarkt: remarks }).catch(() => {});
+    });
+    setModalVessel(null);
   };
 
   const handleSaveConditions = (conditions: ConditionsData) => {
@@ -554,6 +579,15 @@ export default function Bevrachting() {
             cargo={modalCargo}
             onClose={() => setModalCargo(null)}
             onSave={handleSaveConditions}
+          />
+        )}
+
+        {/* Vessel Remarks Modal */}
+        {modalVessel && (
+          <VesselRemarksModal
+            vessel={modalVessel}
+            onClose={() => setModalVessel(null)}
+            onSave={handleSaveVesselRemarks}
           />
         )}
 
