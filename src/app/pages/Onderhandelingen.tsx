@@ -862,7 +862,7 @@ export default function Onderhandelingen() {
                 relatieName: relatie,
                 ladingaanbieder: row.ladingaanbieder as string,
                 vaartuigaanbieder: row.vaartuigaanbieder as string,
-                ...(isBemiddeling ? { bemiddeling: { inkoopRelatie: row.ladingaanbieder as string, verkoopRelatie: row.vaartuigaanbieder as string } } : {}),
+                ...(isBemiddeling ? { bemiddeling: { inkoopRelatie: row.vaartuigaanbieder as string, verkoopRelatie: row.ladingaanbieder as string } } : {}),
               });
             }}
           />

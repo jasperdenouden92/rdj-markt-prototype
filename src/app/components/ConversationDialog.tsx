@@ -1404,9 +1404,9 @@ function ItemRow({
           conditions={conditions}
           bidConditions={bidConditions}
           showBid={bemiddelingMode ? (status === "aangeboden" || status === "interesse") : status === "interesse"}
-          primaryLabel={bemiddelingMode ? "Inkoop" : (isEigen ? "Zoekcriteria" : "Ons")}
+          primaryLabel={bemiddelingMode ? "Verkoop" : (isEigen ? "Zoekcriteria" : "Ons")}
           primarySubLabel={bemiddelingMode ? (isMarkt ? item.relatieName : undefined) : undefined}
-          secondaryLabel={bemiddelingMode ? "Verkoop" : (isEigen ? "Inkoop" : "Hun")}
+          secondaryLabel={bemiddelingMode ? "Inkoop" : (isEigen ? "Inkoop" : "Hun")}
           secondarySubLabel={bemiddelingMode ? (isMarkt ? conversationRelatieName : bemiddelingMatchRelatie) : undefined}
           onConditionChange={onConditionChange}
           onBidConditionChange={onBidConditionChange}
@@ -1420,9 +1420,9 @@ function ItemRow({
           conditions={conditions}
           bidConditions={bidConditions}
           showBid={false}
-          primaryLabel={bemiddelingMode ? "Inkoop" : (isEigen ? "Zoekcriteria" : "Ons")}
+          primaryLabel={bemiddelingMode ? "Verkoop" : (isEigen ? "Zoekcriteria" : "Ons")}
           primarySubLabel={bemiddelingMode ? (isMarkt ? item.relatieName : undefined) : undefined}
-          secondaryLabel={bemiddelingMode ? "Verkoop" : (isEigen ? "Inkoop" : "Hun")}
+          secondaryLabel={bemiddelingMode ? "Inkoop" : (isEigen ? "Inkoop" : "Hun")}
           secondarySubLabel={bemiddelingMode ? (isMarkt ? conversationRelatieName : bemiddelingMatchRelatie) : undefined}
           onConditionChange={onConditionChange}
           onBidConditionChange={onBidConditionChange}
@@ -1477,12 +1477,12 @@ function MatchRow({
   const showButtons = mode !== "no-buttons" && isLading;
   const isEigenMode = mode === "eigen-lading";
   const isRelatieMode = mode === "relatie-lading";
-  // In bemiddeling: Inkoop = markt item relatie, Verkoop = conversation relatie or left item relatie
+  // In bemiddeling: Verkoop = lading bezitter (markt item relatie), Inkoop = vaartuig bezitter (conversation relatie or left item relatie)
   const rightRelatie = item.relatieName ?? (item.source === "relatie" ? conversationRelatieName : undefined);
   const leftRelatie = selectedLeftItem?.source === "markt" ? selectedLeftItem.relatieName : conversationRelatieName;
-  const primaryLabel = isBemiddelingActive ? "Inkoop" : (isEigenMode ? "Zoekcriteria" : (isRelatieMode ? "Zoekcriteria" : "Hun"));
+  const primaryLabel = isBemiddelingActive ? "Verkoop" : (isEigenMode ? "Zoekcriteria" : (isRelatieMode ? "Zoekcriteria" : "Hun"));
   const primarySubLabel = isBemiddelingActive ? rightRelatie : undefined;
-  const secondaryLabel = isBemiddelingActive ? "Verkoop" : (isEigenMode ? "Inkoop" : (isRelatieMode ? "Verkoop" : "Ons"));
+  const secondaryLabel = isBemiddelingActive ? "Inkoop" : (isEigenMode ? "Inkoop" : (isRelatieMode ? "Verkoop" : "Ons"));
   const secondarySubLabel = isBemiddelingActive ? leftRelatie : undefined;
 
   return (
