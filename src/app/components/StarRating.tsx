@@ -27,6 +27,11 @@ export default function StarRating({ value, max = 5, onChange, size = 20 }: Star
     return "#F2F4F7";
   };
 
+  const getStarStroke = (star: number) => {
+    if (hovered === null || star > hovered) return "none";
+    return "#FDB022";
+  };
+
   return (
     <div
       className="flex items-center gap-[4px]"
@@ -42,7 +47,7 @@ export default function StarRating({ value, max = 5, onChange, size = 20 }: Star
               onChange?.(star);
             }}
             onMouseEnter={() => setHovered(star)}
-            className="overflow-clip relative shrink-0 cursor-pointer"
+            className="overflow-clip relative shrink-0 cursor-pointer outline-none"
             style={{ width: size, height: size }}
           >
             <svg
@@ -51,7 +56,7 @@ export default function StarRating({ value, max = 5, onChange, size = 20 }: Star
               preserveAspectRatio="none"
               viewBox="0 0 20 20"
             >
-              <path d={STAR_PATH} fill={getStarFill(star)} />
+              <path d={STAR_PATH} fill={getStarFill(star)} stroke={getStarStroke(star)} strokeWidth="1" />
             </svg>
           </button>
         );
