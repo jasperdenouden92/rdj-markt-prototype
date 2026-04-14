@@ -44,7 +44,6 @@ const statusVariantMap: Record<string, string> = {
   "In onderhandeling": "brand",
   "Goedgekeurd": "success",
   "Afgewezen": "error",
-  "Afgekeurd": "error",
 };
 
 const statusIconMap: Record<string, React.ReactNode | null> = {
@@ -52,7 +51,6 @@ const statusIconMap: Record<string, React.ReactNode | null> = {
   "In onderhandeling": <Send strokeWidth={2.5} />,
   "Goedgekeurd": <Check strokeWidth={2.5} />,
   "Afgewezen": <X strokeWidth={2.5} />,
-  "Afgekeurd": <X strokeWidth={2.5} />,
 };
 
 const statusTypeMap: Record<string, "default" | "color"> = {
@@ -60,7 +58,6 @@ const statusTypeMap: Record<string, "default" | "color"> = {
   "In onderhandeling": "color",
   "Goedgekeurd": "color",
   "Afgewezen": "color",
-  "Afgekeurd": "color",
 };
 
 interface VaartuigDetailPanelProps {

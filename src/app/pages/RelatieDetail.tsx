@@ -40,7 +40,6 @@ const negotiationStatusVariantMap: Record<string, string> = {
   "In onderhandeling": "brand",
   "Goedgekeurd": "success",
   "Afgewezen": "error",
-  "Afgekeurd": "error",
 };
 
 const negotiationStatusIconMap: Record<string, React.ReactNode | null> = {
@@ -48,7 +47,6 @@ const negotiationStatusIconMap: Record<string, React.ReactNode | null> = {
   "In onderhandeling": <Send strokeWidth={2.5} />,
   "Goedgekeurd": <Check strokeWidth={2.5} />,
   "Afgewezen": <X strokeWidth={2.5} />,
-  "Afgekeurd": <X strokeWidth={2.5} />,
 };
 
 const negotiationStatusTypeMap: Record<string, "default" | "color"> = {
@@ -56,7 +54,6 @@ const negotiationStatusTypeMap: Record<string, "default" | "color"> = {
   "In onderhandeling": "color",
   "Goedgekeurd": "color",
   "Afgewezen": "color",
-  "Afgekeurd": "color",
 };
 
 const activeNegStatuses = ["Via werklijst", "In onderhandeling"];

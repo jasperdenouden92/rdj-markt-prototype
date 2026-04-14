@@ -144,7 +144,7 @@ const mockActiviteit: ActivityEvent[] = [
     user: "Eric Nieuwkoop",
     initials: "EN",
     avatar: imgEricNieuwkoop,
-    title: "In onderhandeling",
+    title: "Bod toegevoegd",
     timestamp: "Vandaag, 09:15",
     message: "Lading toegevoegd.",
     changes: [
@@ -156,7 +156,7 @@ const mockActiviteit: ActivityEvent[] = [
     user: "Khoa Nguyen",
     initials: "KN",
     avatar: imgKhoaNguyen,
-    title: "In onderhandeling",
+    title: "Bod toegevoegd",
     timestamp: "Gisteren, 16:32",
     message: "Voor het eerst gesproken.",
     changes: [
@@ -212,18 +212,15 @@ function calcPctDiff(
 
 type SideTab = "vaartuig" | "lading";
 
-type NegotiationStatus = "Via werklijst" | "In onderhandeling" | "Openstaand bod" | "Goedgekeurd" | "Afgewezen" | "Geaccepteerd" | "Geweigerd";
+type NegotiationStatus = "Via werklijst" | "In onderhandeling" | "Goedgekeurd" | "Afgewezen";
 
-const activeStatuses: NegotiationStatus[] = ["Via werklijst", "In onderhandeling", "Openstaand bod"];
+const activeStatuses: NegotiationStatus[] = ["Via werklijst", "In onderhandeling"];
 
 const statusBadgeConfig: Record<NegotiationStatus, { variant: BadgeVariant; type: BadgeType; icon: React.ReactNode | null }> = {
   "Via werklijst": { variant: "brand", type: "default", icon: <ListTodo strokeWidth={2.5} /> },
   "In onderhandeling": { variant: "brand", type: "color", icon: <Send strokeWidth={2.5} /> },
-  "Openstaand bod": { variant: "brand", type: "color", icon: <Send strokeWidth={2.5} /> },
   "Goedgekeurd": { variant: "success", type: "color", icon: <Check strokeWidth={2.5} /> },
   "Afgewezen": { variant: "error", type: "color", icon: <X strokeWidth={2.5} /> },
-  "Geaccepteerd": { variant: "success", type: "color", icon: <Check strokeWidth={2.5} /> },
-  "Geweigerd": { variant: "error", type: "color", icon: <X strokeWidth={2.5} /> },
 };
 
 type NegotiationBron = "eigen" | "markt";
@@ -1384,7 +1381,7 @@ function LadingTab() {
 /* ── Activity title → icon mapping ── */
 const activityIconMap: Record<string, React.ReactNode> = {
   "Bod bijgewerkt": <PenLine size={16} strokeWidth={2} />,
-  "In onderhandeling": <Send size={16} strokeWidth={2} />,
+  "Bod toegevoegd": <Send size={16} strokeWidth={2} />,
   "Via werklijst": <ListTodo size={16} strokeWidth={2} />,
 };
 

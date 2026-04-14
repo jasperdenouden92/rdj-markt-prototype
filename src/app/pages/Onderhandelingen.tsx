@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect, useMemo, type ReactNode } from "react";
 import { useNavigate, useLocation } from "react-router";
-import { Send, MailOpen, Check, X, Ship, ListTodo } from "lucide-react";
+import { Send, Check, X, Ship, ListTodo } from "lucide-react";
 import { Toaster } from "sonner";
 import Sidebar from "../components/Sidebar";
 import PageHeader from "../components/PageHeader";
