@@ -186,7 +186,7 @@ export default function LadingDetail() {
 
   /* ── Matches table ── */
   const matchColumns: Column[] = [
-    { key: 'name', header: 'Vaartuig', type: 'leading-text', subtextKey: 'type', badgeKey: 'eigenBadge', actionLabel: 'Onderhandeling', actionCompletedKey: 'actionCompletedLabel' },
+    { key: 'name', header: 'Vaartuig', type: 'leading-text', subtextKey: 'type', badgeKey: 'eigenBadge', actionLabel: 'Onderhandeling', actionLabelKey: 'actionLabel', actionCompletedKey: 'actionCompletedLabel' },
     { key: 'company', header: 'Relatie', type: 'text', subtextKey: 'contactPersoon', textColor: 'text-rdj-text-brand', width: 'w-[180px]', onClickKey: 'onRelatieClick' },
     { key: 'location', header: 'Locatie', type: 'text', subtextKey: 'locationDate', width: 'w-[200px]' },
     { key: 'distance', header: 'Groottonnage', type: 'text', align: 'right', width: 'w-[120px]' },
@@ -204,10 +204,12 @@ export default function LadingDetail() {
       name: match.name,
       type: match.type,
       eigenBadge: match.isEigen ? undefined : 'Markt',
+      actionLabel: match.isEigen ? 'Openen' : undefined,
+      vaartuigId: match.vaartuigId,
       matchStatus: idx < 2 ? 'aangeboden' : 'openstaand',
-      company: match.company,
-      contactPersoon: match.contactPersoon || match.companyLocation,
-      onRelatieClick: () => { const rel = mockRelaties.find(r => r.naam === match.company); if (rel) navigate(`/crm/relatie/${rel.id}`); },
+      company: match.isEigen ? 'Rederij de Jong' : match.company,
+      contactPersoon: match.isEigen ? undefined : (match.contactPersoon || match.companyLocation),
+      onRelatieClick: match.isEigen ? undefined : (() => { const rel = mockRelaties.find(r => r.naam === match.company); if (rel) navigate(`/crm/relatie/${rel.id}`); }),
       location: match.location,
       locationDate: match.locationDate || '',
       distance: match.distance,
@@ -342,6 +344,10 @@ export default function LadingDetail() {
                             hoveredRowId={hoveredRow}
                             onRowHover={setHoveredRow}
                             onRowClick={(row) => {
+                              if (row.vaartuigId) {
+                                navigate(`/markt/bevrachting/vaartuig/${row.vaartuigId}`);
+                                return;
+                              }
                               const relatie = mockRelaties.find(r => r.naam === row.company);
                               setConversationDialog({
                                 relatieId: relatie?.id || "rel-001",
@@ -350,6 +356,10 @@ export default function LadingDetail() {
                               });
                             }}
                             onRowAction={(row) => {
+                              if (row.vaartuigId) {
+                                navigate(`/markt/bevrachting/vaartuig/${row.vaartuigId}`);
+                                return;
+                              }
                               const relatie = mockRelaties.find(r => r.naam === row.company);
                               setConversationDialog({
                                 relatieId: relatie?.id || "rel-001",
