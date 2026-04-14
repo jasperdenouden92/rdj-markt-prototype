@@ -76,4 +76,13 @@ export const annotations: Annotation[] = [
     author: "Jasper",
     date: "2026-04-14",
   },
+  {
+    id: "cb3924d0-720a-4fba-a254-14dfb8005321",
+    target: "markt/bevrachting/ladingen",
+    elementId: "toevoegen-button",
+    title: "Lading of vaartuig toevoegen aan intake",
+    body: "Via de 'Toevoegen' knop kun je een lading of vaartuig zoeken vanuit de lading- of vlootmodule en deze direct op de intakelijst zetten. Zo start je een nieuw eigen aanbod item zonder het handmatig helemaal opnieuw in te vullen — de bestaande gegevens worden overgenomen als startpunt.",
+    author: "Elwin",
+    date: "2026-04-14",
+  },
 ];
