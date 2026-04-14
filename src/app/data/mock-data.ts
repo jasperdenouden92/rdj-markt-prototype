@@ -445,7 +445,7 @@ export const mockNegotiations: Negotiation[] = [
     freightPriceDiff: '-9,7%',
     bemiddeling: {
       inkoopRelatie: 'Rederij Alfa',
-      verkoopRelatie: 'Cargill N.V.',
+      verkoopRelatie: 'Provaart Logistics BV',
     },
   },
   {

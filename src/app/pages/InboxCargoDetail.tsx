@@ -15,6 +15,7 @@ import LadingMarktSidebar from "../components/LadingMarktSidebar";
 import StartNegotiationSidebar from "../components/StartNegotiationSidebar";
 import OnderhandelingSidepanel from "../components/OnderhandelingSidepanel";
 import ConversationDialog from "../components/ConversationDialog";
+import RelatieSelectDialog from "../components/RelatieSelectDialog";
 import ActivityFeed from "../components/ActivityFeed";
 import SectionHeader from "../components/SectionHeader";
 import LastActivityButton from "../components/LastActivityButton";
@@ -112,7 +113,8 @@ export default function InboxCargoDetail() {
   const [offeredMatches, setOfferedMatches] = useState<Set<string>>(new Set());
   const [selectedNegotiation, setSelectedNegotiation] = useState<{ id: string; status: string; bron: string; relatieName?: string; bemiddeling?: { inkoopRelatie: string; verkoopRelatie: string } } | null>(null);
   const setActiveTab = (tab: typeof activeTab) => { setActiveTabRaw(tab); setSelectedNegotiation(null); };
-  const [conversationDialog, setConversationDialog] = useState<{ relatieId: string; relatieName: string; matchName?: string; leftId?: string; itemType?: "lading" | "vaartuig" | "relatie-vaartuig" | "relatie-lading"; rightName?: string } | null>(null);
+  const [conversationDialog, setConversationDialog] = useState<{ relatieId: string; relatieName: string; matchName?: string; leftId?: string; itemType?: "lading" | "vaartuig" | "relatie-vaartuig" | "relatie-lading"; rightName?: string; initialShowMarktVaartuigen?: boolean } | null>(null);
+  const [showRelatieSelect, setShowRelatieSelect] = useState(false);
   const [hoveredRow, setHoveredRow] = useState<string | null>(null);
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [matchFilter, setMatchFilter] = useState("Alles");
@@ -337,12 +339,14 @@ export default function InboxCargoDetail() {
                                 rightName: row.name as string,
                               });
                             } else {
-                              // Markt vaartuig: open conversation dialog with markt lading pre-selected
-                              const relatieA = mockRelaties.find(r => r.naam === row.company);
+                              // Markt vaartuig: open "Lading van relatie" tab with bemiddeling
                               setConversationDialog({
-                                relatieId: relatieA?.id || "",
-                                relatieName: (row.company as string) || "Onbekend",
-                                leftId: id,
+                                relatieId: summary?.relatieId || "",
+                                relatieName: summary?.relatieName || "Onbekend",
+                                matchName: summary?.title,
+                                itemType: "relatie-lading",
+                                rightName: row.name as string,
+                                initialShowMarktVaartuigen: true,
                               });
                             }
                           }}
@@ -358,7 +362,12 @@ export default function InboxCargoDetail() {
                           filterOptions={["Alles", "Actief", "Geaccepteerd", "Geweigerd"]}
                           filterValue={negFilter}
                           onFilterChange={setNegFilter}
-                          onAdd={() => setConversationDialog({ relatieId: "", relatieName: "" })}
+                          onAdd={() => setConversationDialog({
+                            relatieId: summary?.relatieId || "",
+                            relatieName: summary?.relatieName || "Onbekend",
+                            matchName: summary?.title,
+                            itemType: "relatie-lading",
+                          })}
                           addTooltip="Onderhandeling starten"
                         />
                         <Pagination data-annotation-id="inboxcargodetail-paginering"
@@ -376,7 +385,8 @@ export default function InboxCargoDetail() {
                           activeRowId={selectedNegotiation?.id ?? null}
                           onRowClick={(row) => {
                             const neg = mockNegotiations.find(n => n.id === row.id);
-                            setSelectedNegotiation({ id: row.id, status: row.status as string, bron: "markt", relatieName: summary?.relatieName, bemiddeling: neg?.bemiddeling });
+                            const bemiddeling = neg?.bemiddeling ? { ...neg.bemiddeling, verkoopRelatie: summary?.relatieName || neg.bemiddeling.verkoopRelatie } : undefined;
+                            setSelectedNegotiation({ id: row.id, status: row.status as string, bron: "markt", relatieName: summary?.relatieName, bemiddeling });
                           }}
                         />
                       </>
@@ -430,6 +440,17 @@ export default function InboxCargoDetail() {
         />
       )}
 
+      {/* Relatie select dialog */}
+      {showRelatieSelect && (
+        <RelatieSelectDialog
+          onSelect={(relatie) => {
+            setShowRelatieSelect(false);
+            setConversationDialog({ relatieId: relatie.id, relatieName: relatie.naam });
+          }}
+          onClose={() => setShowRelatieSelect(false)}
+        />
+      )}
+
       {/* Conversation dialog */}
       {conversationDialog && (
         <ConversationDialog
@@ -439,6 +460,7 @@ export default function InboxCargoDetail() {
           preSelectedLeftId={conversationDialog.leftId}
           preSelectedItemType={conversationDialog.itemType}
           preSelectedRightName={conversationDialog.rightName}
+          initialShowMarktVaartuigen={conversationDialog.initialShowMarktVaartuigen}
           onClose={() => setConversationDialog(null)}
         />
       )}
