@@ -302,6 +302,12 @@ export interface BevrachtingCargo {
   splitOriginId?: string;
   splitColorIndex?: number;
   splitTotalWeight?: string;
+  siblingLots?: Array<{
+    id: string;
+    splitIndex: number;
+    cargo: string;
+    status: 'intake' | 'werklijst' | 'markt' | 'gesloten';
+  }>;
   verkoopcondities?: {
     prijs: number | null;
     laadtijd: number | null;
@@ -360,6 +366,8 @@ export function useBevrachtingData() {
       }
       // Track per-subpartij split index
       const subpartijSplitIdx = new Map<string, number>();
+      // Track id -> subpartijId for sibling lot lookup
+      const idToSubpartijId = new Map<string, string>();
 
       // Transform eigen ladingen to bevrachting format
       const cargoRows: BevrachtingCargo[] = eigenLadingen.map(item => {
@@ -384,6 +392,7 @@ export function useBevrachtingData() {
         const currentSplitIdx = (subpartijSplitIdx.get(item.subpartijId) || 0) + 1;
         subpartijSplitIdx.set(item.subpartijId, currentSplitIdx);
         const hasMultipleLots = lotCount > 1;
+        idToSubpartijId.set(item.id, item.subpartijId);
 
         return {
           id: item.id,
@@ -413,6 +422,28 @@ export function useBevrachtingData() {
           },
         };
       });
+
+      // Populate siblingLots for each cargo in a multi-lot subpartij
+      const cargoById = new Map(cargoRows.map(r => [r.id, r]));
+      const subpartijToCargoIds = new Map<string, string[]>();
+      for (const [id, subId] of idToSubpartijId) {
+        if ((subpartijCounts.get(subId) || 1) > 1) {
+          const arr = subpartijToCargoIds.get(subId) || [];
+          arr.push(id);
+          subpartijToCargoIds.set(subId, arr);
+        }
+      }
+      for (const row of cargoRows) {
+        const subId = idToSubpartijId.get(row.id);
+        if (!subId) continue;
+        const siblingIds = (subpartijToCargoIds.get(subId) || []).filter(id => id !== row.id);
+        if (siblingIds.length > 0) {
+          row.siblingLots = siblingIds.map(id => {
+            const sibling = cargoById.get(id)!;
+            return { id: sibling.id, splitIndex: sibling.splitIndex!, cargo: sibling.cargo, status: sibling.status };
+          });
+        }
+      }
 
       // Transform vaartuigen to bevrachting vessel format
       const vesselRows: BevrachtingVessel[] = vaartuigenEigen.map(item => {

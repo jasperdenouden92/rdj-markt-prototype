@@ -44,13 +44,52 @@ export default function CargoCard({ cargo }: CargoCardProps) {
               </p>
               {cargo.splitIndex != null && cargo.splitColorIndex != null && (() => {
                 const color = splitColors[cargo.splitColorIndex % splitColors.length];
-                return (
+                const badge = (
                   <span
                     className="inline-flex items-center justify-center px-[5px] py-[1px] rounded-[4px] font-sans font-bold text-[10px] leading-[14px] whitespace-nowrap"
                     style={{ backgroundColor: color.bg, color: color.text, border: `1px solid ${color.border}` }}
                   >
                     #{cargo.splitIndex}
                   </span>
+                );
+                if (!cargo.siblingLots || cargo.siblingLots.length === 0) return badge;
+                const statusLabel = (s: string) =>
+                  s === "intake" ? "Intake" : s === "werklijst" ? "Werklijst" : s === "markt" ? "In de markt" : "Gesloten";
+                return (
+                  <HoverCard openDelay={200} closeDelay={100}>
+                    <HoverCardTrigger asChild onClick={(e) => e.stopPropagation()}>
+                      {badge}
+                    </HoverCardTrigger>
+                    <HoverCardContent side="bottom" align="start" sideOffset={6} className="w-[260px] p-[6px] border-rdj-border-secondary">
+                      <p className="font-sans font-normal text-[11px] leading-[16px] text-rdj-text-secondary px-[6px] pt-[2px] pb-[4px]">
+                        Overige lots
+                      </p>
+                      {cargo.siblingLots.map((lot) => (
+                        <button
+                          key={lot.id}
+                          type="button"
+                          className="flex items-center gap-[6px] w-full px-[6px] py-[6px] rounded-[4px] hover:bg-[#F9FAFB] text-left"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            navigate(`/markt/bevrachting/lading/${lot.id}`);
+                          }}
+                        >
+                          <span
+                            className="inline-flex items-center justify-center px-[5px] py-[1px] rounded-[4px] font-sans font-bold text-[10px] leading-[14px] whitespace-nowrap shrink-0"
+                            style={{ backgroundColor: color.bg, color: color.text, border: `1px solid ${color.border}` }}
+                          >
+                            #{lot.splitIndex}
+                          </span>
+                          <p className="font-sans font-bold text-[12px] leading-[18px] text-rdj-text-brand flex-1 min-w-0 truncate">
+                            {lot.cargo}
+                          </p>
+                          <span className="font-sans font-normal text-[11px] leading-[16px] text-rdj-text-tertiary shrink-0">
+                            {statusLabel(lot.status)}
+                          </span>
+                        </button>
+                      ))}
+                    </HoverCardContent>
+                  </HoverCard>
                 );
               })()}
             </div>
