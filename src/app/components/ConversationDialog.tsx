@@ -260,7 +260,7 @@ export default function ConversationDialog({
             next.set(preSelectedItemId, conditions);
             return next;
           });
-          // Also prefill "Hun" bid conditions from zoekcriteria
+          // Also prefill "Inkoop" bid conditions from zoekcriteria
           setItemBidConditions(prev => {
             const next = new Map(prev);
             next.set(preSelectedItemId, { ...conditions });
@@ -656,7 +656,7 @@ export default function ConversationDialog({
       }
       return next;
     });
-    // Prefill "Hun" bid conditions from "Ons" if not yet manually set
+    // Prefill "Inkoop" bid conditions from "Zoekcriteria" if not yet manually set
     if (value) {
       setItemBidConditions(prev => {
         const existing = prev.get(itemId) || {};
@@ -1344,9 +1344,9 @@ function ItemRow({
           conditions={conditions}
           bidConditions={bidConditions}
           showBid={status === "aangeboden"}
-          primaryLabel={bemiddelingMode ? "Verkoop" : "Hun"}
+          primaryLabel={bemiddelingMode ? "Verkoop" : "Zoekcriteria"}
           primarySubLabel={bemiddelingMode ? conversationRelatieName : undefined}
-          secondaryLabel={bemiddelingMode ? "Inkoop" : "Ons"}
+          secondaryLabel={bemiddelingMode ? "Inkoop" : "Verkoop"}
           secondarySubLabel={bemiddelingMode ? bemiddelingMatchRelatie : undefined}
           onConditionChange={onConditionChange}
           onBidConditionChange={onBidConditionChange}
@@ -1360,9 +1360,9 @@ function ItemRow({
           conditions={conditions}
           bidConditions={bidConditions}
           showBid={bemiddelingMode ? (status === "aangeboden" || status === "interesse") : status === "interesse"}
-          primaryLabel={bemiddelingMode ? "Inkoop" : "Ons"}
+          primaryLabel={bemiddelingMode ? "Inkoop" : (isEigen ? "Zoekcriteria" : "Ons")}
           primarySubLabel={bemiddelingMode ? (isMarkt ? item.relatieName : undefined) : undefined}
-          secondaryLabel={bemiddelingMode ? "Verkoop" : "Hun"}
+          secondaryLabel={bemiddelingMode ? "Verkoop" : (isEigen ? "Inkoop" : "Hun")}
           secondarySubLabel={bemiddelingMode ? (isMarkt ? conversationRelatieName : bemiddelingMatchRelatie) : undefined}
           onConditionChange={onConditionChange}
           onBidConditionChange={onBidConditionChange}
@@ -1376,9 +1376,9 @@ function ItemRow({
           conditions={conditions}
           bidConditions={bidConditions}
           showBid={false}
-          primaryLabel={bemiddelingMode ? "Inkoop" : "Ons"}
+          primaryLabel={bemiddelingMode ? "Inkoop" : (isEigen ? "Zoekcriteria" : "Ons")}
           primarySubLabel={bemiddelingMode ? (isMarkt ? item.relatieName : undefined) : undefined}
-          secondaryLabel={bemiddelingMode ? "Verkoop" : "Hun"}
+          secondaryLabel={bemiddelingMode ? "Verkoop" : (isEigen ? "Inkoop" : "Hun")}
           secondarySubLabel={bemiddelingMode ? (isMarkt ? conversationRelatieName : bemiddelingMatchRelatie) : undefined}
           onConditionChange={onConditionChange}
           onBidConditionChange={onBidConditionChange}
@@ -1430,12 +1430,13 @@ function MatchRow({
   const filledConditions = conditions ? Object.keys(conditions).length : 0;
   const showButtons = mode !== "no-buttons" && isLading;
   const isEigenMode = mode === "eigen-lading";
+  const isRelatieMode = mode === "relatie-lading";
   // In bemiddeling: Inkoop = markt item relatie, Verkoop = conversation relatie or left item relatie
   const rightRelatie = item.relatieName ?? (item.source === "relatie" ? conversationRelatieName : undefined);
   const leftRelatie = selectedLeftItem?.source === "markt" ? selectedLeftItem.relatieName : conversationRelatieName;
-  const primaryLabel = isBemiddelingActive ? "Inkoop" : (isEigenMode ? "Ons" : "Hun");
+  const primaryLabel = isBemiddelingActive ? "Inkoop" : (isEigenMode ? "Zoekcriteria" : (isRelatieMode ? "Zoekcriteria" : "Hun"));
   const primarySubLabel = isBemiddelingActive ? rightRelatie : undefined;
-  const secondaryLabel = isBemiddelingActive ? "Verkoop" : (isEigenMode ? "Hun" : "Ons");
+  const secondaryLabel = isBemiddelingActive ? "Verkoop" : (isEigenMode ? "Inkoop" : (isRelatieMode ? "Verkoop" : "Ons"));
   const secondarySubLabel = isBemiddelingActive ? leftRelatie : undefined;
 
   return (
