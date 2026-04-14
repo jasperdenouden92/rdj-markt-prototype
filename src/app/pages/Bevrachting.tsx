@@ -248,7 +248,6 @@ export default function Bevrachting() {
     { key: 'tonnage', header: 'Tonnage', type: 'text', width: 'w-[120px]', align: 'right' },
     { key: 'laden', header: 'Laden', type: 'text', width: 'w-[180px]', subtextKey: 'ladenDate' },
     { key: 'lossen', header: 'Lossen', type: 'text', width: 'w-[180px]', subtextKey: 'lossenDate' },
-    { key: 'relatie', header: 'Relatie', type: 'text', width: 'w-[180px]', textColor: 'text-rdj-text-brand', onClickKey: 'onRelatieClick', hoverContentKey: 'relatieHoverContent' },
     { key: 'biedingenBadges', header: 'Biedingen', type: 'badges', width: 'w-[100px]' },
     { key: 'matchesBadges', header: 'Matches', type: 'badges', width: 'w-[100px]' },
     { key: 'deadline', header: 'Deadline', type: 'text', width: 'w-[140px]' },
@@ -330,7 +329,7 @@ export default function Bevrachting() {
       eigenaarLabel: '',
       eigenaarInitials: owners[ownerIdx].initials || undefined,
       eigenaarFoto: owners[ownerIdx].foto || undefined,
-      leadingBadge: c.splitIndex != null ? `#${c.splitIndex}` : (c.status === 'markt' ? 'Markt' : undefined),
+      leadingBadge: c.splitIndex != null ? `#${c.splitIndex}` : undefined,
       leadingBadgeStyle: c.splitIndex != null && c.splitColorIndex != null ? (() => {
         const color = splitColors[c.splitColorIndex % splitColors.length];
         return { backgroundColor: color.bg, color: color.text, borderColor: color.border };
