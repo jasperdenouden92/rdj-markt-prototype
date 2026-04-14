@@ -2,6 +2,7 @@ import { useState, useMemo } from "react";
 import { PanelRight, Scale, Copy, Upload, Trash2 } from "lucide-react";
 import { Toaster } from "sonner";
 import { useParams, Link } from "react-router";
+import AnnotationMarker from "../components/AnnotationMarker";
 import Sidebar from "../components/Sidebar";
 import Button from "../components/Button";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "../components/ui/dropdown-menu";
@@ -311,6 +312,7 @@ export default function SubpartijDetail() {
                     {subtitle && <p className="font-sans font-normal text-[14px] leading-[20px] text-rdj-text-secondary mt-[4px]">{subtitle}</p>}
                   </div>
                   <div className="flex items-center gap-[8px] shrink-0 ml-[24px]">
+                    <AnnotationMarker annotationId="516af18a-88c4-4961-91b5-22e88b1dc26e">
                     <DropdownMenu>
                       <DropdownMenuTrigger asChild>
                         <Button variant="secondary" label="Acties" trailingIcon={
@@ -337,6 +339,7 @@ export default function SubpartijDetail() {
                         </DropdownMenuItem>
                       </DropdownMenuContent>
                     </DropdownMenu>
+                    </AnnotationMarker>
                     <Button variant="primary" label="Bevrachten" />
                   </div>
                 </div>
