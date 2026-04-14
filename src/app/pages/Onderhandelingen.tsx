@@ -11,6 +11,8 @@ import Table from "../components/Table";
 import type { Column } from "../components/Table";
 import useTableSort from "../components/useTableSort";
 import Button from "../components/Button";
+import RelatieSelectDialog from "../components/RelatieSelectDialog";
+import ConversationDialog from "../components/ConversationDialog";
 import OnderhandelingSidepanel from "../components/OnderhandelingSidepanel";
 import svgPaths from "../../imports/svg-q07ncv0e2v";
 import imgAvatar from "../../assets/a2737d3b5b234fc04041650cb9f114889c6859da.png";
@@ -520,6 +522,8 @@ export default function Onderhandelingen() {
     null
   );
   const [statusOverrides, setStatusOverrides] = useState<Record<string, string>>({});
+  const [showRelatieSelect, setShowRelatieSelect] = useState(false);
+  const [conversationDialog, setConversationDialog] = useState<{ relatieId: string; relatieName: string } | null>(null);
 
   const handleStatusChange = (id: string, newStatus: string) => {
     setStatusOverrides(prev => ({ ...prev, [id]: newStatus }));
@@ -705,6 +709,7 @@ export default function Onderhandelingen() {
               variant="primary"
               label="Toevoegen"
               leadingIcon={PlusIcon}
+              onClick={() => setShowRelatieSelect(true)}
             />
           }
           filtersLeft={
@@ -885,6 +890,26 @@ export default function Onderhandelingen() {
           onStatusChange={handleStatusChange}
         />
       )}
+      {/* Conversation dialog */}
+      {conversationDialog && (
+        <ConversationDialog
+          relatieId={conversationDialog.relatieId}
+          relatieName={conversationDialog.relatieName}
+          onClose={() => setConversationDialog(null)}
+        />
+      )}
+
+      {/* Relatie select dialog */}
+      {showRelatieSelect && (
+        <RelatieSelectDialog
+          onSelect={(relatie) => {
+            setShowRelatieSelect(false);
+            setConversationDialog({ relatieId: relatie.id, relatieName: relatie.naam });
+          }}
+          onClose={() => setShowRelatieSelect(false)}
+        />
+      )}
+
       <Toaster position="top-right" richColors />
     </div>
   );
