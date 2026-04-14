@@ -5,6 +5,7 @@ import { Label } from "./ui/label";
 import { Textarea } from "./ui/textarea";
 import Button from "./Button";
 import Checkbox from "./Checkbox";
+import { Switch } from "./ui/switch";
 import type { Relatie, SoortRelatie } from "../data/api";
 import { LADINGGROEP_SUGGESTIES, SOORT_RELATIE_OPTIES, mockGebruikers } from "../data/mock-relatie-data";
 
@@ -29,6 +30,9 @@ export default function RelatieFormDialog({ relatie, onSave, onClose }: RelatieF
   const [eigenaarId, setEigenaarId] = useState(relatie?.eigenaarId || "");
   const [contactFrequentie, setContactFrequentie] = useState<Relatie["contactFrequentie"]>(relatie?.contactFrequentie || "geen");
   const [soortRelatie, setSoortRelatie] = useState<SoortRelatie[]>(relatie?.soortRelatie || []);
+  const [isStandaardLadingEigenaar, setIsStandaardLadingEigenaar] = useState(relatie?.isStandaardLadingEigenaar || false);
+  const [isStandaardBevrachter, setIsStandaardBevrachter] = useState(relatie?.isStandaardBevrachter || false);
+  const [isStandaardScheepseigenaar, setIsStandaardScheepseigenaar] = useState(relatie?.isStandaardScheepseigenaar || false);
   const [ladingGroepen, setLadingGroepen] = useState<string[]>(relatie?.ladingGroepen || []);
   const [ladingGroepInput, setLadingGroepInput] = useState("");
   const [opmerkingen, setOpmerkingen] = useState(relatie?.opmerkingen || "");
@@ -50,6 +54,9 @@ export default function RelatieFormDialog({ relatie, onSave, onClose }: RelatieF
       eigenaarId: eigenaarId || undefined,
       contactFrequentie,
       soortRelatie: soortRelatie.length > 0 ? soortRelatie : undefined,
+      isStandaardLadingEigenaar: soortRelatie.includes("lading-eigenaar") ? isStandaardLadingEigenaar : undefined,
+      isStandaardBevrachter: soortRelatie.includes("bevrachter") ? isStandaardBevrachter : undefined,
+      isStandaardScheepseigenaar: soortRelatie.includes("scheepseigenaar") ? isStandaardScheepseigenaar : undefined,
       ladingGroepen: ladingGroepen.length > 0 ? ladingGroepen : undefined,
       opmerkingen: opmerkingen.trim() || undefined,
     });
@@ -146,18 +153,49 @@ export default function RelatieFormDialog({ relatie, onSave, onClose }: RelatieF
             <Label className="font-sans font-bold text-[14px] text-[#344054]">Soort relatie</Label>
             <div className="flex flex-col gap-[8px]">
               {SOORT_RELATIE_OPTIES.map((optie) => (
-                <Checkbox
-                  key={optie.value}
-                  checked={soortRelatie.includes(optie.value)}
-                  onChange={(checked) => {
-                    if (checked) {
-                      setSoortRelatie((prev) => [...prev, optie.value]);
-                    } else {
-                      setSoortRelatie((prev) => prev.filter((v) => v !== optie.value));
-                    }
-                  }}
-                  label={optie.label}
-                />
+                <div key={optie.value} className="flex items-center justify-between">
+                  <Checkbox
+                    checked={soortRelatie.includes(optie.value)}
+                    onChange={(checked) => {
+                      if (checked) {
+                        setSoortRelatie((prev) => [...prev, optie.value]);
+                      } else {
+                        setSoortRelatie((prev) => prev.filter((v) => v !== optie.value));
+                        if (optie.value === "lading-eigenaar") setIsStandaardLadingEigenaar(false);
+                        if (optie.value === "bevrachter") setIsStandaardBevrachter(false);
+                        if (optie.value === "scheepseigenaar") setIsStandaardScheepseigenaar(false);
+                      }
+                    }}
+                    label={optie.label}
+                  />
+                  {optie.value === "lading-eigenaar" && soortRelatie.includes("lading-eigenaar") && (
+                    <label className="flex items-center gap-[8px] cursor-pointer">
+                      <span className="font-sans font-normal text-[13px] text-rdj-text-secondary">Standaard</span>
+                      <Switch
+                        checked={isStandaardLadingEigenaar}
+                        onCheckedChange={setIsStandaardLadingEigenaar}
+                      />
+                    </label>
+                  )}
+                  {optie.value === "bevrachter" && soortRelatie.includes("bevrachter") && (
+                    <label className="flex items-center gap-[8px] cursor-pointer">
+                      <span className="font-sans font-normal text-[13px] text-rdj-text-secondary">Standaard</span>
+                      <Switch
+                        checked={isStandaardBevrachter}
+                        onCheckedChange={setIsStandaardBevrachter}
+                      />
+                    </label>
+                  )}
+                  {optie.value === "scheepseigenaar" && soortRelatie.includes("scheepseigenaar") && (
+                    <label className="flex items-center gap-[8px] cursor-pointer">
+                      <span className="font-sans font-normal text-[13px] text-rdj-text-secondary">Standaard</span>
+                      <Switch
+                        checked={isStandaardScheepseigenaar}
+                        onCheckedChange={setIsStandaardScheepseigenaar}
+                      />
+                    </label>
+                  )}
+                </div>
               ))}
             </div>
           </div>

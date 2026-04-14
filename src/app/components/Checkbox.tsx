@@ -79,7 +79,7 @@ export default function Checkbox({
         <div
           aria-hidden="true"
           className={`absolute border border-solid inset-0 pointer-events-none rounded-[4px] ${
-            isActive ? "border-rdj-fg-brand" : "border-rdj-border-secondary"
+            isActive ? "border-rdj-fg-brand" : "border-[#98a2b3]"
           }`}
         />
       </div>
