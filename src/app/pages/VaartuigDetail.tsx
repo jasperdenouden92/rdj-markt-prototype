@@ -16,6 +16,7 @@ import VaartuigEigenSidebar from "../components/VaartuigEigenSidebar";
 import VaartuigMarktSidebar from "../components/VaartuigMarktSidebar";
 import OnderhandelingSidepanel from "../components/OnderhandelingSidepanel";
 import ConversationDialog from "../components/ConversationDialog";
+import RelatieSelectDialog from "../components/RelatieSelectDialog";
 import { useBevrachtingVaartuigSummary } from "../data/useDetailData";
 import { mockRelaties } from "../data/mock-relatie-data";
 import LastActivityButton from "../components/LastActivityButton";
@@ -113,6 +114,7 @@ export default function VaartuigDetail() {
   const [selectedNegotiation, setSelectedNegotiation] = useState<{ id: string; status: string; bron: string; relatieName?: string; bemiddeling?: { inkoopRelatie: string; verkoopRelatie: string } } | null>(null);
   const setActiveTab = (tab: typeof activeTab) => { setActiveTabRaw(tab); setSelectedNegotiation(null); };
   const [conversationDialog, setConversationDialog] = useState<{ relatieId: string; relatieName: string; matchName?: string; matchLadingId?: string; isMatch?: boolean } | null>(null);
+  const [showRelatieSelect, setShowRelatieSelect] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [matchFilter, setMatchFilter] = useState("Alles");
   const [negFilter, setNegFilter] = useState("Actief");
@@ -388,7 +390,7 @@ export default function VaartuigDetail() {
                             filterOptions={["Alles", "Actief", "Goedgekeurd", "Afgewezen"]}
                             filterValue={negFilter}
                             onFilterChange={setNegFilter}
-                            onAdd={() => setConversationDialog({ relatieId: "", relatieName: "" })}
+                            onAdd={() => setShowRelatieSelect(true)}
                             addTooltip="Onderhandeling starten"
                           />
                           <Pagination data-annotation-id="vaartuigdetail-paginering"
@@ -457,6 +459,17 @@ export default function VaartuigDetail() {
           relatieName={selectedNegotiation.relatieName}
           bemiddeling={selectedNegotiation.bemiddeling}
           onClose={() => setSelectedNegotiation(null)}
+        />
+      )}
+
+      {/* Relatie select dialog */}
+      {showRelatieSelect && (
+        <RelatieSelectDialog
+          onSelect={(relatie) => {
+            setShowRelatieSelect(false);
+            setConversationDialog({ relatieId: relatie.id, relatieName: relatie.naam });
+          }}
+          onClose={() => setShowRelatieSelect(false)}
         />
       )}
 
