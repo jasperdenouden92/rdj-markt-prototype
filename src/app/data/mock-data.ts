@@ -59,6 +59,7 @@ export interface Vessel {
   matches?: number;
   location?: string;
   locationDate?: string;
+  werklijstRemarks?: string;
 }
 
 export interface Match {
