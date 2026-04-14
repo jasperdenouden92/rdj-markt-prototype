@@ -488,7 +488,7 @@ export default function Bevrachting() {
                   <FilterDropdown label="Laadregio" />
                   <FilterDropdown label="Losregio" />
                 </div>
-                <button className="content-stretch flex gap-[4px] items-center relative shrink-0"><div className="overflow-clip relative shrink-0 size-[20px]"><div className="absolute inset-[12.5%]"><div className="absolute inset-[-5.56%]"><svg className="block size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 16.6667 16.6667"><path d={svgPaths.p3190da80} stroke="var(--stroke-0, #1567A4)" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.66667" /></svg></div></div></div><div className="content-stretch flex items-center justify-center px-[2px] relative shrink-0"><p className="font-sans font-bold leading-[20px] relative shrink-0 text-[#145990] text-[14px] whitespace-nowrap">Filter</p></div></button>
+                <button className="content-stretch flex gap-[4px] items-center relative shrink-0 cursor-pointer hover:opacity-70 transition-opacity"><div className="overflow-clip relative shrink-0 size-[20px]"><svg className="block size-full" fill="none" viewBox="0 0 20 20"><path d="M10 4v12M4 10h12" stroke="#1567a4" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.67" /></svg></div><p className="font-sans font-bold leading-[20px] relative shrink-0 text-[#1567a4] text-[14px] whitespace-nowrap">Filter</p></button>
                 <div className="content-stretch flex flex-[1_0_0] gap-[12px] items-center justify-end min-h-px min-w-px relative">
                   <SegmentedButtonGroup
                     items={[
