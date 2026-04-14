@@ -21,6 +21,13 @@ export interface Cargo {
   splitOriginId?: string;
   splitColorIndex?: number;
   splitTotalWeight?: string;
+  verkoopcondities?: {
+    prijs: number | null;
+    laadtijd: number | null;
+    lostijd: number | null;
+    liggeldLaden: number;
+    liggeldLossen: number;
+  };
   conditions?: {
     eigen?: {
       price: string;

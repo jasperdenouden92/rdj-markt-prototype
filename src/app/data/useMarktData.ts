@@ -302,6 +302,13 @@ export interface BevrachtingCargo {
   splitOriginId?: string;
   splitColorIndex?: number;
   splitTotalWeight?: string;
+  verkoopcondities?: {
+    prijs: number | null;
+    laadtijd: number | null;
+    lostijd: number | null;
+    liggeldLaden: number;
+    liggeldLossen: number;
+  };
 }
 
 export interface BevrachtingVessel {
@@ -397,6 +404,13 @@ export function useBevrachtingData() {
             splitIndex: currentSplitIdx,
             splitColorIndex: subpartijColorIndex.get(item.subpartijId) ?? 0,
           } : {}),
+          verkoopcondities: {
+            prijs: item.prijs,
+            laadtijd: item.laadtijd,
+            lostijd: item.lostijd,
+            liggeldLaden: item.liggeldLaden,
+            liggeldLossen: item.liggeldLossen,
+          },
         };
       });
 

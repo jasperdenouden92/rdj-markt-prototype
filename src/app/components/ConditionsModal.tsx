@@ -10,6 +10,13 @@ interface ConditionsModalProps {
     weight: string;
     from: string;
     to: string;
+    verkoopcondities?: {
+      prijs: number | null;
+      laadtijd: number | null;
+      lostijd: number | null;
+      liggeldLaden: number;
+      liggeldLossen: number;
+    };
   };
   onClose: () => void;
   onSave: (conditions: ConditionsData) => void;
@@ -34,6 +41,8 @@ function parseTonnage(value: string): number {
 }
 
 export default function ConditionsModal({ cargo, onClose, onSave }: ConditionsModalProps) {
+  const vk = cargo.verkoopcondities;
+
   // Parse weight string — supports "3.000 ton X" and "0–500 ton X" (range from split)
   const rangeMatch = cargo.weight.match(/^([\d.,]+)\s*[–-]\s*([\d.,]+)\s*ton/);
   const singleMatch = cargo.weight.match(/^([\d.,]+)\s*ton/);
@@ -226,6 +235,11 @@ export default function ConditionsModal({ cargo, onClose, onSave }: ConditionsMo
                 </div>
               </div>
             </div>
+            {vk?.prijs != null && (
+              <p className="font-sans font-normal leading-[18px] text-[#475467] text-[12px] -mt-[14px]">
+                Verkoopconditie: €{vk.prijs.toLocaleString('nl-NL', { minimumFractionDigits: 2 })} per ton
+              </p>
+            )}
 
             {/* Laadtijd & Lostijd */}
             <div className="grid grid-cols-2 gap-[16px]">
@@ -255,6 +269,11 @@ export default function ConditionsModal({ cargo, onClose, onSave }: ConditionsMo
                     <option value="dag">dag</option>
                   </select>
                 </div>
+                {vk?.laadtijd != null && (
+                  <p className="font-sans font-normal leading-[18px] text-[#475467] text-[12px]">
+                    Verkoopconditie: {vk.laadtijd} uur
+                  </p>
+                )}
               </div>
 
               <div className="content-stretch flex flex-col gap-[6px] items-start relative shrink-0">
@@ -283,6 +302,11 @@ export default function ConditionsModal({ cargo, onClose, onSave }: ConditionsMo
                     <option value="dag">dag</option>
                   </select>
                 </div>
+                {vk?.lostijd != null && (
+                  <p className="font-sans font-normal leading-[18px] text-[#475467] text-[12px]">
+                    Verkoopconditie: {vk.lostijd} uur
+                  </p>
+                )}
               </div>
             </div>
 
@@ -293,6 +317,11 @@ export default function ConditionsModal({ cargo, onClose, onSave }: ConditionsMo
                 <select className="w-full px-[12px] py-[8px] font-sans font-normal leading-[20px] text-[#101828] text-[14px] bg-white border border-[#d0d5dd] rounded-[6px] outline-none">
                   <option>Niet van toepassing</option>
                 </select>
+                {vk && (
+                  <p className="font-sans font-normal leading-[18px] text-[#475467] text-[12px]">
+                    Verkoopconditie: €{vk.liggeldLaden.toLocaleString('nl-NL', { minimumFractionDigits: 2 })}
+                  </p>
+                )}
               </div>
 
               <div className="content-stretch flex flex-col gap-[6px] items-start relative shrink-0">
@@ -300,6 +329,11 @@ export default function ConditionsModal({ cargo, onClose, onSave }: ConditionsMo
                 <select className="w-full px-[12px] py-[8px] font-sans font-normal leading-[20px] text-[#101828] text-[14px] bg-white border border-[#d0d5dd] rounded-[6px] outline-none">
                   <option>Niet van toepassing</option>
                 </select>
+                {vk && (
+                  <p className="font-sans font-normal leading-[18px] text-[#475467] text-[12px]">
+                    Verkoopconditie: €{vk.liggeldLossen.toLocaleString('nl-NL', { minimumFractionDigits: 2 })}
+                  </p>
+                )}
               </div>
             </div>
 
