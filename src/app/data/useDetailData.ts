@@ -6,6 +6,7 @@
 import { useState, useEffect, useRef } from "react";
 import * as api from "./api";
 import { formatDate } from "../utils/formatDate";
+import { getMarktToewijzing } from "./markt-toewijzing-store";
 import type {
   LadingMarkt, LadingEigen, VaartuigMarkt, VaartuigEigen,
   LadingSoort, LadingSubsoort, Haven, Bron, Gebruiker,
@@ -784,10 +785,15 @@ export function useBevrachtingLadingSummary(id: string | undefined) {
           const title = ex ? (ex.type === "opslag" ? ex.naam : `m/v ${ex.naam}`) : subpartij?.naam || id || "—";
           const status = (item as any).status || "intake";
 
+          const toewijzing = getMarktToewijzing(item.subpartijId);
+          const tonnageLabel = toewijzing
+            ? `${toewijzing.marktTonnage.toLocaleString("nl-NL")} van ${toewijzing.subpartijTonnage.toLocaleString("nl-NL")} ton`
+            : `${formatTonnage(item.tonnage)} ton`;
+
           resolved = {
             title,
             exType: ex?.type,
-            subtitle: `${formatTonnage(item.tonnage)} ton ${soortLabel} vanuit ${laadlocatie?.naam || "—"} (${subpartij?.laaddatum ? formatDate(subpartij.laaddatum) : "Af te stemmen"}) naar ${loslocatie?.naam || "—"} (${subpartij?.losdatum ? formatDate(subpartij.losdatum) : "Af te stemmen"})`,
+            subtitle: `${tonnageLabel} ${soortLabel} vanuit ${laadlocatie?.naam || "—"} (${subpartij?.laaddatum ? formatDate(subpartij.laaddatum) : "Af te stemmen"}) naar ${loslocatie?.naam || "—"} (${subpartij?.losdatum ? formatDate(subpartij.losdatum) : "Af te stemmen"})`,
             status: status === "inbox" ? "Inbox" : status === "markt" ? "In de markt" : status === "werklijst" ? "Werklijst" : status === "intake" ? "Intake" : "Gesloten",
             statusVariant: status === "inbox" ? "grey" : status === "markt" ? "success" : status === "werklijst" ? "warning" : status === "intake" ? "brand" : "grey",
             breadcrumbLabel: title.substring(0, 20),

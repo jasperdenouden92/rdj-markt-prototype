@@ -9,6 +9,7 @@ import DroppableColumn from "../components/DroppableColumn";
 import ConditionsModal, { ConditionsData } from "../components/ConditionsModal";
 import VesselRemarksModal from "../components/VesselRemarksModal";
 import EmailWerklijstModal from "../components/EmailWerklijstModal";
+import AddEigenAanbodModal, { type EigenAanbodSubmitData } from "../components/AddEigenAanbodModal";
 import FilterDropdown from "../components/FilterDropdown";
 import SegmentedButtonGroup from "../components/SegmentedButtonGroup";
 import Table from "../components/Table";
@@ -54,6 +55,7 @@ export default function Bevrachting() {
   const [modalCargo, setModalCargo] = useState<Cargo | null>(null);
   const [modalVessel, setModalVessel] = useState<Vessel | null>(null);
   const [showEmailModal, setShowEmailModal] = useState(false);
+  const [showAddModal, setShowAddModal] = useState(false);
   const [viewMode, setViewMode] = useState<'kanban' | 'table'>('kanban');
   const [selectedItems, setSelectedItems] = useState<string[]>([]);
   const [hoveredRow, setHoveredRow] = useState<string | null>(null);
@@ -223,6 +225,54 @@ export default function Bevrachting() {
     }
 
     setModalCargo(null);
+  };
+
+  const handleAddEigenAanbod = (data: EigenAanbodSubmitData) => {
+    const formatDatum = (iso: string | undefined) => {
+      if (!iso) return 'Af te stemmen';
+      const d = new Date(iso);
+      return d.toLocaleDateString('nl-NL', { weekday: 'short', day: 'numeric', month: 'short' });
+    };
+
+    if (data.type === 'lading') {
+      const min = data.marktMin ?? 0;
+      const max = data.marktMax ?? 0;
+      const tonnageStr = min > 0
+        ? max > min
+          ? `${min.toLocaleString('nl-NL')}–${max.toLocaleString('nl-NL')} ton`
+          : `${min.toLocaleString('nl-NL')} ton`
+        : `${max.toLocaleString('nl-NL')} ton`;
+
+      const newCargo: Cargo = {
+        id: `NEW-${Date.now()}`,
+        title: data.exDisplay ?? '',
+        exType: data.exType as 'zeeboot' | 'opslag',
+        code: data.subpartijNaam ?? '',
+        status: 'intake',
+        cargo: tonnageStr,
+        weight: tonnageStr,
+        from: data.laadlocatie ?? '—',
+        to: data.loslocatie ?? '—',
+        fromDate: formatDatum(data.laaddatum),
+        toDate: formatDatum(data.losdatum),
+      };
+      setCargos(prev => [newCargo, ...prev]);
+    } else {
+      const newVessel: Vessel = {
+        id: `NEW-${Date.now()}`,
+        title: data.vaartuigNaam ?? '',
+        code: data.vaartuigEni ?? '',
+        status: 'intake',
+        vesselType: `${(data.vaartuigGroottonnage ?? 0).toLocaleString('nl-NL')} ton`,
+        weight: `${(data.vaartuigGroottonnage ?? 0).toLocaleString('nl-NL')} ton`,
+        from: data.vaartuigLocatie ?? '—',
+        to: '—',
+        fromDate: formatDatum(data.vaartuigBeschikbaarVanaf),
+        toDate: '—',
+      };
+      setVessels(prev => [newVessel, ...prev]);
+    }
+    setShowAddModal(false);
   };
 
   const handleSendEmail = () => {
@@ -453,13 +503,15 @@ export default function Bevrachting() {
                     <div aria-hidden="true" className="absolute border border-rdj-border-primary border-solid inset-0 pointer-events-none rounded-[6px] shadow-[0px_1px_2px_0px_rgba(16,24,40,0.05)]" />
                   </button>
                 </AnnotationMarker>
-                <button className="bg-[#1567a4] relative rounded-[6px] shrink-0">
-                  <div className="content-stretch flex gap-[4px] items-center justify-center overflow-clip px-[14px] py-[10px] relative rounded-[inherit]">
-                    <div className="overflow-clip relative shrink-0 size-[20px]"><div className="absolute inset-[20.83%]"><div className="absolute inset-[-7.14%]"><svg className="block size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 13.3333 13.3333"><path d={svgPaths.p1b67fa00} stroke="var(--stroke-0, white)" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.66667" /></svg></div></div></div>
-                    <div className="content-stretch flex items-center justify-center px-[2px] relative shrink-0"><p className="font-sans font-bold leading-[20px] relative shrink-0 text-[14px] text-white whitespace-nowrap">Toevoegen</p></div>
-                  </div>
-                  <div aria-hidden="true" className="absolute border border-[#1567a4] border-solid inset-0 pointer-events-none rounded-[6px] shadow-[0px_1px_2px_0px_rgba(16,24,40,0.05)]" />
-                </button>
+                <AnnotationMarker annotationId="cb3924d0-720a-4fba-a254-14dfb8005321">
+                  <button onClick={() => setShowAddModal(true)} className="bg-[#1567a4] relative rounded-[6px] shrink-0">
+                    <div className="content-stretch flex gap-[4px] items-center justify-center overflow-clip px-[14px] py-[10px] relative rounded-[inherit]">
+                      <div className="overflow-clip relative shrink-0 size-[20px]"><div className="absolute inset-[20.83%]"><div className="absolute inset-[-7.14%]"><svg className="block size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 13.3333 13.3333"><path d={svgPaths.p1b67fa00} stroke="var(--stroke-0, white)" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.66667" /></svg></div></div></div>
+                      <div className="content-stretch flex items-center justify-center px-[2px] relative shrink-0"><p className="font-sans font-bold leading-[20px] relative shrink-0 text-[14px] text-white whitespace-nowrap">Toevoegen</p></div>
+                    </div>
+                    <div aria-hidden="true" className="absolute border border-[#1567a4] border-solid inset-0 pointer-events-none rounded-[6px] shadow-[0px_1px_2px_0px_rgba(16,24,40,0.05)]" />
+                  </button>
+                </AnnotationMarker>
               </>
             }
             tabs={[
@@ -632,6 +684,14 @@ export default function Bevrachting() {
             onSend={handleSendEmail}
           />
         )}
+
+        {/* Add Eigen Aanbod Modal */}
+        <AddEigenAanbodModal
+          isOpen={showAddModal}
+          onClose={() => setShowAddModal(false)}
+          onSubmit={handleAddEigenAanbod}
+          initialItemType={activeTab === 'vaartuigen' ? 'vaartuig' : 'lading'}
+        />
       </div>
 
       {/* Multi-select Action Bar */}

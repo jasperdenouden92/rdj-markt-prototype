@@ -81,6 +81,7 @@ export const subpartijen: Subpartij[] = [
     loslocatieId: "hav-004",
     laaddatum: "2026-03-18",
     losdatum: "2026-03-21",
+    tonnage: 3000,
   },
   {
     id: "sub-002",
@@ -90,6 +91,7 @@ export const subpartijen: Subpartij[] = [
     loslocatieId: "hav-002",
     laaddatum: "2026-03-14",
     losdatum: "2026-03-17",
+    tonnage: 2000,
   },
   {
     id: "sub-003",
@@ -99,6 +101,7 @@ export const subpartijen: Subpartij[] = [
     loslocatieId: "hav-008",
     laaddatum: "2026-03-15",
     losdatum: "2026-03-17",
+    tonnage: 3000,
   },
   {
     id: "sub-004",
@@ -108,6 +111,7 @@ export const subpartijen: Subpartij[] = [
     loslocatieId: "hav-010",
     laaddatum: "2026-03-16",
     losdatum: "2026-03-22",
+    tonnage: 3500,
   },
   {
     id: "sub-005",
@@ -117,6 +121,7 @@ export const subpartijen: Subpartij[] = [
     loslocatieId: "hav-005",
     laaddatum: "2026-03-20",
     losdatum: "2026-03-23",
+    tonnage: 1800,
   },
   {
     id: "sub-006",
@@ -126,6 +131,7 @@ export const subpartijen: Subpartij[] = [
     loslocatieId: "hav-006",
     laaddatum: "2026-03-19",
     losdatum: "2026-03-22",
+    tonnage: 2500,
   },
   {
     id: "sub-007",
@@ -135,6 +141,7 @@ export const subpartijen: Subpartij[] = [
     loslocatieId: "hav-005",
     laaddatum: "2026-03-19",
     losdatum: "2026-03-22",
+    tonnage: 2500,
   },
   {
     id: "sub-008",
@@ -144,5 +151,6 @@ export const subpartijen: Subpartij[] = [
     loslocatieId: "hav-008",
     laaddatum: "2026-03-20",
     losdatum: "2026-03-23",
+    tonnage: 1500,
   },
 ];

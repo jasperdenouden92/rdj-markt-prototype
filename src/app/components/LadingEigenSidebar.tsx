@@ -5,6 +5,7 @@ import DetailRow from "./DetailRow";
 import { HoverCard, HoverCardTrigger, HoverCardContent } from "./ui/hover-card";
 import { useLadingEigenDetail } from "../data/useDetailData";
 import * as api from "../data/api";
+import { getMarktToewijzing } from "../data/markt-toewijzing-store";
 import { partijen, subpartijen, exen } from "../data/entities/partijen";
 import { ladingenEigen } from "../data/entities/ladingen-eigen";
 import { havens } from "../data/entities/havens";
@@ -349,7 +350,13 @@ export default function LadingEigenSidebar({ id, onEdit, collapsed }: LadingEige
             <DetailRow label="Lading" value={data.lading} subtext={data.subsoort !== "—" ? data.subsoort : undefined} />
             <DetailRow
               label="Tonnage"
-              value={data.tonnage}
+              value={(() => {
+                const toewijzing = getMarktToewijzing(data.raw.subpartijId);
+                if (toewijzing) {
+                  return `${toewijzing.marktTonnage.toLocaleString("nl-NL")} van ${toewijzing.subpartijTonnage.toLocaleString("nl-NL")} t`;
+                }
+                return data.tonnage;
+              })()}
               editValue={data.raw.tonnage ? String(data.raw.tonnage) : ""}
               editable
               onSave={async (v) => {

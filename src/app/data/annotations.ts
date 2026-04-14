@@ -76,4 +76,22 @@ export const annotations: Annotation[] = [
     author: "Jasper",
     date: "2026-04-14",
   },
+  {
+    id: "cb3924d0-720a-4fba-a254-14dfb8005321",
+    target: "markt/bevrachting/ladingen",
+    elementId: "toevoegen-button",
+    title: "Lading of vaartuig toevoegen aan intake",
+    body: "Via de 'Toevoegen' knop kun je een lading of vaartuig zoeken vanuit de lading- of vlootmodule en deze direct op de intakelijst zetten. Zo start je een nieuw eigen aanbod item zonder het handmatig helemaal opnieuw in te vullen — de bestaande gegevens worden overgenomen als startpunt.",
+    author: "Elwin",
+    date: "2026-04-14",
+  },
+  {
+    id: "516af18a-88c4-4961-91b5-22e88b1dc26e",
+    target: "lading/subpartij/:id",
+    elementId: "acties-dropdown",
+    title: "Subpartij (deels) toewijzen aan de markt",
+    body: "Via 'Acties > Toewijzen aan markt' kun je een deel van of de gehele subpartij op de markt zetten. Je geeft aan hoeveel ton je wilt aanbieden — de rest blijft in de eigen vloot. Het toegewezen deel verschijnt vervolgens als nieuw item op de intakelijst binnen de marktmodule, van waaruit het verder behandeld kan worden.",
+    author: "Elwin",
+    date: "2026-04-14",
+  },
 ];
