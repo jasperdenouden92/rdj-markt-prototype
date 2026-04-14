@@ -9,7 +9,7 @@ import DroppableColumn from "../components/DroppableColumn";
 import ConditionsModal, { ConditionsData } from "../components/ConditionsModal";
 import VesselRemarksModal from "../components/VesselRemarksModal";
 import EmailWerklijstModal from "../components/EmailWerklijstModal";
-import AddEigenAanbodModal from "../components/AddEigenAanbodModal";
+import AddEigenAanbodModal, { type EigenAanbodSubmitData } from "../components/AddEigenAanbodModal";
 import FilterDropdown from "../components/FilterDropdown";
 import SegmentedButtonGroup from "../components/SegmentedButtonGroup";
 import Table from "../components/Table";
@@ -225,6 +225,36 @@ export default function Bevrachting() {
     }
 
     setModalCargo(null);
+  };
+
+  const handleAddEigenAanbod = (data: EigenAanbodSubmitData) => {
+    const tonnageStr = data.marktMin > 0
+      ? data.marktMax > data.marktMin
+        ? `${data.marktMin.toLocaleString('nl-NL')}–${data.marktMax.toLocaleString('nl-NL')} ton`
+        : `${data.marktMin.toLocaleString('nl-NL')} ton`
+      : `${(data.marktMax || 0).toLocaleString('nl-NL')} ton`;
+
+    const formatDatum = (iso: string) => {
+      if (!iso) return 'Af te stemmen';
+      const d = new Date(iso);
+      return d.toLocaleDateString('nl-NL', { weekday: 'short', day: 'numeric', month: 'short' });
+    };
+
+    const newCargo: Cargo = {
+      id: `NEW-${Date.now()}`,
+      title: data.exDisplay,
+      exType: data.exType as 'zeeboot' | 'opslag',
+      code: data.subpartijNaam,
+      status: 'intake',
+      cargo: tonnageStr,
+      weight: tonnageStr,
+      from: data.laadlocatie,
+      to: data.loslocatie,
+      fromDate: formatDatum(data.laaddatum),
+      toDate: formatDatum(data.losdatum),
+    };
+    setCargos(prev => [newCargo, ...prev]);
+    setShowAddModal(false);
   };
 
   const handleSendEmail = () => {
@@ -605,7 +635,7 @@ export default function Bevrachting() {
         <AddEigenAanbodModal
           isOpen={showAddModal}
           onClose={() => setShowAddModal(false)}
-          onSubmit={() => setShowAddModal(false)}
+          onSubmit={handleAddEigenAanbod}
         />
       </div>
 
