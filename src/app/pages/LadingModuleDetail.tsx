@@ -1,8 +1,9 @@
 import { useState, useMemo } from "react";
 import { PanelRight } from "lucide-react";
-import { useParams, Link } from "react-router";
+import { useParams, Link, useNavigate } from "react-router";
 import Sidebar from "../components/Sidebar";
 import Button from "../components/Button";
+import Table, { type Column } from "../components/Table";
 import ActivityFeed from "../components/ActivityFeed";
 import { mockRelaties, mockContactPersonen, mockRelatieLadingen } from "../data/mock-relatie-data";
 import { mockContracten, mockLadingSoorten, mockLadingSubsoorten, mockBijzonderheden } from "../data/mock-contract-data";
@@ -12,15 +13,26 @@ import { ladingenEigen } from "../data/entities/ladingen-eigen";
 import { formatDate } from "../utils/formatDate";
 
 const chevronSvg = (
-  <svg className="block size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 5.33333 9.33333">
-    <path d="M0.666664 8.66667L4.66666 4.66667L0.666664 0.666668" stroke="var(--stroke-0, #D0D5DD)" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.33333" />
+  <svg className="shrink-0 size-[16px]" fill="none" viewBox="0 0 16 16">
+    <path d="M6 12L10 8L6 4" stroke="#D0D5DD" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" />
   </svg>
 );
 
+interface PendingSubpartij {
+  id: string;
+  naam: string;
+  tonnage: string;
+  laaddatum: string;
+  losdatum: string;
+  loslocatie: string;
+}
+
 export default function LadingModuleDetail() {
   const { id } = useParams();
+  const navigate = useNavigate();
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [sidebarTab, setSidebarTab] = useState<"details" | "logistiek" | "tijden">("details");
+  const [pendingSubpartijen, setPendingSubpartijen] = useState<PendingSubpartij[]>([]);
 
   // Try mockRelatieLadingen first, fall back to partij entity
   const rlLading = useMemo(() => mockRelatieLadingen.find((l) => l.id === id), [id]);
@@ -78,6 +90,112 @@ export default function LadingModuleDetail() {
   const sg = lading?.soortelijkGewicht || ladingSoort?.soortelijkGewicht || 0;
   const inhoud = tonnageNumber && sg ? Math.round(tonnageNumber / sg) : 0;
 
+  const subpartijTableData = useMemo(() => [
+    ...((lading as any)?._subpartijen ?? []).map((sub: any) => ({
+      id: sub.id,
+      naam: sub.naam,
+      tonnageDisplay: sub.tonnage != null ? `${sub.tonnage.toLocaleString("nl-NL")} t` : "—",
+      laaddatumDisplay: sub.laaddatum ? formatDate(sub.laaddatum) : "—",
+      losdatumDisplay: sub.losdatum ? formatDate(sub.losdatum) : "—",
+      loslocatieDisplay: havens.find((h) => h.id === sub.loslocatieId)?.naam ?? "—",
+      _pending: false,
+    })),
+    ...pendingSubpartijen.map((sub) => ({
+      id: sub.id,
+      naam: sub.naam,
+      tonnageDisplay: sub.tonnage,
+      laaddatumDisplay: sub.laaddatum,
+      losdatumDisplay: sub.losdatum,
+      loslocatieDisplay: sub.loslocatie,
+      _pending: true,
+    })),
+  ], [lading, pendingSubpartijen]);
+
+  const subpartijColumns = useMemo((): Column[] => [
+    {
+      key: "naam",
+      header: "Subpartij",
+      type: "leading-text",
+      minWidth: "min-w-[120px]",
+    },
+    {
+      key: "tonnageDisplay",
+      header: "Tonnage",
+      type: "custom",
+      width: "w-[120px]",
+      render: (row) => row._pending ? (
+        <input
+          type="text"
+          inputMode="numeric"
+          value={row.tonnageDisplay}
+          onClick={(e) => e.stopPropagation()}
+          onChange={(e) => {
+            const raw = e.target.value.replace(/[^0-9]/g, '');
+            const val = raw ? Number(raw).toLocaleString('nl-NL') : '';
+            setPendingSubpartijen((prev) => prev.map((s) => s.id === row.id ? { ...s, tonnage: val } : s));
+          }}
+          placeholder="Tonnage"
+          className="w-full font-sans font-normal text-[14px] text-rdj-text-primary border border-rdj-border-primary rounded-[6px] px-[8px] py-[4px] outline-none focus:border-[#1570ef] bg-white"
+        />
+      ) : (
+        <p className="font-sans font-normal text-[14px] text-rdj-text-primary">{row.tonnageDisplay}</p>
+      ),
+    },
+    {
+      key: "laaddatumDisplay",
+      header: "Laaddatum",
+      type: "custom",
+      width: "w-[130px]",
+      render: (row) => row._pending ? (
+        <input
+          type="text"
+          value={row.laaddatumDisplay}
+          onClick={(e) => e.stopPropagation()}
+          onChange={(e) => setPendingSubpartijen((prev) => prev.map((s) => s.id === row.id ? { ...s, laaddatum: e.target.value } : s))}
+          placeholder="DD-MM-YYYY"
+          className="w-full font-sans font-normal text-[14px] text-rdj-text-primary border border-rdj-border-primary rounded-[6px] px-[8px] py-[4px] outline-none focus:border-[#1570ef] bg-white"
+        />
+      ) : (
+        <p className="font-sans font-normal text-[14px] text-rdj-text-primary">{row.laaddatumDisplay}</p>
+      ),
+    },
+    {
+      key: "losdatumDisplay",
+      header: "Losdatum",
+      type: "custom",
+      width: "w-[130px]",
+      render: (row) => row._pending ? (
+        <input
+          type="text"
+          value={row.losdatumDisplay}
+          onClick={(e) => e.stopPropagation()}
+          onChange={(e) => setPendingSubpartijen((prev) => prev.map((s) => s.id === row.id ? { ...s, losdatum: e.target.value } : s))}
+          placeholder="DD-MM-YYYY"
+          className="w-full font-sans font-normal text-[14px] text-rdj-text-primary border border-rdj-border-primary rounded-[6px] px-[8px] py-[4px] outline-none focus:border-[#1570ef] bg-white"
+        />
+      ) : (
+        <p className="font-sans font-normal text-[14px] text-rdj-text-primary">{row.losdatumDisplay}</p>
+      ),
+    },
+    {
+      key: "loslocatieDisplay",
+      header: "Loslocatie",
+      type: "custom",
+      render: (row) => row._pending ? (
+        <input
+          type="text"
+          value={row.loslocatieDisplay}
+          onClick={(e) => e.stopPropagation()}
+          onChange={(e) => setPendingSubpartijen((prev) => prev.map((s) => s.id === row.id ? { ...s, loslocatie: e.target.value } : s))}
+          placeholder="Loslocatie"
+          className="w-full font-sans font-normal text-[14px] text-rdj-text-primary border border-rdj-border-primary rounded-[6px] px-[8px] py-[4px] outline-none focus:border-[#1570ef] bg-white"
+        />
+      ) : (
+        <p className="font-sans font-normal text-[14px] text-rdj-text-primary">{row.loslocatieDisplay}</p>
+      ),
+    },
+  ], [setPendingSubpartijen]);
+
   if (!lading) {
     return (
       <div className="flex min-h-screen bg-white">
@@ -108,16 +226,12 @@ export default function LadingModuleDetail() {
         <div className="flex-1 overflow-y-auto overflow-x-hidden min-w-0">
         {/* Breadcrumb */}
         <div className="flex flex-col gap-[20px] items-start pt-[24px] w-full">
-          <div className="flex items-center justify-between gap-[8px] px-[24px]">
+          <div className="flex items-center justify-between gap-[8px] px-[24px] w-full">
             <div className="flex items-center gap-[8px]">
-              <Link to="/lading/partijen" className="flex items-center justify-center p-[4px] rounded-[6px] hover:bg-rdj-bg-primary-hover">
+              <Link to="/lading" className="flex items-center justify-center p-[4px] rounded-[6px] hover:bg-rdj-bg-primary-hover">
                 <p className="font-sans font-bold leading-[20px] text-[#475467] text-[14px] whitespace-nowrap">Lading</p>
               </Link>
-              <div className="overflow-clip shrink-0 size-[16px]"><div className="absolute bottom-1/4 left-[37.5%] right-[37.5%] top-1/4 relative"><div className="absolute inset-[-8.33%_-16.67%]">{chevronSvg}</div></div></div>
-              <div className="flex items-center justify-center p-[4px] rounded-[6px]">
-                <p className="font-sans font-bold leading-[20px] text-[#475467] text-[14px] whitespace-nowrap">Partijen</p>
-              </div>
-              <div className="overflow-clip shrink-0 size-[16px]"><div className="absolute bottom-1/4 left-[37.5%] right-[37.5%] top-1/4 relative"><div className="absolute inset-[-8.33%_-16.67%]">{chevronSvg}</div></div></div>
+              {chevronSvg}
               <div className="bg-[#f9fafb] flex items-center justify-center px-[8px] py-[4px] rounded-[6px]">
                 <p className="font-sans font-bold leading-[20px] text-[#344054] text-[14px] whitespace-nowrap">{lading.titel}</p>
               </div>
@@ -214,35 +328,23 @@ export default function LadingModuleDetail() {
                   } />
                 </div>
 
-                {/* Table header */}
-                <div className="border-b border-rdj-border-secondary">
-                  <div className="grid grid-cols-[1fr_100px_100px_120px] gap-[8px] px-[12px] py-[10px]">
-                    {["Subpartij", "Laaddatum", "Losdatum", "Loslocatie"].map((h) => (
-                      <p key={h} className="font-sans font-bold text-[12px] text-rdj-text-secondary uppercase tracking-[0.04em]">{h}</p>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Subpartij rows from partij data */}
-                {(lading as any)?._subpartijen?.map((sub: any) => {
-                  const loslocatieNaam = havens.find((h) => h.id === sub.loslocatieId)?.naam || "—";
-                  return (
-                    <Link
-                      key={sub.id}
-                      to={`/lading/subpartij/${sub.id}`}
-                      className="grid grid-cols-[1fr_100px_100px_120px] gap-[8px] px-[12px] py-[10px] border-b border-rdj-border-secondary hover:bg-rdj-bg-primary-hover transition-colors"
-                    >
-                      <p className="font-sans font-bold text-[14px] text-rdj-text-brand hover:underline truncate">{sub.naam}</p>
-                      <p className="font-sans font-normal text-[14px] text-rdj-text-primary">{sub.laaddatum ? formatDate(sub.laaddatum) : "—"}</p>
-                      <p className="font-sans font-normal text-[14px] text-rdj-text-primary">{sub.losdatum ? formatDate(sub.losdatum) : "—"}</p>
-                      <p className="font-sans font-normal text-[14px] text-rdj-text-primary">{loslocatieNaam}</p>
-                    </Link>
-                  );
-                })}
+                <Table
+                  columns={subpartijColumns}
+                  data={subpartijTableData}
+                  onRowClick={(row) => { if (!row._pending) navigate(`/lading/subpartij/${row.id}`); }}
+                />
 
                 {/* Add button */}
                 <div className="py-[16px] px-[12px]">
-                  <button className="flex items-center gap-[6px] text-rdj-text-brand font-sans font-bold text-[14px] hover:underline">
+                  <button
+                    onClick={() => {
+                      const existingCount = ((lading as any)?._subpartijen?.length ?? 0) + pendingSubpartijen.length;
+                      const partijNaam = (lading as any)?.naam ?? 'SUB';
+                      const naam = `${partijNaam}-${String(existingCount + 1).padStart(2, '0')}`;
+                      setPendingSubpartijen(prev => [...prev, { id: `pending-${Date.now()}`, naam, tonnage: '', laaddatum: '', losdatum: '', loslocatie: '' }]);
+                    }}
+                    className="flex items-center gap-[6px] text-rdj-text-brand font-sans font-bold text-[14px] hover:underline"
+                  >
                     <svg className="size-[14px]" fill="none" viewBox="0 0 16 16">
                       <path d="M8 3V13M3 8H13" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" />
                     </svg>

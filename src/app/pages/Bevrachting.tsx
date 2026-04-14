@@ -228,32 +228,50 @@ export default function Bevrachting() {
   };
 
   const handleAddEigenAanbod = (data: EigenAanbodSubmitData) => {
-    const tonnageStr = data.marktMin > 0
-      ? data.marktMax > data.marktMin
-        ? `${data.marktMin.toLocaleString('nl-NL')}–${data.marktMax.toLocaleString('nl-NL')} ton`
-        : `${data.marktMin.toLocaleString('nl-NL')} ton`
-      : `${(data.marktMax || 0).toLocaleString('nl-NL')} ton`;
-
-    const formatDatum = (iso: string) => {
+    const formatDatum = (iso: string | undefined) => {
       if (!iso) return 'Af te stemmen';
       const d = new Date(iso);
       return d.toLocaleDateString('nl-NL', { weekday: 'short', day: 'numeric', month: 'short' });
     };
 
-    const newCargo: Cargo = {
-      id: `NEW-${Date.now()}`,
-      title: data.exDisplay,
-      exType: data.exType as 'zeeboot' | 'opslag',
-      code: data.subpartijNaam,
-      status: 'intake',
-      cargo: tonnageStr,
-      weight: tonnageStr,
-      from: data.laadlocatie,
-      to: data.loslocatie,
-      fromDate: formatDatum(data.laaddatum),
-      toDate: formatDatum(data.losdatum),
-    };
-    setCargos(prev => [newCargo, ...prev]);
+    if (data.type === 'lading') {
+      const min = data.marktMin ?? 0;
+      const max = data.marktMax ?? 0;
+      const tonnageStr = min > 0
+        ? max > min
+          ? `${min.toLocaleString('nl-NL')}–${max.toLocaleString('nl-NL')} ton`
+          : `${min.toLocaleString('nl-NL')} ton`
+        : `${max.toLocaleString('nl-NL')} ton`;
+
+      const newCargo: Cargo = {
+        id: `NEW-${Date.now()}`,
+        title: data.exDisplay ?? '',
+        exType: data.exType as 'zeeboot' | 'opslag',
+        code: data.subpartijNaam ?? '',
+        status: 'intake',
+        cargo: tonnageStr,
+        weight: tonnageStr,
+        from: data.laadlocatie ?? '—',
+        to: data.loslocatie ?? '—',
+        fromDate: formatDatum(data.laaddatum),
+        toDate: formatDatum(data.losdatum),
+      };
+      setCargos(prev => [newCargo, ...prev]);
+    } else {
+      const newVessel: Vessel = {
+        id: `NEW-${Date.now()}`,
+        title: data.vaartuigNaam ?? '',
+        code: data.vaartuigEni ?? '',
+        status: 'intake',
+        vesselType: `${(data.vaartuigGroottonnage ?? 0).toLocaleString('nl-NL')} ton`,
+        weight: `${(data.vaartuigGroottonnage ?? 0).toLocaleString('nl-NL')} ton`,
+        from: data.vaartuigLocatie ?? '—',
+        to: '—',
+        fromDate: formatDatum(data.vaartuigBeschikbaarVanaf),
+        toDate: '—',
+      };
+      setVessels(prev => [newVessel, ...prev]);
+    }
     setShowAddModal(false);
   };
 
@@ -669,6 +687,7 @@ export default function Bevrachting() {
           isOpen={showAddModal}
           onClose={() => setShowAddModal(false)}
           onSubmit={handleAddEigenAanbod}
+          initialItemType={activeTab === 'vaartuigen' ? 'vaartuig' : 'lading'}
         />
       </div>
 
