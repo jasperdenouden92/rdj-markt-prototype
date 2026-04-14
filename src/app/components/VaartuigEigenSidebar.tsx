@@ -76,6 +76,13 @@ export default function VaartuigEigenSidebar({ id, onEdit, collapsed }: Vaartuig
         <DetailRow label="Eigenaar" type="user" value={data.eigenaar} avatarSrc={data.eigenaarFoto} avatarInitials={data.eigenaarInitials} />
         <DetailRow label="Deadline" value={formatDate(data.deadline)} editable onEdit={() => onEdit?.("deadline")} />
       </DetailsSidebarSection>
+
+      {/* Divider */}
+      <div className="w-full h-px bg-rdj-border-secondary shrink-0 -mt-[8px]" />
+
+      <DetailsSidebarSection>
+        <DetailRow label="Opmerkingen markt" value={data.opmerkingMarkt || "—"} editable onEdit={() => onEdit?.("opmerkingMarkt")} />
+      </DetailsSidebarSection>
     </DetailsSidebar>
   );
 }

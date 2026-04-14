@@ -90,6 +90,13 @@ export default function VaartuigMarktSidebar({ id, onEdit, onResetToBron, collap
         />
       </DetailsSidebarSection>
 
+      {/* Divider */}
+      <div className="w-full h-px bg-rdj-border-secondary shrink-0 -mt-[8px]" />
+
+      <DetailsSidebarSection>
+        <DetailRow label="Opmerkingen markt" value={data.opmerkingMarkt || "—"} editable onEdit={() => onEdit?.("opmerkingMarkt")} />
+      </DetailsSidebarSection>
+
       {/* Reset naar bron button */}
       <div className="w-full shrink-0 pb-[16px]">
         <Button
