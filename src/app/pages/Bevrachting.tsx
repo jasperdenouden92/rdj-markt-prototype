@@ -8,6 +8,7 @@ import PageHeader from "../components/PageHeader";
 import DroppableColumn from "../components/DroppableColumn";
 import ConditionsModal, { ConditionsData } from "../components/ConditionsModal";
 import EmailWerklijstModal from "../components/EmailWerklijstModal";
+import AddEigenAanbodModal from "../components/AddEigenAanbodModal";
 import FilterDropdown from "../components/FilterDropdown";
 import SegmentedButtonGroup from "../components/SegmentedButtonGroup";
 import Table from "../components/Table";
@@ -51,6 +52,7 @@ export default function Bevrachting() {
   const [apiLoaded, setApiLoaded] = useState(false);
   const [modalCargo, setModalCargo] = useState<Cargo | null>(null);
   const [showEmailModal, setShowEmailModal] = useState(false);
+  const [showAddModal, setShowAddModal] = useState(false);
   const [viewMode, setViewMode] = useState<'kanban' | 'table'>('kanban');
   const [selectedItems, setSelectedItems] = useState<string[]>([]);
   const [hoveredRow, setHoveredRow] = useState<string | null>(null);
@@ -394,7 +396,7 @@ export default function Bevrachting() {
                   </div>
                   <div aria-hidden="true" className="absolute border border-rdj-border-primary border-solid inset-0 pointer-events-none rounded-[6px] shadow-[0px_1px_2px_0px_rgba(16,24,40,0.05)]" />
                 </button>
-                <button className="bg-[#1567a4] relative rounded-[6px] shrink-0">
+                <button onClick={() => setShowAddModal(true)} className="bg-[#1567a4] relative rounded-[6px] shrink-0">
                   <div className="content-stretch flex gap-[4px] items-center justify-center overflow-clip px-[14px] py-[10px] relative rounded-[inherit]">
                     <div className="overflow-clip relative shrink-0 size-[20px]"><div className="absolute inset-[20.83%]"><div className="absolute inset-[-7.14%]"><svg className="block size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 13.3333 13.3333"><path d={svgPaths.p1b67fa00} stroke="var(--stroke-0, white)" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.66667" /></svg></div></div></div>
                     <div className="content-stretch flex items-center justify-center px-[2px] relative shrink-0"><p className="font-sans font-bold leading-[20px] relative shrink-0 text-[14px] text-white whitespace-nowrap">Toevoegen</p></div>
@@ -564,6 +566,13 @@ export default function Bevrachting() {
             onSend={handleSendEmail}
           />
         )}
+
+        {/* Add Eigen Aanbod Modal */}
+        <AddEigenAanbodModal
+          isOpen={showAddModal}
+          onClose={() => setShowAddModal(false)}
+          onSubmit={() => setShowAddModal(false)}
+        />
       </div>
 
       {/* Multi-select Action Bar */}
