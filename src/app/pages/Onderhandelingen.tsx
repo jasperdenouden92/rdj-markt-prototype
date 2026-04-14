@@ -130,6 +130,7 @@ const mockOnderhandelingen = [
     vaartuigaanbiederSubtext: "MS Adriana" as string | undefined,
     // Condities
     inkoopcondities: { prijs: 8.50, laadtijd: 24, liggeldLaden: 12.50, lostijd: 16, liggeldLossen: 15.00, overig: "Voorkeur laden vóór 10:00" } as Condities | null,
+    zoekcriteria: { prijs: 7.80, laadtijd: 20, liggeldLaden: 11.00, lostijd: 14, liggeldLossen: 13.00 } as Condities | null,
     verkoopcondities: { prijs: 7.20, laadtijd: 18, liggeldLaden: 10.00, lostijd: 14, liggeldLossen: 12.00 } as Condities | null,
     // Laden / Lossen
     laadLocatie: "Rotterdam",
@@ -160,6 +161,7 @@ const mockOnderhandelingen = [
     vaartuigaanbiederSubtext: undefined as string | undefined,
     // Condities
     inkoopcondities: { prijs: 7.20, laadtijd: 12, liggeldLaden: 10.00, lostijd: 8, liggeldLossen: 10.00 } as Condities | null,
+    zoekcriteria: { prijs: 6.90, laadtijd: 11, liggeldLaden: 9.00, lostijd: 8, liggeldLossen: 9.50 } as Condities | null,
     verkoopcondities: { prijs: 6.80, laadtijd: 10, liggeldLaden: 8.50, lostijd: 8, liggeldLossen: 9.00 } as Condities | null,
     // Laden / Lossen
     laadLocatie: "Duisburg",
@@ -190,6 +192,7 @@ const mockOnderhandelingen = [
     vaartuigaanbiederSubtext: "MS Fortuna" as string | undefined,
     // Condities
     inkoopcondities: { prijs: 9.10, laadtijd: 16, liggeldLaden: 14.00, lostijd: 12, liggeldLossen: 13.00 } as Condities | null,
+    zoekcriteria: { prijs: 8.60, laadtijd: 15, liggeldLaden: 12.50, lostijd: 11, liggeldLossen: 12.00 } as Condities | null,
     verkoopcondities: { prijs: 8.20, laadtijd: 14, liggeldLaden: 11.50, lostijd: 10, liggeldLossen: 11.00 } as Condities | null,
     // Laden / Lossen
     laadLocatie: "Amsterdam",
@@ -220,6 +223,7 @@ const mockOnderhandelingen = [
     vaartuigaanbiederSubtext: "MS Catharina" as string | undefined,
     // Condities
     inkoopcondities: { prijs: 11.00, laadtijd: 8, liggeldLaden: 20.00, lostijd: 8, liggeldLossen: 20.00 } as Condities | null,
+    zoekcriteria: { prijs: 10.50, laadtijd: 8, liggeldLaden: 19.00, lostijd: 7, liggeldLossen: 18.00 } as Condities | null,
     verkoopcondities: { prijs: 10.20, laadtijd: 8, liggeldLaden: 18.00, lostijd: 6, liggeldLossen: 16.00, overig: "Alleen bij daglicht lossen" } as Condities | null,
     // Laden / Lossen
     laadLocatie: "Terneuzen",
@@ -250,6 +254,7 @@ const mockOnderhandelingen = [
     vaartuigaanbiederSubtext: undefined as string | undefined,
     // Condities
     inkoopcondities: { prijs: 10.25, laadtijd: 20, liggeldLaden: 15.00, lostijd: 16, liggeldLossen: 14.00 } as Condities | null,
+    zoekcriteria: { prijs: 9.80, laadtijd: 19, liggeldLaden: 13.50, lostijd: 15, liggeldLossen: 13.00 } as Condities | null,
     verkoopcondities: { prijs: 9.50, laadtijd: 18, liggeldLaden: 12.00, lostijd: 14, liggeldLossen: 12.50 } as Condities | null,
     // Laden / Lossen
     laadLocatie: "Nijmegen",
@@ -280,6 +285,7 @@ const mockOnderhandelingen = [
     vaartuigaanbiederSubtext: undefined as string | undefined,
     // Condities
     inkoopcondities: { prijs: 6.80, laadtijd: 12, liggeldLaden: 8.00, lostijd: 10, liggeldLossen: 9.00, overig: "Schip moet kruiphoogte < 7m hebben" } as Condities | null,
+    zoekcriteria: { prijs: 6.50, laadtijd: 11, liggeldLaden: 7.75, lostijd: 9, liggeldLossen: 8.50 } as Condities | null,
     verkoopcondities: { prijs: 6.20, laadtijd: 10, liggeldLaden: 7.50, lostijd: 8, liggeldLossen: 8.00 } as Condities | null,
     // Laden / Lossen
     laadLocatie: "Mannheim",
@@ -310,6 +316,7 @@ const mockOnderhandelingen = [
     vaartuigaanbiederSubtext: "MS Petronella" as string | undefined,
     // Condities – nog geen bod uitgewisseld
     inkoopcondities: null as Condities | null,
+    zoekcriteria: null as Condities | null,
     verkoopcondities: null as Condities | null,
     // Laden / Lossen
     laadLocatie: "Rotterdam",
@@ -339,6 +346,7 @@ const mockOnderhandelingen = [
     vaartuigaanbiederSubtext: "MS De Hoop" as string | undefined,
     // Condities
     inkoopcondities: { prijs: 7.80, laadtijd: 16, liggeldLaden: 12.00, lostijd: 12, liggeldLossen: 11.00 } as Condities | null,
+    zoekcriteria: { prijs: 7.40, laadtijd: 15, liggeldLaden: 11.00, lostijd: 11, liggeldLossen: 10.50 } as Condities | null,
     verkoopcondities: { prijs: 7.00, laadtijd: 14, liggeldLaden: 10.00, lostijd: 10, liggeldLossen: 10.00 } as Condities | null,
     // Laden / Lossen
     laadLocatie: "Rotterdam Botlek",
@@ -368,6 +376,7 @@ const mockOnderhandelingen = [
     vaartuigaanbiederSubtext: "MS Orion" as string | undefined,
     // Condities
     inkoopcondities: { prijs: 9.40, laadtijd: 20, liggeldLaden: 16.00, lostijd: 14, liggeldLossen: 14.00, overig: "Dubbele bodem vereist" } as Condities | null,
+    zoekcriteria: { prijs: 9.00, laadtijd: 19, liggeldLaden: 15.00, lostijd: 13, liggeldLossen: 13.00 } as Condities | null,
     verkoopcondities: { prijs: 8.60, laadtijd: 18, liggeldLaden: 14.00, lostijd: 12, liggeldLossen: 12.00 } as Condities | null,
     // Laden / Lossen
     laadLocatie: "IJmuiden",
@@ -591,6 +600,13 @@ export default function Onderhandelingen() {
       render: (row) => <ConditiesCell condities={row._verkoopcondities} />,
     },
     {
+      key: "zoekcriteria",
+      header: "Zoekcriteria",
+      type: "custom",
+      width: "w-[160px]",
+      render: (row) => <ConditiesCell condities={row._zoekcriteria} />,
+    },
+    {
       key: "inkoopcondities",
       header: "Inkoopcondities",
       type: "custom",
@@ -654,8 +670,10 @@ export default function Onderhandelingen() {
     vaartuigaanbiederHoverContent: item.vaartuigaanbieder !== "—" ? buildRelatieHoverContent(item.vaartuigaanbieder) : undefined,
     // Store condities objects for custom render
     _inkoopcondities: item.inkoopcondities,
+    _zoekcriteria: item.zoekcriteria,
     _verkoopcondities: item.verkoopcondities,
     inkoopcondities: item.inkoopcondities ? `€ ${item.inkoopcondities.prijs.toFixed(2).replace(".", ",")} /t` : "—",
+    zoekcriteria: item.zoekcriteria ? `€ ${item.zoekcriteria.prijs.toFixed(2).replace(".", ",")} /t` : "—",
     verkoopcondities: item.verkoopcondities ? `€ ${item.verkoopcondities.prijs.toFixed(2).replace(".", ",")} /t` : "—",
     laden: item.laadLocatie,
     ladenDate: item.laadDatum,
