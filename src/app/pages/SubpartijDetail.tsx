@@ -2,7 +2,7 @@ import { useState, useMemo } from "react";
 import { PanelRight, Scale, Copy, Upload, Trash2 } from "lucide-react";
 import { Toaster } from "sonner";
 import { useParams, Link } from "react-router";
-import AnnotationMarker from "../components/AnnotationMarker";
+import { AnnotationMarker } from "@jasperdenouden92/annotations";
 import Sidebar from "../components/Sidebar";
 import Button from "../components/Button";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "../components/ui/dropdown-menu";
