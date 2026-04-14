@@ -524,6 +524,11 @@ function CellRating({
     return "#F2F4F7";
   };
 
+  const getStarStroke = (star: number) => {
+    if (hovered === null || star > hovered) return "none";
+    return "#FDB022";
+  };
+
   return (
     <div
       className="flex items-center gap-[4px]"
@@ -539,7 +544,7 @@ function CellRating({
               col.onRate?.(row.id, star);
             }}
             onMouseEnter={() => setHovered(star)}
-            className="overflow-clip relative shrink-0 size-[20px] cursor-pointer"
+            className="overflow-clip relative shrink-0 size-[20px] cursor-pointer outline-none"
           >
             <svg
               className="block size-full"
@@ -550,6 +555,8 @@ function CellRating({
               <path
                 d={STAR_PATH}
                 fill={getStarFill(star)}
+                stroke={getStarStroke(star)}
+                strokeWidth="1"
               />
             </svg>
           </button>
@@ -807,11 +814,7 @@ export default function Table({
               return (
                 <div key={col.key} className={widthCls}>
                   {col.editable ? (
-                    <div className={`rounded-[6px] px-[6px] py-[6px] -mx-[6px] -my-[6px] h-[52px] flex items-center border transition-all ${
-                      col.type === 'rating'
-                        ? 'border-transparent group-hover/row:border-[#FDB022] group-hover/row:bg-rdj-bg-secondary-hover'
-                        : 'border-transparent group-hover/row:bg-rdj-bg-secondary-hover'
-                    }`}>
+                    <div className="rounded-[6px] px-[6px] py-[6px] -mx-[6px] -my-[6px] h-[52px] flex items-center border border-transparent transition-all group-hover/row:bg-rdj-bg-secondary-hover">
                       <div className="w-full">{cellContent}</div>
                     </div>
                   ) : (
