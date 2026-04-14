@@ -13,6 +13,7 @@ import Button from "../components/Button";
 import VaartuigMarktSidebar from "../components/VaartuigMarktSidebar";
 import OnderhandelingSidepanel from "../components/OnderhandelingSidepanel";
 import ConversationDialog from "../components/ConversationDialog";
+import RelatieSelectDialog from "../components/RelatieSelectDialog";
 import BrokerDialog from "../components/BrokerDialog";
 import ActivityFeed from "../components/ActivityFeed";
 import SectionHeader from "../components/SectionHeader";
@@ -111,6 +112,7 @@ export default function InboxVesselDetail() {
   const [selectedNegotiation, setSelectedNegotiation] = useState<{ id: string; status: string; bron: string; relatieName?: string; bemiddeling?: { inkoopRelatie: string; verkoopRelatie: string } } | null>(null);
   const setActiveTab = (tab: typeof activeTab) => { setActiveTabRaw(tab); setSelectedNegotiation(null); };
   const [conversationDialog, setConversationDialog] = useState<{ relatieId: string; relatieName: string; matchName?: string; itemType?: "lading" | "vaartuig" | "relatie-vaartuig" | "relatie-lading"; rightName?: string } | null>(null);
+  const [showRelatieSelect, setShowRelatieSelect] = useState(false);
   const [brokerDialog, setBrokerDialog] = useState<{ relatieA: { id: string; name: string }; vesselName: string; vesselSubtitle: string; relatieB: { id: string; name: string }; cargoName: string; cargoSubtitle: string } | null>(null);
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [matchFilter, setMatchFilter] = useState("Alles");
@@ -374,7 +376,10 @@ export default function InboxVesselDetail() {
                           filterOptions={["Alles", "Actief", "Geaccepteerd", "Geweigerd"]}
                           filterValue={negFilter}
                           onFilterChange={setNegFilter}
-                          onAdd={() => setConversationDialog({ relatieId: "", relatieName: "" })}
+                          onAdd={() => setConversationDialog({
+                            relatieId: summary?.relatieId || "",
+                            relatieName: summary?.relatieName || "Onbekend",
+                          })}
                           addTooltip="Onderhandeling starten"
                           addPrimary
                         />
@@ -437,6 +442,17 @@ export default function InboxVesselDetail() {
           relatieName={selectedNegotiation.relatieName}
           bemiddeling={selectedNegotiation.bemiddeling}
           onClose={() => setSelectedNegotiation(null)}
+        />
+      )}
+
+      {/* Relatie select dialog */}
+      {showRelatieSelect && (
+        <RelatieSelectDialog
+          onSelect={(relatie) => {
+            setShowRelatieSelect(false);
+            setConversationDialog({ relatieId: relatie.id, relatieName: relatie.naam });
+          }}
+          onClose={() => setShowRelatieSelect(false)}
         />
       )}
 
