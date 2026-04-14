@@ -100,6 +100,8 @@ export interface LeadingTextColumn extends BaseColumn {
   iconKey?: string;
   /** Label for the hover action button (default: "Openen") */
   actionLabel?: string;
+  /** Row key for a per-row override of the action button label. Takes precedence over actionLabel. */
+  actionLabelKey?: string;
   /** Row key for a completed-action label (e.g. "Aangeboden"). When set, shows a check + label instead of the action button. */
   actionCompletedKey?: string;
   /** Optional max-width class, e.g. "max-w-[480px]" */
@@ -260,7 +262,7 @@ function CellLeadingText({
   const subtext = col.subtextKey ? row[col.subtextKey] : undefined;
   const showDot = col.dotKey ? !!row[col.dotKey] : false;
   const hasDotKey = !!col.dotKey;
-  const actionLabel = col.actionLabel ?? "Openen";
+  const actionLabel = (col.actionLabelKey ? row[col.actionLabelKey] as string | undefined : undefined) ?? col.actionLabel ?? "Openen";
   const actionCompleted = col.actionCompletedKey ? row[col.actionCompletedKey] as string | undefined : undefined;
   const extraActions = col.extraActionsKey ? row[col.extraActionsKey] as ReactNode | undefined : undefined;
 

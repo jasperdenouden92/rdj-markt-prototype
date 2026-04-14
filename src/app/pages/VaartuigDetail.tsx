@@ -28,7 +28,7 @@ import imgAvatar4 from "../../assets/9e45f45f537bea4bf653bc0307471e5ff5545f63.pn
 
 /* ── Mock vessel matches (ladingen die passen bij dit vaartuig) ── */
 const vesselMatches = [
-  { id: 'VM001', ladingId: 'rl-001', cargo: '3.000 ton Houtpellets (DSIT)', exNaam: 'Houtpellets Salzgitter', company: 'Provaart Logistics BV', contactPersoon: 'Jan de Vries', laadLocatie: 'Salzgitter Stichkanal', laadDatum: 'Vr 14 Mrt 10:00', losLocatie: 'Hamburg Veddelkanal', losDatum: 'Di 18 Mrt 14:00', matchPercentage: 92, isEigen: true, source: 'Laadplanning', sourceDate: 'Do 6 Mrt 12:44' },
+  { id: 'VM001', ladingId: 'le-001', cargo: '3.000 ton Houtpellets (DSIT)', exNaam: 'Houtpellets Salzgitter', company: 'Provaart Logistics BV', contactPersoon: 'Jan de Vries', laadLocatie: 'Salzgitter Stichkanal', laadDatum: 'Vr 14 Mrt 10:00', losLocatie: 'Hamburg Veddelkanal', losDatum: 'Di 18 Mrt 14:00', matchPercentage: 92, isEigen: true, source: 'Laadplanning', sourceDate: 'Do 6 Mrt 12:44' },
   { id: 'VM002', ladingId: 'rl-004', cargo: '3.000 ton Staal', company: 'Janlow B.V.', contactPersoon: 'Pieter Jansen', laadLocatie: 'Dordrecht', laadDatum: 'Za 15 Mrt 06:00', losLocatie: 'Antwerpen', losDatum: 'Ma 17 Mrt 14:00', matchPercentage: 85, isEigen: false, source: 'Automatische feed', sourceDate: 'Do 6 Mrt 15:45' },
   { id: 'VM003', ladingId: 'rl-006', cargo: '3.500 ton Sojabonen', company: 'Cargill N.V.', contactPersoon: 'Sophie van Dam', laadLocatie: 'Rotterdam Botlek', laadDatum: 'Zo 16 Mrt 08:00', losLocatie: 'Basel', losDatum: 'Do 20 Mrt', matchPercentage: 78, isEigen: false, source: 'Automatische feed', sourceDate: 'Do 6 Mrt 10:30' },
   { id: 'VM004', ladingId: 'rl-002', cargo: '3.000 ton Graan', company: 'Provaart Logistics BV', contactPersoon: 'Maria Bakker', laadLocatie: 'Rotterdam', laadDatum: 'Di 18 Mrt 08:00', losLocatie: 'Krefeld', losDatum: 'Vr 21 Mrt', matchPercentage: 65, isEigen: false, source: 'Automatische feed', sourceDate: 'Vr 7 Mrt 09:15' },
@@ -199,7 +199,7 @@ export default function VaartuigDetail() {
 
   /* ── Matches table columns ── */
   const matchColumns: Column[] = [
-    { key: 'cargoTitle', header: 'Lading', type: 'leading-text', subtextKey: 'cargoSubtitle', maxWidth: 'max-w-[480px]', badgeKey: 'eigenBadge', actionLabel: 'Onderhandeling', actionCompletedKey: 'actionCompletedLabel' },
+    { key: 'cargoTitle', header: 'Lading', type: 'leading-text', subtextKey: 'cargoSubtitle', maxWidth: 'max-w-[480px]', badgeKey: 'eigenBadge', actionLabel: 'Onderhandeling', actionLabelKey: 'actionLabel', actionCompletedKey: 'actionCompletedLabel' },
     { key: 'tonnage', header: 'Tonnage', type: 'text', width: 'w-[120px]', align: 'right' },
     { key: 'company', header: 'Relatie', type: 'text', subtextKey: 'contactPersoon', textColor: 'text-rdj-text-brand', width: 'w-[180px]', onClickKey: 'onRelatieClick' },
     { key: 'laadLocatie', header: 'Laden', type: 'text', subtextKey: 'laadDatum', width: 'w-[180px]' },
@@ -220,10 +220,12 @@ export default function VaartuigDetail() {
       cargoSubtitle: m.isEigen ? `${tonnage} ${ladingSoort}`.trim() : tonnage,
       tonnage,
       eigenBadge: m.isEigen ? undefined : 'Markt',
+      actionLabel: m.isEigen ? 'Openen' : undefined,
+      ladingId: m.isEigen ? m.ladingId : undefined,
       matchStatus: idx < 2 ? 'aangeboden' : 'openstaand',
-      company: m.company,
-      contactPersoon: m.contactPersoon,
-      onRelatieClick: () => { const rel = mockRelaties.find(r => r.naam === m.company); if (rel) navigate(`/crm/relatie/${rel.id}`); },
+      company: m.isEigen ? 'Rederij de Jong' : m.company,
+      contactPersoon: m.isEigen ? undefined : m.contactPersoon,
+      onRelatieClick: m.isEigen ? undefined : (() => { const rel = mockRelaties.find(r => r.naam === m.company); if (rel) navigate(`/crm/relatie/${rel.id}`); }),
       laadLocatie: m.laadLocatie,
       laadDatum: m.laadDatum,
       losLocatie: m.losLocatie,
@@ -355,6 +357,10 @@ export default function VaartuigDetail() {
                             hoveredRowId={hoveredRow}
                             onRowHover={setHoveredRow}
                             onRowClick={(row) => {
+                              if (row.ladingId) {
+                                navigate(`/markt/bevrachting/lading/${row.ladingId}`);
+                                return;
+                              }
                               const relatie = mockRelaties.find(r => r.naam === row.company);
                               const match = vesselMatches.find(m => m.id === row.id);
                               setConversationDialog({
@@ -366,6 +372,10 @@ export default function VaartuigDetail() {
                               });
                             }}
                             onRowAction={(row) => {
+                              if (row.ladingId) {
+                                navigate(`/markt/bevrachting/lading/${row.ladingId}`);
+                                return;
+                              }
                               const relatie = mockRelaties.find(r => r.naam === row.company);
                               const match = vesselMatches.find(m => m.id === row.id);
                               setConversationDialog({

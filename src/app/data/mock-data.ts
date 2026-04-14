@@ -85,6 +85,7 @@ export interface Match {
   cargoDate: string;
   matchPercentage: number;
   isEigen?: boolean;
+  vaartuigId?: string;
   source?: string;
   sourceDate?: string;
 }
@@ -367,6 +368,7 @@ export const mockMatches: Match[] = [
     cargoDate: 'Vr 7 Mrt 08:00',
     matchPercentage: 60,
     isEigen: true,
+    vaartuigId: 've-001',
     source: 'Eigen vloot',
     sourceDate: 'Vr 7 Mrt 08:00',
   },
