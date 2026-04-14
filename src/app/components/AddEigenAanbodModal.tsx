@@ -145,7 +145,11 @@ export default function AddEigenAanbodModal({ isOpen, onClose, onSubmit }: AddEi
 
   const handleRangeToggle = (checked: boolean) => {
     setIsRange(checked);
-    if (!checked) setMarktMax('');
+    if (checked) {
+      setMarktMax(marktMin);
+    } else {
+      setMarktMax('');
+    }
   };
 
   const handleSubmit = () => {
