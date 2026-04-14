@@ -5,10 +5,10 @@ import { Dialog, DialogOverlay, DialogPortal } from "./ui/dialog";
 import * as DialogPrimitive from "@radix-ui/react-dialog";
 import Button from "./Button";
 import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuCheckboxItem } from "./ui/dropdown-menu";
-import { mockRelaties, mockRelatieLadingen, mockRelatieVaartuigen, mockContactPersonen } from "../data/mock-relatie-data";
+import { mockRelaties, mockRelatieLadingen, mockRelatieVaartuigen } from "../data/mock-relatie-data";
 import type { RelatieLading, RelatieVaartuig } from "../data/mock-relatie-data";
 import type { Relatie } from "../data/api";
-import GespreksverslagQuickDialog from "./GespreksverslagQuickDialog";
+import ConversationDialog from "./ConversationDialog";
 import { formatDate } from "../utils/formatDate";
 import { mockVlootData } from "../data/mock-vloot-data";
 import type { VlootVaartuig } from "../data/mock-vloot-data";
@@ -618,10 +618,9 @@ export default function GlobalSearchDialog({ open, onOpenChange }: GlobalSearchD
     </Dialog>
 
     {gespreksverslagRelatie && (
-      <GespreksverslagQuickDialog
+      <ConversationDialog
         relatieId={gespreksverslagRelatie.id}
-        relatieNaam={gespreksverslagRelatie.naam}
-        contactPersonen={mockContactPersonen.filter((cp) => cp.relatieId === gespreksverslagRelatie.id)}
+        relatieName={gespreksverslagRelatie.naam}
         onSave={() => setGespreksverslagRelatie(null)}
         onClose={() => setGespreksverslagRelatie(null)}
       />
