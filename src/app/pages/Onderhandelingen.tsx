@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect, useMemo, type ReactNode } from "react";
 import { useNavigate, useLocation } from "react-router";
-import { Send, MailOpen, Check, X, Ship, ListTodo } from "lucide-react";
+import { Send, Check, X, Ship, ListTodo } from "lucide-react";
 import { Toaster } from "sonner";
 import Sidebar from "../components/Sidebar";
 import PageHeader from "../components/PageHeader";
@@ -20,30 +20,27 @@ import { HoverCard, HoverCardTrigger, HoverCardContent } from "../components/ui/
 /* ── Status badge mapping ── */
 const statusVariantMap: Record<string, string> = {
   "Via werklijst": "brand",
-  "Bod verstuurd": "brand",
-  "Bod ontvangen": "brand",
+  "In onderhandeling": "brand",
   "Goedgekeurd": "success",
   "Afgewezen": "error",
 };
 
 const statusIconMap: Record<string, React.ReactNode | null> = {
   "Via werklijst": <ListTodo strokeWidth={2.5} />,
-  "Bod verstuurd": <Send strokeWidth={2.5} />,
-  "Bod ontvangen": <MailOpen strokeWidth={2.5} />,
+  "In onderhandeling": <Send strokeWidth={2.5} />,
   "Goedgekeurd": <Check strokeWidth={2.5} />,
   "Afgewezen": <X strokeWidth={2.5} />,
 };
 
 const statusTypeMap: Record<string, "default" | "color"> = {
   "Via werklijst": "default",
-  "Bod verstuurd": "color",
-  "Bod ontvangen": "color",
+  "In onderhandeling": "color",
   "Goedgekeurd": "color",
   "Afgewezen": "color",
 };
 
-/** Filter groups: "actief" = Via werklijst + Bod ontvangen + Bod verstuurd */
-const activeStatuses = ["Via werklijst", "Bod ontvangen", "Bod verstuurd"];
+/** Filter groups: "actief" = Via werklijst + In onderhandeling */
+const activeStatuses = ["Via werklijst", "In onderhandeling"];
 
 /* ── Condities types ── */
 interface Condities {
@@ -141,7 +138,7 @@ const mockOnderhandelingen = [
     losDatum: "16 jan 2026, 14:00",
     // Rest
     deadline: "17 jan 2026",
-    status: "Bod verstuurd",
+    status: "In onderhandeling",
     updateUserInitials: "KN",
     updateUserAvatar: imgAvatar as string | undefined,
     updateDate: "14 jan 2026, 16:32",
@@ -171,7 +168,7 @@ const mockOnderhandelingen = [
     losDatum: "19 jan 2026, 10:00",
     // Rest
     deadline: "20 jan 2026",
-    status: "Bod ontvangen",
+    status: "In onderhandeling",
     updateUserInitials: "PJ",
     updateUserAvatar: undefined as string | undefined,
     updateDate: "13 jan 2026, 09:15",
@@ -261,7 +258,7 @@ const mockOnderhandelingen = [
     losDatum: "25 jan 2026, 18:00",
     // Rest
     deadline: "26 jan 2026",
-    status: "Bod verstuurd",
+    status: "In onderhandeling",
     updateUserInitials: "JK",
     updateUserAvatar: imgAvatar as string | undefined,
     updateDate: "17 jan 2026, 08:00",
@@ -291,7 +288,7 @@ const mockOnderhandelingen = [
     losDatum: "30 jan 2026, 09:00",
     // Rest
     deadline: "31 jan 2026",
-    status: "Bod ontvangen",
+    status: "In onderhandeling",
     updateUserInitials: "KN",
     updateUserAvatar: imgAvatar as string | undefined,
     updateDate: "18 jan 2026, 10:10",
@@ -350,7 +347,7 @@ const mockOnderhandelingen = [
     losDatum: "7 feb 2026, 14:00",
     // Rest
     deadline: "2 feb 2026",
-    status: "Bod verstuurd",
+    status: "In onderhandeling",
     updateUserInitials: "PJ",
     updateUserAvatar: imgAvatar as string | undefined,
     updateDate: "20 jan 2026, 09:30",
@@ -379,7 +376,7 @@ const mockOnderhandelingen = [
     losDatum: "7 feb 2026, 10:00",
     // Rest
     deadline: "4 feb 2026",
-    status: "Bod ontvangen",
+    status: "In onderhandeling",
     updateUserInitials: "EN",
     updateUserAvatar: undefined as string | undefined,
     updateDate: "21 jan 2026, 15:45",
@@ -861,7 +858,7 @@ export default function Onderhandelingen() {
       {selectedNegotiation && (
         <OnderhandelingSidepanel
           negotiationId={selectedNegotiation.id}
-          status={selectedNegotiation.status as "Via werklijst" | "Bod verstuurd" | "Bod ontvangen" | "Goedgekeurd" | "Afgewezen"}
+          status={selectedNegotiation.status as "Via werklijst" | "In onderhandeling" | "Goedgekeurd" | "Afgewezen"}
           bron={selectedNegotiation.bron as "eigen" | "markt"}
           soort="lading"
           relatieName={selectedNegotiation.relatieName}

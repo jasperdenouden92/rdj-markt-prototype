@@ -30,29 +30,23 @@ import imgAvatar4 from "../../assets/9e45f45f537bea4bf653bc0307471e5ff5545f63.pn
 /* ── Status variant map ── */
 const negotiationStatusVariantMap: Record<string, string> = {
   "Via werklijst": "brand",
-  "Bod verstuurd": "brand",
-  "Bod ontvangen": "brand",
+  "In onderhandeling": "brand",
   "Goedgekeurd": "success",
   "Afgewezen": "error",
-  "Afgekeurd": "error",
 };
 
 const negotiationStatusIconMap: Record<string, React.ReactNode | null> = {
   "Via werklijst": <ListTodo strokeWidth={2.5} />,
-  "Bod verstuurd": <Send strokeWidth={2.5} />,
-  "Bod ontvangen": <MailOpen strokeWidth={2.5} />,
+  "In onderhandeling": <Send strokeWidth={2.5} />,
   "Goedgekeurd": <Check strokeWidth={2.5} />,
   "Afgewezen": <X strokeWidth={2.5} />,
-  "Afgekeurd": <X strokeWidth={2.5} />,
 };
 
 const negotiationStatusTypeMap: Record<string, "default" | "color"> = {
   "Via werklijst": "default",
-  "Bod verstuurd": "color",
-  "Bod ontvangen": "color",
+  "In onderhandeling": "color",
   "Goedgekeurd": "color",
   "Afgewezen": "color",
-  "Afgekeurd": "color",
 };
 
 /* ── Source icons ── */
@@ -197,7 +191,7 @@ export default function LadingDetail() {
     { key: 'matchPercentage', header: 'Match', type: 'progress', align: 'right', width: 'w-[100px]' },
   ];
 
-  const activeNegStatuses = ["Via werklijst", "Bod verstuurd", "Bod ontvangen"];
+  const activeNegStatuses = ["Via werklijst", "In onderhandeling"];
 
   const matchTableData: RowData[] = mockMatches.map((match, idx) => {
     const src = match.source || match.cargoType;

@@ -37,36 +37,30 @@ const vesselMatches = [
 
 /* ── Mock onderhandelingen ── */
 const vesselNegotiations = [
-  { id: 'VN001', company: 'Provaart Logistics BV', cargo: '2.000 ton Houtpellets (DSIT)', price: '€3,50 per ton', priceDiff: '+4,2%', laadLocatie: 'Salzgitter Stichkanal', laadDatum: 'Ma 12 Jan 10:00', losLocatie: 'Hamburg Veddelkanal', losDatum: 'Vr 16 Jan 14:00', deadline: 'Za 14 Feb, 16:00', deadlineExpired: true, status: 'Bod ontvangen', contact: { name: 'Eric Nieuwkoop', date: 'Ma 9 Feb 07:28' }, bemiddeling: { inkoopRelatie: 'Provaart Logistics BV', verkoopRelatie: 'Rederij van Dam' } as const },
+  { id: 'VN001', company: 'Provaart Logistics BV', cargo: '2.000 ton Houtpellets (DSIT)', price: '€3,50 per ton', priceDiff: '+4,2%', laadLocatie: 'Salzgitter Stichkanal', laadDatum: 'Ma 12 Jan 10:00', losLocatie: 'Hamburg Veddelkanal', losDatum: 'Vr 16 Jan 14:00', deadline: 'Za 14 Feb, 16:00', deadlineExpired: true, status: 'In onderhandeling', contact: { name: 'Eric Nieuwkoop', date: 'Ma 9 Feb 07:28' }, bemiddeling: { inkoopRelatie: 'Provaart Logistics BV', verkoopRelatie: 'Rederij van Dam' } as const },
   { id: 'VN002', company: 'Janlow B.V.', cargo: '3.000 ton Houtpellets', price: '€3,00 per ton', priceDiff: '-2,1%', laadLocatie: 'Rotterdam Europoort', laadDatum: 'Do 15 Jan 08:00', losLocatie: 'Mannheim', losDatum: 'Af te stemmen', deadline: 'Morgen, 10:00', deadlineExpired: false, status: 'Via werklijst', contact: { name: 'Pelger de Jong', date: 'Di 10 Feb 19:53' } },
   { id: 'VN003', company: 'Cargill N.V.', cargo: '2.000 ton Koolraapzaad', price: '', priceDiff: '', laadLocatie: 'Bremerhaven', laadDatum: 'Ma 19 Jan', losLocatie: 'Duisburg', losDatum: 'Wo 21 Jan', deadline: 'Do 19 Feb, 11:15', deadlineExpired: false, status: 'Via werklijst', contact: { name: 'Khoa Nguyen', date: 'Zo 8 Feb 01:31' }, bemiddeling: { inkoopRelatie: 'Cargill N.V.', verkoopRelatie: 'Rederij Alfa' } as const },
 ];
 
 const statusVariantMap: Record<string, string> = {
   "Via werklijst": "brand",
-  "Bod verstuurd": "brand",
-  "Bod ontvangen": "brand",
+  "In onderhandeling": "brand",
   "Goedgekeurd": "success",
   "Afgewezen": "error",
-  "Afgekeurd": "error",
 };
 
 const statusIconMap: Record<string, React.ReactNode | null> = {
   "Via werklijst": <ListTodo strokeWidth={2.5} />,
-  "Bod verstuurd": <Send strokeWidth={2.5} />,
-  "Bod ontvangen": <MailOpen strokeWidth={2.5} />,
+  "In onderhandeling": <Send strokeWidth={2.5} />,
   "Goedgekeurd": <Check strokeWidth={2.5} />,
   "Afgewezen": <X strokeWidth={2.5} />,
-  "Afgekeurd": <X strokeWidth={2.5} />,
 };
 
 const statusTypeMap: Record<string, "default" | "color"> = {
   "Via werklijst": "default",
-  "Bod verstuurd": "color",
-  "Bod ontvangen": "color",
+  "In onderhandeling": "color",
   "Goedgekeurd": "color",
   "Afgewezen": "color",
-  "Afgekeurd": "color",
 };
 
 /* ── Source icons ── */
@@ -210,7 +204,7 @@ export default function VaartuigDetail() {
     { key: 'matchPercentage', header: 'Match', type: 'progress', align: 'right', width: 'w-[100px]' },
   ];
 
-  const activeNegStatuses = ["Via werklijst", "Bod verstuurd", "Bod ontvangen"];
+  const activeNegStatuses = ["Via werklijst", "In onderhandeling"];
 
   const matchTableData: RowData[] = vesselMatches.map((m, idx) => {
     const tonnageMatch = m.cargo.match(/^([\d.,\s\-]+ton)\s+(.+)$/);

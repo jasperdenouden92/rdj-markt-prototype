@@ -17,7 +17,7 @@ export const boden: Bod[] = [
     lostijd: 8,
     liggeldLossen: 25,
     laagwaterToeslag: 0,
-    status: "verstuurd",
+    status: "In onderhandeling",
   },
   {
     id: "bod-002",
@@ -35,7 +35,7 @@ export const boden: Bod[] = [
     lostijd: 8,
     liggeldLossen: 20,
     laagwaterToeslag: 0.50,
-    status: "ontvangen",
+    status: "In onderhandeling",
   },
   {
     id: "bod-003",
@@ -53,7 +53,7 @@ export const boden: Bod[] = [
     lostijd: 8,
     liggeldLossen: 25,
     laagwaterToeslag: 0,
-    status: "geaccepteerd",
+    status: "Goedgekeurd",
   },
   {
     id: "bod-004",
@@ -71,7 +71,7 @@ export const boden: Bod[] = [
     lostijd: 10,
     liggeldLossen: 20,
     laagwaterToeslag: 0,
-    status: "verstuurd",
+    status: "In onderhandeling",
   },
   {
     id: "bod-005",
@@ -89,7 +89,7 @@ export const boden: Bod[] = [
     lostijd: 8,
     liggeldLossen: 25,
     laagwaterToeslag: 0.25,
-    status: "ontvangen",
+    status: "In onderhandeling",
   },
   {
     id: "bod-006",
@@ -107,7 +107,7 @@ export const boden: Bod[] = [
     lostijd: 6,
     liggeldLossen: 20,
     laagwaterToeslag: 0,
-    status: "verstuurd",
+    status: "In onderhandeling",
   },
   {
     id: "bod-007",
@@ -125,7 +125,7 @@ export const boden: Bod[] = [
     lostijd: 10,
     liggeldLossen: 25,
     laagwaterToeslag: 0,
-    status: "ontvangen",
+    status: "In onderhandeling",
   },
   {
     id: "bod-008",
@@ -143,7 +143,7 @@ export const boden: Bod[] = [
     lostijd: null,
     liggeldLossen: 20,
     laagwaterToeslag: 0,
-    status: "verstuurd",
+    status: "In onderhandeling",
   },
   {
     id: "bod-009",
@@ -161,7 +161,7 @@ export const boden: Bod[] = [
     lostijd: 8,
     liggeldLossen: 25,
     laagwaterToeslag: 0,
-    status: "geaccepteerd",
+    status: "Goedgekeurd",
   },
 ];
 
