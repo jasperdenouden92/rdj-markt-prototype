@@ -274,7 +274,7 @@ export default function Bevrachting() {
   };
 
   const tableColumns: Column[] = [
-    { key: 'subpartij', header: 'Subpartij', type: 'leading-text', subtextKey: 'subpartijEx', badgeKey: 'leadingBadge', badgeStyleKey: 'leadingBadgeStyle', iconKey: 'exTypeIcon' },
+    { key: 'subpartij', header: 'Subpartij', type: 'leading-text', subtextKey: 'subpartijEx', badgeKey: 'leadingBadge', badgeStyleKey: 'leadingBadgeStyle', badgeHoverContentKey: 'leadingBadgeHoverContent', iconKey: 'exTypeIcon' },
     { key: 'statusLabel', header: 'Status', type: 'status', width: 'w-[140px]', variantKey: 'statusVariant' },
     { key: 'ladingType', header: 'Lading', type: 'text', width: 'w-[160px]', subtextKey: 'ladingSG' },
     { key: 'tonnage', header: 'Tonnage', type: 'text', width: 'w-[120px]', align: 'right' },
@@ -366,6 +366,39 @@ export default function Bevrachting() {
       leadingBadgeStyle: c.splitIndex != null && c.splitColorIndex != null ? (() => {
         const color = splitColors[c.splitColorIndex % splitColors.length];
         return { backgroundColor: color.bg, color: color.text, borderColor: color.border };
+      })() : undefined,
+      leadingBadgeHoverContent: c.siblingLots && c.siblingLots.length > 0 && c.splitColorIndex != null ? (() => {
+        const color = splitColors[c.splitColorIndex % splitColors.length];
+        const statusLabel = (s: string) =>
+          s === "intake" ? "Intake" : s === "werklijst" ? "Werklijst" : s === "markt" ? "In de markt" : "Gesloten";
+        return (
+          <div className="p-[2px]">
+            <p className="font-sans font-normal text-[11px] leading-[16px] text-rdj-text-secondary px-[4px] pb-[4px]">
+              Overige lots
+            </p>
+            {c.siblingLots.map((lot) => (
+              <button
+                key={lot.id}
+                type="button"
+                className="flex items-center gap-[6px] w-full px-[4px] py-[6px] rounded-[4px] hover:bg-[#F9FAFB] text-left"
+                onClick={(e) => { e.stopPropagation(); navigate(`/markt/bevrachting/lading/${lot.id}`); }}
+              >
+                <span
+                  className="inline-flex items-center justify-center px-[5px] py-[1px] rounded-[4px] font-sans font-bold text-[10px] leading-[14px] whitespace-nowrap shrink-0"
+                  style={{ backgroundColor: color.bg, color: color.text, border: `1px solid ${color.border}` }}
+                >
+                  #{lot.splitIndex}
+                </span>
+                <p className="font-sans font-bold text-[12px] leading-[18px] text-rdj-text-brand flex-1 min-w-0 truncate">
+                  {lot.cargo}
+                </p>
+                <span className="font-sans font-normal text-[11px] leading-[16px] text-rdj-text-tertiary shrink-0">
+                  {statusLabel(lot.status)}
+                </span>
+              </button>
+            ))}
+          </div>
+        );
       })() : undefined,
     };
   });

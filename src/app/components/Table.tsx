@@ -96,10 +96,14 @@ export interface LeadingTextColumn extends BaseColumn {
   badgeVariantKey?: string;
   /** Row key for custom badge inline style (e.g. { backgroundColor, color, borderColor }) */
   badgeStyleKey?: string;
+  /** Row key for a ReactNode to show in a HoverCard popover when hovering the badge */
+  badgeHoverContentKey?: string;
   /** Row key for an icon type indicator ("vaartuig" | "warehouse") */
   iconKey?: string;
   /** Label for the hover action button (default: "Openen") */
   actionLabel?: string;
+  /** Row key for a per-row override of the action button label. Takes precedence over actionLabel. */
+  actionLabelKey?: string;
   /** Row key for a completed-action label (e.g. "Aangeboden"). When set, shows a check + label instead of the action button. */
   actionCompletedKey?: string;
   /** Optional max-width class, e.g. "max-w-[480px]" */
@@ -260,12 +264,13 @@ function CellLeadingText({
   const subtext = col.subtextKey ? row[col.subtextKey] : undefined;
   const showDot = col.dotKey ? !!row[col.dotKey] : false;
   const hasDotKey = !!col.dotKey;
-  const actionLabel = col.actionLabel ?? "Openen";
+  const actionLabel = (col.actionLabelKey ? row[col.actionLabelKey] as string | undefined : undefined) ?? col.actionLabel ?? "Openen";
   const actionCompleted = col.actionCompletedKey ? row[col.actionCompletedKey] as string | undefined : undefined;
   const extraActions = col.extraActionsKey ? row[col.extraActionsKey] as ReactNode | undefined : undefined;
 
   const badgeLabel = col.badgeKey ? row[col.badgeKey] : undefined;
   const badgeStyle = col.badgeStyleKey ? row[col.badgeStyleKey] as React.CSSProperties | undefined : undefined;
+  const badgeHoverContent = col.badgeHoverContentKey ? row[col.badgeHoverContentKey] as ReactNode | undefined : undefined;
   const iconType = col.iconKey ? row[col.iconKey] : undefined;
 
   return (
@@ -294,14 +299,27 @@ function CellLeadingText({
           <p className="font-sans font-bold leading-[20px] text-rdj-text-primary text-[14px] truncate">
             {text}
           </p>
-          {badgeLabel && (
-            <span
-              className={`shrink-0 inline-flex items-center rounded-[4px] px-[4px] py-[0px] font-sans font-bold leading-[16px] text-[11px] whitespace-nowrap ${badgeStyle ? '' : 'border border-rdj-border-secondary text-rdj-text-primary'}`}
-              style={badgeStyle ? { backgroundColor: badgeStyle.backgroundColor, color: badgeStyle.color, border: `1px solid ${badgeStyle.borderColor}` } : undefined}
-            >
-              {badgeLabel}
-            </span>
-          )}
+          {badgeLabel && (() => {
+            const badgeSpan = (
+              <span
+                className={`shrink-0 inline-flex items-center rounded-[4px] px-[4px] py-[0px] font-sans font-bold leading-[16px] text-[11px] whitespace-nowrap ${badgeStyle ? '' : 'border border-rdj-border-secondary text-rdj-text-primary'}`}
+                style={badgeStyle ? { backgroundColor: badgeStyle.backgroundColor, color: badgeStyle.color, border: `1px solid ${badgeStyle.borderColor}` } : undefined}
+              >
+                {badgeLabel}
+              </span>
+            );
+            if (!badgeHoverContent) return badgeSpan;
+            return (
+              <HoverCard openDelay={200} closeDelay={100}>
+                <HoverCardTrigger asChild onClick={(e) => e.stopPropagation()}>
+                  {badgeSpan}
+                </HoverCardTrigger>
+                <HoverCardContent side="bottom" align="start" sideOffset={6} className="w-[260px] p-[6px] border-rdj-border-secondary">
+                  {badgeHoverContent}
+                </HoverCardContent>
+              </HoverCard>
+            );
+          })()}
         </div>
         {subtext && (
           <p className="font-sans font-normal leading-[20px] text-rdj-text-secondary text-[14px] truncate">

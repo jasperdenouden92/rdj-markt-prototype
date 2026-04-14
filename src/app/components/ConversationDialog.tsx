@@ -13,6 +13,8 @@ import {
 } from "../data/mock-relatie-data";
 import LastActivityButton from "./LastActivityButton";
 import DatePickerPopover, { formatDatePickerValue, type DatePickerValue } from "./DatePickerPopover";
+import { Calendar } from "./ui/calendar";
+import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
 import { formatDate } from "../utils/formatDate";
 import { TermijnPill } from "./TermijnDropdown";
 
@@ -288,8 +290,8 @@ export default function ConversationDialog({
     setRelatieLadingenItems(
       rl.map(l => ({
         id: l.id,
-        title: l.titel,
-        subtitle: `${l.tonnage} · ${l.product}`,
+        title: l.product,
+        subtitle: l.tonnage,
         meta: "",
         source: "relatie" as const,
         kind: "lading" as const,
@@ -712,12 +714,12 @@ export default function ConversationDialog({
     setBemiddelingSet(new Set()); // reset manual bemiddeling when switching left item
   };
 
-  const handleAddRelatieLading = (data: { titel: string; tonnage: string; product: string; laadlocatie: string; loslocatie: string; laaddatum: string; losdatum: string }) => {
+  const handleAddRelatieLading = (data: { tonnage: string; product: string; laadlocatie: string; loslocatie: string; laaddatum: string; losdatum: string }) => {
     const id = `rl-new-${Date.now()}`;
     const newItem: DisplayItem = {
       id,
-      title: data.titel,
-      subtitle: `${data.tonnage} · ${data.product}`,
+      title: data.product !== "–" ? data.product : "Nieuwe lading",
+      subtitle: data.tonnage,
       meta: "",
       source: "relatie",
       kind: "lading",
@@ -1962,29 +1964,32 @@ function QuickAddLading({
   onCancel,
 }: {
   inputRef: React.RefObject<HTMLInputElement | null>;
-  onSave: (data: { titel: string; tonnage: string; product: string; laadlocatie: string; loslocatie: string; laaddatum: string; losdatum: string }) => void;
+  onSave: (data: { tonnage: string; product: string; laadlocatie: string; loslocatie: string; laaddatum: string; losdatum: string }) => void;
   onCancel: () => void;
 }) {
-  const [titel, setTitel] = useState("");
   const [tonnage, setTonnage] = useState("");
   const [product, setProduct] = useState("");
   const [laadlocatie, setLaadlocatie] = useState("");
   const [loslocatie, setLoslocatie] = useState("");
-  const [laaddatum, setLaaddatum] = useState("");
-  const [losdatum, setLosdatum] = useState("");
+  const [laaddatum, setLaaddatum] = useState<Date | undefined>();
+  const [losdatum, setLosdatum] = useState<Date | undefined>();
 
-  const canSave = titel.trim() !== "";
+  const canSave = true;
+
+  const formatDayLabel = (d: Date) => {
+    const DAY_NAMES = ["Zo", "Ma", "Di", "Wo", "Do", "Vr", "Za"];
+    const MONTH_NAMES = ["Jan", "Feb", "Mrt", "Apr", "Mei", "Jun", "Jul", "Aug", "Sep", "Okt", "Nov", "Dec"];
+    return `${DAY_NAMES[d.getDay()]} ${d.getDate()} ${MONTH_NAMES[d.getMonth()]}`;
+  };
 
   const handleSubmit = () => {
-    if (!canSave) return;
     onSave({
-      titel: titel.trim(),
       tonnage: tonnage.trim() || "– ton",
       product: product.trim() || "–",
       laadlocatie: laadlocatie.trim(),
       loslocatie: loslocatie.trim(),
-      laaddatum: laaddatum.trim(),
-      losdatum: losdatum.trim(),
+      laaddatum: laaddatum ? formatDayLabel(laaddatum) : "",
+      losdatum: losdatum ? formatDayLabel(losdatum) : "",
     });
   };
 
@@ -1996,17 +2001,34 @@ function QuickAddLading({
   return (
     <div className="px-[16px] py-[12px] bg-[#f0f7ff]" onClick={e => e.stopPropagation()}>
       <div className="flex flex-wrap gap-[8px]">
-        <QuickInput ref={inputRef} value={titel} onChange={setTitel} onKeyDown={handleKeyDown} placeholder="Titel *" className="flex-[2_1_140px]" />
-        <QuickInput value={tonnage} onChange={setTonnage} onKeyDown={handleKeyDown} placeholder="Tonnage" className="flex-[1_1_80px]" />
+        <QuickInput ref={inputRef} value={tonnage} onChange={setTonnage} onKeyDown={handleKeyDown} placeholder="Tonnage" className="flex-[1_1_80px]" />
         <QuickInput value={product} onChange={setProduct} onKeyDown={handleKeyDown} placeholder="Product" className="flex-[1_1_80px]" />
       </div>
       <div className="flex flex-wrap gap-[8px] mt-[6px]">
         <QuickInput value={laadlocatie} onChange={setLaadlocatie} onKeyDown={handleKeyDown} placeholder="Laadlocatie" className="flex-1" />
-        <QuickInput value={laaddatum} onChange={setLaaddatum} onKeyDown={handleKeyDown} placeholder="Datum laden" className="flex-1" />
+        <Popover>
+          <PopoverTrigger asChild>
+            <button type="button" className="h-[32px] rounded-[6px] border border-[#d0d5dd] bg-white px-[10px] font-sans text-[13px] leading-[18px] text-left flex-1 hover:border-[#98a2b3] transition-colors">
+              {laaddatum ? <span className="text-rdj-text-primary">{formatDayLabel(laaddatum)}</span> : <span className="text-[#98a2b3]">Datum laden</span>}
+            </button>
+          </PopoverTrigger>
+          <PopoverContent align="start" sideOffset={4} className="w-auto p-0 border border-rdj-border-primary rounded-[12px] shadow-[0px_4px_6px_-2px_rgba(16,24,40,0.03),0px_12px_16px_-4px_rgba(16,24,40,0.08)]">
+            <Calendar mode="single" selected={laaddatum} onSelect={(d) => d && setLaaddatum(d)} weekStartsOn={1} className="p-[12px]" classNames={{ day_selected: "!bg-rdj-text-brand !text-white hover:!bg-rdj-text-brand hover:!text-white focus:!bg-rdj-text-brand focus:!text-white" }} />
+          </PopoverContent>
+        </Popover>
       </div>
       <div className="flex flex-wrap gap-[8px] mt-[6px]">
         <QuickInput value={loslocatie} onChange={setLoslocatie} onKeyDown={handleKeyDown} placeholder="Loslocatie" className="flex-1" />
-        <QuickInput value={losdatum} onChange={setLosdatum} onKeyDown={handleKeyDown} placeholder="Datum lossen" className="flex-1" />
+        <Popover>
+          <PopoverTrigger asChild>
+            <button type="button" className="h-[32px] rounded-[6px] border border-[#d0d5dd] bg-white px-[10px] font-sans text-[13px] leading-[18px] text-left flex-1 hover:border-[#98a2b3] transition-colors">
+              {losdatum ? <span className="text-rdj-text-primary">{formatDayLabel(losdatum)}</span> : <span className="text-[#98a2b3]">Datum lossen</span>}
+            </button>
+          </PopoverTrigger>
+          <PopoverContent align="start" sideOffset={4} className="w-auto p-0 border border-rdj-border-primary rounded-[12px] shadow-[0px_4px_6px_-2px_rgba(16,24,40,0.03),0px_12px_16px_-4px_rgba(16,24,40,0.08)]">
+            <Calendar mode="single" selected={losdatum} onSelect={(d) => d && setLosdatum(d)} weekStartsOn={1} className="p-[12px]" classNames={{ day_selected: "!bg-rdj-text-brand !text-white hover:!bg-rdj-text-brand hover:!text-white focus:!bg-rdj-text-brand focus:!text-white" }} />
+          </PopoverContent>
+        </Popover>
       </div>
       <div className="flex items-center gap-[8px] mt-[8px]">
         <button

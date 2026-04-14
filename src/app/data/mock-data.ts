@@ -21,6 +21,12 @@ export interface Cargo {
   splitOriginId?: string;
   splitColorIndex?: number;
   splitTotalWeight?: string;
+  siblingLots?: Array<{
+    id: string;
+    splitIndex: number;
+    cargo: string;
+    status: 'intake' | 'werklijst' | 'markt' | 'gesloten';
+  }>;
   verkoopcondities?: {
     prijs: number | null;
     laadtijd: number | null;
@@ -85,6 +91,7 @@ export interface Match {
   cargoDate: string;
   matchPercentage: number;
   isEigen?: boolean;
+  vaartuigId?: string;
   source?: string;
   sourceDate?: string;
 }
@@ -367,6 +374,7 @@ export const mockMatches: Match[] = [
     cargoDate: 'Vr 7 Mrt 08:00',
     matchPercentage: 60,
     isEigen: true,
+    vaartuigId: 've-001',
     source: 'Eigen vloot',
     sourceDate: 'Vr 7 Mrt 08:00',
   },
