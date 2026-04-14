@@ -42,6 +42,9 @@ export interface Relatie {
   website?: string;
   ladingGroepen?: string[];
   soortRelatie?: SoortRelatie[];
+  isStandaardLadingEigenaar?: boolean;
+  isStandaardBevrachter?: boolean;
+  isStandaardScheepseigenaar?: boolean;
   eigenaarId?: string;
   status?: 'actief' | 'inactief' | 'prospect';
   contactFrequentie?: 'wekelijks' | 'maandelijks' | 'kwartaal' | 'geen';

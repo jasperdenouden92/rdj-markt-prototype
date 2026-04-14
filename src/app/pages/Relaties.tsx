@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { useNavigate } from "react-router";
 import Sidebar from "../components/Sidebar";
 import PageHeader from "../components/PageHeader";
@@ -14,6 +14,7 @@ import { mockRelaties, mockContactPersonen, mockGebruikers, LADINGGROEP_SUGGESTI
 import type { Gespreksverslag } from "../data/mock-relatie-data";
 import { mockTaken } from "../data/mock-taken-data";
 import type { Relatie } from "../data/api";
+import { list, create } from "../data/api";
 import { formatDate } from "../utils/formatDate";
 
 function getInitials(name: string): string {
@@ -51,7 +52,11 @@ export default function Relaties() {
   const [hoveredRow, setHoveredRow] = useState<string | null>(null);
   const [showCreateDialog, setShowCreateDialog] = useState(false);
   const [verslagRelatieId, setVerslagRelatieId] = useState<string | null>(null);
-  const [relaties, setRelaties] = useState<Relatie[]>(mockRelaties);
+  const [relaties, setRelaties] = useState<Relatie[]>([]);
+
+  useEffect(() => {
+    list<Relatie>("relatie").then(setRelaties);
+  }, []);
 
   const soortRelatieOptions = useMemo(
     () => ["Alle soorten", ...SOORT_RELATIE_OPTIES.map((o) => o.label)],
@@ -229,13 +234,12 @@ export default function Relaties() {
     };
   });
 
-  const handleCreateRelatie = (data: Partial<Relatie>) => {
-    const newRelatie: Relatie = {
-      id: `rel-${Date.now()}`,
+  const handleCreateRelatie = async (data: Partial<Relatie>) => {
+    const newRelatie = await create<Relatie>("relatie", {
       naam: data.naam || "Nieuwe relatie",
       contactPersoonIds: [],
       ...data,
-    };
+    });
     setRelaties((prev) => [newRelatie, ...prev]);
     setShowCreateDialog(false);
   };

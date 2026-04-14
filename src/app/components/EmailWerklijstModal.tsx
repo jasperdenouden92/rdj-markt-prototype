@@ -16,8 +16,8 @@ const STANDAARD_BEVRACHTERS = [
   "contact@vaartuigen.nl",
 ];
 
-// Mock data for standaard opdrachtgevers
-const STANDAARD_OPDRACHTGEVERS = [
+// Mock data for standaard lading-eigenaren
+const STANDAARD_LADING_EIGENAREN = [
   "planning@bouwbedrijf.nl",
   "logistiek@grondwerk.nl",
   "info@waterbouw.nl",
@@ -55,7 +55,7 @@ Zie bijgevoegd beschikbare vaartuigen van dinsdag 27 januari. Mocht u passende l
 
   const addStandaardOpdrachtgevers = () => {
     const newRecipients = [...recipients];
-    STANDAARD_OPDRACHTGEVERS.forEach(email => {
+    STANDAARD_LADING_EIGENAREN.forEach(email => {
       if (!newRecipients.includes(email)) {
         newRecipients.push(email);
       }
@@ -176,7 +176,7 @@ Zie bijgevoegd beschikbare vaartuigen van dinsdag 27 januari. Mocht u passende l
                         </div>
                       </div>
                     </div>
-                    <p className="font-sans font-bold leading-[20px] relative shrink-0 text-[#145990] text-[14px] whitespace-nowrap">Standaard opdrachtgevers</p>
+                    <p className="font-sans font-bold leading-[20px] relative shrink-0 text-[#145990] text-[14px] whitespace-nowrap">Standaard lading-eigenaren</p>
                   </button>
                 </div>
               </div>
