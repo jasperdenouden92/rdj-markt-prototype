@@ -608,7 +608,7 @@ export const mockRelatieOnderhandelingen: RelatieOnderhandeling[] = [
     tonnage: "2.000 ton",
     deadline: "Za 14 Mrt, 16:00",
     deadlineExpired: true,
-    status: "Bod ontvangen",
+    status: "In onderhandeling",
     contact: { naam: "Eric Nieuwkoop", datum: "Ma 9 Mrt 07:28", gebruikerId: "usr-001" },
   },
   {
@@ -621,7 +621,7 @@ export const mockRelatieOnderhandelingen: RelatieOnderhandeling[] = [
     vrachtprijsDiff: "-3,2%",
     tonnage: "3.500 ton",
     deadline: "Morgen, 10:00",
-    status: "Bod verstuurd",
+    status: "In onderhandeling",
     contact: { naam: "Khoa Nguyen", datum: "Di 10 Mrt 19:53", gebruikerId: "usr-002" },
   },
   {
@@ -648,7 +648,7 @@ export const mockRelatieOnderhandelingen: RelatieOnderhandeling[] = [
     tonnage: "3.500 ton",
     deadline: "Morgen, 9:00",
     deadlineExpired: true,
-    status: "Bod ontvangen",
+    status: "In onderhandeling",
     contact: { naam: "Pelger de Jong", datum: "Di 10 Mrt 12:04", gebruikerId: "usr-003" },
   },
   {
@@ -699,7 +699,7 @@ export const mockRelatieOnderhandelingen: RelatieOnderhandeling[] = [
     vrachtprijsDiff: "+2,0%",
     tonnage: "2.000 ton",
     deadline: "Morgen, 11:00",
-    status: "Bod verstuurd",
+    status: "In onderhandeling",
     contact: { naam: "Khoa Nguyen", datum: "Zo 8 Mrt 01:31", gebruikerId: "usr-002" },
   },
   {
@@ -762,7 +762,7 @@ export const mockRelatieOnderhandelingen: RelatieOnderhandeling[] = [
     vrachtprijs: "€3,80 per ton",
     tonnage: "3.000 ton",
     deadline: "Morgen, 12:00",
-    status: "Bod verstuurd",
+    status: "In onderhandeling",
     contact: { naam: "Khoa Nguyen", datum: "Ma 9 Mrt 14:30", gebruikerId: "usr-002" },
   },
   {
@@ -788,7 +788,7 @@ export const mockRelatieOnderhandelingen: RelatieOnderhandeling[] = [
     vrachtprijsDiff: "+3,3%",
     tonnage: "2.000 ton",
     deadline: "Za 21 Mrt",
-    status: "Bod ontvangen",
+    status: "In onderhandeling",
     contact: { naam: "Pelger de Jong", datum: "Vr 6 Mrt 15:20", gebruikerId: "usr-003" },
   },
   {

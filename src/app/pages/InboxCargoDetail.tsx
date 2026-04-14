@@ -30,7 +30,7 @@ import imgAvatar4 from "../../assets/9e45f45f537bea4bf653bc0307471e5ff5545f63.pn
 
 /* ── Inbox status mapping: marktaanbod uses In onderhandeling / Geaccepteerd / Geweigerd ── */
 function toInboxStatus(raw: string): string {
-  if (raw === "Via werklijst" || raw === "Bod verstuurd" || raw === "Bod ontvangen") return "In onderhandeling";
+  if (raw === "Via werklijst" || raw === "In onderhandeling") return "In onderhandeling";
   if (raw === "Goedgekeurd") return "Geaccepteerd";
   if (raw === "Afgewezen" || raw === "Afgekeurd") return "Geweigerd";
   return raw;

@@ -144,7 +144,7 @@ const mockActiviteit: ActivityEvent[] = [
     user: "Eric Nieuwkoop",
     initials: "EN",
     avatar: imgEricNieuwkoop,
-    title: "Bod ontvangen",
+    title: "In onderhandeling",
     timestamp: "Vandaag, 09:15",
     message: "Lading toegevoegd.",
     changes: [
@@ -156,7 +156,7 @@ const mockActiviteit: ActivityEvent[] = [
     user: "Khoa Nguyen",
     initials: "KN",
     avatar: imgKhoaNguyen,
-    title: "Bod verstuurd",
+    title: "In onderhandeling",
     timestamp: "Gisteren, 16:32",
     message: "Voor het eerst gesproken.",
     changes: [
@@ -212,18 +212,16 @@ function calcPctDiff(
 
 type SideTab = "vaartuig" | "lading";
 
-type NegotiationStatus = "Via werklijst" | "Bod verstuurd" | "Bod ontvangen" | "Openstaand bod" | "Goedgekeurd" | "Afgewezen" | "In onderhandeling" | "Geaccepteerd" | "Geweigerd";
+type NegotiationStatus = "Via werklijst" | "In onderhandeling" | "Openstaand bod" | "Goedgekeurd" | "Afgewezen" | "Geaccepteerd" | "Geweigerd";
 
-const activeStatuses: NegotiationStatus[] = ["Via werklijst", "Bod verstuurd", "Bod ontvangen", "Openstaand bod", "In onderhandeling"];
+const activeStatuses: NegotiationStatus[] = ["Via werklijst", "In onderhandeling", "Openstaand bod"];
 
 const statusBadgeConfig: Record<NegotiationStatus, { variant: BadgeVariant; type: BadgeType; icon: React.ReactNode | null }> = {
   "Via werklijst": { variant: "brand", type: "default", icon: <ListTodo strokeWidth={2.5} /> },
-  "Bod verstuurd": { variant: "brand", type: "color", icon: <Send strokeWidth={2.5} /> },
-  "Bod ontvangen": { variant: "brand", type: "color", icon: <MailOpen strokeWidth={2.5} /> },
+  "In onderhandeling": { variant: "brand", type: "color", icon: <Send strokeWidth={2.5} /> },
   "Openstaand bod": { variant: "brand", type: "color", icon: <Send strokeWidth={2.5} /> },
   "Goedgekeurd": { variant: "success", type: "color", icon: <Check strokeWidth={2.5} /> },
   "Afgewezen": { variant: "error", type: "color", icon: <X strokeWidth={2.5} /> },
-  "In onderhandeling": { variant: "brand", type: "color", icon: <Send strokeWidth={2.5} /> },
   "Geaccepteerd": { variant: "success", type: "color", icon: <Check strokeWidth={2.5} /> },
   "Geweigerd": { variant: "error", type: "color", icon: <X strokeWidth={2.5} /> },
 };
@@ -1386,8 +1384,7 @@ function LadingTab() {
 /* ── Activity title → icon mapping ── */
 const activityIconMap: Record<string, React.ReactNode> = {
   "Bod bijgewerkt": <PenLine size={16} strokeWidth={2} />,
-  "Bod ontvangen": <MailOpen size={16} strokeWidth={2} />,
-  "Bod verstuurd": <Send size={16} strokeWidth={2} />,
+  "In onderhandeling": <Send size={16} strokeWidth={2} />,
   "Via werklijst": <ListTodo size={16} strokeWidth={2} />,
 };
 
