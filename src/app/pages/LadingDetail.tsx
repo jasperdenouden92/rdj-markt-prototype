@@ -15,6 +15,7 @@ import SectionHeader from "../components/SectionHeader";
 import LadingEigenSidebar from "../components/LadingEigenSidebar";
 import OnderhandelingSidepanel from "../components/OnderhandelingSidepanel";
 import ConversationDialog from "../components/ConversationDialog";
+import RelatieSelectDialog from "../components/RelatieSelectDialog";
 import { useBevrachtingLadingSummary } from "../data/useDetailData";
 import { mockMatches, mockNegotiations } from "../data/mock-data";
 import { mockRelaties } from "../data/mock-relatie-data";
@@ -99,6 +100,7 @@ export default function LadingDetail() {
   const [selectedNegotiation, setSelectedNegotiation] = useState<{ id: string; status: string; bron: string; relatieName?: string; bemiddeling?: { inkoopRelatie: string; verkoopRelatie: string } } | null>(null);
   const setActiveTab = (tab: typeof activeTab) => { setActiveTabRaw(tab); setSelectedNegotiation(null); };
   const [conversationDialog, setConversationDialog] = useState<{ relatieId: string; relatieName: string; matchName?: string } | null>(null);
+  const [showRelatieSelect, setShowRelatieSelect] = useState(false);
   const [sidebarKey, setSidebarKey] = useState(0);
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [matchFilter, setMatchFilter] = useState("Alles");
@@ -379,7 +381,7 @@ export default function LadingDetail() {
                             filterOptions={["Alles", "Actief", "Goedgekeurd", "Afgewezen"]}
                             filterValue={negFilter}
                             onFilterChange={setNegFilter}
-                            onAdd={() => setConversationDialog({ relatieId: "", relatieName: "" })}
+                            onAdd={() => setShowRelatieSelect(true)}
                             addTooltip="Onderhandeling starten"
                           />
                           <Pagination data-annotation-id="ladingdetail-paginering"
@@ -439,6 +441,17 @@ export default function LadingDetail() {
           relatieName={selectedNegotiation.relatieName}
           bemiddeling={selectedNegotiation.bemiddeling}
           onClose={() => setSelectedNegotiation(null)}
+        />
+      )}
+
+      {/* Relatie select dialog */}
+      {showRelatieSelect && (
+        <RelatieSelectDialog
+          onSelect={(relatie) => {
+            setShowRelatieSelect(false);
+            setConversationDialog({ relatieId: relatie.id, relatieName: relatie.naam });
+          }}
+          onClose={() => setShowRelatieSelect(false)}
         />
       )}
 
